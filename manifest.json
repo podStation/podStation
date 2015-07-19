@@ -3,7 +3,8 @@
 	"description": "A podcast aggregator for Chrome",
 	"version": "0.0.1",
 	"permissions": [
-		"tabs"
+		"tabs",
+		"storage"
 	],
 	"browser_action": {
 		"default_title": "podStation"

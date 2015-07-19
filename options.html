@@ -1,8 +1,20 @@
 <html>
 	<head>
 		<title>podStation - Options</title>
+		<script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="storage.js"></script>
+		<script type="text/javascript" src="options.js"></script>
+		<link rel="stylesheet" type="text/css" href="podstation.css">
 	</head>
 	<body>
 		<h1>podStation - Options</h1>
+		<div id="podcasts">
+			<h2>Your Podcasts</h2>
+			<input type="text" id="entryBox" />
+			<input type="button" id="addRSS" value="Add Feed"/>
+			<input type="button" id="removeAllRSS" value="Remove all Feeds"/>
+			<div id="podcastList">
+			</div>
+		</div>
 	</body>
 </html>
