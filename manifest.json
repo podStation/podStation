@@ -1,0 +1,16 @@
+{
+	"name": "podStation",
+	"description": "A podcast aggregator for Chrome",
+	"version": "0.0.1",
+	"permissions": [
+		"tabs"
+	],
+	"browser_action": {
+		"default_title": "podStation"
+	},
+	"background": {
+		"scripts": ["podstation_bg.js"]
+	},
+	"options_page": "options.html",
+	"manifest_version": 2
+}
