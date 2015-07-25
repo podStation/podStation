@@ -4,13 +4,20 @@
 	"version": "0.0.1",
 	"permissions": [
 		"tabs",
-		"storage"
+		"storage",
+		"http://*/",
+		"https://*/"
 	],
 	"browser_action": {
 		"default_title": "podStation"
 	},
 	"background": {
-		"scripts": ["podstation_bg.js"]
+		"scripts": [
+			"entities/podcast.js",
+			"entities/podcastManager.js",
+			"podstation_bg.js"
+		],
+		"persistent": false
 	},
 	"options_page": "options.html",
 	"manifest_version": 2

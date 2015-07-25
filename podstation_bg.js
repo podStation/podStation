@@ -9,3 +9,5 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		}
 	});
 });
+
+window.podcastManager = new PodcastManager();
