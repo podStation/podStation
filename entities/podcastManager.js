@@ -54,6 +54,7 @@ var PodcastManager;
 
 		this.deleteAllPodcasts = function () {
 			chrome.storage.sync.set({'podcastList': []});
+			this.podcastList = [];
 		}
 
 		instance = this;
