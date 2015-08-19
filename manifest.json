@@ -5,6 +5,7 @@
 	"permissions": [
 		"tabs",
 		"storage",
+		"unlimitedStorage",
 		"http://*/",
 		"https://*/"
 	],
@@ -13,6 +14,7 @@
 	},
 	"background": {
 		"scripts": [
+			"lib/jquery-2.1.4.min.js",
 			"entities/podcast.js",
 			"entities/podcastManager.js",
 			"podstation_bg.js"

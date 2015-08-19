@@ -1,30 +1,20 @@
 function updatePodcastList() {
 	var podcastListElement = $('#podcastList');
 
-	chrome.storage.sync.get('podcastList', function(storageObject) {
-		syncPodcastList = storageObject.podcastList;
+	var bgPage = chrome.extension.getBackgroundPage();
 
-		if(typeof syncPodcastList === 'undefined' || syncPodcastList.lenght === 0) {
-			podcastListElement.html('You have no podcasts in your list');
-		}
-		else {
-			var listHtml;
+	var listHTML = '';
 
-			listHtml = '<ul>';
-			syncPodcastList.forEach(function (podcast) {
-				listHtml += '<li>' + (podcast.title ? podcast.title : podcast.url) + '</li>';
-			});
-			listHtml += '</ul>';
-
-			podcastListElement.html(listHtml);
-		}
+	bgPage.podcastManager.podcastList.forEach(function(podcast) {
+		listHTML += renderPodcast(podcast);
 	});
+
+	podcastListElement.html(listHTML);
 }
 
 function storageChanged(changes, areaName) {
 	if(areaName === 'sync')
 	{
-		console.log(changes);
 		updatePodcastList();
 	}
 }
@@ -34,7 +24,7 @@ $( document ).ready( function() {
 
 	$('#addRSS').click( function() {
 		// addRSS($('#entryBox').val());
-		bgPage.podcastManager.addPodcast($('#entryBox').val());
+		bgPage.podcastManager.addPodcast($('#entryBox').val(), updatePodcastList);
 	});
 
 	$('#removeAllRSS').click( function() {
@@ -42,7 +32,7 @@ $( document ).ready( function() {
 		bgPage.podcastManager.deleteAllPodcasts();
 	});
 
-	chrome.storage.onChanged.addListener(storageChanged)
+	// chrome.storage.onChanged.addListener(storageChanged)
 
 	updatePodcastList();
 });
