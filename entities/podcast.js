@@ -1,5 +1,6 @@
 var Podcast = function(url) {
 	this.url = url;
+	this.image = 'images/rss_small.png';
 
 	this.update = function(callback) {
 		var that = this;
