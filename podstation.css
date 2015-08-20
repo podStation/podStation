@@ -7,10 +7,15 @@ body {
 
 a {
 	text-decoration: none;
+	color: black;
+}
+
+a:hover {
+	text-decoration: underline;
 }
 
 a:visited {
-	background-color: yellow;
+	color: black;
 }
 
 td {
