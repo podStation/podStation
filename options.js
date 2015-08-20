@@ -28,8 +28,8 @@ $( document ).ready( function() {
 	});
 
 	$('#removeAllRSS').click( function() {
-		// removeAllRSS();
 		bgPage.podcastManager.deleteAllPodcasts();
+		updatePodcastList();
 	});
 
 	// chrome.storage.onChanged.addListener(storageChanged)
