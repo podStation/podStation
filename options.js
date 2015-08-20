@@ -23,8 +23,9 @@ $( document ).ready( function() {
 	var bgPage = chrome.extension.getBackgroundPage();
 
 	$('#addRSS').click( function() {
-		// addRSS($('#entryBox').val());
-		bgPage.podcastManager.addPodcast($('#entryBox').val(), updatePodcastList);
+		var entryBox = $('#entryBox');
+		bgPage.podcastManager.addPodcast(entryBox.val(), updatePodcastList);
+		entryBox.val('');
 	});
 
 	$('#removeAllRSS').click( function() {
