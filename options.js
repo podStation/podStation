@@ -12,13 +12,6 @@ function updatePodcastList() {
 	podcastListElement.html(listHTML);
 }
 
-function storageChanged(changes, areaName) {
-	if(areaName === 'sync')
-	{
-		updatePodcastList();
-	}
-}
-
 $( document ).ready( function() {
 	var bgPage = chrome.extension.getBackgroundPage();
 
