@@ -1,5 +1,58 @@
+body {
+	margin-top: 0px;
+	width: 1000px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:visited {
+	background-color: yellow;
+}
+
+td {
+	vertical-align: top;
+}
+
+#header {
+	background-color: Gainsboro;
+	height: 50px;
+	margin-bottom: 10px;
+}
+
+#headerRight {
+	float: right;
+	margin: 10px;
+}
+
+
+#entryBox {
+	width: 500px;
+}
+
+#contentBoxMenu {
+	float: right;
+	padding: 15px;
+
+}
+
 div#podcasts {
 	padding: 15px;
 	border-radius: 5px;
 	background-color: Gainsboro;
+}
+
+.podcastEntry {
+	background-color: orange;
+	margin: 7px;
+	margin-left: 0px;
+	margin-right: 0px;
+	padding: 5px;
+}
+
+.podcastTextView {
+	padding-left: 20px;
 }

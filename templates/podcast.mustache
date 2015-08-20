@@ -1,12 +1,15 @@
-<div id="podcast_{{url}}" class="podcast_entry">
+<div id="podcast_{{url}}" class="podcastEntry">
 	<table>
 		<tr>
 			<td>
-				<img src="{{image}}" height="144" width="144"></img>
+				<img src="{{image}}" class="podcastImage" height="100" width="100"></img>
 			</td>
 			<td>
-				<a href="{{link}}"><h1>{{title}}</h1></a>
-				<p>{{description}}</p>
+				<div class="podcastTextView">
+					<a href="{{link}}"><h1 class="podcastTitle">{{title}}</h1></a>
+					<h2 class="podcastTitle">{{episodesNumber}} Episode(s)</h2>
+					<p>{{description}}</p>
+				</div>
 			</td>
 		</tr>
 	</table>

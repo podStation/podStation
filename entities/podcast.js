@@ -2,6 +2,7 @@ var Podcast = function(url) {
 	this.url = url;
 	this.image = 'images/rss_small.png';
 	this.status = 'new';
+	this.episodes = [];
 
 	this.getKey = function() {
 		return 'podcast' + this.url;
@@ -65,7 +66,10 @@ var Podcast = function(url) {
 				that.description = storedPodcast.description;
 				that.link = storedPodcast.link;
 				that.image = storedPodcast.image;
-				callback(that);
+
+				if(typeof callback === "function") {
+					callback(that);
+				}
 			}
 			else {
 				that.update(callback);

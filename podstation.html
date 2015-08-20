@@ -1,8 +1,32 @@
 <html>
 	<head>
 		<title>podStation</title>
+		<script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
+		<script type="text/javascript" src="lib/mustache.min.js"></script>
+		<script type="text/javascript" src="entities/podcastHTMLRenderer.js"></script>
+		<script type="text/javascript" src="options.js"></script>
+		<script type="text/javascript" src="podstation.js"></script>
+		<link rel="stylesheet" type="text/css" href="podstation.css">
 	</head>
 	<body>
-		<h1>podStation</h1>
+		<div id="header">
+			<div id="headerRight">
+				<input type="text" id="entryBox" />
+				<input type="button" id="addRSS" value="Add Feed"/>
+			</div>
+			<h1>podStation</h1>
+		</div>
+		<div id="contentBoxOut">
+			<div id="contentBoxMenu">
+				Podcasts | Last Episodes | Update All
+			</div>
+			<div id="contentBoxIn">
+				<div id="podcasts">
+					<h2>Podcasts</h2>
+					<div id="podcastList">
+					</div>
+				</div>
+			<div>
+		<div>
 	</body>
 </html>

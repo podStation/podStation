@@ -12,8 +12,18 @@ jQuery.ajax({
 
 function renderPodcast(podcast) {
 	var podcastHTML;
+	var podcastForTemplate;
 
-	var renderedHTML = Mustache.render(podcastTemplate, podcast);
+	podcastForTemplate = {
+		link: podcast.link,
+		title: podcast.title ? podcast.title : podcast.url,
+		image: podcast.image,
+		url: podcast.url,
+		description: podcast.description,
+		episodesNumber: podcast.episodes.length
+	};
+
+	var renderedHTML = Mustache.render(podcastTemplate, podcastForTemplate);
 
 	return renderedHTML;
 }
