@@ -33,7 +33,5 @@ $( document ).ready( function() {
 		updatePodcastList();
 	});
 
-	// chrome.storage.onChanged.addListener(storageChanged)
-
 	updatePodcastList();
 });
