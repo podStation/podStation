@@ -74,9 +74,9 @@ var Podcast = function(url) {
 				callback(that);
 			}
 
-		}/*, function() {
+		}).fail(function() {
 			that.status = 'failed';
-		}*/);
+		});
 	}
 
 	this.load = function(callback) {

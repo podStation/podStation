@@ -20,6 +20,14 @@ function updatePodcastList() {
 			}
 		});
 	})
+
+	$('.updatePodcast').click(function(eventObject) {
+		var pocastEntryId = 'podcast_' + eventObject.target.id;
+		bgPage.podcastManager.updatePodcast(eventObject.target.id, function() {
+			updatePodcastList();
+		});
+		updatePodcastList();
+	})
 }
 
 $( document ).ready( function() {
@@ -28,6 +36,7 @@ $( document ).ready( function() {
 	$('#addRSS').click( function() {
 		var entryBox = $('#entryBox');
 		bgPage.podcastManager.addPodcast(entryBox.val(), updatePodcastList);
+		updatePodcastList();
 		entryBox.val('');
 	});
 

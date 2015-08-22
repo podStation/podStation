@@ -81,6 +81,15 @@ var PodcastManager;
 			})
 		}
 
+		this.updatePodcast = function(url, callback) {
+			this.podcastList.forEach(function(item) {
+				if( item.url === url) {
+					item.update(callback);
+					return false;
+				}
+			});
+		}
+
 		this.deleteAllPodcasts = function () {
 			chrome.storage.sync.set({'syncPodcastList': []});
 			this.podcastList.forEach(function(item) {

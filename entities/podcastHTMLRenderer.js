@@ -20,7 +20,8 @@ function renderPodcast(podcast) {
 		image: podcast.image,
 		url: podcast.url,
 		description: podcast.description,
-		episodesNumber: podcast.episodes.length
+		episodesNumber: podcast.episodes.length,
+		status: podcast.status
 	};
 
 	var renderedHTML = Mustache.render(podcastTemplate, podcastForTemplate);
