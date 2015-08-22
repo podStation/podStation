@@ -17,6 +17,7 @@ var Podcast = function(url) {
 		storedPodcast.description = this.description;
 		storedPodcast.link = this.link;
 		storedPodcast.image = this.image;
+		storedPodcast.episodes = this.episodes;
 
 		storageObject[this.getKey()] = storedPodcast;
 
@@ -91,6 +92,7 @@ var Podcast = function(url) {
 				that.description = storedPodcast.description;
 				that.link = storedPodcast.link;
 				that.image = storedPodcast.image;
+				that.episodes = storedPodcast.episodes;
 
 				if(typeof callback === "function") {
 					callback(that);
