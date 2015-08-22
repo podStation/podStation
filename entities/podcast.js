@@ -44,6 +44,27 @@ var Podcast = function(url) {
 				that.image = xml.find('rss > channel > image').attr('href');
 			}
 
+			that.episodes = [];
+
+			xml.find('rss > channel > item').each(function() {
+				var feedItem = $(this);
+				var episode = {};
+				var enclosure;
+
+				episode.title = feedItem.find('title').text();
+				episode.link = feedItem.find('link').text();
+				episode.pubDate = feedItem.find('pubDate').text();
+				episode.description = feedItem.find('description').text();
+				enclosure = feedItem.find('enclosure');
+				episode.enclosure = {
+					url: enclosure.attr('url'),
+					length: enclosure.attr('length'),
+					type: enclosure.attr('type')
+				};
+
+				that.episodes.push(episode);
+			});
+
 			that.status = 'loaded';
 
 			that.store();
