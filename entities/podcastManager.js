@@ -21,7 +21,9 @@ var PodcastManager;
 					syncPodcastList = storageObject.syncPodcastList;
 				}
 
-				loaded(syncPodcastList);
+				if( loaded(syncPodcastList) ) {
+					chrome.storage.sync.set({'syncPodcastList': syncPodcastList});
+				}
 			});
 		};
 
@@ -46,19 +48,44 @@ var PodcastManager;
 
 					syncPodcastList.push(podcastForSync);
 
-					chrome.storage.sync.set({'syncPodcastList': syncPodcastList});
-
 					var podcast = new Podcast(podcastForSync.url);
 
 					that.podcastList.push(podcast);
 
 					podcast.load(afterLoad);
+
+					return true;
 				});
 			}
 		}
 
+		this.deletePodcast = function(url) {
+			var that = this;
+			this.podcastList.forEach(function(item) {
+				if( item.url === url) {
+					item.deleteFromStorage();
+					that.podcastList.splice(that.podcastList.indexOf(item), 1);
+					return false;
+				}
+			});
+
+			loadPodcastsFromSync(function(syncPodcastList) {
+				syncPodcastList.forEach(function(item) {
+					if( item.url === url) {
+						syncPodcastList.splice(syncPodcastList.indexOf(item), 1);
+						return false;
+					}
+				});
+
+				return true;
+			})
+		}
+
 		this.deleteAllPodcasts = function () {
 			chrome.storage.sync.set({'syncPodcastList': []});
+			this.podcastList.forEach(function(item) {
+				item.deleteFromStorage();
+			});
 			this.podcastList = [];
 		}
 

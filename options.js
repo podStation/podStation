@@ -10,6 +10,16 @@ function updatePodcastList() {
 	});
 
 	podcastListElement.html(listHTML);
+
+	$('.removePodcast').click(function(eventObject) {
+		var pocastEntryId = 'podcast_' + eventObject.target.id;
+		bgPage.podcastManager.deletePodcast(eventObject.target.id);
+		$('.podcastEntry').each(function() {
+			if( $( this )[0].id === pocastEntryId) {
+				$( this ).hide();
+			}
+		});
+	})
 }
 
 $( document ).ready( function() {

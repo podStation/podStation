@@ -23,6 +23,10 @@ var Podcast = function(url) {
 		chrome.storage.local.set(storageObject);
 	}
 
+	this.deleteFromStorage = function() {
+		chrome.storage.local.remove(this.getKey());
+	}
+
 	this.update = function(callback) {
 		var that = this;
 

@@ -5,9 +5,14 @@
 				<img src="{{image}}" class="podcastImage" height="100" width="100"></img>
 			</td>
 			<td>
+				<div class="podcastMenu">
+					<a href="#" class="removePodcast" id="{{url}}">Remove</a> | <a>Update</a>
+				</div>
 				<div class="podcastTextView">
-					<a href="{{link}}"><h1 class="podcastTitle">{{title}}</h1></a>
-					<h2 class="podcastTitle">{{episodesNumber}} Episode(s)</h2>
+					<a href="{{link}}"><h2 class="podcastTitle">{{title}}</h2></a>
+					<a href="#Episodes" class=linkToEpisodes id="{{url}}">
+						<h3 class="podcastTitle">{{episodesNumber}} Episode(s)</h3>
+					</a>
 					<p>{{description}}</p>
 				</div>
 			</td>

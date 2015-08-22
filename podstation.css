@@ -58,6 +58,12 @@ div#podcasts {
 	padding: 5px;
 }
 
+.podcastMenu {
+	float: right;
+	padding: 10px,
+}
+
 .podcastTextView {
 	padding-left: 20px;
+	width: 820px;
 }
