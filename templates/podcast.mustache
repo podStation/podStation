@@ -1,23 +1,26 @@
 <div id="podcast_{{url}}" class="podcastEntry">
+	<div class="itemMenu">
+		<a href="#" class="removePodcast" id="{{url}}"><i class="fa fa-remove"></i></a> |
+		<a href="#" class="updatePodcast" id="{{url}}"><i class="fa fa-refresh"></i></a>
+	</div>
+	<div>
 	<table>
 		<tr>
 			<td>
-				<img src="{{image}}" class="podcastImage" height="100" width="100"></img>
+				<img src="{{image}}" class="podcastImage" width="100"></img>
 			</td>
 			<td>
-				<div class="itemMenu">
-					<a href="#" class="removePodcast" id="{{url}}">Remove</a> |
-					<a href="#" class="updatePodcast" id="{{url}}">Update</a>
-				</div>
 				<div class="textView">
-					<a href="{{link}}"><h2 class="podcastTitle">{{title}}</h2></a>
-					<a href="#Episodes" class=linkToEpisodes id="{{url}}">
-						<h3 class="podcastTitle">{{episodesNumber}} Episode(s)</h3>
+					<a href="{{link}}"><span class="podcastTitle">{{title}}</span></a> -
+					<a href="#Episodes" class="linkToEpisodes" id="{{url}}">
+						<span class="episodes">{{episodesNumber}} Episode(s)</span>
 					</a>
-					<h4 class="podcastTitle">Status: {{status}}</h4>
+					<br>
+					<span class="podcastStatus">Status: {{status}}</span>
 					<p>{{description}}</p>
 				</div>
 			</td>
 		</tr>
 	</table>
+	</div>
 </div>

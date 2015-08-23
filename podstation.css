@@ -43,26 +43,50 @@ td {
 	padding: 15px;
 }
 
+#mainTitle {
+	padding-top: 5px;
+	padding-left: 15px;
+}
+
 .mainContentBox {
-	padding: 15px;
+	/*padding: 15px;
 	border-radius: 5px;
-	background-color: Gainsboro;
+	background-color: Gainsboro;*/
 }
 
 .podcastEntry, .episodeEntry {
-	background-color: orange;
-	margin: 7px;
+	/*background-color: orange;*/
+	/*background-color: lightblue;*/
+	border-radius: 10px;
+	border-style: solid;
+	border-color: whitesmoke;
+	margin: 10px;
 	margin-left: 0px;
 	margin-right: 0px;
 	padding: 5px;
+	position: relative;
+	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
+}
+
+.podcastImage {
+	background-color: white;
+}
+
+.podcastTitle {
+	font-size: 20px;
+	font-weight: bold;
 }
 
 .itemMenu {
 	float: right;
-	padding: 10px,
+	padding: 10px;
+	position: absolute;
+	right: 0px;
 }
 
 .textView {
 	padding-left: 20px;
-	width: 820px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+	/*width: 820px;*/
 }

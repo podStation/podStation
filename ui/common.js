@@ -12,8 +12,8 @@ function updatePodcastList() {
 	podcastListElement.html(listHTML);
 
 	$('.removePodcast').click(function(eventObject) {
-		var pocastEntryId = 'podcast_' + eventObject.target.id;
-		bgPage.podcastManager.deletePodcast(eventObject.target.id);
+		var pocastEntryId = 'podcast_' + eventObject.currentTarget.id;
+		bgPage.podcastManager.deletePodcast(eventObject.currentTarget.id);
 		$('.podcastEntry').each(function() {
 			if( $( this )[0].id === pocastEntryId) {
 				$( this ).hide();
@@ -22,8 +22,8 @@ function updatePodcastList() {
 	})
 
 	$('.updatePodcast').click(function(eventObject) {
-		var pocastEntryId = 'podcast_' + eventObject.target.id;
-		bgPage.podcastManager.updatePodcast(eventObject.target.id, function() {
+		var pocastEntryId = 'podcast_' + eventObject.currentTarget.id;
+		bgPage.podcastManager.updatePodcast(eventObject.currentTarget.id, function() {
 			updatePodcastList();
 		});
 		updatePodcastList();
