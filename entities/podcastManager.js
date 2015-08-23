@@ -82,12 +82,22 @@ var PodcastManager;
 		}
 
 		this.updatePodcast = function(url, callback) {
+			var podcast = this.getPodcast(url);
+
+			podcast.update(callback);
+		}
+
+		this.getPodcast = function(url) {
+			var podcast;
+
 			this.podcastList.forEach(function(item) {
 				if( item.url === url) {
-					item.update(callback);
+					podcast = item;
 					return false;
 				}
 			});
+
+			return podcast;
 		}
 
 		this.deleteAllPodcasts = function () {

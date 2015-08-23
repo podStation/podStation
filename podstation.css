@@ -41,16 +41,15 @@ td {
 #contentBoxMenu {
 	float: right;
 	padding: 15px;
-
 }
 
-div#podcasts {
+.mainContentBox {
 	padding: 15px;
 	border-radius: 5px;
 	background-color: Gainsboro;
 }
 
-.podcastEntry {
+.podcastEntry, .episodeEntry {
 	background-color: orange;
 	margin: 7px;
 	margin-left: 0px;
@@ -58,12 +57,12 @@ div#podcasts {
 	padding: 5px;
 }
 
-.podcastMenu {
+.itemMenu {
 	float: right;
 	padding: 10px,
 }
 
-.podcastTextView {
+.textView {
 	padding-left: 20px;
 	width: 820px;
 }
