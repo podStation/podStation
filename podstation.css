@@ -84,6 +84,10 @@ td {
 	font-weight: bold;
 }
 
+.itemDescription {
+	padding-top: 10px;
+}
+
 .itemDescription a {
 	color: deepskyblue;
 }
