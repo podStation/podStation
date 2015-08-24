@@ -10,6 +10,21 @@ jQuery.ajax({
 	async: false
 });
 
+getStatusClass = function (status) {
+	if(status === 'updating') {
+		return 'fa-refresh fa-spin';
+	}
+	else if(status === 'loaded') {
+		return 'fa-thumbs-up';
+	}
+	else if(status === 'failed') {
+		return 'fa-thumbs-down';
+	}
+	else {
+		return 'fa-question-circle'
+	}
+}
+
 function renderPodcast(podcast) {
 	var podcastHTML;
 	var podcastForTemplate;
@@ -21,7 +36,7 @@ function renderPodcast(podcast) {
 		url: podcast.url,
 		description: podcast.description,
 		episodesNumber: podcast.episodes.length,
-		status: podcast.status
+		statusClass: getStatusClass(podcast.status)
 	};
 
 	var renderedHTML = Mustache.render(podcastTemplate, podcastForTemplate);
