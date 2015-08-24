@@ -22,6 +22,7 @@ function updatePodcastList() {
 	})
 
 	$('.updatePodcast').click(function(eventObject) {
+		eventObject.preventDefault();
 		var pocastEntryId = 'podcast_' + eventObject.currentTarget.id;
 		bgPage.podcastManager.updatePodcast(eventObject.currentTarget.id, function() {
 			updatePodcastList();
