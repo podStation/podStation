@@ -54,6 +54,13 @@ td {
 	background-color: Gainsboro;*/
 }
 
+.itemMenu {
+	float: right;
+	padding: 10px;
+	position: absolute;
+	right: 0px;
+}
+
 .podcastEntry, .episodeEntry {
 	/*background-color: orange;*/
 	/*background-color: lightblue;*/
@@ -72,16 +79,17 @@ td {
 	background-color: white;
 }
 
-.podcastTitle {
+.itemTitle {
 	font-size: 20px;
 	font-weight: bold;
 }
 
-.itemMenu {
-	float: right;
-	padding: 10px;
-	position: absolute;
-	right: 0px;
+.itemDescription a {
+	color: deepskyblue;
+}
+
+.itemDescription a:hover {
+	color: deepskyblue;
 }
 
 .textView {

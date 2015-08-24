@@ -11,13 +11,15 @@
 			</td>
 			<td>
 				<div class="textView">
-					<a href="{{link}}"><span class="podcastTitle">{{title}}</span></a> -
+					<a href="{{link}}"><span class="itemTitle podcastTitle">{{title}}</span></a> -
 					<a href="#Episodes" class="linkToEpisodes" id="{{url}}">
 						<span class="episodes">{{episodesNumber}} Episode(s)</span>
 					</a>
 					<br>
 					<span class="podcastStatus">Status: <i class="fa {{statusClass}}"></i></span>
-					<p>{{description}}</p>
+					<div class="itemDescription">
+						{{description}}
+					<div class="itemDescription">
 				</div>
 			</td>
 		</tr>
