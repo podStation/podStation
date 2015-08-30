@@ -23,7 +23,10 @@ showEpisodes = function(urlOrPodcast) {
 
 	$('#contentBoxIn').html(
 		'<div id="episodes" class="mainContentBox">' +
-			'<h1>Episodes from ' + podcast.title + '</h1>' +
+			'<table><tbody><tr>' +
+			'<td><img height="50" src="' + podcast.image + '"></img></td>' +
+			'<td><h1 class="sectionTitle episodesSectionTitle">Episodes from ' + podcast.title + '</h1></td>' +
+			'</tr></tbody></table>' +
 			'<div id="episodeList">' +
 			'</div>' +
 		'</div>'
@@ -35,7 +38,7 @@ showEpisodes = function(urlOrPodcast) {
 showPodcasts = function() {
 	$('#contentBoxIn').html(
 		'<div id="podcasts" class="mainContentBox">' +
-			'<h1>Podcasts</h1>' +
+			'<h1 class="sectionTitle">Podcasts</h1>' +
 			'<div id="podcastList">' +
 			'</div>' +
 		'</div>'
@@ -60,7 +63,6 @@ function processHash() {
 	else {
 		showPodcasts();
 	}
-
 }
 
 $(document).ready(function() {

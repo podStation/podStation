@@ -54,6 +54,10 @@ td {
 	background-color: Gainsboro;*/
 }
 
+.sectionTitle {
+	font-size: 30px;
+}
+
 .itemMenu {
 	font-size: 12px;
 	float: right;
