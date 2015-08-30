@@ -66,6 +66,15 @@ function processHash() {
 }
 
 $(document).ready(function() {
+	$('#updateAll').click(function(event) {
+		event.preventDefault();
+
+		var bgPage = chrome.extension.getBackgroundPage();
+
+		bgPage.podcastManager.updatePodcast('', updatePodcastList);
+		updatePodcastList();
+	});
+
 	processHash();
 });
 

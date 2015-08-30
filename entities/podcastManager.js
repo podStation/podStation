@@ -82,9 +82,17 @@ var PodcastManager;
 		}
 
 		this.updatePodcast = function(url, callback) {
-			var podcast = this.getPodcast(url);
+			if(url !== '') {
+				var podcast;
+				podcast = this.getPodcast(url);
 
-			podcast.update(callback);
+				podcast.update(callback);
+			}
+			else {
+				this.podcastList.forEach(function(podcast) {
+					podcast.update(callback);
+				});
+			}
 		}
 
 		this.getPodcast = function(url) {
