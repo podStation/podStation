@@ -15,13 +15,13 @@ getStatusClass = function (status) {
 		return 'fa-refresh fa-spin';
 	}
 	else if(status === 'loaded') {
-		return 'fa-thumbs-up';
+		return 'fa-check';
 	}
 	else if(status === 'failed') {
-		return 'fa-thumbs-down';
+		return 'fa-close';
 	}
 	else {
-		return 'fa-question-circle'
+		return 'fa-question'
 	}
 }
 
