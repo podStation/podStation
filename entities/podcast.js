@@ -99,6 +99,7 @@ var Podcast = function(url) {
 				that.link = storedPodcast.link;
 				that.image = storedPodcast.image;
 				that.episodes = storedPodcast.episodes;
+				that.status = 'loaded';
 
 				if(typeof callback === "function") {
 					callback(that);
