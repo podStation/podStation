@@ -55,6 +55,7 @@ td {
 }
 
 .itemMenu {
+	font-size: 12px;
 	float: right;
 	padding: 10px;
 	position: absolute;
