@@ -25,11 +25,12 @@ getStatusClass = function (status) {
 	}
 }
 
-function renderPodcast(podcast) {
+function renderPodcast(podcast, index) {
 	var podcastHTML;
 	var podcastForTemplate;
 
 	podcastForTemplate = {
+		index: index,
 		link: podcast.link,
 		title: podcast.title ? podcast.title : podcast.url,
 		image: podcast.image,

@@ -10,9 +10,16 @@ updateEpisodeList = function(podcast) {
 	episodeListElement.html(listHTML);
 }
 
-showEpisodes = function(url) {
+showEpisodes = function(urlOrPodcast) {
 	var bgPage = chrome.extension.getBackgroundPage();
-	var podcast = bgPage.podcastManager.getPodcast(url);
+	var podcast;
+
+	if(typeof urlOrPodcast === "string") {
+		podcast = bgPage.podcastManager.getPodcast(urlOrPodcast);
+	}
+	else {
+		podcast = urlOrPodcast;
+	}
 
 	$('#contentBoxIn').html(
 		'<div id="episodes" class="mainContentBox">' +
@@ -35,12 +42,31 @@ showPodcasts = function() {
 	);
 
 	updatePodcastList();
+}
 
-	$('.linkToEpisodes').click(function(eventObject) {
-		showEpisodes(eventObject.currentTarget.id);
-	})
+function processHash() {
+	if(window.location.hash === '#Podcasts') {
+		showPodcasts();
+	}
+	else if(window.location.hash.indexOf('#Episodes/') === 0) {
+		var hash = window.location.hash;
+		var podcastIndex = hash.substring('#Episodes/'.length, hash.length);
+
+		var bgPage = chrome.extension.getBackgroundPage();
+		var podcast = bgPage.podcastManager.podcastList[podcastIndex];
+
+		showEpisodes(podcast);
+	}
+	else {
+		showPodcasts();
+	}
+
 }
 
 $(document).ready(function() {
-	showPodcasts();
+	processHash();
+});
+
+$(window).on('hashchange', function() {
+	processHash();
 });

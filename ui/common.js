@@ -5,8 +5,8 @@ function updatePodcastList() {
 
 	var listHTML = '';
 
-	bgPage.podcastManager.podcastList.forEach(function(podcast) {
-		listHTML += renderPodcast(podcast);
+	bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
+		listHTML += renderPodcast(podcast, index);
 	});
 
 	podcastListElement.html(listHTML);
