@@ -11,7 +11,9 @@
 			</td>
 			<td>
 				<div class="textView">
-					<a href="{{link}}"><span class="itemTitle podcastTitle">{{title}}</span></a> -
+					{{#link}}<a href="{{link}}" target="_blank">{{/link}}
+						<span class="itemTitle podcastTitle">{{title}}</span>
+					{{#link}}</a>{{/link}}
 					<a href="#Episodes/{{index}}" class="linkToEpisodes" id="{{url}}">
 						<span class="episodes">{{episodesNumber}} Episode(s)</span>
 					</a>

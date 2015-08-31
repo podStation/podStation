@@ -7,7 +7,9 @@
 					<a href="{{url}}" download><i class="fa fa-download"></i></a>
 				</div>
 				<div class="textView">
-					<a href="{{link}}"><span class="itemTitle episodeTitle">{{title}}</span></a>
+					{{#link}}<a href="{{link}}" target="_blank">{{/link}}
+						<span class="itemTitle episodeTitle">{{title}}</span>
+					{{#link}}</a>{{/link}}
 					<p>{{pubDate}}</p>
 					<div class="itemDescription">
 						{{{description}}}
