@@ -83,7 +83,12 @@ var Podcast = function(url) {
 				return dateB - dateA;
 			});
 
-			if((that.pubDate === undefined || that.pubDate === '') && that.episodes[0] && that.episodes[0].pubDate) {
+			if(that.episodes[0] && that.episodes[0].pubDate  &&
+				(
+					that.pubDate === undefined || that.pubDate === '' ||
+					(new Date(that.episodes[0].pubDate)) > (new Date(that.pubDate))
+				)
+			) {
 				that.pubDate = that.episodes[0].pubDate;
 			}
 
