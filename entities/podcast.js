@@ -16,6 +16,7 @@ var Podcast = function(url) {
 		storedPodcast.title = this.title;
 		storedPodcast.description = this.description;
 		storedPodcast.link = this.link;
+		storedPodcast.pubDate = this.pubDate;
 		storedPodcast.image = this.image;
 		storedPodcast.episodes = this.episodes;
 
@@ -39,8 +40,13 @@ var Podcast = function(url) {
 			that.title = xml.find('rss > channel > title').text();
 			that.description = xml.find('rss > channel > description').text();
 			that.link = xml.find('rss > channel > link').text();
-			that.image = xml.find('rss > channel > image > url').text();
 
+			that.pubDate = xml.find('rss > channel > pubDate').text();
+			if(that.pubDate === '') {
+				that.pubDate = xml.find('rss > channel > lastBuildDate').text();
+			}
+
+			that.image = xml.find('rss > channel > image > url').text();
 			if(that.image === "") {
 				that.image = xml.find('rss > channel > image').attr('href');
 			}
@@ -72,6 +78,10 @@ var Podcast = function(url) {
 				return dateB - dateA;
 			});
 
+			if((that.pubDate === undefined || that.pubDate === '') && that.episodes[0] && that.episodes[0].pubDate) {
+				that.pubDate = that.episodes[0].pubDate;
+			}
+
 			that.status = 'loaded';
 
 			that.store();
@@ -97,6 +107,7 @@ var Podcast = function(url) {
 				that.title = storedPodcast.title;
 				that.description = storedPodcast.description;
 				that.link = storedPodcast.link;
+				that.pubDate = storedPodcast.pubDate;
 				that.image = storedPodcast.image;
 				that.episodes = storedPodcast.episodes;
 				that.status = 'loaded';
