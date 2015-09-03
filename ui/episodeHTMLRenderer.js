@@ -18,7 +18,7 @@ function renderEpisode(episode) {
 		title: episode.title ? episode.title : episode.url,
 		url: episode.enclosure.url,
 		description: episode.description,
-		pubDate: episode.pubDate
+		pubDate: formatDate(new Date(episode.pubDate))
 	};
 
 	var renderedHTML = Mustache.render(episodeTemplate, episodeForTemplate);
