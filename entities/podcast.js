@@ -37,6 +37,11 @@ var Podcast = function(url) {
 		$.get(this.url, function(data) {
 			var xml = $(data);
 
+			if(!xml.find('rss > channel')[0]) {
+				that.status = 'failed';
+				return;
+			}
+
 			that.title = xml.find('rss > channel > title').text();
 			that.description = xml.find('rss > channel > description').text();
 			that.link = xml.find('rss > channel > link').text();
