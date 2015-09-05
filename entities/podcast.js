@@ -1,6 +1,6 @@
 var Podcast = function(url) {
 	this.url = url;
-	this.image = 'images/rss_small.png';
+	this.image = 'images/rss-alt-8x.png';
 	this.status = 'new';
 	this.episodes = [];
 
