@@ -1,4 +1,4 @@
-updateEpisodeList = function(podcast) {
+updateEpisodeListWithPodcast = function(podcast) {
 	var episodeListElement = $('#episodeList');
 
 	var listHTML = '';
@@ -32,7 +32,33 @@ showEpisodes = function(urlOrPodcast) {
 		'</div>'
 	);
 
-	updateEpisodeList(podcast);
+	updateEpisodeListWithPodcast(podcast);
+}
+
+updateEpisodeListWithContainers = function(episodeContainers) {
+	var episodeListElement = $('#episodeList');
+
+	var listHTML = '';
+
+	episodeContainers.forEach(function(episodeContainer) {
+		listHTML += renderEpisode(episodeContainer.episode, episodeContainer.podcast);
+	});
+
+	episodeListElement.html(listHTML);
+}
+
+showLastEpisodes = function(numberOfEpisodes) {
+	var bgPage = chrome.extension.getBackgroundPage();
+
+	$('#contentBoxIn').html(
+		'<div id="episodes" class="mainContentBox">' +
+			'<h1 class="sectionTitle episodesSectionTitle">Last Episodes</h1>' +
+			'<div id="episodeList">' +
+			'</div>' +
+		'</div>'
+	);
+
+	updateEpisodeListWithContainers(bgPage.podcastManager.getAllEpisodes().slice(0,numberOfEpisodes));
 }
 
 showPodcasts = function() {
@@ -48,11 +74,17 @@ showPodcasts = function() {
 }
 
 function processHash() {
-	if(window.location.hash === '#Podcasts') {
+	var hash = window.location.hash;
+
+	if(hash.indexOf('#LastEpisodes/') === 0) {
+		var numberOfEpisodes = hash.substring('#LastEpisodes/'.length, hash.length);
+
+		showLastEpisodes(numberOfEpisodes);
+	}
+	else if(hash === '#Podcasts') {
 		showPodcasts();
 	}
-	else if(window.location.hash.indexOf('#Episodes/') === 0) {
-		var hash = window.location.hash;
+	else if(hash.indexOf('#Episodes/') === 0) {
 		var podcastIndex = hash.substring('#Episodes/'.length, hash.length);
 
 		var bgPage = chrome.extension.getBackgroundPage();
@@ -61,7 +93,7 @@ function processHash() {
 		showEpisodes(podcast);
 	}
 	else {
-		showPodcasts();
+		showLastEpisodes(20);
 	}
 }
 

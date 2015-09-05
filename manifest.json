@@ -15,6 +15,7 @@
 	"background": {
 		"scripts": [
 			"lib/jquery-2.1.4.min.js",
+			"reuse/comparison.js",
 			"entities/podcast.js",
 			"entities/podcastManager.js",
 			"podstation_bg.js"

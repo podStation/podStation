@@ -9,13 +9,14 @@ jQuery.ajax({
 	async: false
 });
 
-function renderEpisode(episode) {
+function renderEpisode(episode, podcast) {
 	var episodeHTML;
 	var episodeForTemplate;
 
 	episodeForTemplate = {
 		link: episode.link,
 		title: episode.title ? episode.title : episode.url,
+		image: podcast ? podcast.image : undefined,
 		url: episode.enclosure.url,
 		description: episode.description,
 		pubDate: formatDate(new Date(episode.pubDate))

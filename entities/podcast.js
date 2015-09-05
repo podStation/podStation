@@ -77,11 +77,7 @@ var Podcast = function(url) {
 				that.episodes.push(episode);
 			});
 
-			that.episodes.sort(function(a, b){
-				var dateA = new Date(a.pubDate);
-				var dateB = new Date(b.pubDate);
-				return dateB - dateA;
-			});
+			that.episodes.sort(byPubDateDescending);
 
 			if(that.episodes[0] && that.episodes[0].pubDate  &&
 				(

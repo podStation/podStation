@@ -116,6 +116,26 @@ var PodcastManager;
 			this.podcastList = [];
 		}
 
+		this.getAllEpisodes = function() {
+			var allEpisodes = [];
+
+			this.podcastList.forEach(function(podcast) {
+				podcast.episodes.forEach(function(episode) {
+					var episodeContainer = {
+						podcast: podcast,
+						episode: episode,
+						pubDate: episode.pubDate // to facilitate reuse of sorting function
+					};
+
+					allEpisodes.push(episodeContainer);
+				})
+			});
+
+			allEpisodes.sort(byPubDateDescending);
+
+			return allEpisodes;
+		}
+
 		instance = this;
 
 		loadPodcasts = function() {
