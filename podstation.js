@@ -121,8 +121,8 @@ $(document).ready(function() {
 		event.preventDefault();
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
-			bgPage.podcastManager.updatePodcast('', updatePodcastList);
-			updatePodcastList();
+			bgPage.podcastManager.updatePodcast('', processHash);
+			processHash();
 		});
 	});
 
