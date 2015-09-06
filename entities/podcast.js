@@ -34,6 +34,8 @@ var Podcast = function(url) {
 
 		this.status = 'updating';
 
+		$.ajaxSetup({cache: false});
+
 		$.get(this.url, function(data) {
 			var xml = $(data);
 
