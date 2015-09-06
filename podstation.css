@@ -94,12 +94,16 @@ td {
 	padding-top: 10px;
 }
 
-.itemDescription a {
+.itemDescription a, #aboutContent a {
 	color: deepskyblue;
 }
 
-.itemDescription a:hover {
+.itemDescription a:hover, #aboutContent a:hover {
 	color: deepskyblue;
+}
+
+#aboutContent {
+	font-size: medium;
 }
 
 .textView {

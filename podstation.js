@@ -74,6 +74,20 @@ showPodcasts = function() {
 	updatePodcastList();
 }
 
+function showAbout() {
+	$('#contentBoxIn').html(
+		'<div id="about" class="mainContentBox">' +
+			'<h1 class="sectionTitle">About</h1>' +
+			'<div id="aboutContent">' +
+			'</div>' +
+		'</div>'
+	);
+
+	$.get('ui/about.html').done(function(data) {
+		$('#aboutContent').html(data);
+	});
+}
+
 function processHash() {
 	var hash = window.location.hash;
 
@@ -93,6 +107,9 @@ function processHash() {
 
 			showEpisodes(podcast);
 		});
+	}
+	else if(hash === '#About') {
+		showAbout();
 	}
 	else {
 		showLastEpisodes(20);
