@@ -11,28 +11,29 @@ updateEpisodeListWithPodcast = function(podcast) {
 }
 
 showEpisodes = function(urlOrPodcast) {
-	var bgPage = chrome.extension.getBackgroundPage();
-	var podcast;
+	chrome.runtime.getBackgroundPage(function(bgPage) {
+		var podcast;
 
-	if(typeof urlOrPodcast === "string") {
-		podcast = bgPage.podcastManager.getPodcast(urlOrPodcast);
-	}
-	else {
-		podcast = urlOrPodcast;
-	}
+		if(typeof urlOrPodcast === "string") {
+			podcast = bgPage.podcastManager.getPodcast(urlOrPodcast);
+		}
+		else {
+			podcast = urlOrPodcast;
+		}
 
-	$('#contentBoxIn').html(
-		'<div id="episodes" class="mainContentBox">' +
-			'<table><tbody><tr>' +
-			'<td><img height="50" src="' + podcast.image + '"></img></td>' +
-			'<td><h1 class="sectionTitle episodesSectionTitle">Episodes from ' + podcast.title + '</h1></td>' +
-			'</tr></tbody></table>' +
-			'<div id="episodeList">' +
-			'</div>' +
-		'</div>'
-	);
+		$('#contentBoxIn').html(
+			'<div id="episodes" class="mainContentBox">' +
+				'<table><tbody><tr>' +
+				'<td><img height="50" src="' + podcast.image + '"></img></td>' +
+				'<td><h1 class="sectionTitle episodesSectionTitle">Episodes from ' + podcast.title + '</h1></td>' +
+				'</tr></tbody></table>' +
+				'<div id="episodeList">' +
+				'</div>' +
+			'</div>'
+		);
 
-	updateEpisodeListWithPodcast(podcast);
+		updateEpisodeListWithPodcast(podcast);
+	});
 }
 
 updateEpisodeListWithContainers = function(episodeContainers) {
@@ -48,17 +49,17 @@ updateEpisodeListWithContainers = function(episodeContainers) {
 }
 
 showLastEpisodes = function(numberOfEpisodes) {
-	var bgPage = chrome.extension.getBackgroundPage();
+	chrome.runtime.getBackgroundPage(function(bgPage) {
+		$('#contentBoxIn').html(
+			'<div id="episodes" class="mainContentBox">' +
+				'<h1 class="sectionTitle episodesSectionTitle">Last Episodes</h1>' +
+				'<div id="episodeList">' +
+				'</div>' +
+			'</div>'
+		);
 
-	$('#contentBoxIn').html(
-		'<div id="episodes" class="mainContentBox">' +
-			'<h1 class="sectionTitle episodesSectionTitle">Last Episodes</h1>' +
-			'<div id="episodeList">' +
-			'</div>' +
-		'</div>'
-	);
-
-	updateEpisodeListWithContainers(bgPage.podcastManager.getAllEpisodes().slice(0,numberOfEpisodes));
+		updateEpisodeListWithContainers(bgPage.podcastManager.getAllEpisodes().slice(0,numberOfEpisodes));
+	});
 }
 
 showPodcasts = function() {
@@ -87,10 +88,11 @@ function processHash() {
 	else if(hash.indexOf('#Episodes/') === 0) {
 		var podcastIndex = hash.substring('#Episodes/'.length, hash.length);
 
-		var bgPage = chrome.extension.getBackgroundPage();
-		var podcast = bgPage.podcastManager.podcastList[podcastIndex];
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			var podcast = bgPage.podcastManager.podcastList[podcastIndex];
 
-		showEpisodes(podcast);
+			showEpisodes(podcast);
+		});
 	}
 	else {
 		showLastEpisodes(20);
@@ -101,10 +103,10 @@ $(document).ready(function() {
 	$('#updateAll').click(function(event) {
 		event.preventDefault();
 
-		var bgPage = chrome.extension.getBackgroundPage();
-
-		bgPage.podcastManager.updatePodcast('', updatePodcastList);
-		updatePodcastList();
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			bgPage.podcastManager.updatePodcast('', updatePodcastList);
+			updatePodcastList();
+		});
 	});
 
 	processHash();

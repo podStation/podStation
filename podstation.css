@@ -41,6 +41,7 @@ td {
 #contentBoxMenu {
 	float: right;
 	padding: 15px;
+	padding-right: 0px;
 }
 
 #mainTitle {
