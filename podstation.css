@@ -95,11 +95,11 @@ td {
 }
 
 .itemDescription a, #aboutContent a {
-	color: deepskyblue;
+	color: darkgrey;
 }
 
 .itemDescription a:hover, #aboutContent a:hover {
-	color: deepskyblue;
+	color: darkgrey;
 }
 
 #aboutContent {
