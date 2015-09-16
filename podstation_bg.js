@@ -10,4 +10,23 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 	});
 });
 
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+	if(request.action === 'feedFound') {
+		chrome.browserAction.setBadgeText({
+			text: '!?',
+			tabId: sender.tab.id
+		});
+
+		chrome.browserAction.setTitle({
+			title: 'podStation - a feed was found! click to add...',
+			tabId: sender.tab.id
+		});
+
+		chrome.browserAction.setPopup({
+			popup: 'popup.html',
+			tabId: sender.tab.id
+		})
+	}
+});
+
 window.podcastManager = new PodcastManager();
