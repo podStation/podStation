@@ -8,13 +8,26 @@ $(document).ready(function() {
 			if(response.length) {
 				var html = '';
 
-				response.forEach(function(item) {
-					html += '<p>' + item.title + ' - ' + item.feed + '</p>';
-				});
+				html = renderFeedsInPage(response);
 
 				$('#feedsInPage').html(html);
+
+				$('#open').click(function(event) {
+					event.preventDefault();
+					chrome.runtime.getBackgroundPage(function(bgPage) {
+						bgPage.openPodStation();
+					});
+				});
+
+				$('.addPodcast').click(function(event) {
+					event.preventDefault();
+
+					chrome.runtime.getBackgroundPage(function(bgPage) {
+						bgPage.podcastManager.addPodcast(event.currentTarget.id)
+						bgPage.openPodStation('Podcasts');
+					});
+				});
 			}
 		});
 	});
-
 });

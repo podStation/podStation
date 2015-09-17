@@ -1,10 +1,18 @@
 var feedList = [];
+
+function absolutePath(href) {
+	var link = document.createElement("a");
+	link.href = href;
+	return (link.protocol + "//" + link.host + link.pathname +l ink.search + link.hash);
+}
+
 $(document).ready(function() {
 	$("link[rel='alternate']").each(function(){
 		var link = $(this);
 
-		//todo: check if is type application/*xml (could be atom or rss)
-		// if(link.attr('type').match())
+		if(link.attr('type') !== 'application/rss+xml') {
+			return true;
+		}
 
 		chrome.runtime.sendMessage({
 			action: 'feedFound',
@@ -13,7 +21,7 @@ $(document).ready(function() {
 		if(link.attr('href')) {
 			feedList.push({
 				title: link.attr('title') ? link.attr('title') : document.title,
-				feed: link.attr('href')
+				feed: absolutePath(link.attr('href'))
 			});
 		}
 	});

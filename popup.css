@@ -1,3 +1,13 @@
 .popup_body {
-	width: 400px;
+	width: auto;
+	min-width: 300px;
+}
+
+td {
+	padding: 4px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background-color: lightgrey;
+	vertical-align: middle;
+	font-size: small;
 }
