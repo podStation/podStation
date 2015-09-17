@@ -3,7 +3,7 @@ var feedList = [];
 function absolutePath(href) {
 	var link = document.createElement("a");
 	link.href = href;
-	return (link.protocol + "//" + link.host + link.pathname +l ink.search + link.hash);
+	return (link.protocol + "//" + link.host + link.pathname +link.search + link.hash);
 }
 
 $(document).ready(function() {

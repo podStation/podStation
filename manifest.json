@@ -1,7 +1,7 @@
 {
 	"name": "podStation",
 	"description": "A podcast aggregator for Chrome",
-	"version": "1.1.0",
+	"version": "1.1.1",
 	"icons": {
 		"8": "images/rss-alt.png",
 		"16": "images/rss-alt-2x.png",
