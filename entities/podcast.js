@@ -1,6 +1,8 @@
 var Podcast = function(url) {
+	var defaultImage = 'images/rss-alt-8x.png';
+
 	this.url = url;
-	this.image = 'images/rss-alt-8x.png';
+	this.image = defaultImage;
 	this.status = 'new';
 	this.episodes = [];
 
@@ -54,8 +56,11 @@ var Podcast = function(url) {
 			}
 
 			that.image = xml.find('rss > channel > image > url').text();
-			if(that.image === "") {
+			if(that.image === undefined || that.image === "") {
 				that.image = xml.find('rss > channel > image').attr('href');
+			}
+			if(that.image === undefined || that.image === "") {
+				that.image = defaultImage;
 			}
 
 			that.episodes = [];
