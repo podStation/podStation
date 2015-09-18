@@ -14,12 +14,16 @@
 					{{#link}}<a href="{{link}}" target="_blank">{{/link}}
 						<span class="itemTitle podcastTitle">{{title}}</span>
 					{{#link}}</a>{{/link}}
-					<a href="#Episodes/{{index}}" class="linkToEpisodes" id="{{url}}">
-						<span class="episodes">{{episodesNumber}} Episode(s)</span>
-					</a>
+					{{#episodesNumber}}
+						<a href="#Episodes/{{index}}" class="linkToEpisodes" id="{{url}}">
+							<span class="episodes">{{episodesNumber}} Episode(s)</span>
+						</a>
+					{{/episodesNumber}}
 					<br>
-					<span>Publication date: {{pubDate}}</span>
-					<br>
+					{{#pubDate}}
+						<span>Publication date: {{pubDate}}</span>
+						<br>
+					{{/pubDate}}
 					<span class="podcastStatus">Status: <i class="fa {{statusClass}}"></i></span>
 					<div class="itemDescription">
 						{{description}}

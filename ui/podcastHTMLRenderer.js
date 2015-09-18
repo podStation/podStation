@@ -37,7 +37,7 @@ function renderPodcast(podcast, index) {
 		url: podcast.url,
 		description: podcast.description,
 		episodesNumber: podcast.episodes.length,
-		pubDate: formatDate(new Date(podcast.pubDate)),
+		pubDate: podcast.pubDate ? formatDate(new Date(podcast.pubDate)) : undefined,
 		statusClass: getStatusClass(podcast.status)
 	};
 
