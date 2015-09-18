@@ -8,8 +8,10 @@
 			{{/image}}
 			<td>
 				<div class="itemMenu">
-					<a href="{{url}}" target="_blank"><i class="fa fa-play"></i></a> |
-					<a href="{{url}}" download><i class="fa fa-download"></i></a>
+					{{#url}}
+						<a href="{{url}}" target="_blank"><i class="fa fa-play"></i></a> |
+						<a href="{{url}}" download><i class="fa fa-download"></i></a>
+					{{/url}}
 				</div>
 				<div class="textView">
 					{{#link}}<a href="{{link}}" target="_blank">{{/link}}
