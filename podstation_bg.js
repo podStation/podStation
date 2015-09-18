@@ -3,13 +3,10 @@ window.openPodStation = function(hash) {
 		if(tabs.length) {
 			chrome.tabs.update(tabs[0].id, {active: true});
 			chrome.windows.update(tabs[0].windowId, {focused: true});
-			/*if(hash) {
-				chrome.windows.get(tabs[0].windowId, function(tabWindow) {
-					tabWindow.location.hash = '#' + hash;
-				});
-			}*/
 
-			chrome.tabs.update(tabs[0].id, {url: '/podstation.html' + ( hash ? '#' + hash : '')});
+			if(hash) {
+				chrome.tabs.update(tabs[0].id, {url: '/podstation.html' + '#' + hash });
+			}
 		}
 		else {
 			window.open('/podstation.html' + ( hash ? '#' + hash : ''));
