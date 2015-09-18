@@ -46,11 +46,11 @@ var PodcastManager;
 						url: url
 					};
 
-					syncPodcastList.push(podcastForSync);
+					syncPodcastList.unshift(podcastForSync);
 
 					var podcast = new Podcast(podcastForSync.url);
 
-					that.podcastList.push(podcast);
+					that.podcastList.unshift(podcast);
 
 					podcast.load(afterLoad);
 
