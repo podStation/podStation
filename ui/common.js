@@ -26,7 +26,7 @@ function updatePodcastList() {
 					$( this ).hide();
 				}
 			});
-		})
+		});
 
 		$('.updatePodcast').click(function(eventObject) {
 			eventObject.preventDefault();
@@ -35,7 +35,7 @@ function updatePodcastList() {
 				updatePodcastList();
 			});
 			updatePodcastList();
-		})
+		});
 	});
 }
 
