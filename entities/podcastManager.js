@@ -95,15 +95,20 @@ var PodcastManager;
 			}
 		}
 
-		this.getPodcast = function(url) {
+		this.getPodcast = function(urlOrIndex) {
 			var podcast;
 
-			this.podcastList.forEach(function(item) {
-				if( item.url === url) {
-					podcast = item;
-					return false;
-				}
-			});
+			if(typeof urlOrIndex === "string") {
+				this.podcastList.forEach(function(item) {
+					if( item.url === urlOrIndex) {
+						podcast = item;
+						return undefined;
+					}
+				});
+			}
+			else {
+				podcast = this.podcastList[urlOrIndex];
+			}
 
 			return podcast;
 		}

@@ -6,7 +6,11 @@ function formatDate(date) {
 }
 
 function updatePodcastList() {
-	var podcastListElement = $('#podcastList');
+	/*var scope = angular.element(document.getElementById("MainWrap")).scope();
+  scope.$apply(function () {
+  scope.updateCustomRequest(data, type, res);
+});*/
+	/*var podcastListElement = $('#podcastList');
 
 	chrome.runtime.getBackgroundPage(function(bgPage) {
 		var listHTML = '';
@@ -36,16 +40,17 @@ function updatePodcastList() {
 			});
 			updatePodcastList();
 		});
-	});
+	});*/
 }
 
-$( document ).ready( function() {
+/*$( document ).ready( function() {
 	chrome.runtime.getBackgroundPage(function(bgPage) {
 		$('#addRSS').click( function() {
 			var entryBox = $('#entryBox');
 			bgPage.podcastManager.addPodcast(entryBox.val(), updatePodcastList);
 			updatePodcastList();
 			entryBox.val('');
+
 		});
 	});
-});
+});*/

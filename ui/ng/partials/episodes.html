@@ -1,0 +1,39 @@
+<div id="episodes" class="mainContentBox">
+	<table>
+		<tbody>
+			<tr>
+				<td><img height="50" ng-src="{{podcastImage}}"></img></td>
+				<td><h1 class="sectionTitle episodesSectionTitle">Episodes from {{podcastTitle}}</h1></td>
+			</tr>
+		</tbody>
+	</table>
+	<div id="episodeList">
+		<div class="episodeEntry" ng-repeat="episode in episodes">
+			<table>
+				<tr>
+					<td ng-if="episode.image">
+						<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
+					</td>
+					<td>
+						<div class="itemMenu">
+							<div ng-if="episode.url">
+								<a ng-href="{{episode.url}}" target="_blank"><i class="fa fa-play"></i></a> |
+								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
+							</div>
+						</div>
+						<div class="textView">
+							<a ng-href="{{episode.link}}" target="_blank">
+								<span class="itemTitle episodeTitle">{{episode.title}}</span>
+							</a>
+							<br>
+							<span>Publication date: {{episode.pubDate}}</span>
+							<br>
+							<div class="itemDescription" ng-bind-html="episode.description">
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

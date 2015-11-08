@@ -105,6 +105,10 @@ var Podcast = function(url) {
 
 		}).fail(function() {
 			that.status = 'failed';
+
+			if(typeof callback === "function") {
+				callback(that);
+			}
 		});
 	}
 

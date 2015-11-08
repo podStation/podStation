@@ -1,27 +1,28 @@
-<html>
+<html ng-app="podstationApp">
 	<head>
 		<title>podStation</title>
 		<script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
-		<script type="text/javascript" src="lib/mustache.min.js"></script>
-		<script type="text/javascript" src="ui/podcastHTMLRenderer.js"></script>
-		<script type="text/javascript" src="ui/episodeHTMLRenderer.js"></script>
+		<script type="text/javascript" src="lib/angular.js"></script>
+		<script type="text/javascript" src="lib/angular-route.js"></script>
+		<script type="text/javascript" src="lib/angular-sanitize.js"></script>
 		<script type="text/javascript" src="ui/common.js"></script>
+		<script type="text/javascript" src="ui/ng/podstationApp.js"></script>
 		<script type="text/javascript" src="podstation.js"></script>
 		<link rel="stylesheet" type="text/css" href="podstation.css">
 		<link rel="stylesheet" href="lib/font-awesome.min.css">
 	</head>
 	<body>
-		<div id="header">
+		<div id="header" ng-controller="headerController">
 			<div id="headerRight">
-				<input type="text" id="entryBox" />
-				<input type="button" id="addRSS" value="Add Feed"/>
+				<input type="text" id="entryBox" placeholder="Podcast feed" ng-model="entry"/>
+				<input type="button" id="addRSS" ng-click="addPodcast()" value="Add Feed"/>
 			</div>
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>
 		</div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu">
-				<a href="#Podcasts">Podcasts</a> |
-				<a href="#LastEpisodes/20">Last Episodes</a> |
+				<a href="#/Podcasts">Podcasts</a> |
+				<a href="#/LastEpisodes/20">Last Episodes</a> |
 				<a href="#" id="updateAll">Update All</a> |
 				<a href="https://www.facebook.com/podStation/" target="_blank" title="Facebook">
 					<i class="fa fa-facebook-official"></i>
@@ -29,9 +30,9 @@
 				<a href="https://bitbucket.org/dellagustin/podstation_chrome_ext/issues/new" target="_blank" title="Report a bug">
 					<i class="fa fa-bug"></i>
 				</a> |
-				<a href="#About" title="About..."><i class="fa fa-question"></i></a>
+				<a href="#/About" title="About..."><i class="fa fa-question"></i></a>
 			</div>
-			<div id="contentBoxIn">
+			<div id="contentBoxIn" ng-view>
 			<div>
 		<div>
 	</body>

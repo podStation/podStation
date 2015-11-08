@@ -1,0 +1,38 @@
+<div id="podcasts" class="mainContentBox">
+	<h1 class="sectionTitle">Podcasts</h1>
+	<div id="podcastList">
+		<div ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
+			<div class="itemMenu">
+				<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
+				<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+			</div>
+			<div>
+			<table>
+				<tr>
+					<td>
+						<img ng-src="{{podcast.image}}" class="podcastImage" width="100"></img>
+					</td>
+					<td>
+						<div class="textView">
+							<a ng-href="{{podcast.link}}" target="_blank">
+								<span title="{{podcast.url}}" class="itemTitle podcastTitle">{{podcast.title}}</span>
+							</a>
+							<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
+								<span class="episodes">{{podcast.episodesNumber}} Episode(s)</span>
+							</a>
+							<br>
+							<!--must add a check for pubdate-->
+							<span>Publication date: {{podcast.pubDate}}</span>
+							<br>
+							<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
+							<div class="itemDescription">
+								{{podcast.description}}
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+			</div>
+		</div>
+	</div>
+</div>
