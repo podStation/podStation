@@ -31,7 +31,7 @@ var Podcast = function(url) {
 		chrome.storage.local.remove(this.getKey());
 	}
 
-	this.update = function(callback) {
+	this.update = function() {
 		var that = this;
 
 		this.status = 'updating';
@@ -99,20 +99,27 @@ var Podcast = function(url) {
 
 			that.store();
 
-			if(typeof callback === "function") {
-				callback(that);
-			}
+			chrome.runtime.sendMessage({
+				type: 'podcastChanged',
+				podcast: that
+			});
 
 		}).fail(function() {
 			that.status = 'failed';
 
-			if(typeof callback === "function") {
-				callback(that);
-			}
+			chrome.runtime.sendMessage({
+				type: 'podcastChanged',
+				podcast: that
+			});
+		});
+
+		chrome.runtime.sendMessage({
+			type: 'podcastChanged',
+			podcast: this
 		});
 	}
 
-	this.load = function(callback) {
+	this.load = function() {
 		var that = this;
 
 		var podcastKey = this.getKey();
@@ -128,13 +135,9 @@ var Podcast = function(url) {
 				that.image = storedPodcast.image;
 				that.episodes = storedPodcast.episodes;
 				that.status = 'loaded';
-
-				if(typeof callback === "function") {
-					callback(that);
-				}
 			}
 			else {
-				that.update(callback);
+				that.update();
 			}
 		});
 	};

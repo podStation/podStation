@@ -1,9 +1,5 @@
 var myApp = angular.module('podstationApp', ['ngRoute', 'ngSanitize']);
 
-/*myApp.factory('podcastManagerGetter', function() {
-	var podcastManager
-});*/
-
 myApp.controller('headerController', ['$scope', function($scope) {
 	$scope.entry = "";
 
@@ -38,93 +34,132 @@ myApp.controller('podcastsController', function($scope) {
 
 	$scope.updatePodcastList = function() {
 		var that = this;
-		this.podcasts = [];
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
+			that.podcasts = [];
+
 			bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
-				var podcastForController;
+				$scope.$apply(function() {
+					var podcastForController;
 
-				podcastForController = {
-					fromStoredPodcast: function(storedPodcast) {
-						this.index = index;
-						this.link =  storedPodcast.link;
-						this.title =  storedPodcast.title ? storedPodcast.title : storedPodcast.url;
-						this.image = storedPodcast.image;
-						this.url =  storedPodcast.url;
-						this.description =  storedPodcast.description;
-						this.episodesNumber =  storedPodcast.episodes.length;
-						this.pubDate =  storedPodcast.pubDate ? formatDate(new Date(storedPodcast.pubDate)) : undefined;
-						this.statusClass =  getStatusClass(storedPodcast.status);
-					},
-					update: function() {
-						var that1 = this;
+					podcastForController = {
+						fromStoredPodcast: function(storedPodcast) {
+							this.index = index;
+							this.link =  storedPodcast.link;
+							this.title =  storedPodcast.title ? storedPodcast.title : storedPodcast.url;
+							this.image = storedPodcast.image;
+							this.url =  storedPodcast.url;
+							this.description =  storedPodcast.description;
+							this.episodesNumber =  storedPodcast.episodes.length;
+							this.pubDate =  storedPodcast.pubDate ? formatDate(new Date(storedPodcast.pubDate)) : undefined;
+							this.statusClass =  getStatusClass(storedPodcast.status);
+						},
+						update: function() {
+							var that1 = this;
 
-						bgPage.podcastManager.updatePodcast(this.url, function(storedPodcast) {
-							// as we are responting to an http request that is not done
-							// throug $http, we need to use $apply
-							$scope.$apply(function() {
-								that1.fromStoredPodcast(storedPodcast);
+							// As the bgPage is an event page, it is better not to thrust
+							// in the contet of the bgPage variable at this moment.
+							chrome.runtime.getBackgroundPage(function(bgPage) {
+								bgPage.podcastManager.updatePodcast(that1.url);
 							});
-						});
+						},
+						delete: function(storedPodcast) {
+							var that1 = this;
 
-						that1.fromStoredPodcast(bgPage.podcastManager.getPodcast(this.url));
-					},
-					delete: function(storedPodcast) {
-						bgPage.podcastManager.deletePodcast(this.url);
+							// As the bgPage is an event page, it is better not to thrust
+							// in the contet of the bgPage variable at this moment.
+							chrome.runtime.getBackgroundPage(function(bgPage) {
+								bgPage.podcastManager.deletePodcast(that1.url);
+							});
+						}
+					};
 
-						// We still use the index of the podcast in the array,
-						// therefore we need to update the whole list again.
-						$scope.updatePodcastList();
-					}
-				};
+					podcastForController.fromStoredPodcast(podcast);
 
-				podcastForController.fromStoredPodcast(podcast);
-
-				that.podcasts.push(podcastForController);
+					that.podcasts.push(podcastForController);
+				});
 			});
+		});
+	};
+
+	$scope.updatePodcast = function(storedPodcast) {
+		this.podcasts.forEach(function(podcast) {
+			if(podcast.url === storedPodcast.url) {
+				podcast.fromStoredPodcast(storedPodcast);
+				return false;
+			}
 		});
 	}
 
 	$scope.updatePodcastList();
+
+	chrome.runtime.onMessage.addListener(function(message) {
+		$scope.$apply(function() {
+			if(!message.type){
+				return;
+			}
+
+			if(message.type === 'podcastListChanged') {
+				$scope.updatePodcastList();
+			}
+			else if(message.type === 'podcastChanged') {
+				$scope.updatePodcast(message.podcast);
+			}
+		});
+	});
 });
 
-myApp.controller('lastEpisodesController', ['$scope', function($scope) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', function($scope, $routeParams) {
 	$scope.episodes = [];
 
 	$scope.updateEpisodes = function() {
 		var that = this;
-		var numberEpisodes = 20;
+		var numberEpisodes = $routeParams.numberEpisodes ? $routeParams.numberEpisodes : 20;
 		this.episodes = [];
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
-			var storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
+			$scope.$apply(function(){
+				var storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
 
-			storedEpisodeContainers.forEach(function(storedEpisodeContainer, index) {
-				var episodeForController;
+				storedEpisodeContainers.forEach(function(storedEpisodeContainer, index) {
+					var episodeForController;
 
-				if(index >= numberEpisodes) {
-					return false;
-				}
-
-				episodeForController = {
-					fromStoredEpisode: function(storedEpisodeContainer) {
-						this.link = storedEpisodeContainer.episode.link;
-						this.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
-						this.image = storedEpisodeContainer.podcast.image;
-						this.url = storedEpisodeContainer.episode.enclosure.url;
-						this.description = storedEpisodeContainer.episode.description;
-						this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
+					if(index >= numberEpisodes) {
+						return false;
 					}
-				};
 
-				episodeForController.fromStoredEpisode(storedEpisodeContainer);
+					episodeForController = {
+						fromStoredEpisode: function(storedEpisodeContainer) {
+							this.link = storedEpisodeContainer.episode.link;
+							this.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
+							this.image = storedEpisodeContainer.podcast.image;
+							this.url = storedEpisodeContainer.episode.enclosure.url;
+							this.description = storedEpisodeContainer.episode.description;
+							this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
+						}
+					};
 
-				that.episodes.push(episodeForController);
-			})
+					episodeForController.fromStoredEpisode(storedEpisodeContainer);
+
+					that.episodes.push(episodeForController);
+				});
+			});
 		});
 	};
 
 	$scope.updateEpisodes();
+
+	chrome.runtime.onMessage.addListener(function(message) {
+		$scope.$apply(function() {
+			if(!message.type){
+				return;
+			}
+
+			if(message.type === 'podcastChanged') {
+				$scope.updateEpisodes();
+			}
+		});
+	});
 }]);
 
 myApp.controller('episodesController', ['$scope', '$routeParams', function($scope, $routeParams) {
@@ -135,42 +170,58 @@ myApp.controller('episodesController', ['$scope', '$routeParams', function($scop
 		this.episodes = [];
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
-			var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
+			$scope.$apply(function(){
+				var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
 
-			that.podcastImage = storedPodcast.image;
-			that.podcastTitle = storedPodcast.title;
+				that.podcastImage = storedPodcast.image;
+				that.podcastTitle = storedPodcast.title;
 
-			storedPodcast.episodes.forEach(function(storedEpisode) {
-				var episodeForController;
+				storedPodcast.episodes.forEach(function(storedEpisode) {
+					var episodeForController;
 
-				episodeForController = {
-					fromStoredEpisode: function(storedEpisode) {
-						this.link = storedEpisode.link;
-						this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
-						// this.image = podcast ? podcast.image : undefined;
-						this.url = storedEpisode.enclosure.url;
-						this.description = storedEpisode.description;
-						this.pubDate = formatDate(new Date(storedEpisode.pubDate));
-					}
-				};
+					episodeForController = {
+						fromStoredEpisode: function(storedEpisode) {
+							this.link = storedEpisode.link;
+							this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
+							// this.image = podcast ? podcast.image : undefined;
+							this.url = storedEpisode.enclosure.url;
+							this.description = storedEpisode.description;
+							this.pubDate = formatDate(new Date(storedEpisode.pubDate));
+						}
+					};
 
-				episodeForController.fromStoredEpisode(storedEpisode);
+					episodeForController.fromStoredEpisode(storedEpisode);
 
-				that.episodes.push(episodeForController);
-			})
+					that.episodes.push(episodeForController);
+				});
+			});
 		});
 	};
 
 	$scope.updateEpisodes();
+
+	chrome.runtime.onMessage.addListener(function(message) {
+		$scope.$apply(function() {
+			if(!message.type){
+				return;
+			}
+
+			if(message.type === 'podcastChanged') {
+				$scope.updateEpisodes();
+			}
+		});
+	});
 }]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
-	$compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
+	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension):/;
+	$compileProvider.aHrefSanitizationWhitelist(whiteList);
+	$compileProvider.imgSrcSanitizationWhitelist(whiteList);
 
 	$routeProvider.when('/Podcasts', {
 		templateUrl: '/ui/ng/partials/podcasts.html',
 		controller: 'podcastsController'
-	}).when('/LastEpisodes', {
+	}).when('/LastEpisodes/:numberEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
 		controller: 'lastEpisodesController'
 	}).when('/Episodes/:podcastIndex', {
@@ -180,6 +231,6 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		templateUrl: '/ui/ng/partials/about.html',
 		controller: 'episodesController'
 	}).otherwise({
-		redirectTo: '/LastEpisodes'
+		redirectTo: '/LastEpisodes/20'
 	});
 }]);

@@ -27,7 +27,7 @@ var PodcastManager;
 			});
 		};
 
-		this.addPodcast = function(url, afterLoad) {
+		this.addPodcast = function(url) {
 			if(url !== '') {
 				var that = this;
 				loadPodcastsFromSync(function(syncPodcastList) {
@@ -52,7 +52,11 @@ var PodcastManager;
 
 					that.podcastList.unshift(podcast);
 
-					podcast.load(afterLoad);
+					podcast.load();
+
+					chrome.runtime.sendMessage({
+						type: 'podcastListChanged',
+					});
 
 					return true;
 				});
@@ -78,19 +82,23 @@ var PodcastManager;
 				});
 
 				return true;
-			})
+			});
+
+			chrome.runtime.sendMessage({
+				type: 'podcastListChanged',
+			});
 		}
 
-		this.updatePodcast = function(url, callback) {
+		this.updatePodcast = function(url) {
 			if(url !== '') {
 				var podcast;
 				podcast = this.getPodcast(url);
 
-				podcast.update(callback);
+				podcast.update();
 			}
 			else {
 				this.podcastList.forEach(function(podcast) {
-					podcast.update(callback);
+					podcast.update();
 				});
 			}
 		}
@@ -119,6 +127,10 @@ var PodcastManager;
 				item.deleteFromStorage();
 			});
 			this.podcastList = [];
+
+			chrome.runtime.sendMessage({
+				type: 'podcastListChanged',
+			});
 		}
 
 		this.getAllEpisodes = function() {
@@ -151,6 +163,10 @@ var PodcastManager;
 					instance.podcastList.push(podcast);
 
 					podcast.load();
+				});
+
+				chrome.runtime.sendMessage({
+					type: 'podcastListChanged',
 				});
 			});
 		};
