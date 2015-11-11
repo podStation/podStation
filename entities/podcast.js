@@ -6,6 +6,13 @@ var Podcast = function(url) {
 	this.status = 'new';
 	this.episodes = [];
 
+	function podcastChanged(podcast) {
+		chrome.runtime.sendMessage({
+			type: 'podcastChanged',
+			podcast: podcast
+		});
+	}
+
 	this.getKey = function() {
 		return 'podcast' + this.url;
 	}
@@ -43,6 +50,7 @@ var Podcast = function(url) {
 
 			if(!xml.find('rss > channel')[0]) {
 				that.status = 'failed';
+				podcastChanged(that);
 				return;
 			}
 
@@ -96,27 +104,16 @@ var Podcast = function(url) {
 			}
 
 			that.status = 'loaded';
-
+			podcastChanged(that);
 			that.store();
-
-			chrome.runtime.sendMessage({
-				type: 'podcastChanged',
-				podcast: that
-			});
 
 		}).fail(function() {
 			that.status = 'failed';
+			podcastChanged(that);
 
-			chrome.runtime.sendMessage({
-				type: 'podcastChanged',
-				podcast: that
-			});
 		});
 
-		chrome.runtime.sendMessage({
-			type: 'podcastChanged',
-			podcast: this
-		});
+		podcastChanged(this);
 	}
 
 	this.load = function() {
