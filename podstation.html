@@ -14,7 +14,8 @@
 	<body>
 		<div id="header" ng-controller="headerController">
 			<div id="headerRight">
-				<input type="text" id="entryBox" placeholder="Podcast feed" ng-model="entry"/>
+				<input type="text" id="entryBox" placeholder="Podcast feed or search terms..." ng-model="entry"/>
+				<input type="button" ng-click="searchPodcast()" value="Search for a podcast"/>
 				<input type="button" id="addRSS" ng-click="addPodcast()" value="Add Feed"/>
 			</div>
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>

@@ -67,7 +67,7 @@ td {
 	right: 0px;
 }
 
-.podcastEntry, .episodeEntry {
+.podcastEntry, .episodeEntry, .listEntry {
 	/*background-color: orange;*/
 	/*background-color: lightblue;*/
 	border-radius: 10px;
@@ -79,6 +79,11 @@ td {
 	padding: 5px;
 	position: relative;
 	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
+}
+
+.textView {
+	padding: 10px;
+	padding-top: 0px;
 }
 
 .podcastImage {

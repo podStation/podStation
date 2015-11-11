@@ -1,0 +1,20 @@
+<div id="podcasts" class="mainContentBox">
+	<h1 class="sectionTitle">Search Results for '{{searchTerms}}'</h1>
+	<h2>This search is provided by <a href="http://www.podcastsearchservice.com/">www.podcastsearchservice.com</a></h2>
+	<div class="listEntry" ng-repeat="searchResult in searchResults">
+		<div class="itemMenu">
+			<a href="" ng-if="!searchResult.subscribed" title="Add podcast" ng-click="searchResult.addPodcast()"><i class="fa fa-plus"></i></a>
+			<i ng-if="searchResult.subscribed" title="Hooray! you have this feed already." class="fa fa-check"></i>
+		</div>
+		<div class="textView">
+			<a ng-href="{{searchResult.link}}" target="_blank">
+				<span class="itemTitle">{{searchResult.title}}</span>
+			</a>
+			<br>
+			<div class="itemDescription">
+				{{searchResult.description}}
+			</div>
+		</div>
+	</div>
+	<h3 ng-if="!searchResults.length">Sorry, we could not find a podcast for you...</h3>
+</div>
