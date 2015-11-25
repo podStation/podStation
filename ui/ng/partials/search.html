@@ -1,6 +1,7 @@
 <div id="podcasts" class="mainContentBox">
 	<h1 class="sectionTitle">Search Results for '{{searchTerms}}'</h1>
-	<h2>Results from <a href="http://www.podcastsearchservice.com/">www.podcastsearchservice.com</a> and <a href="http://www.apple.com/itunes/">iTunes®</a></h2>
+	<h2>Results from <a href="http://www.podcastsearchservice.com/">www.podcastsearchservice.com</a> and <a href="http://www.apple.com/itunes/">iTunes</a></h2>
+	<p>iTunes is a trademark of Apple Inc., registered in the U.S. and other countries.</p>
 	<div class="listEntry" ng-repeat="searchResult in searchResults">
 		<div class="itemMenu">
 			<a href="" ng-if="!searchResult.subscribed" title="Add podcast" ng-click="searchResult.addPodcast()"><i class="fa fa-plus"></i></a>
