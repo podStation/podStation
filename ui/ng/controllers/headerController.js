@@ -1,6 +1,12 @@
 myApp.controller('headerController', ['$scope', '$location', function($scope, $location) {
 	$scope.entry = "";
 
+	$scope.editBoxKeyPress = function(event) {
+		if(event.which === 13) {
+			$scope.searchPodcast();
+		}
+	}
+
 	$scope.addPodcast = function() {
 		var podcastURL = $scope.entry;
 
@@ -9,6 +15,8 @@ myApp.controller('headerController', ['$scope', '$location', function($scope, $l
 		});
 
 		$scope.entry = "";
+
+		$location.path('/Podcasts');
 	};
 
 	$scope.searchPodcast = function() {
