@@ -65,9 +65,13 @@ myApp.controller('searchController', ['$scope', '$routeParams', '$http', '$locat
 	}
 
 	function searchInDigitalPodcast() {
-		var url = 'http://api.digitalpodcast.com/v2r/search/?appid=0f56b00cfbdc051c29b88171e67507f3&format=rssopml&keywords=' + $scope.searchTerms;
-
-		$http.get(url).then(function(response) {
+		$http.get('http://api.digitalpodcast.com/v2r/search/', {
+			params : {
+				"appid": "0f56b00cfbdc051c29b88171e67507f3",
+				"format": "rssopml",
+				"keywords": $scope.searchTerms
+			}
+		}).then(function(response) {
 
 			var xml = $($.parseXML(response.data));
 
@@ -88,9 +92,12 @@ myApp.controller('searchController', ['$scope', '$routeParams', '$http', '$locat
 	}
 
 	function searchItunes() {
-		var url = 'https://itunes.apple.com/search?media=podcast&term=' + $scope.searchTerms;
-
-		$http.get(url).then(function(response) {
+		$http.get('https://itunes.apple.com/search', {
+			params: {
+				"media": "podcast",
+				"term": $scope.searchTerms
+			}
+		}).then(function(response) {
 			response.data.results.forEach(function(result) {
 				var searchResult = new SearchResult;
 
