@@ -1,7 +1,7 @@
 var myApp = angular.module('podstationApp', ['ngRoute', 'ngSanitize']);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
-	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension):/;
+	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension|data):/;
 	$compileProvider.aHrefSanitizationWhitelist(whiteList);
 	$compileProvider.imgSrcSanitizationWhitelist(whiteList);
 

@@ -22,6 +22,49 @@ td {
 	vertical-align: top;
 }
 
+#audioPlayer {
+	margin-top: -10;
+}
+
+#playerImage {
+	width: 80px;
+	height: 80px;
+}
+
+#audioPlayer table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+#audioPlayer td {
+	background-color: black;
+	color: white;
+	padding: 10px;
+	white-space: nowrap;
+}
+
+#audioPlayer td a {
+	color: white;
+}
+
+#audioPlayer td:last-child{
+	width:100%;
+}
+
+#progressOut {
+	margin-top: 5px;
+	height: 10px;
+	background-color: white;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+#progressIn {
+	height: inherit;
+	background-color: grey;
+	border-radius: inherit;
+}
+
 #header {
 	background-color: Gainsboro;
 	height: 50px;
@@ -32,7 +75,6 @@ td {
 	float: right;
 	margin: 10px;
 }
-
 
 #entryBox {
 	width: 500px;

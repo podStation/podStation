@@ -7,6 +7,7 @@
 		<script type="text/javascript" src="lib/angular-sanitize.js"></script>
 		<script type="text/javascript" src="ui/common.js"></script>
 		<script type="text/javascript" src="ui/ng/podstationApp.js"></script>
+		<script type="text/javascript" src="ui/ng/controllers/episodePlayerController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/headerController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/podcastsController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/episodesController.js"></script>
@@ -23,6 +24,34 @@
 				<input type="button" id="addRSS" ng-click="addPodcast()" value="Add Feed"/>
 			</div>
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>
+		</div>
+		<div  ng-controller="episodePlayerController">
+			<div id="audioPlayer" ng-if="visible">
+				<table>
+					<tbody>
+						<tr>
+							<td>
+								<i class="fa fa-refresh fa-spin" ng-if="loading" title="Loading"></i>
+								<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
+								<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="Pause"></i></a>
+								<a href="" ng-click="stop()"><i class="fa fa-stop" title="Stop"></i></a>
+								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="Speed Down: {{playbackRate - 0.5}}x"></i></a>
+								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="Speed Up: {{playbackRate + 0.5}}x"></i></a>
+								<span>{{time}} / {{duration}}</span>
+							</td>
+							<td ng-if="imageUrl">
+								<img ng-src="{{imageUrl}}" id="playerImage"></img>
+							</td>
+							<td>
+								<div id="playingTitle">Playing: {{mediaTitle}}</div>
+								<div id="progressOut" ng-click="seek($event)" ng-mouseover="progressMouseOver($event)" title="{{timeMouseOver}}">
+									<div id="progressIn" style="width: {{timePercent}}%"></div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu">

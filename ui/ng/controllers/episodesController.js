@@ -1,4 +1,6 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', function($scope, $routeParams) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer',
+	function($scope, $routeParams, episodePlayer) {
+
 	$scope.episodes = [];
 
 	$scope.updateEpisodes = function() {
@@ -25,6 +27,12 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', function($
 							this.url = storedEpisodeContainer.episode.enclosure.url;
 							this.description = storedEpisodeContainer.episode.description;
 							this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
+							this.play = function() {
+								episodePlayer.play({
+									title: this.title,
+									url: this.url
+								});
+							}
 						}
 					};
 
@@ -39,19 +47,21 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', function($
 	$scope.updateEpisodes();
 
 	chrome.runtime.onMessage.addListener(function(message) {
-		$scope.$apply(function() {
-			if(!message.type){
-				return;
-			}
+		if(!message.type){
+			return;
+		}
 
-			if(message.type === 'podcastChanged') {
+		if(message.type === 'podcastChanged') {
+			$scope.$apply(function() {
 				$scope.updateEpisodes();
-			}
-		});
+			});
+		}
 	});
 }]);
 
-myApp.controller('episodesController', ['$scope', '$routeParams', function($scope, $routeParams) {
+myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer',
+	function($scope, $routeParams, episodePlayer) {
+
 	$scope.episodes = [];
 
 	$scope.updateEpisodes = function() {
@@ -76,6 +86,12 @@ myApp.controller('episodesController', ['$scope', '$routeParams', function($scop
 							this.url = storedEpisode.enclosure.url;
 							this.description = storedEpisode.description;
 							this.pubDate = formatDate(new Date(storedEpisode.pubDate));
+							this.play = function() {
+								episodePlayer.play({
+									title: this.title,
+									url: this.url
+								});
+							}
 						}
 					};
 
@@ -90,14 +106,14 @@ myApp.controller('episodesController', ['$scope', '$routeParams', function($scop
 	$scope.updateEpisodes();
 
 	chrome.runtime.onMessage.addListener(function(message) {
-		$scope.$apply(function() {
-			if(!message.type){
-				return;
-			}
+		if(!message.type){
+			return;
+		}
 
-			if(message.type === 'podcastChanged') {
+		if(message.type === 'podcastChanged') {
+			$scope.$apply(function() {
 				$scope.updateEpisodes();
-			}
-		});
+			});
+		}
 	});
 }]);
