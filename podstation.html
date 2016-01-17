@@ -35,8 +35,8 @@
 								<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
 								<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="Pause"></i></a>
 								<a href="" ng-click="stop()"><i class="fa fa-stop" title="Stop"></i></a>
-								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="Speed Down: {{playbackRate - 0.5}}x"></i></a>
-								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="Speed Up: {{playbackRate + 0.5}}x"></i></a>
+								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="Speed Down: {{nextPlaybackRateDown()}}x"></i></a>
+								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="Speed Up: {{nextPlaybackRateUp()}}x"></i></a>
 								<span>{{time}} / {{duration}}</span>
 							</td>
 							<td ng-if="imageUrl">

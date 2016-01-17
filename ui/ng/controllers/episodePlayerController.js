@@ -24,6 +24,27 @@ myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  functio
 		return date.toISOString().substr(11, 8);
 	}
 
+	playbackRateStepUp = function() {
+		return $scope.playbackRate >= 1.0 ? 0.5 : 0.05;
+	}
+
+	playbackRateStepDown = function() {
+		return -($scope.playbackRate > 1.0 ? 0.5 : 0.05);
+	}
+
+	function formatPlaybackRate (playbackRate) {
+		// we need the +0.001 because for some reason 0.95 - 0.5 = 0.8999999...
+		return parseInt((playbackRate)*100.0 + 0.001)/100.0;
+	}
+
+	$scope.nextPlaybackRateUp = function() {
+		return formatPlaybackRate($scope.playbackRate + playbackRateStepUp());
+	};
+
+	$scope.nextPlaybackRateDown = function() {
+		return formatPlaybackRate($scope.playbackRate + playbackRateStepDown());
+	};
+
 	$scope.play = function() {
 		episodePlayer.play();
 	};
@@ -37,11 +58,17 @@ myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  functio
 	};
 
 	$scope.speedDown = function() {
-		episodePlayer.shiftPlaybackRate(-0.5);
+		episodePlayer.shiftPlaybackRate(playbackRateStepDown());
+
+		// to keep it consistent we do not wait for the update from the player
+		$scope.playbackRate += playbackRateStepDown();
 	}
 
 	$scope.speedUp = function() {
-		episodePlayer.shiftPlaybackRate(0.5);
+		episodePlayer.shiftPlaybackRate(playbackRateStepUp());
+
+		// to keep it consistent we do not wait for the update from the player
+		$scope.playbackRate += playbackRateStepUp();
 	}
 
 	$scope.seek = function(event) {
