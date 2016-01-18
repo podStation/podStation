@@ -78,7 +78,9 @@ var Podcast = function(url) {
 				var episode = {};
 				var enclosure;
 
-				episode.title = feedItem.find('title').text();
+				// the selector will find 'title' for all namespaces, we may find more
+				// than one. They are in theory all the same, so we take the first.
+				episode.title = $(feedItem.find('title')[0]).text();
 				episode.link = feedItem.find('link').text();
 				episode.pubDate = feedItem.find('pubDate').text();
 				episode.description = feedItem.find('description').text();
