@@ -1,8 +1,7 @@
-<html>
+<html ng-app="podstationPopupApp">
 	<head>
 		<script type="text/javascript" src="lib/jquery-2.1.4.min.js"></script>
-		<script type="text/javascript" src="lib/mustache.min.js"></script>
-		<script type="text/javascript" src="ui/feedsInPageHTMLRenderer.js"></script>
+		<script type="text/javascript" src="lib/angular.js"></script>
 		<script type="text/javascript" src="popup.js"></script>
 		<link rel="stylesheet" type="text/css" href="podstation.css">
 		<link rel="stylesheet" type="text/css" href="popup.css">
@@ -12,9 +11,22 @@
 		<div id="header">
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation - <a id='open' href='#'>open</a></h1>
 		</div>
-		<div>
+		<div ng-controller="feedsInPageController">
 			<h2>Feeds in this page</h2>
 			<div id="feedsInPage">
+				<table>
+					<tbody>
+						<tr ng-repeat="feed in feedsInPage">
+							<td nowrap>{{feed.title}}</td>
+							<!--<td nowrap>{{feed.url}}</td>-->
+							<td>{{feed.url}}</td>
+							<td nowrap>
+								<i ng-if="feed.added" class="fa fa-check" title="Hooray! you have this feed already."></i>
+								<a ng-if="!feed.added" href='#' title="Add feed..." ng-click="feed.addPodcast()"><i class="fa fa-plus"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
 			</div>
 		</div>
 	</body>

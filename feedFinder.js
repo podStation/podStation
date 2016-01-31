@@ -21,7 +21,7 @@ $(document).ready(function() {
 		if(link.attr('href')) {
 			feedList.push({
 				title: link.attr('title') ? link.attr('title') : document.title,
-				feed: absolutePath(link.attr('href'))
+				url: absolutePath(link.attr('href'))
 			});
 		}
 	});
