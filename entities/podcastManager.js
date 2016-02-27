@@ -136,9 +136,10 @@ var PodcastManager;
 		this.getAllEpisodes = function() {
 			var allEpisodes = [];
 
-			this.podcastList.forEach(function(podcast) {
+			this.podcastList.forEach(function(podcast, podcastIndex) {
 				podcast.episodes.forEach(function(episode) {
 					var episodeContainer = {
+						podcastIndex: podcastIndex,
 						podcast: podcast,
 						episode: episode,
 						pubDate: episode.pubDate // to facilitate reuse of sorting function

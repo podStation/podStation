@@ -24,6 +24,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 							this.link = storedEpisodeContainer.episode.link;
 							this.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
 							this.image = storedEpisodeContainer.podcast.image;
+							this.podcastIndex = storedEpisodeContainer.podcastIndex;
+							this.podcastTitle = storedEpisodeContainer.podcast.title;
 							this.url = storedEpisodeContainer.episode.enclosure.url;
 							this.description = storedEpisodeContainer.episode.description;
 							this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));

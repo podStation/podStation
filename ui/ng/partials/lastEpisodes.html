@@ -15,10 +15,14 @@
 							</div>
 						</div>
 						<div class="textView">
-							<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank">
-								<span class="itemTitle episodeTitle">{{episode.title}}</span>
+							<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank" class="itemTitle episodeTitle">
+								<span>{{episode.title}}</span>
 							</a>
 							<span ng-if="!episode.link" class="itemTitle episodeTitle">{{episode.title}}</span>
+							<br>
+							<a ng-href="#/Episodes/{{episode.podcastIndex}}">
+								<span>All episodes from <i>{{episode.podcastTitle}}</i></span>
+							</a>
 							<br>
 							<span>Publication date: {{episode.pubDate}}</span>
 							<br>
