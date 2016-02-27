@@ -1,7 +1,7 @@
 <div id="episodes" class="mainContentBox">
 	<h1 class="sectionTitle episodesSectionTitle">Last episodes</h1>
 	<div id="episodeList">
-		<div class="episodeEntry" ng-repeat="episode in episodes">
+		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
 			<table>
 				<tr>
 					<td ng-if="episode.image">

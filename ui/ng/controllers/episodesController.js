@@ -2,10 +2,10 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	function($scope, $routeParams, episodePlayer) {
 
 	$scope.episodes = [];
+	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
 
 	$scope.updateEpisodes = function() {
 		var that = this;
-		var numberEpisodes = $routeParams.numberEpisodes ? $routeParams.numberEpisodes : 20;
 		this.episodes = [];
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
@@ -14,10 +14,6 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 				storedEpisodeContainers.forEach(function(storedEpisodeContainer, index) {
 					var episodeForController;
-
-					if(index >= numberEpisodes) {
-						return false;
-					}
 
 					episodeForController = {
 						fromStoredEpisode: function(storedEpisodeContainer) {
