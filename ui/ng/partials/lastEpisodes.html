@@ -1,6 +1,6 @@
 <div id="episodes" class="mainContentBox">
 	<h1 class="sectionTitle episodesSectionTitle">Last episodes</h1>
-	<div id="episodeList">
+	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
 		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
 			<table>
 				<tr>

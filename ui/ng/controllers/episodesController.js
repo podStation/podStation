@@ -42,7 +42,10 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 		});
 	};
 
-	$scope.updateEpisodes();
+	$scope.myPagingFunction = function() {
+		$scope.numberEpisodes += 20;
+		console.log('Paging function - ' + $scope.numberEpisodes);
+	};
 
 	chrome.runtime.onMessage.addListener(function(message) {
 		if(!message.type){
@@ -55,6 +58,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 			});
 		}
 	});
+
+	$scope.updateEpisodes();
 }]);
 
 myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer',
