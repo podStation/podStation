@@ -14,17 +14,20 @@
 					</td>
 					<td>
 						<div class="textView">
-							<a ng-href="{{podcast.link}}" target="_blank">
-								<span title="{{podcast.url}}" class="itemTitle podcastTitle">{{podcast.title}}</span>
-							</a>
-							<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
-								<span class="episodes">{{podcast.episodesNumber}} Episode(s)</span>
-							</a>
-							<br>
-							<!--must add a check for pubdate-->
-							<span>Publication date: {{podcast.pubDate}}</span>
-							<br>
-							<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
+							<div class="itemHeader">
+								<a ng-href="{{podcast.link}}" target="_blank">
+									<span title="{{podcast.url}}" class="itemTitle podcastTitle">{{podcast.title}}</span>
+								</a>
+								<br>
+								<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
+									<span class="episodes">{{podcast.episodesNumber}} Episode(s)</span>
+								</a>
+								<br>
+								<!--must add a check for pubdate-->
+								<span>Publication date: {{podcast.pubDate}}</span>
+								<br>
+								<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
+							</div>
 							<div class="itemDescription">
 								{{podcast.description}}
 							</div>

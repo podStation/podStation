@@ -109,6 +109,12 @@ td {
 	right: 0px;
 }
 
+.itemHeader {
+	background: #F2F2F2;
+	padding: 10px;
+	width: 800px;
+}
+
 .podcastEntry, .episodeEntry, .listEntry {
 	/*background-color: orange;*/
 	/*background-color: lightblue;*/

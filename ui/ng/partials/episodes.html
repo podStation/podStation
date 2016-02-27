@@ -22,13 +22,14 @@
 							</div>
 						</div>
 						<div class="textView">
-							<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank">
-								<span class="itemTitle episodeTitle">{{episode.title}}</span>
-							</a>
-							<span ng-if="!episode.link || episode.link === '' " class="itemTitle episodeTitle">{{episode.title}}</span>
-							<br>
-							<span>Publication date: {{episode.pubDate}}</span>
-							<br>
+							<div class="itemHeader" style="width: 900px">
+								<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank">
+									<span class="itemTitle episodeTitle">{{episode.title}}</span>
+								</a>
+								<span ng-if="!episode.link || episode.link === '' " class="itemTitle episodeTitle">{{episode.title}}</span>
+								<br>
+								<span>Publication date: {{episode.pubDate}}</span>
+							</div>
 							<div class="itemDescription" ng-bind-html="episode.description">
 							</div>
 						</div>
