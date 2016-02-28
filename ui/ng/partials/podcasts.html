@@ -28,8 +28,7 @@
 								<br>
 								<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
 							</div>
-							<div class="itemDescription">
-								{{podcast.description}}
+							<div class="itemDescription" ng-bind-html="podcast.description">
 							</div>
 						</div>
 					</td>

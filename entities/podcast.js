@@ -38,6 +38,26 @@ var Podcast = function(url) {
 		chrome.storage.local.remove(this.getKey());
 	}
 
+	function processMultiTagText(selectedTags) {
+		var text = '';
+		var texts = [];
+
+		selectedTags.each(function() {
+			var selectedTag = $(this);
+			if(texts.indexOf(selectedTag.text()) < 0) {
+				if(text) {
+					text += '<br>';
+				}
+
+				text += selectedTag.text();
+
+				texts.push(selectedTag.text());
+			}
+		});
+
+		return text;
+	}
+
 	this.update = function() {
 		var that = this;
 
@@ -61,7 +81,7 @@ var Podcast = function(url) {
 			}
 
 			that.title = xml.find('rss > channel > title').text();
-			that.description = xml.find('rss > channel > description').text();
+			that.description = processMultiTagText(xml.find('rss > channel > description'));
 			that.link = xml.find('rss > channel > link').text();
 
 			that.pubDate = xml.find('rss > channel > pubDate').text();
