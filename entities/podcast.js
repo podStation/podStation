@@ -41,7 +41,13 @@ var Podcast = function(url) {
 	this.update = function() {
 		var that = this;
 
+		if(this.status == 'updating') {
+			console.log('Already updating: ' + this.url);
+			return;
+		}
+
 		this.status = 'updating';
+		console.log('Updating: ' + this.url);
 
 		$.ajaxSetup({cache: false});
 
