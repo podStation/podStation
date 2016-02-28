@@ -90,6 +90,7 @@ var Podcast = function(url) {
 				episode.link = feedItem.find('link').text();
 				episode.pubDate = feedItem.find('pubDate').text();
 				episode.description = feedItem.find('description').text();
+				episode.guid = feedItem.find('guid').text();
 				enclosure = feedItem.find('enclosure');
 				episode.enclosure = {
 					url: enclosure.attr('url'),
