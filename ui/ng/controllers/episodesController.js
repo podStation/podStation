@@ -6,10 +6,10 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 	$scope.updateEpisodes = function() {
 		var that = this;
-		this.episodes = [];
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			$scope.$apply(function(){
+				that.episodes = [];
 				var storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
 
 				storedEpisodeContainers.forEach(function(storedEpisodeContainer, index) {
