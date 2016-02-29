@@ -52,7 +52,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 			return;
 		}
 
-		if(message.type === 'podcastChanged') {
+		if(message.type === 'podcastChanged' && message.podcastListChanged) {
 			$scope.$apply(function() {
 				$scope.updateEpisodes();
 			});

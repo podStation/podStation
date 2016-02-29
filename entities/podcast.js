@@ -6,10 +6,11 @@ var Podcast = function(url) {
 	this.status = 'new';
 	this.episodes = [];
 
-	function podcastChanged(podcast) {
+	function podcastChanged(podcast, episodeListChanged) {
 		chrome.runtime.sendMessage({
 			type: 'podcastChanged',
-			podcast: podcast
+			podcast: podcast,
+			episodeListChanged: episodeListChanged ? true : false
 		});
 	}
 
@@ -133,7 +134,7 @@ var Podcast = function(url) {
 			}
 
 			that.status = 'loaded';
-			podcastChanged(that);
+			podcastChanged(that, true);
 			that.store();
 
 		}).fail(function() {
