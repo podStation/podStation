@@ -3,22 +3,24 @@ var episodeInfo;
 var playingTimeOutID;
 
 function getAudioTags(callback) {
-	ID3.loadTags(audioPlayer.src, function() {
-		var tags = ID3.getAllTags(audioPlayer.src);
+	new jsmediatags.Reader(audioPlayer.src)
+	.setTagsToRead(["PIC", "APIC"])
+	.read({
+		onSuccess: function(tag) {
+			var tags = tag.tags;
 
-		if( "picture" in tags ) {
-			var image = tags.picture;
-			var base64String = "";
-			for (var i = 0; i < image.data.length; i++) {
-					base64String += String.fromCharCode(image.data[i]);
+			if( "picture" in tags ) {
+				var image = tags.picture;
+				var base64String = "";
+				for (var i = 0; i < image.data.length; i++) {
+						base64String += String.fromCharCode(image.data[i]);
+				}
+
+				tags.imageDataUrl = "data:" + image.format + ";base64," + window.btoa(base64String);
+
+				callback(tags);
 			}
-
-			tags.imageDataUrl = "data:" + image.format + ";base64," + window.btoa(base64String);
-
-			callback(tags);
 		}
-	}, {
-		tags: ["artist", "title", "album", "year", "picture"]
 	});
 }
 

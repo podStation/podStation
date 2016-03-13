@@ -34,7 +34,7 @@
 	"background": {
 		"scripts": [
 			"lib/jquery-2.1.4.min.js",
-			"lib/id3-minimized.js",
+			"lib/jsmediatags.min.js",
 			"reuse/comparison.js",
 			"entities/podcast.js",
 			"entities/podcastManager.js",
