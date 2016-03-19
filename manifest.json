@@ -36,6 +36,7 @@
 			"lib/jquery-2.1.4.min.js",
 			"lib/jsmediatags.min.js",
 			"reuse/comparison.js",
+			"entities/notificationManager.js",
 			"entities/podcast.js",
 			"entities/podcastManager.js",
 			"entities/audioPlayer.js",

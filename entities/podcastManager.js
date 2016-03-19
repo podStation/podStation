@@ -27,6 +27,40 @@ var PodcastManager;
 			});
 		};
 
+		var notificationIdLoading = 0;
+
+		function triggerNotifications() {
+			var loadingEpisodes = 0;
+
+			instance.podcastList.forEach(function(podcast) {
+				if(podcast.status === 'updating') {
+					loadingEpisodes++;
+				}
+			});
+
+			if(loadingEpisodes) {
+				notificationIdLoading = notificationManager.updateNotification(notificationIdLoading, {
+					icon: 'fa-refresh fa-spin',
+					text: 'Updating ' + loadingEpisodes + ' podcast(s)...'
+				});
+			}
+			else {
+				if(notificationIdLoading) {
+					notificationManager.removeNotification(notificationIdLoading);
+					notificationIdLoading = 0;
+				}
+			}
+		}
+
+		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+			switch (message.type) {
+				case 'podcastChanged':
+						triggerNotifications();
+					break;
+				default:
+			}
+		});
+
 		this.addPodcast = function(url) {
 			if(url !== '') {
 				var that = this;
