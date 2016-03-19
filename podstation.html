@@ -28,8 +28,8 @@
 			</div>
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>
 		</div>
-		<div ng-controller="notificationController">
-			<p ng-repeat="notification in notifications">
+		<div ng-controller="notificationController" id="notificationDrawer">
+			<p ng-repeat="notification in notifications track by id">
 				<i ng-if="notification.icon" class="fa {{notification.icon}}"></i> {{notification.text}}
 			</p>
 		</div>

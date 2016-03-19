@@ -22,6 +22,16 @@ td {
 	vertical-align: top;
 }
 
+#notificationDrawer {
+	background-color: gray;
+	color: white;
+}
+
+#notificationDrawer p{
+	margin: 0px;
+	padding: 5px;
+}
+
 #audioPlayer {
 	margin-top: -10;
 }
