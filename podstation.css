@@ -33,6 +33,15 @@ td {
 	padding: 5px;
 }
 
+.notification {
+	padding: 5px;
+	cursor: pointer;
+}
+
+.notification:hover {
+	color: lightgrey;
+}
+
 #audioPlayer {
 	margin-top: -10;
 }

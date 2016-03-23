@@ -30,6 +30,9 @@ var NotificationManager;
 				case 'getNotifications':
 					sendResponse(notifications);
 					return true;
+				case 'removeNotification':
+					instance.removeNotification(message.notificationId);
+					break;
 			}
 		});
 

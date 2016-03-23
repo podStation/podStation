@@ -15,6 +15,18 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 					if(notifications[key]) {
 						var notification = notifications[key];
 						notification.id = key;
+						notification.dismiss = function() {
+							chrome.runtime.sendMessage({
+								to: 'notificationManager',
+								type: 'removeNotification',
+								notificationId: this.id
+							});
+							// just to trigger a ui reaction wihtout
+						 	// waiting for the notificationChanged message
+							$scope.notifications.splice(
+								$scope.notifications.indexOf(this)
+							);
+						}
 
 						$scope.notifications.push(notification);
 					}
