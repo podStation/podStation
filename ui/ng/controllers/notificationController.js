@@ -12,10 +12,12 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 				$scope.notifications = [];
 
 				for(key in notifications) {
-					var notification = notifications[key];
-					notification.id = key;
+					if(notifications[key]) {
+						var notification = notifications[key];
+						notification.id = key;
 
-					$scope.notifications.push(notification);
+						$scope.notifications.push(notification);
+					}
 				}
 			});
 		});

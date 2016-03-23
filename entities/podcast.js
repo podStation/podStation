@@ -6,6 +6,8 @@ var Podcast = function(url) {
 	this.status = 'new';
 	this.episodes = [];
 
+	var idNotificationFailed = 0;
+
 	function podcastChanged(podcast, episodeListChanged) {
 		chrome.runtime.sendMessage({
 			type: 'podcastChanged',
@@ -140,7 +142,10 @@ var Podcast = function(url) {
 		}).fail(function() {
 			that.status = 'failed';
 			podcastChanged(that);
-
+			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
+				icon: 'fa-close',
+				text: 'Failed to update ' + that.title
+			});
 		});
 
 		podcastChanged(this);
