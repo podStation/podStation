@@ -7,6 +7,7 @@ var Podcast = function(url) {
 	this.episodes = [];
 
 	var idNotificationFailed = 0;
+	var idNotificationNewEpisodes = 0;
 
 	function podcastChanged(podcast, episodeListChanged) {
 		chrome.runtime.sendMessage({
@@ -14,6 +15,16 @@ var Podcast = function(url) {
 			podcast: podcast,
 			episodeListChanged: episodeListChanged ? true : false
 		});
+	}
+
+	function guidsFromEpisodes(episodes) {
+		var guids = [];
+
+		episodes.forEach(function(episode) {
+			guids.push(episode.guid);
+		});
+
+		return guids;
 	}
 
 	this.getKey = function() {
@@ -100,6 +111,8 @@ var Podcast = function(url) {
 				that.image = defaultImage;
 			}
 
+			var newEpisodesCount = 0;
+			var guids = guidsFromEpisodes(that.episodes);
 			that.episodes = [];
 
 			xml.find('rss > channel > item').each(function() {
@@ -121,6 +134,10 @@ var Podcast = function(url) {
 					type: enclosure.attr('type')
 				};
 
+				if(guids.indexOf(episode.guid) < 0) {
+					newEpisodesCount++;
+				}
+
 				that.episodes.push(episode);
 			});
 
@@ -138,6 +155,13 @@ var Podcast = function(url) {
 			that.status = 'loaded';
 			podcastChanged(that, true);
 			that.store();
+
+			if(newEpisodesCount) {
+				idNotificationNewEpisodes = notificationManager.updateNotification(idNotificationNewEpisodes, {
+					icon: 'fa-check',
+					text: newEpisodesCount + ' new episode(s) for ' + that.title
+				});
+			}
 
 		}).fail(function() {
 			that.status = 'failed';
