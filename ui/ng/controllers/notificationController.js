@@ -24,7 +24,7 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 							// just to trigger a ui reaction wihtout
 						 	// waiting for the notificationChanged message
 							$scope.notifications.splice(
-								$scope.notifications.indexOf(this)
+								$scope.notifications.indexOf(this), 1
 							);
 						}
 
