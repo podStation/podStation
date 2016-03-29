@@ -124,7 +124,7 @@ var PodcastManager;
 		}
 
 		this.updatePodcast = function(url) {
-			if(url !== '') {
+			if(url && url !== '') {
 				var podcast;
 				podcast = this.getPodcast(url);
 

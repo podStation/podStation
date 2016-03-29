@@ -38,3 +38,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 });
 
 window.podcastManager = new PodcastManager();
+
+chrome.alarms.create('updatePodcasts', {
+	periodInMinutes: 60
+});
+
+chrome.alarms.onAlarm.addListener(function (alarm) {
+	if(alarm.name !== 'updatePodcasts') {
+		return;
+	}
+
+	window.podcastManager.updatePodcast();
+});
