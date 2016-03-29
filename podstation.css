@@ -33,6 +33,12 @@ td {
 	padding: 5px;
 }
 
+#closeAllNotifications {
+	float: right;
+	padding: 3px;
+	cursor: pointer;
+}
+
 .notification {
 	padding: 5px;
 	cursor: pointer;
