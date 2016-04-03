@@ -37,6 +37,7 @@
 			"lib/jsmediatags.min.js",
 			"reuse/comparison.js",
 			"entities/notificationManager.js",
+			"entities/optionsManager.js",
 			"entities/podcast.js",
 			"entities/podcastManager.js",
 			"entities/audioPlayer.js",
@@ -44,5 +45,6 @@
 		],
 		"persistent": false
 	},
-	"manifest_version": 2
+	"manifest_version": 2,
+	"options_page": "podstation.html#/Options"
 }

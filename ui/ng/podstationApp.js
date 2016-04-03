@@ -20,6 +20,9 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 	}).when('/About', {
 		templateUrl: '/ui/ng/partials/about.html',
 		controller: 'episodesController'
+	}).when('/Options', {
+		templateUrl: '/ui/ng/partials/options.html',
+		controller: 'optionsController'
 	}).otherwise({
 		redirectTo: '/LastEpisodes/20'
 	});

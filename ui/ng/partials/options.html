@@ -1,0 +1,21 @@
+<style>
+.listEntry {
+	line-height: 300%;
+}
+
+#updatePeriod {
+	width: 50px;
+}
+</style>
+<div class="mainContentBox">
+	<h1 class="sectionTitle">Options</h1>
+	<div class="listEntry">
+		<input type="checkbox" ng-model="options.autoUpdate"><span>Auto update podcasts</span>
+		<br>
+		<span>Auto update every </span>
+		<input id="updatePeriod" ng-model="options.autoUpdateEvery" ng-disabled="!options.autoUpdate">
+		<span> minutes</span>
+		<br>
+		<button ng-click="save()">Save</button>
+	</div>
+</div>
