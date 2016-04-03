@@ -33,6 +33,9 @@ var NotificationManager;
 				case 'removeNotification':
 					instance.removeNotification(message.notificationId);
 					break;
+				case 'removeAllNotifications':
+					instance.removeNotification();
+					break;
 			}
 		});
 
@@ -55,8 +58,14 @@ var NotificationManager;
 		}
 
 		this.removeNotification = function(notificationId) {
-			notifications[notificationId] = undefined;
-			notificationChanged(notificationId);
+			if(notificationId) {
+				notifications[notificationId] = undefined;
+				notificationChanged(notificationId);
+			}
+			else {
+				notifications = [];
+				notificationChanged();
+			}
 		}
 	}
 })();

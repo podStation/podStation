@@ -35,6 +35,14 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 		});
 	}
 
+	$scope.dismissAll = function() {
+		chrome.runtime.sendMessage({
+			to: 'notificationManager',
+			type: 'removeAllNotifications',
+			notificationId: this.id
+		});
+	}
+
 	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 		if(message.from !== "notificationManager") {
 			return;

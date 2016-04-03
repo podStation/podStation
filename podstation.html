@@ -30,6 +30,9 @@
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>
 		</div>
 		<div ng-controller="notificationController" id="notificationDrawer">
+			<div id="closeAllNotifications" ng-click="dismissAll()" title="Dismiss all...">
+				<i class="fa fa-close"></i>
+			</div>
 			<div class="notification" ng-repeat="notification in notifications track by notification.id"
 			title="click to dismiss..." ng-click="notification.dismiss()">
 				<i ng-if="notification.icon" class="fa {{notification.icon}}"></i> {{notification.text}}
