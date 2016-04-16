@@ -18,7 +18,7 @@ var OptionsManager;
 			});
 		}
 
-		function getOptions(sendResponse) {
+		this.getOptions = function(sendResponse) {
 			chrome.storage.sync.get('syncOptions', function(storageObject) {
 				var syncOptions;
 
@@ -41,6 +41,8 @@ var OptionsManager;
 			optionsChanged(options);
 		}
 
+		var that = this;
+
 		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
 			if(!message.to || message.to != 'optionsManager') {
 				return;
@@ -48,7 +50,7 @@ var OptionsManager;
 
 			switch(message.type) {
 				case 'getOptions':
-					getOptions(sendResponse);
+					that.getOptions(sendResponse);
 					return true;
 				case 'saveOptions':
 					saveOptions(message.options);

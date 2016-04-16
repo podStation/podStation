@@ -29,7 +29,7 @@ var Podcast = function(url) {
 
 	this.getKey = function() {
 		return 'podcast' + this.url;
-	}
+	};
 
 	this.store = function() {
 		var storageObject = {};
@@ -46,11 +46,11 @@ var Podcast = function(url) {
 		storageObject[this.getKey()] = storedPodcast;
 
 		chrome.storage.local.set(storageObject);
-	}
+	};
 
 	this.deleteFromStorage = function() {
 		chrome.storage.local.remove(this.getKey());
-	}
+	};
 
 	function processMultiTagText(selectedTags) {
 		var text = '';
@@ -173,7 +173,7 @@ var Podcast = function(url) {
 		});
 
 		podcastChanged(this);
-	}
+	};
 
 	this.load = function() {
 		var that = this;
