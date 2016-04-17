@@ -163,7 +163,7 @@ var Podcast = function(url) {
 				});
 			}
 
-		}).fail(function() {
+		}, 'xml').fail(function() {
 			that.status = 'failed';
 			podcastChanged(that);
 			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
