@@ -52,13 +52,8 @@ var PodcastManager;
 			}
 		}
 
-		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-			switch (message.type) {
-				case 'podcastChanged':
-						triggerNotifications();
-					break;
-				default:
-			}
+		messageService.for('podcast').onMessage('changed', function() {
+			triggerNotifications();
 		});
 
 		this.addPodcast = function(url) {

@@ -1,5 +1,5 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer',
-	function($scope, $routeParams, episodePlayer) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
+	function($scope, $routeParams, episodePlayer, messageService) {
 
 	$scope.episodes = [];
 	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
@@ -47,12 +47,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 		console.log('Paging function - ' + $scope.numberEpisodes);
 	};
 
-	chrome.runtime.onMessage.addListener(function(message) {
-		if(!message.type){
-			return;
-		}
-
-		if(message.type === 'podcastChanged' && message.episodeListChanged) {
+	messageService.for('podcast').onMessage('changed', function(messageContent) {
+		if(messageContent.episodeListChanged) {
 			$scope.$apply(function() {
 				$scope.updateEpisodes();
 			});
@@ -62,8 +58,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	$scope.updateEpisodes();
 }]);
 
-myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer',
-	function($scope, $routeParams, episodePlayer) {
+myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
+	function($scope, $routeParams, episodePlayer, messageService) {
 
 	$scope.episodes = [];
 
@@ -108,12 +104,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 
 	$scope.updateEpisodes();
 
-	chrome.runtime.onMessage.addListener(function(message) {
-		if(!message.type){
-			return;
-		}
-
-		if(message.type === 'podcastChanged') {
+	messageService.for('podcast').onMessage('changed', function(messageContent) {
+		if(messageContent.episodeListChanged) {
 			$scope.$apply(function() {
 				$scope.updateEpisodes();
 			});

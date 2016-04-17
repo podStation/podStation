@@ -10,8 +10,7 @@ var Podcast = function(url) {
 	var idNotificationNewEpisodes = 0;
 
 	function podcastChanged(podcast, episodeListChanged) {
-		chrome.runtime.sendMessage({
-			type: 'podcastChanged',
+		messageService.for('podcast').sendMessage('changed', {
 			podcast: podcast,
 			episodeListChanged: episodeListChanged ? true : false
 		});

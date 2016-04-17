@@ -1,4 +1,4 @@
-myApp.controller('podcastsController', function($scope) {
+myApp.controller('podcastsController', ['$scope', 'messageService', function($scope, messageService) {
 	$scope.podcasts = [];
 
 	function getStatusClass(status) {
@@ -86,9 +86,10 @@ myApp.controller('podcastsController', function($scope) {
 			if(message.type === 'podcastListChanged') {
 				$scope.updatePodcastList();
 			}
-			else if(message.type === 'podcastChanged') {
-				$scope.updatePodcast(message.podcast);
-			}
 		});
 	});
-});
+	
+	messageService.for('podcast').onMessage('changed', function(messageContent) {
+		$scope.updatePodcast(messageContent.podcast);
+	});
+}]);
