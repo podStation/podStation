@@ -1,15 +1,3 @@
-/*messageService.for('podcast').onMessage('podcastChanged', function() {
-
-});
-
-messageService.for('audioPlayer').sendMessage('getAudioInfo', {}, function(response) {
-
-});
-
-messageService.for('audioPlayer').onMessage('getAudioInfo', function(messageContent, sendResponse) {
-	return true;
-});*/
-
 window.openPodStation = function(hash) {
 	chrome.tabs.query({url: 'chrome-extension://*/podstation.html'}, function(tabs) {
 		if(tabs.length) {
