@@ -32,6 +32,10 @@ var ChromeExtensionMessageService;
 			}
 
 			function dispatchToListeners(messageName, messageContent, sendResponseCallback, responseTakenCareOf) {
+				if(!that.listeners[messageName]) {
+					return false;
+				}
+				
 				var willAnswer;
 
 				that.listeners[messageName].forEach(function(callback) {

@@ -14,29 +14,19 @@ var NotificationManager;
 		var notifications = {};
 
 		function notificationChanged(notificationId) {
-			chrome.runtime.sendMessage({
-				from: 'notificationManager',
-				type: 'notificationChanged',
-				notification: notifications[notificationId]
-			});
+			messageService.for('notificationManager').sendMessage('notificationChanged', notifications[notificationId]);
 		}
 
-		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-			if(!message.to || message.to != 'notificationManager') {
-				return;
-			}
-
-			switch(message.type) {
-				case 'getNotifications':
-					sendResponse(notifications);
-					return true;
-				case 'removeNotification':
-					instance.removeNotification(message.notificationId);
-					break;
-				case 'removeAllNotifications':
-					instance.removeNotification();
-					break;
-			}
+		messageService.for('notificationManager')
+		.onMessage('getNotifications', function(messageContent, sendResponse) {
+			sendResponse(notifications);
+			return true;
+		})
+		.onMessage('removeNotification', function(messageContent) {
+			instance.removeNotification(messageContent.notificationId);
+		})
+		.onMessage('removeAllNotifications', function() {
+			instance.removeNotification();
 		});
 
 		this.addNotification = function(notification) {

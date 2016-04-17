@@ -1,11 +1,8 @@
-myApp.controller('notificationController', ['$scope',  function($scope, episodePlayer) {
+myApp.controller('notificationController', ['$scope', 'messageService', function($scope, messageService, episodePlayer) {
 	$scope.notifications = [];
 
 	function getNotifications() {
-		chrome.runtime.sendMessage({
-			to: 'notificationManager',
-			type: 'getNotifications',
-		}, function(response) {
+		messageService.for('notificationManager').sendMessage('getNotifications', {}, function(response) {
 			$scope.$apply(function() {
 				var notifications = response;
 
@@ -15,14 +12,13 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 					if(notifications[key]) {
 						var notification = notifications[key];
 						notification.id = key;
-						notification.dismiss = function() {
-							chrome.runtime.sendMessage({
-								to: 'notificationManager',
-								type: 'removeNotification',
+						notification.dismiss = function() {							
+							messageService.for('notificationManager').sendMessage('removeNotification', {
 								notificationId: this.id
 							});
+							
 							// just to trigger a ui reaction wihtout
-						 	// waiting for the notificationChanged message
+							// waiting for the notificationChanged message
 							$scope.notifications.splice(
 								$scope.notifications.indexOf(this), 1
 							);
@@ -36,23 +32,11 @@ myApp.controller('notificationController', ['$scope',  function($scope, episodeP
 	}
 
 	$scope.dismissAll = function() {
-		chrome.runtime.sendMessage({
-			to: 'notificationManager',
-			type: 'removeAllNotifications',
-			notificationId: this.id
-		});
+		messageService.for('notificationManager').sendMessage('removeAllNotifications');
 	}
 
-	chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-		if(message.from !== "notificationManager") {
-			return;
-		}
-
-		switch (message.type) {
-			case 'notificationChanged':
-				getNotifications();
-				break;
-		}
+	messageService.for('notificationManager').onMessage('notificationChanged', function() {
+		getNotifications();
 	});
 
 	getNotifications();
