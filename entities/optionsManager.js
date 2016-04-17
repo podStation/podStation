@@ -11,11 +11,7 @@ var OptionsManager;
 		instance = this;
 
 		function optionsChanged(options) {
-			chrome.runtime.sendMessage({
-				from: 'optionsManager',
-				type: 'optionsChanged',
-				options: options,
-			});
+			messageService.for('optionsManager').sendMessage('optionsChanged', options);
 		}
 
 		this.getOptions = function(sendResponse) {
@@ -43,19 +39,12 @@ var OptionsManager;
 
 		var that = this;
 
-		chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-			if(!message.to || message.to != 'optionsManager') {
-				return;
-			}
-
-			switch(message.type) {
-				case 'getOptions':
-					that.getOptions(sendResponse);
-					return true;
-				case 'saveOptions':
-					saveOptions(message.options);
-					break;
-			}
+		messageService.for('optionsManager')
+		  .onMessage('saveOptions', function(messageContent) {
+			saveOptions(messageContent);
+		}).onMessage('getOptions',  function(messageContent, sendResponse) {
+			that.getOptions(sendResponse);
+			return true;
 		});
 	}
 })();

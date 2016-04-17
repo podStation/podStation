@@ -1,3 +1,15 @@
+/*messageService.for('podcast').onMessage('podcastChanged', function() {
+
+});
+
+messageService.for('audioPlayer').sendMessage('getAudioInfo', {}, function(response) {
+
+});
+
+messageService.for('audioPlayer').onMessage('getAudioInfo', function(messageContent, sendResponse) {
+	return true;
+});*/
+
 window.openPodStation = function(hash) {
 	chrome.tabs.query({url: 'chrome-extension://*/podstation.html'}, function(tabs) {
 		if(tabs.length) {
@@ -63,16 +75,8 @@ function setupAutoUpdate(options, updateNow) {
 	}
 }
 
-chrome.runtime.onMessage.addListener(function(message) {
-	if(!message.from || message.from != 'optionsManager') {
-		return;
-	}
-
-	switch(message.type) {
-		case 'optionsChanged':
-			setupAutoUpdate(message.options, false);
-			break;
-	}
+messageService.for('optionsManager').onMessage('optionsChanged', function(options) {
+	setupAutoUpdate(message.options, false);
 });
 
 optionsManager.getOptions(function(options) {
