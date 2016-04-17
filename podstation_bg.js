@@ -64,7 +64,7 @@ function setupAutoUpdate(options, updateNow) {
 }
 
 messageService.for('optionsManager').onMessage('optionsChanged', function(options) {
-	setupAutoUpdate(message.options, false);
+	setupAutoUpdate(options, false);
 });
 
 optionsManager.getOptions(function(options) {
