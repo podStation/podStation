@@ -78,6 +78,10 @@ myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  functio
 	$scope.progressMouseOver = function(event) {
 		$scope.timeMouseOver = formatSeconds(event.offsetX / event.currentTarget.clientWidth * durationInSeconds);
 	}
+	
+	$scope.progressMouseLeave = function() {
+		$scope.timeMouseOver = '';
+	}
 
 	function getAudioInfoCallback(audioInfo) {
 		$scope.$apply(function(){

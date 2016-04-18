@@ -56,14 +56,19 @@
 								<a href="" ng-click="stop()"><i class="fa fa-stop" title="Stop"></i></a>
 								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="Speed Down: {{nextPlaybackRateDown()}}x"></i></a>
 								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="Speed Up: {{nextPlaybackRateUp()}}x"></i></a>
-								<span>{{time}} / {{duration}}</span>
+								<span>
+									<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
+									<span ng-if="!timeMouseOver">{{time}}</span>
+									<span> / {{duration}}</span>
+								</span>
 							</td>
 							<td ng-if="imageUrl">
 								<img ng-src="{{imageUrl}}" id="playerImage"></img>
 							</td>
 							<td>
 								<div id="playingTitle">Playing: {{mediaTitle}}</div>
-								<div id="progressOut" ng-click="seek($event)" ng-mouseover="progressMouseOver($event)" title="{{timeMouseOver}}">
+								<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
+								ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
 									<div id="progressIn" style="width: {{timePercent}}%"></div>
 								</div>
 							</td>
