@@ -19,7 +19,7 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		controller: 'searchController'
 	}).when('/About', {
 		templateUrl: '/ui/ng/partials/about.html',
-		controller: 'episodesController'
+		controller: 'aboutController'
 	}).when('/Options', {
 		templateUrl: '/ui/ng/partials/options.html',
 		controller: 'optionsController'
