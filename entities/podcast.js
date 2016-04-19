@@ -150,10 +150,14 @@ var Podcast = function(url) {
 			) {
 				that.pubDate = that.episodes[0].pubDate;
 			}
-
+			
 			that.status = 'loaded';
 			podcastChanged(that, true);
 			that.store();
+
+			if(idNotificationFailed) {
+				notificationManager.removeNotification(idNotificationFailed);
+			}
 
 			if(newEpisodesCount) {
 				idNotificationNewEpisodes = notificationManager.updateNotification(idNotificationNewEpisodes, {
