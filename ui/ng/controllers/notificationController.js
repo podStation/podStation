@@ -1,33 +1,79 @@
 myApp.controller('notificationController', ['$scope', 'messageService', function($scope, messageService, episodePlayer) {
 	$scope.notifications = [];
+	
+	function dismissNotification() {
+		messageService.for('notificationManager').sendMessage('removeNotification', {
+			notificationId: this.id
+		});
+				
+		// just to trigger a ui reaction wihtout
+		// waiting for the notificationChanged message
+		var indexOf = $scope.notifications.indexOf(this);
+		
+		if(indexOf >= 0) {
+			$scope.notifications.splice(indexOf, 1);
+		}
+	}
+
+	function processNotificationsFromBackground(notificationsFromBackground) {
+		$scope.$apply(function() {
+			$scope.notifications = [];
+
+			for(key in notificationsFromBackground) {
+				if(notificationsFromBackground[key]) {
+					var notification = notificationsFromBackground[key];
+					notification.id = key;
+					notification.dismiss = dismissNotification;
+					$scope.notifications.push(notification);
+				}
+			}
+			
+			var notificationGroups = {};
+			
+			// build the notification groups
+			$scope.notifications.forEach(function(notification) {
+				if(notification.groupName) {
+					if(!notificationGroups[notification.groupName]) {
+						notificationGroups[notification.groupName] = {
+							id: notification.id,
+							isGroup: true,
+							collapsed: true,
+							text: notification.groupName,
+							notifications: [],
+							toggleCollapsed: function() {this.collapsed = !this.collapsed;}
+						}
+					}
+					
+					notificationGroups[notification.groupName].notifications.push(notification);
+				}
+			});
+			
+			// replace notifcations by groups if > 3
+			for(key in notificationGroups) {
+				if(notificationGroups[key].notifications.length > 3) {
+					var indexOfFirst = -1;
+					
+					notificationGroups[key].notifications.forEach(function(notification) {
+						var indexOf;
+						
+						indexOf = $scope.notifications.indexOf(notification);
+						
+						if(indexOfFirst < 0) {
+							indexOfFirst = indexOf;
+						} 
+						
+						$scope.notifications.splice(indexOf, 1);
+					});
+					
+					$scope.notifications.splice(indexOfFirst, 0, notificationGroups[key]);
+				}
+			}
+		});
+	}
 
 	function getNotifications() {
 		messageService.for('notificationManager').sendMessage('getNotifications', {}, function(response) {
-			$scope.$apply(function() {
-				var notifications = response;
-
-				$scope.notifications = [];
-
-				for(key in notifications) {
-					if(notifications[key]) {
-						var notification = notifications[key];
-						notification.id = key;
-						notification.dismiss = function() {							
-							messageService.for('notificationManager').sendMessage('removeNotification', {
-								notificationId: this.id
-							});
-							
-							// just to trigger a ui reaction wihtout
-							// waiting for the notificationChanged message
-							$scope.notifications.splice(
-								$scope.notifications.indexOf(this), 1
-							);
-						}
-
-						$scope.notifications.push(notification);
-					}
-				}
-			});
+			processNotificationsFromBackground(response);
 		});
 	}
 

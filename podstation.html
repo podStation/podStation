@@ -40,9 +40,21 @@
 			<div id="closeAllNotifications" ng-if="notifications.length" ng-click="dismissAll()" title="Dismiss all...">
 				<i class="fa fa-close"></i>
 			</div>
-			<div class="notification" ng-repeat="notification in notifications track by notification.id"
-			title="click to dismiss..." ng-click="notification.dismiss()">
-				<i ng-if="notification.icon" class="fa {{notification.icon}}"></i> {{notification.text}}
+			<div ng-repeat="notification in notifications track by notification.id">
+				<div ng-if="!notification.isGroup" class="notification" title="click to dismiss..." ng-click="notification.dismiss()">
+					<i ng-if="notification.icon" class="fa {{notification.icon}}"></i> {{notification.text}}
+				</div>
+				<div ng-if="notification.isGroup" class="notification" ng-click="notification.toggleCollapsed()">
+					<i ng-if="notification.collapsed" class="fa fa-caret-right"></i>
+					<i ng-if="!notification.collapsed" class="fa fa-caret-down"></i>
+					<span>{{notification.text}}</span>
+				</div>
+				<div ng-if="notification.isGroup && !notification.collapsed">
+					<div class="notification" ng-repeat="notificationInGroup in notification.notifications track by notificationInGroup.id"
+						title="click to dismiss..." ng-click="notificationInGroup.dismiss()">
+						<span>&nbsp;</span><i ng-if="notificationInGroup.icon" class="fa {{notificationInGroup.icon}}"></i> {{notificationInGroup.text}}
+					</div>
+				</div>
 			</div>
 		</div>
 		<div  ng-controller="episodePlayerController">

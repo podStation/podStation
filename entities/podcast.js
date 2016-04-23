@@ -162,6 +162,7 @@ var Podcast = function(url) {
 			if(newEpisodesCount) {
 				idNotificationNewEpisodes = notificationManager.updateNotification(idNotificationNewEpisodes, {
 					icon: 'fa-check',
+					groupName: 'New episodes',
 					text: newEpisodesCount + ' new episode(s) for ' + that.title
 				});
 			}
@@ -171,6 +172,7 @@ var Podcast = function(url) {
 			podcastChanged(that);
 			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
 				icon: 'fa-close',
+				groupName: 'Failed to update podcasts',
 				text: 'Failed to update ' + that.title
 			});
 		});
