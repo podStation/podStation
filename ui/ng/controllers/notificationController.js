@@ -17,6 +17,16 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 
 	function processNotificationsFromBackground(notificationsFromBackground) {
 		$scope.$apply(function() {
+			var notificationGroups = {};
+			
+			// Save existing groups
+			$scope.notifications.forEach(function(notification) {
+				if(notification.isGroup) {
+					notificationGroups[notification.text] = notification;
+					notificationGroups[notification.text].notifications = [];
+				}
+			});
+			
 			$scope.notifications = [];
 
 			for(key in notificationsFromBackground) {
@@ -27,8 +37,6 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 					$scope.notifications.push(notification);
 				}
 			}
-			
-			var notificationGroups = {};
 			
 			// build the notification groups
 			$scope.notifications.forEach(function(notification) {
