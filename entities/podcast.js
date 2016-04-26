@@ -173,7 +173,7 @@ var Podcast = function(url) {
 			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
 				icon: 'fa-close',
 				groupName: 'Failed to update podcasts',
-				text: 'Failed to update ' + that.title
+				text: 'Failed to update ' + (that.title ? that.title : that.url)
 			});
 		});
 
