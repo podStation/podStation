@@ -27,14 +27,14 @@
 		{
 			"matches": ["http://*/*", "https://*/*"],
 			"js": [
-				"lib/jquery-2.1.4.min.js",
+				"lib/jquery.min.js",
 				"feedFinder.js"
 			]
 		}
 	],
 	"background": {
 		"scripts": [
-			"lib/jquery-2.1.4.min.js",
+			"lib/jquery.min.js",
 			"lib/jsmediatags.min.js",
 			"reuse/comparison.js",
 			"reuse/messageServiceDefinition.js",

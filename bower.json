@@ -1,0 +1,32 @@
+{
+  "name": "podStation",
+  "authors": [
+    "Guilherme Dellagustin <dellagustin.developer@gmail.com>"
+  ],
+  "description": "A podcast aggregator for Google Chrome",
+  "main": "podstation.html",
+  "keywords": [
+    "RSS",
+    "feed",
+    "podcast"
+  ],
+  "license": "MIT",
+  "homepage": "https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "2.1.4",
+    "angular": "1.4.7",
+    "angular-route": "1.4.7",
+    "angular-sanitize": "1.4.7",
+    "font-awesome": "4.4.0",
+    "jsmediatags": "git@github.com:aadsm/jsmediatags.git",
+    "ngInfiniteScroll": "git@github.com:sroze/ngInfiniteScroll.git#1.0.0"
+  }
+}
