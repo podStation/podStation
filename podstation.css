@@ -15,6 +15,10 @@ a:hover {
 	text-decoration: underline;
 }
 
+a.icon:hover {
+	text-decoration: none;
+}
+
 a:visited {
 	color: black;
 }
