@@ -25,6 +25,10 @@ var Podcast = function(url) {
 
 		return guids;
 	}
+	
+	function postProcessPubDate(pubDate) {
+		return pubDate.replace('GTM', 'GMT');
+	}
 
 	this.getKey = function() {
 		return 'podcast' + this.url;
@@ -97,9 +101,9 @@ var Podcast = function(url) {
 			that.description = processMultiTagText(xml.find('rss > channel > description'));
 			that.link = xml.find('rss > channel > link').text();
 
-			that.pubDate = xml.find('rss > channel > pubDate').text();
+			that.pubDate = postProcessPubDate(xml.find('rss > channel > pubDate').text());
 			if(that.pubDate === '') {
-				that.pubDate = xml.find('rss > channel > lastBuildDate').text();
+				that.pubDate = postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
 			}
 
 			that.image = xml.find('rss > channel > image > url').text();
@@ -123,7 +127,7 @@ var Podcast = function(url) {
 				// than one. They are in theory all the same, so we take the first.
 				episode.title = $(feedItem.find('title')[0]).text();
 				episode.link = feedItem.find('link').text();
-				episode.pubDate = feedItem.find('pubDate').text();
+				episode.pubDate = postProcessPubDate(feedItem.find('pubDate').text());
 				episode.description = feedItem.find('description').text();
 				episode.guid = feedItem.find('guid').text();
 				enclosure = feedItem.find('enclosure');
