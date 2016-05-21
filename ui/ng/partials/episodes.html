@@ -3,7 +3,7 @@
 		<tbody>
 			<tr>
 				<td><img height="50" ng-src="{{podcastImage}}"></img></td>
-				<td><h1 class="sectionTitle episodesSectionTitle">Episodes from {{podcastTitle}}</h1></td>
+				<td><h1 class="sectionTitle episodesSectionTitle">{{ { message: 'all_eps_from', arguments: [podcastTitle]} | chrome_i18n }}</h1></td>
 			</tr>
 		</tbody>
 	</table>
@@ -28,7 +28,7 @@
 								</a>
 								<span ng-if="!episode.link || episode.link === '' " class="itemTitle episodeTitle">{{episode.title}}</span>
 								<br>
-								<span>Publication date: {{episode.pubDate}}</span>
+								<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 							</div>
 							<div class="itemDescription" ng-bind-html="episode.description">
 							</div>

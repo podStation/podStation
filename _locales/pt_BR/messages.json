@@ -1,0 +1,99 @@
+{
+	// header
+	"search_placeholder": {
+		"message": "Endereço de um feeds ou termos de busca..."
+	},
+	"search_button": {
+		"message": "Buscar por um podcast"
+	},
+	"add_feed": {
+		"message": "Adicionar Feed"
+	},
+	// notifications
+	"dismiss_all": {
+		"message": "Dispensar todas as notificações..."
+	},
+	"click_dismiss": {
+		"message": "clique para dispensar..."
+	},
+	// player
+	"pause": {
+		"message": "Pausar"
+	},
+	"stop": {
+		"message": "Parar"
+	},
+	"speed_down": {
+		"message": "Diminuir velocidade"
+	},
+	"speed_up": {
+		"message": "Aumentar velocidade"
+	},
+	"playing": {
+		"message": "Reproduzindo"
+	},
+	// search
+	
+	// podcasts
+	"number_episodes": {
+		"message": "$number$ Episódio(s)",
+		"description": "Number of episodes to be shown in the podcasts list",
+		"placeholders": {
+			"number": {
+				"content": "$1",
+				"example": "20"
+			}
+		}
+	},
+	"publication_date": {
+		"message": "Data de publicação"
+	},
+	// episodes
+	"all_eps_from": {
+		"message": "Todos os episódios de <i>$podcast$</i>",
+		"placeholders": {
+			"podcast": {
+				"content": "$1"
+			}
+		}
+	},
+	"eps_from": {
+		"message": "Episódios de $podcast$",
+		"placeholders": {
+			"podcast": {
+				"content": "$1"
+			}
+		}
+	},
+	// options
+	"auto_update": {
+		"message": "Atualizar podcasts automaticamente"
+	},
+	"update_frequency": {
+		"message": "Frequência de atualização"
+	},
+	"minutes": {
+		"message": "minutos"
+	},
+	"save": {
+		"message": "Salvar"
+	},
+	// toolbar
+	"update_all": {
+		"message": "Últimos episódios",
+		"description": "Link to the last episodes of all podcasts"
+	},
+	"last_episodes": {
+		"message": "Atualizar todos",
+		"description": "Update all podcasts"
+	},
+	"options": {
+		"message": "Opções"
+	},
+	"report_bug": {
+		"message": "Reportar um problema"
+	},
+	"about": {
+		"message": "Sobre..."
+	}
+}

@@ -1,5 +1,5 @@
 <div id="episodes" class="mainContentBox">
-	<h1 class="sectionTitle episodesSectionTitle">Last episodes</h1>
+	<h1 class="sectionTitle episodesSectionTitle">{{'last_episodes' | chrome_i18n }}</h1>
 	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
 		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
 			<table>
@@ -22,10 +22,10 @@
 								<span ng-if="!episode.link" class="itemTitle episodeTitle">{{episode.title}}</span>
 								<br>
 								<a ng-href="#/Episodes/{{episode.podcastIndex}}">
-									<span>All episodes from <i>{{episode.podcastTitle}}</i></span>
+									<span ng-bind-html="{ message: 'all_eps_from', arguments: [episode.podcastTitle]} | chrome_i18n"></span>
 								</a>
 								<br>
-								<span>Publication date: {{episode.pubDate}}</span>
+								<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 							</div>
 							<div class="itemDescription" ng-bind-html="episode.description">
 							</div>

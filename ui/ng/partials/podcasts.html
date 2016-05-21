@@ -20,7 +20,7 @@
 								</a>
 								<br>
 								<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
-									<span class="episodes">{{podcast.episodesNumber}} Episode(s)</span>
+									<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span>
 								</a>
 								<br>
 								<!--must add a check for pubdate-->

@@ -8,14 +8,14 @@
 }
 </style>
 <div class="mainContentBox">
-	<h1 class="sectionTitle">Options</h1>
+	<h1 class="sectionTitle">{{ 'options' | chrome_i18n }}</h1>
 	<div class="listEntry">
-		<input type="checkbox" ng-model="options.autoUpdate"><span>Auto update podcasts</span>
+		<input type="checkbox" ng-model="options.autoUpdate"><span>{{ 'auto_update' | chrome_i18n }}</span>
 		<br>
-		<span>Auto update every </span>
+		<span>{{ 'update_frequency' | chrome_i18n }}:</span>
 		<input id="updatePeriod" ng-model="options.autoUpdateEvery" ng-disabled="!options.autoUpdate">
-		<span> minutes</span>
+		<span> {{ 'minutes' | chrome_i18n }}</span>
 		<br>
-		<button ng-click="save()">Save</button>
+		<button ng-click="save()">{{ 'save' | chrome_i18n }}</button>
 	</div>
 </div>

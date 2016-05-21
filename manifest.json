@@ -4,6 +4,7 @@
 
 	"description": "A podcast aggregator for Chrome",
 	"version": "1.9.3",
+	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
 		"16": "images/rss-alt-2x.png",

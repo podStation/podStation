@@ -27,3 +27,14 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		redirectTo: '/LastEpisodes/20'
 	});
 }]);
+
+myApp.filter('chrome_i18n', function() {
+	return function(input) {
+		if(typeof input === 'object') {
+			return chrome.i18n.getMessage(input.message, input.arguments);
+		}
+		else if (typeof input === 'string') {
+			return chrome.i18n.getMessage(input);
+		}
+	};
+});
