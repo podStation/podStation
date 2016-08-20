@@ -32,6 +32,28 @@
 	"playing": {
 		"message": "Playing"
 	},
+	// search
+	"open_in_itunes": {
+		"message": "Open in iTunes"
+	},
+	"search_results_for": {
+		"message": "Search Results for <i>$search_term$</i>",
+		"placeholders": {
+			"search_term": {
+				"content": "$1",
+				"example": "some podcast"
+			}
+		}
+	},
+	"results_from" : {
+		"message": "Results from <a href=\"http://www.podcastsearchservice.com/\">www.podcastsearchservice.com</a> and <a href=\"http://www.apple.com/itunes/\">iTunes</a>"
+	},
+	"itunes_trademark" : {
+		"message": "iTunes is a trademark of Apple Inc., registered in the U.S. and other countries."
+	},
+	"no_results" : {
+		"message": "Sorry, we could not find a podcast for you..."
+	},
 	// podcasts
 	"number_episodes": {
 		"message": "$number$ Episode(s)",
@@ -76,14 +98,29 @@
 	"save": {
 		"message": "Save"
 	},
+	// about
+	"about" : {
+		"message": "About"
+	},
+	"about_long_text" : {
+		"message": "<p>Podstation is a simple podcast agregator.</p>
+		<p>This is a work in progress, to check the planned features or suggest new ones, visit our 
+		<a href=\"https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open\" target=\"_blank\">bug tracking page</a>.</p> 
+		<p>Podstation is developed by <a href=\"https://de.linkedin.com/pub/guilherme-dellagustin/28/957/154\" target=\"_blank\">Guilherme Dellagustin</a> and
+		it is an open source project, fork it at <a href=\"https://github.com/podStation/podStation\" target=\"_blank\">GitHub</a>.
+		</p>"
+	},
+	"stats_for_nerds": {
+		"message": "Stats for Nerds"
+	},
 	// toolbar
 	"update_all": {
-		"message": "Last Episodes",
-		"description": "Link to the last episodes of all podcasts"
-	},
-	"last_episodes": {
 		"message": "Update All",
 		"description": "Update all podcasts"
+	},
+	"last_episodes": {
+		"message": "Last Episodes",
+		"description": "Link to the last episodes of all podcasts"
 	},
 	"options": {
 		"message": "Options"
@@ -93,5 +130,15 @@
 	},
 	"about": {
 		"message": "About..."
+	},
+	// pop up
+	"open": {
+		"message": "open"
+	},
+	"feeds_in_page": {
+		"message": "Feeds in this page"
+	},
+	"feed_in_list": {
+		"message": "Hooray! you have this feed already."
 	}
 }

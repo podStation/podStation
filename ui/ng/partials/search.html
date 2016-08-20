@@ -1,11 +1,11 @@
 <div id="podcasts" class="mainContentBox">
-	<h1 class="sectionTitle">Search Results for '{{searchTerms}}'</h1>
-	<h2>Results from <a href="http://www.podcastsearchservice.com/">www.podcastsearchservice.com</a> and <a href="http://www.apple.com/itunes/">iTunes</a></h2>
-	<p>iTunes is a trademark of Apple Inc., registered in the U.S. and other countries.</p>
+	<h1 class="sectionTitle" ng-bind-html="{ message: 'search_results_for', arguments: [searchTerms] } | chrome_i18n"></h1>
+	<h2 ng-bind-html="'results_from' | chrome_i18n"></h2>
+	<p>{{ 'itunes_trademark' | chrome_i18n }}</p>
 	<div class="listEntry" ng-repeat="searchResult in searchResults">
 		<div class="itemMenu">
-			<a href="" ng-if="!searchResult.subscribed" title="Add podcast" ng-click="searchResult.addPodcast()"><i class="fa fa-plus"></i></a>
-			<i ng-if="searchResult.subscribed" title="Hooray! you have this feed already." class="fa fa-check"></i>
+			<a href="" ng-if="!searchResult.subscribed" title="{{ 'add_feed' | chrome_i18n }}" ng-click="searchResult.addPodcast()"><i class="fa fa-plus"></i></a>
+			<i ng-if="searchResult.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
 		</div>
 		<div>
 			<table>
@@ -20,7 +20,7 @@
 									<span class="itemTitle">{{searchResult.title}}</span>
 								</a>
 								<br>
-								<a ng-if="searchResult.itunesLink" ng-href="{{searchResult.itunesLink}}" target="_blank">Open in iTunes</a>
+								<a ng-if="searchResult.itunesLink" ng-href="{{searchResult.itunesLink}}" target="_blank">{{ 'open_in_itunes' | chrome_i18n }}</a>
 								<div class="itemDescription">
 									{{searchResult.description}}
 								</div>
@@ -31,5 +31,5 @@
 			</table>
 		</div>
 	</div>
-	<h3 ng-if="!searchResults.length">Sorry, we could not find a podcast for you...</h3>
+	<h3 ng-if="!searchResults.length">{{ 'no_results' | chrome_i18n }}</h3>
 </div>

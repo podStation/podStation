@@ -1,13 +1,8 @@
 <div id="about" class="mainContentBox">
-	<h1 class="sectionTitle">About</h1>
+	<h1 class="sectionTitle">{{'about' | chrome_i18n }}</h1>
 	<div id="aboutContent">
-		<p>Podstation is a simple podcast agregator.</p>
-		<p>This is a work in progress, to check the planned features or suggest new ones,
-		visit our <a href="https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open" target="_blank">bug tracking page</a>.
-		</p>
-		<p>Podstation is developed by <a href="https://de.linkedin.com/pub/guilherme-dellagustin/28/957/154" target="_blank">Guilherme Dellagustin</a> and
-		it is an open source project, fork it at <a href="https://github.com/podStation/podStation" target="_blank">GitHub</a>.
-		</p>
+		<div ng-bind-html="{ message: 'about_long_text'} | chrome_i18n">
+		</div>
 		<h3>Powered by</h3>
 		<ul>
 			<li><a href="https://jquery.com/" target="_blank">jQuery</a></li>
@@ -18,7 +13,7 @@
 			<li><a href="https://useiconic.com/open/" target="_blank">Open Iconic</a></li>
 			<li><a href="https://github.com/aadsm/jsmediatags" target="_blank">JS MediaTags</a></li>
 		</ul>
-		<h3>Stats for Nerds</h3>
+		<h3>{{'stats_for_nerds' | chrome_i18n }}</h3>
 		<ul>
 			<li>Synch storage: {{bytesInSynchStorage}} B</li>
 			<li>Local storage: {{bytesInLocalStorage/(1024*1024) | number : 2}} MB</li>

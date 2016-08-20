@@ -65,40 +65,48 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 
 	$scope.updateEpisodes = function() {
 		var that = this;
+		
 		this.episodes = [];
+		this.podcastTitle = '';
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
-			$scope.$apply(function(){
-				var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
+			var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
 
+			$scope.$apply(function() {
 				that.podcastImage = storedPodcast.image;
 				that.podcastTitle = storedPodcast.title;
-
-				storedPodcast.episodes.forEach(function(storedEpisode) {
-					var episodeForController;
-
-					episodeForController = {
-						fromStoredEpisode: function(storedEpisode) {
-							this.link = storedEpisode.link;
-							this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
-							// this.image = podcast ? podcast.image : undefined;
-							this.url = storedEpisode.enclosure.url;
-							this.description = storedEpisode.description;
-							this.pubDate = formatDate(new Date(storedEpisode.pubDate));
-							this.play = function() {
-								episodePlayer.play({
-									title: this.title,
-									url: this.url
-								});
-							}
-						}
-					};
-
-					episodeForController.fromStoredEpisode(storedEpisode);
-
-					that.episodes.push(episodeForController);
-				});
 			});
+
+			// the following part is more expensive, we let the browser update 
+			// the content on the screen before going on.
+			setTimeout(function() {
+				$scope.$apply(function() {
+					storedPodcast.episodes.forEach(function(storedEpisode) {
+						var episodeForController;
+
+						episodeForController = {
+							fromStoredEpisode: function(storedEpisode) {
+								this.link = storedEpisode.link;
+								this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
+								// this.image = podcast ? podcast.image : undefined;
+								this.url = storedEpisode.enclosure.url;
+								this.description = storedEpisode.description;
+								this.pubDate = formatDate(new Date(storedEpisode.pubDate));
+								this.play = function() {
+									episodePlayer.play({
+										title: this.title,
+										url: this.url
+									});
+								}
+							}
+						};
+
+						episodeForController.fromStoredEpisode(storedEpisode);
+
+						that.episodes.push(episodeForController);
+					});
+				});
+			} ,1);
 		});
 	};
 
