@@ -1,9 +1,10 @@
 {
-	"name": "podStation",
+	"name": "podStation Podcast Player",
+	"short_name": "podStation",
 	"author": "Guilherme Dellagustin",
 
 	"description": "A podcast aggregator for Chrome",
-	"version": "1.9.3",
+	"version": "1.9.4",
 	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
