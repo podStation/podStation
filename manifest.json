@@ -50,5 +50,14 @@
 		"persistent": false
 	},
 	"manifest_version": 2,
-	"options_page": "podstation.html#/Options"
+	"options_page": "podstation.html#/Options",
+	"commands": {
+		"play_pause": {
+			"suggested_key": {
+				"default": "MediaPlayPause"
+			},
+			"description": "Play/Pause podcast",
+			"global": true
+		}
+	}
 }

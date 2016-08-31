@@ -67,6 +67,10 @@ messageService.for('optionsManager').onMessage('optionsChanged', function(option
 	setupAutoUpdate(options, false);
 });
 
+chrome.commands.onCommand.addListener(function(command) {
+	console.log(command);
+});
+
 optionsManager.getOptions(function(options) {
 	setupAutoUpdate(options, true);
 });
