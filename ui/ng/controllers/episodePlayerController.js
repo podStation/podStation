@@ -124,46 +124,37 @@ myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  functio
 	episodePlayer.getAudioInfo(getAudioInfoCallback);
 }]);
 
-myApp.factory('episodePlayer', function() {
+myApp.factory('episodePlayer', ['messageService', function(messageService) {
 	var episodePlayer = {};
 
 	episodePlayer.play = function(episode) {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.play',
+		messageService.for('audioPlayer').sendMessage('play', {
 			episode: episode
 		});
 	};
 
 	episodePlayer.pause = function() {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.pause'
-		});
+		messageService.for('audioPlayer').sendMessage('pause');
 	};
 
 	episodePlayer.stop = function() {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.stop'
-		});
+		messageService.for('audioPlayer').sendMessage('stop');
 	};
 
 	episodePlayer.seek = function(position) {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.seek',
+		messageService.for('audioPlayer').sendMessage('seek', {
 			position: position
 		});
 	};
 
 	episodePlayer.shiftPlaybackRate = function(delta) {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.shiftPlaybackRate',
+		messageService.for('audioPlayer').sendMessage('shiftPlaybackRate', {
 			delta: delta
 		});
 	};
 
 	episodePlayer.getAudioInfo = function(callback) {
-		chrome.runtime.sendMessage({
-			type: 'episodePlayer.getAudioInfo',
-		}, function(response) {
+		messageService.for('audioPlayer').sendMessage('getAudioInfo', {}, function(response) {
 			callback(response);
 		});
 	};
@@ -184,33 +175,24 @@ myApp.factory('episodePlayer', function() {
 		episodePlayer.changedCallback = changedCallback;
 	};
 
-	chrome.runtime.onMessage.addListener(function(message) {
-		if(!message.type) {
-			return;
+	messageService.for('audioPlayer')
+	  .onMessage('playing', function(messageContent) {
+		if(episodePlayer.playingCallback) {
+			episodePlayer.playingCallback(messageContent.episodePlayerInfo)
 		}
-
-		switch(message.type) {
-			case 'episodePlayer.playing':
-				if(episodePlayer.playingCallback) {
-					episodePlayer.playingCallback(message.episodePlayerInfo)
-				}
-				break;
-			case 'episodePlayer.paused':
-				if(episodePlayer.pausedCallback) {
-					episodePlayer.pausedCallback()
-				}
-				break;
-			case 'episodePlayer.stopped':
-				if(episodePlayer.stoppedCallback) {
-					episodePlayer.stoppedCallback()
-				}
-				break;
-			case 'episodePlayer.changed':
-				if(episodePlayer.changedCallback) {
-					episodePlayer.changedCallback(message.episodePlayerInfo)
-				}
+	}).onMessage('paused', function() {
+		if(episodePlayer.pausedCallback) {
+			episodePlayer.pausedCallback()
+		}
+	}).onMessage('stopped', function() {
+		if(episodePlayer.stoppedCallback) {
+			episodePlayer.stoppedCallback()
+		}
+	}).onMessage('changed', function() {
+		if(episodePlayer.changedCallback) {
+			episodePlayer.changedCallback(message.episodePlayerInfo)
 		}
 	});
 
 	return episodePlayer;
-})
+}]);
