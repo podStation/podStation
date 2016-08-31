@@ -70,3 +70,10 @@ messageService.for('optionsManager').onMessage('optionsChanged', function(option
 optionsManager.getOptions(function(options) {
 	setupAutoUpdate(options, true);
 });
+
+if(chrome.i18n.getUILanguage() === 'pt-BR') {
+	chrome.runtime.setUninstallURL('https://goo.gl/forms/fjOsh46l7IyZ1XIg1');
+}
+else {
+	chrome.runtime.setUninstallURL('https://goo.gl/forms/80WF29XcdmLnSuAY2');
+}
