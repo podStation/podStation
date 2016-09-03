@@ -53,16 +53,15 @@ function pauseTimeOut() {
 	}
 }
 
-messageService.for('audioPlayer')
-  .onMessage('play', function(messageContent) {
-	if(messageContent.episode && messageContent.episode.url &&
-		(!audioPlayer || messageContent.episode.url !== audioPlayer.src)) {
+function play(audioInfo) {
+	if(audioInfo && audioInfo.episode && audioInfo.episode.url &&
+		(!audioPlayer || audioInfo.episode.url !== audioPlayer.src)) {
 
 		if(audioPlayer) {
 			audioPlayer.pause( );
 		}
-		audioPlayer = new Audio(messageContent.episode.url);
-		episodeInfo = messageContent.episode;
+		audioPlayer = new Audio(audioInfo.episode.url);
+		episodeInfo = audioInfo.episode;
 
 		getAudioTags(function(tags) {
 			episodeInfo.audioTags = tags;
@@ -79,7 +78,9 @@ messageService.for('audioPlayer')
 	chrome.browserAction.setBadgeText({
 		text: 'I>'
 	});
-}).onMessage('pause', function() {
+}
+
+function pause() {
 	pauseTimeOut();
 	audioPlayer.pause();
 
@@ -88,6 +89,23 @@ messageService.for('audioPlayer')
 	chrome.browserAction.setBadgeText({
 		text: 'II'
 	});
+}
+
+messageService.for('audioPlayer')
+  .onMessage('play', function(messageContent) {
+	play(messageContent);
+}).onMessage('pause', function() {
+	pause();
+}).onMessage('togglePlayPause', function() {
+	if(!audioPlayer)
+		return;
+
+	if(audioPlayer.paused) {
+		play();
+	}
+	else {
+		pause();
+	}
 }).onMessage('stop', function() {
 	pauseTimeOut();
 	audioPlayer.pause();

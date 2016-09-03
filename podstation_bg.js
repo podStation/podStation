@@ -68,7 +68,11 @@ messageService.for('optionsManager').onMessage('optionsChanged', function(option
 });
 
 chrome.commands.onCommand.addListener(function(command) {
-	console.log(command);
+	switch(command) {
+		case 'play_pause':
+			messageService.for('audioPlayer').sendMessage('togglePlayPause');
+			break;
+	}
 });
 
 optionsManager.getOptions(function(options) {
