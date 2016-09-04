@@ -40,10 +40,7 @@ function buildAudioInfo() {
 }
 
 function playingTimeOut() {
-	chrome.runtime.sendMessage({
-		type: 'episodePlayer.playing',
-		episodePlayerInfo: buildAudioInfo()
-	});
+	messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
 	// recursive timeout to be called 1/second
 	playingTimeOutID = window.setTimeout(playingTimeOut, 1000);
@@ -56,82 +53,82 @@ function pauseTimeOut() {
 	}
 }
 
-chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	if(!message.type) {
+function play(audioInfo) {
+	if(audioInfo && audioInfo.episode && audioInfo.episode.url &&
+		(!audioPlayer || audioInfo.episode.url !== audioPlayer.src)) {
+
+		if(audioPlayer) {
+			audioPlayer.pause( );
+		}
+		audioPlayer = new Audio(audioInfo.episode.url);
+		episodeInfo = audioInfo.episode;
+
+		getAudioTags(function(tags) {
+			episodeInfo.audioTags = tags;
+		});
+	}
+
+	audioPlayer.play();
+
+	// if we don't eliminate the timeout first we may have two timeouts
+	// running in parallel (play while already playing)
+	pauseTimeOut();
+	playingTimeOut();
+
+	chrome.browserAction.setBadgeText({
+		text: 'I>'
+	});
+}
+
+function pause() {
+	pauseTimeOut();
+	audioPlayer.pause();
+
+	messageService.for('audioPlayer').sendMessage('paused');
+
+	chrome.browserAction.setBadgeText({
+		text: 'II'
+	});
+}
+
+messageService.for('audioPlayer')
+  .onMessage('play', function(messageContent) {
+	play(messageContent);
+}).onMessage('pause', function() {
+	pause();
+}).onMessage('togglePlayPause', function() {
+	if(!audioPlayer)
 		return;
+
+	if(audioPlayer.paused) {
+		play();
 	}
-
-	switch(message.type) {
-		case 'episodePlayer.play':
-			if(message.episode && message.episode.url &&
-			   (!audioPlayer || message.episode.url !== audioPlayer.src)) {
-
-				if(audioPlayer) {
-					audioPlayer.pause( );
-				}
-				audioPlayer = new Audio(message.episode.url);
-				episodeInfo = message.episode;
-
-				getAudioTags(function(tags) {
-					episodeInfo.audioTags = tags;
-				});
-			}
-
-			audioPlayer.play();
-
-			// if we don't eliminate the timeout first we may have two timeouts
-			// running in parallel (play while already playing)
-			pauseTimeOut();
-			playingTimeOut();
-
-			chrome.browserAction.setBadgeText({
-				text: 'I>'
-			});
-			break;
-		case 'episodePlayer.pause':
-			pauseTimeOut();
-			audioPlayer.pause();
-
-			chrome.runtime.sendMessage({
-				type: 'episodePlayer.paused',
-			});
-
-			chrome.browserAction.setBadgeText({
-				text: 'II'
-			});
-			break;
-		case 'episodePlayer.stop':
-			pauseTimeOut();
-			audioPlayer.pause();
-			audioPlayer = undefined;
-			episodeInfo = undefined;
-
-			chrome.runtime.sendMessage({
-				type: 'episodePlayer.stopped',
-			});
-
-			chrome.browserAction.setBadgeText({
-				text: ''
-			});
-			break;
-		case 'episodePlayer.seek':
-			if(audioPlayer && audioPlayer.duration) {
-				audioPlayer.currentTime = message.position * audioPlayer.duration;
-
-				chrome.runtime.sendMessage({
-					type: 'episodePlayer.changed',
-					episodePlayerInfo: buildAudioInfo()
-				});
-			}
-			break;
-		case 'episodePlayer.shiftPlaybackRate':
-			if(audioPlayer && audioPlayer.playbackRate + message.delta > 0) {
-				audioPlayer.playbackRate += message.delta;
-			}
-			break;
-		case 'episodePlayer.getAudioInfo':
-			sendResponse(buildAudioInfo());
-			return true;
-			break;
+	else {
+		pause();
 	}
+}).onMessage('stop', function() {
+	pauseTimeOut();
+	audioPlayer.pause();
+	audioPlayer = undefined;
+	episodeInfo = undefined;
+
+	messageService.for('audioPlayer').sendMessage('stopped');
+
+	chrome.browserAction.setBadgeText({
+		text: ''
+	});
+	
+}).onMessage('shiftPlaybackRate', function(messageContent) {
+	if(audioPlayer && audioPlayer.playbackRate + messageContent.delta > 0) {
+		audioPlayer.playbackRate += messageContent.delta;
+	}
+}).onMessage('seek', function(messageContent) {
+	if(audioPlayer && audioPlayer.duration) {
+		audioPlayer.currentTime = messageContent.position * audioPlayer.duration;
+
+		messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+	}
+}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
+	sendResponse(buildAudioInfo());
+	return true;
 });

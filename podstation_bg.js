@@ -67,6 +67,14 @@ messageService.for('optionsManager').onMessage('optionsChanged', function(option
 	setupAutoUpdate(options, false);
 });
 
+chrome.commands.onCommand.addListener(function(command) {
+	switch(command) {
+		case 'play_pause':
+			messageService.for('audioPlayer').sendMessage('togglePlayPause');
+			break;
+	}
+});
+
 optionsManager.getOptions(function(options) {
 	setupAutoUpdate(options, true);
 });
