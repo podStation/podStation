@@ -188,6 +188,11 @@ h1 {
 	color: darkgrey;
 }
 
+.itemDescription img {
+	max-width: 400px;
+	height: auto;
+}
+
 #aboutContent {
 	font-size: medium;
 }
