@@ -7,8 +7,8 @@
 			</tr>
 		</tbody>
 	</table>
-	<div id="episodeList">
-		<div class="episodeEntry" ng-repeat="episode in episodes">
+	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
+		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
 			<table>
 				<tr>
 					<td ng-if="episode.image">

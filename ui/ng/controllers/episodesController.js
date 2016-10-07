@@ -62,6 +62,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	function($scope, $routeParams, episodePlayer, messageService) {
 
 	$scope.episodes = [];
+	$scope.numberEpisodes = 20;
+	$scope.podcastUrl = '';
 
 	$scope.updateEpisodes = function() {
 		var that = this;
@@ -71,6 +73,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
+
+			$scope.podcastUrl = storedPodcast.url;
 
 			$scope.$apply(function() {
 				that.podcastImage = storedPodcast.image;
@@ -110,13 +114,18 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 		});
 	};
 
-	$scope.updateEpisodes();
+	$scope.myPagingFunction = function() {
+		$scope.numberEpisodes += 20;
+		console.log('Paging function - ' + $scope.numberEpisodes);
+	};
 
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
-		if(messageContent.episodeListChanged) {
+		if(messageContent.episodeListChanged && messageContent.podcast.url === $scope.podcastUrl) {
 			$scope.$apply(function() {
 				$scope.updateEpisodes();
 			});
 		}
 	});
+
+	$scope.updateEpisodes();
 }]);
