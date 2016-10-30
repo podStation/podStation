@@ -86,7 +86,13 @@ var Podcast = function(url) {
 		this.status = 'updating';
 		console.log('Updating: ' + this.url);
 
-		$.ajaxSetup({cache: false});
+		$.ajaxSetup({
+			cache: false,
+
+			accepts: {
+				xml: 'application/rss+xml, application/xml, text/xml'
+			}
+		});
 
 		$.get(this.url, function(data) {
 			var xml = $(data);
