@@ -126,6 +126,31 @@ var PodcastManager;
 			});
 		});
 
+		function findNextFreeId(syncPodcastList) {
+			var idList = [];
+
+			idList = syncPodcastList.map(function(item) { return item.i });
+
+			if(!idList.length) {
+				return 1;
+			}
+
+			idList.sort(function(a, b){return a-b});
+
+			if(idList[0] > 1) {
+				return 1;
+			}
+
+			for(var i = 0; i < (idList.length - 1); i++) {
+				if(idList[i] + 1 !== idList[i+1]) {
+					// gap found, reuse id
+					return idList[i] + 1;
+				}
+			}
+
+			return idList[idList.length-1] + 1;
+		}
+
 		this.addPodcast = function(url) {
 			if(url !== '') {
 				var that = this;
@@ -142,7 +167,8 @@ var PodcastManager;
 					}
 
 					var podcastForSync = {
-						url: url
+						url: url,
+						i: findNextFreeId(syncPodcastList)
 					};
 
 					syncPodcastList.unshift(podcastForSync);
