@@ -51,6 +51,14 @@ var AudioPlayerManager;
 			}
 		}
 
+		function setEpisodeInProgress(podcastUrl, episodeId, currentTime) { 
+			messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
+				url: podcastUrl,
+				episodeId: episodeId,
+				currentTime: currentTime
+			});
+		}
+
 		function playingTimeOut() {
 			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
@@ -71,9 +79,20 @@ var AudioPlayerManager;
 
 				if(audioPlayer) {
 					audioPlayer.pause( );
+					setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
 				}
+
 				audioPlayer = new Audio(audioInfo.episode.url);
 				episodeInfo = audioInfo.episode;
+
+				messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
+					url: episodeInfo.podcastUrl,
+					episodeId: episodeInfo.guid,
+				}, function(currentTime) {
+					if(currentTime >= 0) {
+						audioPlayer.currentTime = currentTime;
+					}
+				});
 
 				getAudioTags(function(tags) {
 					episodeInfo.audioTags = tags;
@@ -96,6 +115,7 @@ var AudioPlayerManager;
 			pauseTimeOut();
 			audioPlayer.pause();
 
+			setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
 			messageService.for('audioPlayer').sendMessage('paused');
 
 			chrome.browserAction.setBadgeText({
@@ -121,6 +141,8 @@ var AudioPlayerManager;
 		}).onMessage('stop', function() {
 			pauseTimeOut();
 			audioPlayer.pause();
+			setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, 0);
+			
 			audioPlayer = undefined;
 			episodeInfo = undefined;
 
@@ -137,6 +159,8 @@ var AudioPlayerManager;
 		}).onMessage('seek', function(messageContent) {
 			if(audioPlayer && audioPlayer.duration) {
 				audioPlayer.currentTime = messageContent.position * audioPlayer.duration;
+
+				setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
 
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}

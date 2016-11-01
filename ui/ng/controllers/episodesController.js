@@ -22,13 +22,17 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 							this.image = storedEpisodeContainer.podcast.image;
 							this.podcastIndex = storedEpisodeContainer.podcastIndex;
 							this.podcastTitle = storedEpisodeContainer.podcast.title;
+							this.podcastUrl = storedEpisodeContainer.podcast.url;
 							this.url = storedEpisodeContainer.episode.enclosure.url;
 							this.description = storedEpisodeContainer.episode.description;
 							this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
+							this.guid = storedEpisodeContainer.episode.guid;
 							this.play = function() {
 								episodePlayer.play({
 									title: this.title,
-									url: this.url
+									url: this.url,
+									guid: this.guid,
+									podcastUrl: this.podcastUrl
 								});
 							}
 						}

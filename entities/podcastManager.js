@@ -27,6 +27,37 @@ var PodcastManager;
 			});
 		};
 
+		function loadPodcastInfoFromSync(url, loaded) {
+			loadPodcastsFromSync(function(syncPodcastList) {
+				var syncPodcast = syncPodcastList.find(function(item) { return item.url === url });
+
+				if(!syncPodcast) {
+					return false;
+				}
+			
+				var key = 'P' + syncPodcast.i;
+
+				chrome.storage.sync.get(key, function(storageObject) {
+					var syncPodcastInfo;
+
+					if(typeof storageObject[key] === "undefined") {
+						syncPodcastInfo = {};
+					}
+					else {
+						syncPodcastInfo = storageObject[key];
+					}
+
+					if( loaded(syncPodcastInfo) ) {
+						var newStorageObject = {};
+						newStorageObject[key] = syncPodcastInfo;
+						chrome.storage.sync.set(newStorageObject);
+					}
+				});
+				
+				return false;
+			});
+		};
+
 		var notificationIdLoading = 0;
 
 		function triggerNotifications() {
@@ -52,8 +83,47 @@ var PodcastManager;
 			}
 		}
 
+		function setEpisodeInProgress(url, episodeId, currentTime) {
+			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
+				if(!syncPodcastInfo.e) {
+					syncPodcastInfo.e = [];
+				}
+
+				var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
+
+				if(!episodeInfo) {
+					var newLenght = syncPodcastInfo.e.push({i: episodeId});
+					episodeInfo = syncPodcastInfo.e[newLenght - 1];
+				}
+
+				episodeInfo.t = Math.floor(currentTime);
+				episodeInfo.l = JSON.parse(JSON.stringify(new Date()));
+
+				return true;
+			});
+		}
+
+		function getStoredEpisodeInfo(url, episodeId, callback) {
+			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
+				var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
+
+				callback(episodeInfo);
+
+				return false;
+			});
+		}
+
 		messageService.for('podcast').onMessage('changed', function() {
 			triggerNotifications();
+		});
+
+		messageService.for('podcastManager')
+		  .onMessage('setEpisodeInProgress', function(message) {
+			setEpisodeInProgress(message.url, message.episodeId, message.currentTime);
+		}).onMessage('getEpisodeProgress', function(message, sendResponse) {
+			getStoredEpisodeInfo(message.url, message.episodeId, function(storedEpisodeInfo) {
+				sendResponse(storedEpisodeInfo ? storedEpisodeInfo.t : -1);
+			});
 		});
 
 		this.addPodcast = function(url) {
@@ -185,6 +255,24 @@ var PodcastManager;
 
 		instance = this;
 
+		function assignIdsInSyncStorage() {
+			loadPodcastsFromSync(function(syncPodcastList) {
+				if(syncPodcastList.length > 0 && syncPodcastList[0].i) {
+					// ids were already assigned
+					return false;
+				}
+
+				var nextId = 1;
+
+				syncPodcastList.forEach(function(storedPodcast) {
+					storedPodcast.i = nextId;
+					nextId++;
+				});
+
+				return true;
+			});
+		}
+
 		loadPodcasts = function() {
 			loadPodcastsFromSync(function(syncPodcastList) {
 				syncPodcastList.forEach(function(storedPodcast) {
@@ -201,8 +289,10 @@ var PodcastManager;
 			});
 		};
 
+		// this should only take effect once, when filling the ids
+		// of old stored data
+		assignIdsInSyncStorage();
+
 		loadPodcasts();
-
-
 	}
 })();
