@@ -117,6 +117,9 @@
 		"message": "Últimos episódios",
 		"description": "Link to the last episodes of all podcasts"
 	},
+	"review": {
+		"message": "Mande amor, deixe um review"
+	},
 	"options": {
 		"message": "Opções"
 	},

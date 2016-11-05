@@ -23,6 +23,22 @@ a:visited {
 	color: black;
 }
 
+.icon {
+	transition: 0.5s;
+}
+
+.icon_red:hover {
+	color: red;
+}
+
+.icon_facebook:hover {
+	color: #3b5998;
+}
+
+.icon_github:hover {
+	color: #4078c0;
+}
+
 td {
 	vertical-align: top;
 }
