@@ -85,6 +85,14 @@ var AudioPlayerManager;
 				audioPlayer = new Audio(audioInfo.episode.url);
 				episodeInfo = audioInfo.episode;
 
+				audioPlayer.onended = function() {
+					setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, 0);
+
+					chrome.browserAction.setBadgeText({
+						text: ''
+					});
+				};
+
 				messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
 					url: episodeInfo.podcastUrl,
 					episodeId: episodeInfo.guid,
