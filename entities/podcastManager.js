@@ -83,6 +83,13 @@ var PodcastManager;
 			}
 		}
 
+		// to save sync data, we need a criteria to remove episode data
+		function storedEpisodeListCleanUp(storedEpisodeList) {
+			return storedEpisodeList.filter(function(storedEpisode) {
+				return storedEpisode.t > 0;
+			});
+		}
+
 		function setEpisodeInProgress(url, episodeId, currentTime) {
 			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
 				if(!syncPodcastInfo.e) {
@@ -97,7 +104,10 @@ var PodcastManager;
 				}
 
 				episodeInfo.t = Math.floor(currentTime);
+				// the date object does not seem to be properly serialized
 				episodeInfo.l = JSON.parse(JSON.stringify(new Date()));
+
+				syncPodcastInfo.e = storedEpisodeListCleanUp(syncPodcastInfo.e);
 
 				return true;
 			});
