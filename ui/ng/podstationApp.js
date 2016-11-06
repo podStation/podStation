@@ -14,6 +14,9 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 	}).when('/Episodes/:podcastIndex', {
 		templateUrl: '/ui/ng/partials/episodes.html',
 		controller: 'episodesController'
+	}).when('/InProgress', {
+		templateUrl: '/ui/ng/partials/episodesInProgress.html',
+		controller: 'episodesInProgressController'
 	}).when('/Search/:searchTerms', {
 		templateUrl: '/ui/ng/partials/search.html',
 		controller: 'searchController'

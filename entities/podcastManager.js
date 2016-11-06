@@ -134,6 +134,19 @@ var PodcastManager;
 			getStoredEpisodeInfo(message.url, message.episodeId, function(storedEpisodeInfo) {
 				sendResponse(storedEpisodeInfo ? storedEpisodeInfo.t : -1);
 			});
+			return true;
+		}).onMessage('getSyncPodcastInfo', function(message, sendResponse) {
+			loadPodcastInfoFromSync(message.url, function(syncPodcastInfo) {
+
+				if(!syncPodcastInfo.e) {
+					syncPodcastInfo.e = [];
+				}
+
+				sendResponse(syncPodcastInfo);
+
+				return false;
+			});
+			return true;
 		});
 
 		function findNextFreeId(syncPodcastList) {

@@ -133,3 +133,97 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 
 	$scope.updateEpisodes();
 }]);
+
+myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
+	function($scope, $routeParams, episodePlayer, messageService) {
+
+	$scope.episodes = [];
+	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
+
+	// copied from episodePlayerController
+	// TODO: put in a service to be reused
+	function formatSeconds(seconds) {
+		var date = new Date(null);
+		date.setSeconds(seconds);
+
+		// this will work fine as long as less than 24hs, which is reasonable
+		return date.toISOString().substr(11, 8);
+	}
+
+	$scope.updateEpisodes = function() {
+		var that = this;
+
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
+
+				messageService.for('podcastManager').sendMessage('getSyncPodcastInfo', { url: podcast.url }, function(syncPodcastInfo) {
+					$scope.$apply(function() {
+						that.episodes = that.episodes.filter(function(item) {
+							return item.podcastUrl !== podcast.url; 
+						});
+
+						if(!syncPodcastInfo) {
+							return;
+						}
+						
+						syncPodcastInfo.e.forEach(function(syncEpisodeInfo) {
+							var episode = podcast.episodes.find(function(episode) {
+								return episode.guid === syncEpisodeInfo.i;
+							});
+
+							if(!episode) {
+								return;
+							}
+						
+							episodeForController = {
+								fromStoredEpisode: function(episode) {
+									this.link = episode.link;
+									this.title = episode.title ? episode.title : episode.url;
+									this.image = podcast.image;
+									this.podcastTitle = podcast.title;
+									this.podcastUrl = podcast.url;
+									this.url = episode.enclosure.url;
+									this.guid = episode.guid;
+									this.lastTimePlayed = new Date(syncEpisodeInfo.l);
+									this.lastTimePlayedFormatted = formatDate(this.lastTimePlayed);;
+									this.pausedAt = formatSeconds(syncEpisodeInfo.t);
+									this.play = function() {
+										episodePlayer.play({
+											title: this.title,
+											url: this.url,
+											guid: this.guid,
+											podcastUrl: this.podcastUrl
+										});
+									}
+								}
+							};
+
+							episodeForController.fromStoredEpisode(episode);
+							console.log(episodeForController);
+							that.episodes.push(episodeForController);
+						});
+
+						that.episodes.sort(function(a, b) {
+							return b.lastTimePlayed - a.lastTimePlayed;
+						});
+					});
+				});
+			});
+		});
+	};
+
+	$scope.myPagingFunction = function() {
+		$scope.numberEpisodes += 20;
+		console.log('Paging function - ' + $scope.numberEpisodes);
+	};
+
+	messageService.for('podcast').onMessage('changed', function(messageContent) {
+		if(messageContent.episodeListChanged) {
+			$scope.$apply(function() {
+				$scope.updateEpisodes();
+			});
+		}
+	});
+
+	$scope.updateEpisodes();
+}]);

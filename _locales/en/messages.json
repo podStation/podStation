@@ -85,6 +85,12 @@
 			}
 		}
 	},
+	"last_time_played": {
+		"message": "Last time played"
+	},
+	"paused_at": {
+		"message": "Paused at"
+	},
 	// options
 	"auto_update": {
 		"message": "Auto update podcasts"
@@ -116,6 +122,9 @@
 	"last_episodes": {
 		"message": "Last Episodes",
 		"description": "Link to the last episodes of all podcasts"
+	},
+	"in_progress": {
+		"message": "Episodes in progress"
 	},
 	"review": {
 		"message": "Send love, leave a review"
