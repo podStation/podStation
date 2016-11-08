@@ -194,6 +194,13 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 											guid: this.guid,
 											podcastUrl: this.podcastUrl
 										});
+									};
+									this.remove = function() {
+										messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
+											url: this.podcastUrl,
+											episodeId: this.guid,
+											currentTime: 0
+										});
 									}
 								}
 							};
