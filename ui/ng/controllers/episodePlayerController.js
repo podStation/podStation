@@ -188,7 +188,7 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 		if(episodePlayer.stoppedCallback) {
 			episodePlayer.stoppedCallback()
 		}
-	}).onMessage('changed', function() {
+	}).onMessage('changed', function(message) {
 		if(episodePlayer.changedCallback) {
 			episodePlayer.changedCallback(message.episodePlayerInfo)
 		}
