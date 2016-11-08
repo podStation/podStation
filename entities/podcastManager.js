@@ -58,6 +58,16 @@ var PodcastManager;
 			});
 		};
 
+		chrome.storage.onChanged.addListener(function(changes, areaName) {
+			if(areaName === "sync") {
+				for(key in changes) {
+					if(key.charAt(0) === 'P') {
+						messageService.for('podcastManager').sendMessage('podcastSyncInfoChanged');
+					}
+				}
+			}
+		});
+
 		var notificationIdLoading = 0;
 
 		function triggerNotifications() {

@@ -225,5 +225,11 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 		}
 	});
 
+	messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
+		$scope.$apply(function() {
+			$scope.updateEpisodes();
+		});
+	});
+
 	$scope.updateEpisodes();
 }]);
