@@ -1,0 +1,35 @@
+<div id="episodes" class="mainContentBox">
+	<h1 class="sectionTitle episodesSectionTitle">{{'in_progress' | chrome_i18n }}</h1>
+	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
+		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
+			<table>
+				<tr>
+					<td ng-if="episode.image">
+						<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
+					</td>
+					<td>
+						<div class="itemMenu">
+							<div ng-if="episode.url">
+								<a href="" ng-click="episode.remove()"><i class="fa fa-remove"></i></a>
+								<a href="" ng-click="episode.play()"><i class="fa fa-play"></i></a>
+								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
+							</div>
+						</div>
+						<div class="textView">
+							<div class="itemHeader">
+								<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank" class="itemTitle episodeTitle">
+									<span>{{episode.title}}</span>
+								</a>
+								<span ng-if="!episode.link" class="itemTitle episodeTitle">{{episode.title}}</span>
+								<br>
+								<span>{{'last_time_played' | chrome_i18n }}: {{ episode.lastTimePlayedFormatted }}</span>
+								<br>
+								<span>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt}}</span>
+							</div>
+						</div>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

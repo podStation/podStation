@@ -206,7 +206,6 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 							};
 
 							episodeForController.fromStoredEpisode(episode);
-							console.log(episodeForController);
 							that.episodes.push(episodeForController);
 						});
 
