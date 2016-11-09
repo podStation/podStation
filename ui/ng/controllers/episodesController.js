@@ -96,14 +96,16 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 							fromStoredEpisode: function(storedEpisode) {
 								this.link = storedEpisode.link;
 								this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
-								// this.image = podcast ? podcast.image : undefined;
 								this.url = storedEpisode.enclosure.url;
 								this.description = storedEpisode.description;
 								this.pubDate = formatDate(new Date(storedEpisode.pubDate));
+								this.guid = storedEpisode.guid;
 								this.play = function() {
 									episodePlayer.play({
 										title: this.title,
-										url: this.url
+										url: this.url,
+										guid: this.guid,
+										podcastUrl: storedPodcast.url
 									});
 								}
 							}
