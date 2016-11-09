@@ -58,6 +58,11 @@ var PodcastManager;
 			});
 		};
 
+		function removePodcastInfoFromSync(id) {
+			var key = 'P' + id;
+			chrome.storage.sync.remove(key);
+		}
+
 		chrome.storage.onChanged.addListener(function(changes, areaName) {
 			if(areaName === "sync") {
 				for(key in changes) {
@@ -234,6 +239,7 @@ var PodcastManager;
 			loadPodcastsFromSync(function(syncPodcastList) {
 				syncPodcastList.forEach(function(item) {
 					if( item.url === url) {
+						removePodcastInfoFromSync(item.i);
 						syncPodcastList.splice(syncPodcastList.indexOf(item), 1);
 						return false;
 					}
