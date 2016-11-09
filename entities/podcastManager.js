@@ -130,9 +130,11 @@ var PodcastManager;
 
 		function getStoredEpisodeInfo(url, episodeId, callback) {
 			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
-				var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
+				if(syncPodcastInfo.e) {
+					var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
 
-				callback(episodeInfo);
+					callback(episodeInfo);
+				}
 
 				return false;
 			});
