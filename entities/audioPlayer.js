@@ -13,6 +13,7 @@ var AudioPlayerManager;
 		var audioPlayer;
 		var episodeInfo;
 		var playingTimeOutID;
+		var timeOutCounter = 0;
 
 		function getAudioTags(callback) {
 			new jsmediatags.Reader(audioPlayer.src)
@@ -62,6 +63,13 @@ var AudioPlayerManager;
 		function playingTimeOut() {
 			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
+			timeOutCounter++;
+
+			if(timeOutCounter === 10) {
+				timeOutCounter = 0;
+				setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
+			}
+
 			// recursive timeout to be called 1/second
 			playingTimeOutID = window.setTimeout(playingTimeOut, 1000);
 		}
@@ -70,6 +78,7 @@ var AudioPlayerManager;
 			if(playingTimeOutID) {
 				window.clearTimeout(playingTimeOutID);
 				playingTimeOutID = undefined;
+				timeOutCounter = 0;
 			}
 		}
 
