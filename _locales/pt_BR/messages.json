@@ -85,6 +85,15 @@
 			}
 		}
 	},
+	"no_podcasts": {
+		"message": "Você ainda não tem nenhum podcast, use a barra de pesquisa para procurar um ou adicione seus feeds"
+	},
+	"no_episodes": {
+		"message": "Você ainda não tem nenhum episódio, busque por podcasts ou adicione feeds"
+	},
+	"no_podcast_in_progress": {
+		"message": "Você não tem podcasts em progresso no momento"
+	},
 	"last_time_played": {
 		"message": "Última vez tocado"
 	},

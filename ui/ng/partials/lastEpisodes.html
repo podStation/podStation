@@ -1,5 +1,6 @@
 <div id="episodes" class="mainContentBox">
 	<h1 class="sectionTitle episodesSectionTitle">{{'last_episodes' | chrome_i18n }}</h1>
+	<h3 ng-if="!episodes.length">{{'no_episodes' | chrome_i18n }}</h3>
 	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
 		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
 			<table>

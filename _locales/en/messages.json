@@ -85,6 +85,15 @@
 			}
 		}
 	},
+	"no_podcasts": {
+		"message": "You don't have any podcast yet, use the search bar to find one or add some feeds"
+	},
+	"no_episodes": {
+		"message": "You don't have any episode yet, search for podcasts or add some feeds"
+	},
+	"no_podcast_in_progress": {
+		"message": "You don't have episodes in progress at the moment"
+	},
 	"last_time_played": {
 		"message": "Last time played"
 	},

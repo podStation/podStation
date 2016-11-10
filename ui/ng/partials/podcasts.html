@@ -1,5 +1,6 @@
 <div id="podcasts" class="mainContentBox">
 	<h1 class="sectionTitle">Podcasts</h1>
+	<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
 	<div id="podcastList">
 		<div ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
 			<div class="itemMenu">
