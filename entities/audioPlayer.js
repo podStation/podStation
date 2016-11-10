@@ -79,7 +79,10 @@ var AudioPlayerManager;
 
 				if(audioPlayer) {
 					audioPlayer.pause( );
-					setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
+
+					if(audioPlayer.currentTime	!= audioPlayer.duration) {
+						setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
+					}
 				}
 
 				audioPlayer = new Audio(audioInfo.episode.url);
