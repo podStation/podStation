@@ -15,6 +15,27 @@ var AudioPlayerManager;
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
+		function showBrowserNotification(options) {
+			var title;
+
+			switch(options.event) {
+				case 'playing':
+					chrome.notifications.clear('paused');
+					break;
+				case 'paused':
+					chrome.notifications.clear('playing');
+					break;
+			}
+
+			chrome.notifications.create(options.event, {
+				type: 'progress',
+				iconUrl: episodeInfo && episodeInfo.audioTags ? episodeInfo.audioTags.imageDataUrl : 'images/rss-alt-8x.png',
+				title: title = chrome.i18n.getMessage(options.event),
+				message: episodeInfo ? episodeInfo.title : '',
+				progress: Math.round(audioPlayer.duration ? ( audioPlayer.currentTime / audioPlayer.duration ) * 100 : 0)
+			});
+		}
+
 		function getAudioTags(callback) {
 			new jsmediatags.Reader(audioPlayer.src)
 			.setTagsToRead(["PIC", "APIC"])
@@ -121,6 +142,10 @@ var AudioPlayerManager;
 
 			audioPlayer.play();
 
+			if(audioInfo && audioInfo.showNotification) {
+				showBrowserNotification({event: 'playing'});
+			}
+
 			// if we don't eliminate the timeout first we may have two timeouts
 			// running in parallel (play while already playing)
 			pauseTimeOut();
@@ -131,9 +156,13 @@ var AudioPlayerManager;
 			});
 		}
 
-		function pause() {
+		function pause(options) {
 			pauseTimeOut();
 			audioPlayer.pause();
+
+			if(options && options.showNotification) {
+				showBrowserNotification({event: 'paused'});
+			}
 
 			setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
 			messageService.for('audioPlayer').sendMessage('paused');
@@ -153,10 +182,10 @@ var AudioPlayerManager;
 				return;
 
 			if(audioPlayer.paused) {
-				play();
+				play({ showNotification: true });
 			}
 			else {
-				pause();
+				pause({ showNotification: true });
 			}
 		}).onMessage('stop', function() {
 			pauseTimeOut();

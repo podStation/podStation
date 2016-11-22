@@ -32,6 +32,9 @@
 	"playing": {
 		"message": "Playing"
 	},
+	"paused": {
+		"message": "Paused"
+	},
 	// search
 	"open_in_itunes": {
 		"message": "Open in iTunes"

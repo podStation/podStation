@@ -32,6 +32,9 @@
 	"playing": {
 		"message": "Reproduzindo"
 	},
+	"paused": {
+		"message": "Pausado"
+	},
 	// search
 	"open_in_itunes": {
 		"message": "Abrir no iTunes"
