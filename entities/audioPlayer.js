@@ -120,6 +120,7 @@ var AudioPlayerManager;
 
 				audioPlayer.onended = function() {
 					setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, 0);
+					pauseTimeOut();
 
 					chrome.browserAction.setBadgeText({
 						text: ''
