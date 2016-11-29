@@ -87,7 +87,7 @@ var PodcastManager;
 			if(loadingEpisodes) {
 				notificationIdLoading = notificationManager.updateNotification(notificationIdLoading, {
 					icon: 'fa-refresh fa-spin',
-					text: 'Updating ' + loadingEpisodes + ' podcast(s)...'
+					text: chrome.i18n.getMessage('updating_podcasts')
 				});
 			}
 			else {
@@ -263,9 +263,43 @@ var PodcastManager;
 				podcast.update();
 			}
 			else {
-				this.podcastList.forEach(function(podcast) {
-					podcast.update();
+				var podcastIndex;
+				var maxConcurrentUpdates = 3;
+				var that = this;
+
+				that.podcastList.forEach(function(podcast) {
+					if(podcast.isUpdating())
+						maxConcurrentUpdates--;	
 				});
+
+				if(maxConcurrentUpdates <= 0)
+					return;
+				
+				var podcastUpdate = function() {
+					if(podcastIndex >= that.podcastList.length)
+						return;
+
+					var jqxhr = that.podcastList[podcastIndex].update();
+
+					if(jqxhr) {
+						jqxhr.always(function() {
+							podcastIndex++;
+							podcastUpdate();
+						});
+					}
+					else {
+						// most likely, it is already updating
+						setTimeOut(function() {
+							// we want it to be async because of the loop below
+							podcastIndex++;
+							podcastUpdate();
+						}, 0);
+					}
+				}
+
+				for(podcastIndex = 0; podcastIndex < maxConcurrentUpdates; podcastIndex++) {
+					podcastUpdate();
+				}
 			}
 		}
 

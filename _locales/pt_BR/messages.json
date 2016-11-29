@@ -71,6 +71,9 @@
 	"publication_date": {
 		"message": "Data de publicação"
 	},
+	"updating_podcasts": {
+		"message": "Atualizando podcasts..."
+	},
 	// episodes
 	"all_eps_from": {
 		"message": "Todos os episódios de <i>$podcast$</i>",

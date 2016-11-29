@@ -98,7 +98,7 @@ var Podcast = function(url) {
 			}
 		});
 
-		$.get(this.url, function(data) {
+		var jqxhr = $.get(this.url, function(data) {
 			var xml = $(data);
 
 			if(!xml.find('rss > channel')[0]) {
@@ -192,6 +192,8 @@ var Podcast = function(url) {
 		});
 
 		podcastChanged(this);
+
+		return jqxhr;
 	};
 
 	this.load = function() {
