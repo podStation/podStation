@@ -308,14 +308,14 @@ var PodcastManager;
 						podcastIndex: podcastIndex,
 						podcast: podcast,
 						episode: episode,
-						pubDate: episode.pubDate // to facilitate reuse of sorting function
+						pubDate: new Date(episode.pubDate)
 					};
 
 					allEpisodes.push(episodeContainer);
 				})
 			});
 
-			allEpisodes.sort(byPubDateDescending);
+			allEpisodes.sort(function (a, b) { return b.pubDate - a.pubDate; });
 
 			return allEpisodes;
 		}
