@@ -75,10 +75,14 @@ var Podcast = function(url) {
 		return text;
 	}
 
+	this.isUpdating = function() {
+		return this.status == 'updating';
+	};
+
 	this.update = function() {
 		var that = this;
 
-		if(this.status == 'updating') {
+		if(this.isUpdating()) {
 			console.log('Already updating: ' + this.url);
 			return;
 		}

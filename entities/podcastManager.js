@@ -79,7 +79,7 @@ var PodcastManager;
 			var loadingEpisodes = 0;
 
 			instance.podcastList.forEach(function(podcast) {
-				if(podcast.status === 'updating') {
+				if(podcast.isUpdating()) {
 					loadingEpisodes++;
 				}
 			});
