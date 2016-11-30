@@ -27,9 +27,20 @@ var AudioPlayerManager;
 					break;
 			}
 
+			var iconUrl;
+
+			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
+				iconUrl = episodeInfo.audioTags.imageDataUrl;
+			}
+			else {
+				var podcast = window.podcastManager ? window.podcastManager.getPodcast(episodeInfo.podcastUrl) : undefined;
+
+				iconUrl = podcast ? podcast.image : 'images/rss-alt-8x.png';
+			}
+
 			chrome.notifications.create(options.event, {
 				type: 'progress',
-				iconUrl: episodeInfo && episodeInfo.audioTags ? episodeInfo.audioTags.imageDataUrl : 'images/rss-alt-8x.png',
+				iconUrl: iconUrl,
 				title: title = chrome.i18n.getMessage(options.event),
 				message: episodeInfo ? episodeInfo.title : '',
 				progress: Math.round(audioPlayer.duration ? ( audioPlayer.currentTime / audioPlayer.duration ) * 100 : 0)
