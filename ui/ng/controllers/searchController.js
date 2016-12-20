@@ -1,113 +1,25 @@
-myApp.controller('searchController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+myApp.controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', function($scope, $routeParams, $location, searchService) {
 	$scope.searchTerms = $routeParams.searchTerms;
 
 	$scope.searchResults = [];
+	$scope.addPodcast = addPodcast;
 
-	var SearchResult = function() {
-		this.title = '';
-		this.feedUrl = '';
-		this.description = '';
-		this.link = '';
-		this.itunesLink = '';
-		this.image = '';
+	function addPodcast(searchResult) {
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			$scope.$apply(function() {
+				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
 
-		this.addPodcast = function() {
-			var that = this;
-
-			chrome.runtime.getBackgroundPage(function(bgPage) {
-				$scope.$apply(function() {
-					bgPage.podcastManager.addPodcast(that.feedUrl);
-
-					$location.path('/Podcasts');
-				});
-			});
-		};
-
-		this.checkIsSubscribed = function() {
-			var that = this;
-
-			chrome.runtime.getBackgroundPage(function(bgPage) {
-				$scope.$apply(function() {
-					that.subscribed = bgPage.podcastManager.getPodcast(that.feedUrl) !== undefined;
-				});
-			});
-		};
-
-		this.merge = function(otherSearchResult) {
-			if(otherSearchResult.description !== '')
-				this.description = otherSearchResult.description;
-
-			if(otherSearchResult.link !== '')
-				this.link = otherSearchResult.link;
-
-			if(otherSearchResult.image !== '')
-				this.image = otherSearchResult.image;
-
-			if(otherSearchResult.itunesLink !== '')
-				this.itunesLink = otherSearchResult.itunesLink;
-		}
-
-		return this;
-	}
-
-	function mergeInResult(searchResult) {
-		var searchResultToMergeWith = $scope.searchResults.find(function(item) {
-			return item.feedUrl === searchResult.feedUrl;
-		});
-
-		if(searchResultToMergeWith) {
-			searchResultToMergeWith.merge(searchResult);
-		}
-		else {
-			searchResult.checkIsSubscribed();
-			$scope.searchResults.push(searchResult);
-		}
-	}
-
-	function searchInDigitalPodcast() {
-		$http.get('http://api.digitalpodcast.com/v2r/search/', {
-			params : {
-				"appid": "0f56b00cfbdc051c29b88171e67507f3",
-				"format": "rssopml",
-				"keywords": $scope.searchTerms
-			}
-		}).then(function(response) {
-
-			var xml = $($.parseXML(response.data));
-
-			xml.find('opml > body > outline').each(function() {
-				var feed = $(this);
-
-				var searchResult = new SearchResult;
-
-				searchResult.title = feed.attr('text');
-				searchResult.description = feed.attr('description');
-				searchResult.link = feed.attr('htmlUrl');
-				searchResult.feedUrl = feed.attr('xmlUrl');
-				searchResult.subscribed = false;
-
-				mergeInResult(searchResult);
+				$location.path('/Podcasts');
 			});
 		});
-	}
+	};
 
-	function searchItunes() {
-		$http.get('https://itunes.apple.com/search', {
-			params: {
-				"media": "podcast",
-				"term": $scope.searchTerms
-			}
-		}).then(function(response) {
-			response.data.results.forEach(function(result) {
-				var searchResult = new SearchResult;
-
-				searchResult.title = result.collectionName;
-				searchResult.itunesLink = result.collectionViewUrl;
-				searchResult.feedUrl = result.feedUrl;
-				searchResult.subscribed = false;
-				searchResult.image = result.artworkUrl100;
-
-				mergeInResult(searchResult);
+	function fillIsSubscribed(searchResults) {
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			$scope.$apply(function() {
+				searchResults.forEach(function(searchResult) {
+					searchResult.subscribed = bgPage.podcastManager.getPodcast(searchResult.feedUrl) !== undefined;
+				});
 			});
 		});
 	}
@@ -115,8 +27,14 @@ myApp.controller('searchController', ['$scope', '$routeParams', '$http', '$locat
 	function search() {
 		$scope.searchResults = [];
 
-		searchItunes();
-		searchInDigitalPodcast();
+		searchService.search($scope.searchTerms, function(event, eventData) {
+			switch(event) {
+				case 'resultAvailable':
+					$scope.searchResults = eventData;
+					fillIsSubscribed($scope.searchResults);
+					break;
+			}
+		});
 	}
 
 	search();
