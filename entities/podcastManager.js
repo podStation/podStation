@@ -289,7 +289,7 @@ var PodcastManager;
 					}
 					else {
 						// most likely, it is already updating
-						setTimeOut(function() {
+						setTimeout(function() {
 							// we want it to be async because of the loop below
 							podcastIndex++;
 							podcastUpdate();
