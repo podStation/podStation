@@ -32,6 +32,9 @@
 	"playing": {
 		"message": "Reproduzindo"
 	},
+	"paused": {
+		"message": "Pausado"
+	},
 	// search
 	"open_in_itunes": {
 		"message": "Abrir no iTunes"
@@ -67,6 +70,9 @@
 	},
 	"publication_date": {
 		"message": "Data de publicação"
+	},
+	"updating_podcasts": {
+		"message": "Atualizando podcasts..."
 	},
 	// episodes
 	"all_eps_from": {

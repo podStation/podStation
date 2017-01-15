@@ -1,4 +1,5 @@
-myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  function($scope, episodePlayer) {
+myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'episodePlayer',
+  function($scope, $document, $window, episodePlayer) {
 
 	var durationInSeconds;
 
@@ -119,6 +120,20 @@ myApp.controller('episodePlayerController', ['$scope', 'episodePlayer',  functio
 		getAudioInfoCallback(audioInfo);
 	});
 
+	$document[0].body.onkeyup = function(e) {
+		if(e.key === ' ' && $scope.visible && e.target.localName !== 'input') {
+			episodePlayer.togglePlayPause();
+		}
+	}
+
+	// prevent scroll down on space
+	$window.onkeydown = function(e) {
+		if(e.key == ' ' && $scope.visible && e.target.localName !== 'input') {
+			e.preventDefault();
+			return false;
+		}
+	};
+
 	reset();
 
 	episodePlayer.getAudioInfo(getAudioInfoCallback);
@@ -135,6 +150,10 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 
 	episodePlayer.pause = function() {
 		messageService.for('audioPlayer').sendMessage('pause');
+	};
+
+	episodePlayer.togglePlayPause = function () {
+		messageService.for('audioPlayer').sendMessage('togglePlayPause');
 	};
 
 	episodePlayer.stop = function() {

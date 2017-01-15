@@ -15,6 +15,38 @@ var AudioPlayerManager;
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
+		function showBrowserNotification(options) {
+			var title;
+
+			switch(options.event) {
+				case 'playing':
+					chrome.notifications.clear('paused');
+					break;
+				case 'paused':
+					chrome.notifications.clear('playing');
+					break;
+			}
+
+			var iconUrl;
+
+			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
+				iconUrl = episodeInfo.audioTags.imageDataUrl;
+			}
+			else {
+				var podcast = window.podcastManager ? window.podcastManager.getPodcast(episodeInfo.podcastUrl) : undefined;
+
+				iconUrl = podcast ? podcast.image : 'images/rss-alt-8x.png';
+			}
+
+			chrome.notifications.create(options.event, {
+				type: 'progress',
+				iconUrl: iconUrl,
+				title: title = chrome.i18n.getMessage(options.event),
+				message: episodeInfo ? episodeInfo.title : '',
+				progress: Math.round(audioPlayer.duration ? ( audioPlayer.currentTime / audioPlayer.duration ) * 100 : 0)
+			});
+		}
+
 		function getAudioTags(callback) {
 			new jsmediatags.Reader(audioPlayer.src)
 			.setTagsToRead(["PIC", "APIC"])
@@ -60,6 +92,21 @@ var AudioPlayerManager;
 			});
 		}
 
+		function setCurrentTimeFromEpisode() {
+			if(!episodeInfo) {
+				return;
+			}
+
+			messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
+				url: episodeInfo.podcastUrl,
+				episodeId: episodeInfo.guid,
+			}, function(currentTime) {
+				if(currentTime >= 0 && Math.abs(currentTime - audioPlayer.currentTime) > 20) {
+					audioPlayer.currentTime = currentTime;
+				}
+			});
+		}
+
 		function playingTimeOut() {
 			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
@@ -99,20 +146,14 @@ var AudioPlayerManager;
 
 				audioPlayer.onended = function() {
 					setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, 0);
+					pauseTimeOut();
 
 					chrome.browserAction.setBadgeText({
 						text: ''
 					});
 				};
 
-				messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
-					url: episodeInfo.podcastUrl,
-					episodeId: episodeInfo.guid,
-				}, function(currentTime) {
-					if(currentTime >= 0) {
-						audioPlayer.currentTime = currentTime;
-					}
-				});
+				setCurrentTimeFromEpisode();
 
 				getAudioTags(function(tags) {
 					episodeInfo.audioTags = tags;
@@ -120,6 +161,10 @@ var AudioPlayerManager;
 			}
 
 			audioPlayer.play();
+
+			if(audioInfo && audioInfo.showNotification) {
+				showBrowserNotification({event: 'playing'});
+			}
 
 			// if we don't eliminate the timeout first we may have two timeouts
 			// running in parallel (play while already playing)
@@ -131,9 +176,13 @@ var AudioPlayerManager;
 			});
 		}
 
-		function pause() {
+		function pause(options) {
 			pauseTimeOut();
 			audioPlayer.pause();
+
+			if(options && options.showNotification) {
+				showBrowserNotification({event: 'paused'});
+			}
 
 			setEpisodeInProgress(episodeInfo.podcastUrl, episodeInfo.guid, audioPlayer.currentTime);
 			messageService.for('audioPlayer').sendMessage('paused');
@@ -153,10 +202,10 @@ var AudioPlayerManager;
 				return;
 
 			if(audioPlayer.paused) {
-				play();
+				play({ showNotification: true });
 			}
 			else {
-				pause();
+				pause({ showNotification: true });
 			}
 		}).onMessage('stop', function() {
 			pauseTimeOut();
@@ -187,6 +236,10 @@ var AudioPlayerManager;
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
+		});
+
+		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
+			setCurrentTimeFromEpisode();
 		});
 	}
 })();

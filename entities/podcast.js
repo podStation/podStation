@@ -75,10 +75,14 @@ var Podcast = function(url) {
 		return text;
 	}
 
+	this.isUpdating = function() {
+		return this.status == 'updating';
+	};
+
 	this.update = function() {
 		var that = this;
 
-		if(this.status == 'updating') {
+		if(this.isUpdating()) {
 			console.log('Already updating: ' + this.url);
 			return;
 		}
@@ -94,7 +98,7 @@ var Podcast = function(url) {
 			}
 		});
 
-		$.get(this.url, function(data) {
+		var jqxhr = $.get(this.url, function(data) {
 			var xml = $(data);
 
 			if(!xml.find('rss > channel')[0]) {
@@ -188,6 +192,8 @@ var Podcast = function(url) {
 		});
 
 		podcastChanged(this);
+
+		return jqxhr;
 	};
 
 	this.load = function() {
