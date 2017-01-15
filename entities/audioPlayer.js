@@ -92,6 +92,17 @@ var AudioPlayerManager;
 			});
 		}
 
+		function setCurrentTimeFromEpisode() {
+			messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
+				url: episodeInfo.podcastUrl,
+				episodeId: episodeInfo.guid,
+			}, function(currentTime) {
+				if(currentTime >= 0 && Math.abs(currentTime - audioPlayer.currentTime) > 20) {
+					audioPlayer.currentTime = currentTime;
+				}
+			});
+		}
+
 		function playingTimeOut() {
 			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
@@ -138,14 +149,7 @@ var AudioPlayerManager;
 					});
 				};
 
-				messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
-					url: episodeInfo.podcastUrl,
-					episodeId: episodeInfo.guid,
-				}, function(currentTime) {
-					if(currentTime >= 0) {
-						audioPlayer.currentTime = currentTime;
-					}
-				});
+				setCurrentTimeFromEpisode();
 
 				getAudioTags(function(tags) {
 					episodeInfo.audioTags = tags;
@@ -228,6 +232,10 @@ var AudioPlayerManager;
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
+		});
+
+		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
+			setCurrentTimeFromEpisode();
 		});
 	}
 })();
