@@ -93,6 +93,10 @@ var AudioPlayerManager;
 		}
 
 		function setCurrentTimeFromEpisode() {
+			if(!episodeInfo) {
+				return;
+			}
+
 			messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
 				url: episodeInfo.podcastUrl,
 				episodeId: episodeInfo.guid,
