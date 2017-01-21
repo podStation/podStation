@@ -39,6 +39,10 @@ a:visited {
 	color: #3b5998;
 }
 
+.icon_twitter:hover {
+	color: #1DA1F2;
+}
+
 .icon_github:hover {
 	color: #4078c0;
 }
