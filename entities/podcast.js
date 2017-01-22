@@ -181,7 +181,7 @@ var Podcast = function(url) {
 				});
 			}
 
-		}, 'xml').fail(function() {
+		}, 'xml').fail(function(jqXHR, textStatus, errorThrown) {
 			that.status = 'failed';
 			podcastChanged(that);
 			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
