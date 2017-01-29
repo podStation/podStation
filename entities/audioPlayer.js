@@ -28,9 +28,18 @@ var AudioPlayerManager;
 			};
 		}
 
-		function showBrowserNotification(options) {
-			var title;
+		function imageUrl() {
+			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
+				return episodeInfo.audioTags.imageDataUrl;
+			}
+			else {
+				var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
 
+				return podcastAndEpisode.podcast ? podcastAndEpisode.podcast.image : 'images/rss-alt-8x.png';
+			}
+		}
+
+		function showBrowserNotification(options) {
 			switch(options.event) {
 				case 'playing':
 					chrome.notifications.clear('paused');
@@ -42,19 +51,10 @@ var AudioPlayerManager;
 
 			var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
 
-			var iconUrl;
-
-			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
-				iconUrl = episodeInfo.audioTags.imageDataUrl;
-			}
-			else {
-				iconUrl = podcastAndEpisode.podcast ? podcastAndEpisode.podcast.image : 'images/rss-alt-8x.png';
-			}
-
 			chrome.notifications.create(options.event, {
 				type: 'progress',
-				iconUrl: iconUrl,
-				title: title = chrome.i18n.getMessage(options.event),
+				iconUrl: imageUrl(),
+				title: chrome.i18n.getMessage(options.event),
 				message: podcastAndEpisode.episode.title,
 				progress: Math.round(audioPlayer.duration ? ( audioPlayer.currentTime / audioPlayer.duration ) * 100 : 0)
 			});
@@ -90,13 +90,14 @@ var AudioPlayerManager;
 			return {
 				audio: {
 					url: audioPlayer ? audioPlayer.src : '',
-					imageUrl: episodeInfo && episodeInfo.audioTags ? episodeInfo.audioTags.imageDataUrl : '',
+					imageUrl: imageUrl(),
 					currentTime: audioPlayer ? audioPlayer.currentTime : 0,
 					duration: audioPlayer ? audioPlayer.duration : 0,
 					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0
 				},
 				episode: {
-					title: podcastAndEpisode.episode ? podcastAndEpisode.episode.title : ''
+					podcastUrl: episodeInfo.podcastUrl,
+					episodeGuid: episodeInfo.episodeGuid
 				}
 			}
 		}
