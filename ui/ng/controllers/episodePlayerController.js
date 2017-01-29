@@ -15,6 +15,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.loading = false;
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
+		$scope.nextAndPrev = 'from_podcast';
 	}
 
 	function formatSeconds(seconds) {
@@ -70,6 +71,12 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 		// to keep it consistent we do not wait for the update from the player
 		$scope.playbackRate += playbackRateStepUp();
+	}
+
+	$scope.nextEpisode = function() {
+	}
+
+	$scope.previousEpisode = function() {
 	}
 
 	$scope.seek = function(event) {
