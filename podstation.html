@@ -80,7 +80,11 @@
 								<img ng-src="{{imageUrl}}" id="playerImage"></img>
 							</td>
 							<td>
-								<div id="playingTitle">{{'playing' | chrome_i18n }}: {{mediaTitle}}</div>
+								<div id="playingTitle">
+									<span><b>{{'playing' | chrome_i18n }}:</b> </span>
+									<a ng-if="mediaLink" ng-href="{{mediaLink}}" target="_blank">{{mediaTitle}}</a>
+									<span ng-if="!mediaLink">{{mediaTitle}}</span>
+								</div>
 								<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
 								ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
 									<div id="progressIn" style="width: {{timePercent}}%"></div>

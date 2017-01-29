@@ -9,6 +9,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.duration = '';
 		durationInSeconds = 0;
 		$scope.mediaTitle = '';
+		$scope.mediaLink = '';
 		$scope.imageUrl = '';
 		$scope.visible = false;
 		$scope.playing = false;
@@ -94,6 +95,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		
 			$scope.$apply(function(){
 				$scope.mediaTitle = episode.title;
+				$scope.mediaLink = episode.link;
 				$scope.time = formatSeconds(audioInfo.audio.currentTime);
 				$scope.duration = formatSeconds(audioInfo.audio.duration);
 				$scope.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
