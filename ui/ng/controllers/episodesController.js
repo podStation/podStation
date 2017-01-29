@@ -29,9 +29,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 							this.guid = storedEpisodeContainer.episode.guid;
 							this.play = function() {
 								episodePlayer.play({
-									title: this.title,
-									url: this.url,
-									guid: this.guid,
+									episodeGuid: this.guid,
 									podcastUrl: this.podcastUrl
 								});
 							}
@@ -102,9 +100,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 								this.guid = storedEpisode.guid;
 								this.play = function() {
 									episodePlayer.play({
-										title: this.title,
-										url: this.url,
-										guid: this.guid,
+										episodeGuid: this.guid,
 										podcastUrl: storedPodcast.url
 									});
 								}
@@ -191,9 +187,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 									this.pausedAt = formatSeconds(syncEpisodeInfo.t);
 									this.play = function() {
 										episodePlayer.play({
-											title: this.title,
-											url: this.url,
-											guid: this.guid,
+											episodeGuid: this.guid,
 											podcastUrl: this.podcastUrl
 										});
 									};
