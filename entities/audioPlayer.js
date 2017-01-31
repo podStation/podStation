@@ -32,11 +32,13 @@ var AudioPlayerManager;
 			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
 				return episodeInfo.audioTags.imageDataUrl;
 			}
-			else {
+			else if(episodeInfo) {
 				var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
 
 				return podcastAndEpisode.podcast ? podcastAndEpisode.podcast.image : 'images/rss-alt-8x.png';
 			}
+
+			return undefined;
 		}
 
 		function showBrowserNotification(options) {
@@ -96,8 +98,8 @@ var AudioPlayerManager;
 					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0
 				},
 				episode: {
-					podcastUrl: episodeInfo.podcastUrl,
-					episodeGuid: episodeInfo.episodeGuid
+					podcastUrl: episodeInfo ? episodeInfo.podcastUrl : undefined,
+					episodeGuid: episodeInfo ? episodeInfo.episodeGuid : undefined
 				}
 			}
 		}
