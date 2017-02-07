@@ -321,6 +321,35 @@ var PodcastManager;
 			return podcast;
 		}
 
+		function getEpisode(currentEpisode, delta, callback) {
+			var podcast = instance.getPodcast(currentEpisode.podcastUrl);
+
+			for(var i = 0; i < podcast.episodes.length; i++) {
+				if(podcast.episodes[i].guid === currentEpisode.episodeGuid) {
+					var indexWithDelta = i + delta;
+
+					if(indexWithDelta >= 0 && indexWithDelta < podcast.episodes.length) {
+						callback({
+							podcastUrl: currentEpisode.podcastUrl,
+							episodeGuid: podcast.episodes[indexWithDelta].guid
+						});
+
+						return;
+					}
+				}
+			}
+
+			podcast.episodes;
+		}
+
+		this.getNextEpisode = function(currentEpisode, callback) {
+			getEpisode(currentEpisode, -1, callback);
+		};
+
+		this.getPreviousEpisode = function(currentEpisode, callback) {
+			getEpisode(currentEpisode, 1, callback);
+		};
+
 		this.deleteAllPodcasts = function () {
 			chrome.storage.sync.set({'syncPodcastList': []});
 			this.podcastList.forEach(function(item) {

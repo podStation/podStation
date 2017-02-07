@@ -260,6 +260,36 @@ var AudioPlayerManager;
 
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
+		}).onMessage('playNext', function() {
+			if(!episodeInfo)
+				return;
+
+			window.podcastManager.getNextEpisode({
+				podcastUrl: episodeInfo.podcastUrl,	
+				episodeGuid: episodeInfo.episodeGuid
+			}, function(nextEpisode) {
+				play({ 
+					episode: {
+						podcastUrl: nextEpisode.podcastUrl,
+						episodeGuid: nextEpisode.episodeGuid
+					}
+				});
+			});
+		}).onMessage('playPrevious', function() {
+			if(!episodeInfo)
+				return;
+
+			window.podcastManager.getPreviousEpisode({
+				podcastUrl: episodeInfo.podcastUrl,	
+				episodeGuid: episodeInfo.episodeGuid
+			}, function(nextEpisode) {
+				play({ 
+					episode: {
+						podcastUrl: nextEpisode.podcastUrl,
+						episodeGuid: nextEpisode.episodeGuid
+					}
+				});
+			});
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;

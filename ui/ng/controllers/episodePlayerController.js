@@ -17,6 +17,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
 		$scope.nextAndPrev = 'from_podcast';
+		$scope.continuousPlay = false;
 	}
 
 	function formatSeconds(seconds) {
@@ -75,9 +76,11 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	}
 
 	$scope.nextEpisode = function() {
+		episodePlayer.playNext();
 	}
 
 	$scope.previousEpisode = function() {
+		episodePlayer.playPrevious();
 	}
 
 	$scope.seek = function(event) {
@@ -163,6 +166,14 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 		messageService.for('audioPlayer').sendMessage('play', {
 			episode: episode
 		});
+	};
+
+	episodePlayer.playNext = function(episode) {
+		messageService.for('audioPlayer').sendMessage('playNext');
+	};
+
+	episodePlayer.playPrevious = function(episode) {
+		messageService.for('audioPlayer').sendMessage('playPrevious');
 	};
 
 	episodePlayer.pause = function() {
