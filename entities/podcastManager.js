@@ -321,7 +321,7 @@ var PodcastManager;
 			return podcast;
 		}
 
-		function getEpisode(currentEpisode, delta, callback) {
+		function getEpisodeFromPodcast(currentEpisode, delta, callback) {
 			var podcast = instance.getPodcast(currentEpisode.podcastUrl);
 
 			for(var i = 0; i < podcast.episodes.length; i++) {
@@ -338,8 +338,40 @@ var PodcastManager;
 					}
 				}
 			}
+		}
 
-			podcast.episodes;
+		function getEpisodeFromLastEpisodes(currentEpisode, delta, callback) {
+			var allEpisodes = instance.getAllEpisodes();
+
+			for(var i = 0; i < allEpisodes.length; i++) {
+				if(allEpisodes[i].podcast.url  === currentEpisode.podcastUrl &&
+				   allEpisodes[i].episode.guid === currentEpisode.episodeGuid) {
+					var indexWithDelta = i + delta;
+
+					if(indexWithDelta >= 0 && indexWithDelta < allEpisodes.length) {
+						callback({
+							podcastUrl: allEpisodes[indexWithDelta].podcast.url,
+							episodeGuid: allEpisodes[indexWithDelta].episode.guid
+						});
+
+						return;
+					}
+				}
+			}
+		}
+
+		function getEpisode(currentEpisode, delta, callback) {
+			chrome.storage.sync.get('playerOptions', function(storageObject) {
+				switch(storageObject.playerOptions ? storageObject.playerOptions.next : 'from_last_episodes') {
+					case 'from_podcast':
+					default:
+						getEpisodeFromPodcast(currentEpisode, delta, callback);
+						break;
+					case 'from_last_episodes':
+						getEpisodeFromLastEpisodes(currentEpisode, delta, callback);
+						break;
+				}
+			});
 		}
 
 		this.getNextEpisode = function(currentEpisode, callback) {
