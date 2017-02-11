@@ -266,6 +266,9 @@ var AudioPlayerManager;
 			if(!audioPlayer)
 				return;
 
+			if(audioPlayer.ended)
+				return;
+
 			if(audioPlayer.paused) {
 				play({ showNotification: true });
 			}
