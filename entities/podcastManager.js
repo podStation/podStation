@@ -360,26 +360,20 @@ var PodcastManager;
 			}
 		}
 
-		function getEpisode(currentEpisode, delta, callback) {
-			chrome.storage.sync.get('playerOptions', function(storageObject) {
-				switch(storageObject.playerOptions ? storageObject.playerOptions.next : 'from_last_episodes') {
-					case 'from_podcast':
-					default:
-						getEpisodeFromPodcast(currentEpisode, delta, callback);
-						break;
-					case 'from_last_episodes':
-						getEpisodeFromLastEpisodes(currentEpisode, delta, callback);
-						break;
-				}
-			});
+		function getEpisode(order, currentEpisode, delta, callback) {
+			switch(order ? order : 'from_last_episodes') {
+				case 'from_podcast':
+				default:
+					getEpisodeFromPodcast(currentEpisode, delta, callback);
+					break;
+				case 'from_last_episodes':
+					getEpisodeFromLastEpisodes(currentEpisode, delta, callback);
+					break;
+			}
 		}
 
-		this.getNextEpisode = function(currentEpisode, callback) {
-			getEpisode(currentEpisode, -1, callback);
-		};
-
-		this.getPreviousEpisode = function(currentEpisode, callback) {
-			getEpisode(currentEpisode, 1, callback);
+		this.getNextOrPreviousEpisode = function(isNext, order, currentEpisode, callback) {
+			getEpisode(order, currentEpisode, isNext ? -1 : 1, callback);
 		};
 
 		this.deleteAllPodcasts = function () {

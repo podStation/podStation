@@ -15,6 +15,23 @@ var AudioPlayerManager;
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
+		function loadPlayerOptions(loaded) {
+			chrome.storage.sync.get('playerOptions', function(storageObject) {
+				var playerOptions;
+
+				if(typeof storageObject.playerOptions === "undefined") {
+					playerOptions = {};
+				}
+				else {
+					playerOptions = storageObject.playerOptions;
+				}
+
+				if( loaded(playerOptions) ) {
+					chrome.storage.sync.set({'playerOptions': playerOptions});
+				}
+			});
+		};
+
 		function getPodcastAndEpisode(podcastUrl, episodeGuid) {
 			var podcast = window.podcastManager.getPodcast(podcastUrl);
 
@@ -203,6 +220,27 @@ var AudioPlayerManager;
 			});
 		}
 
+		function playNextOrPrevious(isNext) {
+			if(!episodeInfo)
+				return;
+
+			loadPlayerOptions(function(playerOptions) {
+				window.podcastManager.getNextOrPreviousEpisode(isNext, playerOptions.order, {
+					podcastUrl: episodeInfo.podcastUrl,	
+					episodeGuid: episodeInfo.episodeGuid
+				}, function(nextEpisode) {
+					play({
+						episode: {
+							podcastUrl: nextEpisode.podcastUrl,
+							episodeGuid: nextEpisode.episodeGuid
+						}
+					});
+				});
+
+				return false;
+			});
+		}
+
 		function pause(options) {
 			pauseTimeOut();
 			audioPlayer.pause();
@@ -261,35 +299,9 @@ var AudioPlayerManager;
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}).onMessage('playNext', function() {
-			if(!episodeInfo)
-				return;
-
-			window.podcastManager.getNextEpisode({
-				podcastUrl: episodeInfo.podcastUrl,	
-				episodeGuid: episodeInfo.episodeGuid
-			}, function(nextEpisode) {
-				play({ 
-					episode: {
-						podcastUrl: nextEpisode.podcastUrl,
-						episodeGuid: nextEpisode.episodeGuid
-					}
-				});
-			});
+			playNextOrPrevious(true);
 		}).onMessage('playPrevious', function() {
-			if(!episodeInfo)
-				return;
-
-			window.podcastManager.getPreviousEpisode({
-				podcastUrl: episodeInfo.podcastUrl,	
-				episodeGuid: episodeInfo.episodeGuid
-			}, function(nextEpisode) {
-				play({ 
-					episode: {
-						podcastUrl: nextEpisode.podcastUrl,
-						episodeGuid: nextEpisode.episodeGuid
-					}
-				});
-			});
+			playNextOrPrevious(false);
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
