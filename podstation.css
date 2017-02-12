@@ -101,6 +101,11 @@ td {
 	color: white;
 }
 
+.playerButtonDisabled {
+	color: gray !important;
+	cursor: default;
+}
+
 #audioPlayer td:last-child{
 	width:100%;
 }

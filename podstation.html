@@ -68,8 +68,8 @@
 								<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
 								<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
 								<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></i></a>
-								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
+								<a href="" ng-click="speedDown()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-backward" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></i></a>
+								<a href="" ng-click="speedUp()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
 								<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
 								<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
 								<span>
