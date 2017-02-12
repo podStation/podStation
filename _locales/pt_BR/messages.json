@@ -41,6 +41,9 @@
 	"next_episode": {
 		"message": "Próximo episódio"
 	},
+	"show_player_options": {
+		"message": "Mostrar opções do player"
+	},
 	"order_next_previous": {
 		"message": "Próximo/Anterior"
 	},

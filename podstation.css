@@ -119,6 +119,12 @@ td {
 	border-radius: inherit;
 }
 
+#playerOptions {
+	background-color: gray;
+	padding: 5px;
+	border-radius: 5px;
+}
+
 #header {
 	background-color: Gainsboro;
 	height: 50px;

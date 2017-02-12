@@ -78,15 +78,18 @@
 									<span> / {{duration}}</span>
 								</span>
 								<br>
-								<p>
+								<a href="" ng-click="toggleShowOptions()" ng-if="!showOptions"><i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></a>
+								<a href="" ng-click="toggleShowOptions()" ng-if="showOptions"><i class="fa fa-angle-double-down" title=""></i></a>
+								<div id="playerOptions" ng-if="showOptions">
 									<span>{{'order_next_previous' | chrome_i18n}}</span>
 									<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
 										<option value="from_podcast">{{'order_from_podcast' | chrome_i18n}}</option>
 										<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
 									</select>
-								</p>
-								<br>
-								<p><input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" /> {{'continue_playing' | chrome_i18n}}</p>
+									<br>
+									<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
+									<span> {{'continue_playing' | chrome_i18n}}</span>
+								</div>
 							</td>
 							<td ng-if="imageUrl">
 								<img ng-src="{{imageUrl}}" id="playerImage"></img>

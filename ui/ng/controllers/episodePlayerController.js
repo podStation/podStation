@@ -17,6 +17,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
 
+		$scope.showOptions = false;
 		// The data binding will not work properly if the components
 		// are direclty placed in $scope	
 		$scope.options = {
@@ -119,6 +120,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	$scope.continuousChanged = function() {
 		episodePlayer.setOptions({continuous: $scope.options.continuous});
+	};
+
+	$scope.toggleShowOptions = function() {
+		$scope.showOptions = !$scope.showOptions;
 	};
 
 	function getAudioInfoCallback(audioInfo) {
