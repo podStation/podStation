@@ -35,6 +35,24 @@
 	"paused": {
 		"message": "Pausado"
 	},
+	"previous_episode": {
+		"message": "Episódio anterior"
+	},
+	"next_episode": {
+		"message": "Próximo episódio"
+	},
+	"order_next_previous": {
+		"message": "Próximo/Anterior"
+	},
+	"order_from_podcast": {
+		"message": "do podcast"
+	},
+	"order_from_last_episodes": {
+		"message": "dos últimos episódios"
+	},
+	"continue_playing": {
+		"message": "Continuar reproduzindo"
+	},
 	// search
 	"open_in_itunes": {
 		"message": "Abrir no iTunes"

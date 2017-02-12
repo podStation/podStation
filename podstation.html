@@ -79,14 +79,14 @@
 								</span>
 								<br>
 								<p>
-									<span>Next/Previous</span>
+									<span>{{'order_next_previous' | chrome_i18n}}</span>
 									<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
-										<option value="from_podcast">from podcast</option>
-										<option value="from_last_episodes">from last episodes</option>
+										<option value="from_podcast">{{'order_from_podcast' | chrome_i18n}}</option>
+										<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
 									</select>
 								</p>
 								<br>
-								<p><input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" /> Continue playing</p>
+								<p><input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" /> {{'continue_playing' | chrome_i18n}}</p>
 							</td>
 							<td ng-if="imageUrl">
 								<img ng-src="{{imageUrl}}" id="playerImage"></img>
