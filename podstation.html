@@ -87,8 +87,10 @@
 										<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
 									</select>
 									<br>
-									<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
-									<span> {{'continue_playing' | chrome_i18n}}</span>
+									<div title="{{'continue_playing_description' | chrome_i18n}}">
+										<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
+										<span> {{'continue_playing' | chrome_i18n}}</span>
+									</div>
 								</div>
 							</td>
 							<td ng-if="imageUrl">

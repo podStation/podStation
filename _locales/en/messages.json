@@ -56,6 +56,9 @@
 	"continue_playing": {
 		"message": "Continue playing"
 	},
+	"continue_playing_description": {
+		"message": "play next episode when current episode ends"
+	},
 	// search
 	"open_in_itunes": {
 		"message": "Open in iTunes"
