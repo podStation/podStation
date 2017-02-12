@@ -127,6 +127,9 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	};
 
 	function getAudioInfoCallback(audioInfo) {
+		if(!audioInfo.episode.podcastUrl)
+			return;
+
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			var podcast = bgPage.podcastManager.getPodcast(audioInfo.episode.podcastUrl);
 
