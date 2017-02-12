@@ -80,13 +80,13 @@
 								<br>
 								<p>
 									<span>Next/Previous</span>
-									<select name="audio_list" ng-model="nextAndPrev">
+									<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
 										<option value="from_podcast">from podcast</option>
 										<option value="from_last_episodes">from last episodes</option>
 									</select>
 								</p>
 								<br>
-								<p><input type="checkbox" name="continuous_play" ng-model="continuousPlay" /> Continue playing</p>
+								<p><input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" /> Continue playing</p>
 							</td>
 							<td ng-if="imageUrl">
 								<img ng-src="{{imageUrl}}" id="playerImage"></img>

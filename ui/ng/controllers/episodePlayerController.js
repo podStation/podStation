@@ -16,8 +16,26 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.loading = false;
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
-		$scope.nextAndPrev = 'from_podcast';
-		$scope.continuousPlay = false;
+
+		// The data binding will not work properly if the components
+		// are direclty placed in $scope	
+		$scope.options = {
+			order: 'from_podcast',
+			continuous: false
+		};
+
+		readOptions();
+	}
+
+	function readOptions() {
+		episodePlayer.getOptions(setScopeOptions);
+	}
+
+	function setScopeOptions(options) {
+		$scope.$apply(function() {
+			$scope.options.order = options.order ? options.order : 'from_podcast';
+			$scope.options.continuous = options.continuous ? options.continuous : false;
+		});
 	}
 
 	function formatSeconds(seconds) {
@@ -95,6 +113,14 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.timeMouseOver = '';
 	}
 
+	$scope.orderChanged = function() {
+		episodePlayer.setOptions({order: $scope.options.order});
+	};
+
+	$scope.continuousChanged = function() {
+		episodePlayer.setOptions({continuous: $scope.options.continuous});
+	};
+
 	function getAudioInfoCallback(audioInfo) {
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			var podcast = bgPage.podcastManager.getPodcast(audioInfo.episode.podcastUrl);
@@ -138,6 +164,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	episodePlayer.changed(function(audioInfo) {
 		getAudioInfoCallback(audioInfo);
+	});
+
+	episodePlayer.optionsChanged(function(options) {
+		setScopeOptions(options);
 	});
 
 	$document[0].body.onkeyup = function(e) {
@@ -206,6 +236,16 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 		});
 	};
 
+	episodePlayer.setOptions = function(options) {
+		messageService.for('audioPlayer').sendMessage('setOptions', options);
+	};
+
+	episodePlayer.getOptions = function(callback) {
+		messageService.for('audioPlayer').sendMessage('getOptions', {}, function(response) {
+			callback(response);
+		});
+	};
+
 	episodePlayer.playing = function(playingCallback) {
 		episodePlayer.playingCallback = playingCallback;
 	};
@@ -220,6 +260,10 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 
 	episodePlayer.changed = function(changedCallback) {
 		episodePlayer.changedCallback = changedCallback;
+	};
+
+	episodePlayer.optionsChanged = function(optionsChangedCallback) {
+		episodePlayer.optionsChangedCallback = optionsChangedCallback;
 	};
 
 	messageService.for('audioPlayer')
@@ -238,6 +282,10 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 	}).onMessage('changed', function(message) {
 		if(episodePlayer.changedCallback) {
 			episodePlayer.changedCallback(message.episodePlayerInfo)
+		}
+	}).onMessage('optionsChanged', function(message) {
+		if(episodePlayer.optionsChangedCallback) {
+			episodePlayer.optionsChangedCallback(message)
 		}
 	});
 

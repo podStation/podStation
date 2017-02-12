@@ -195,6 +195,11 @@ var AudioPlayerManager;
 					chrome.browserAction.setBadgeText({
 						text: ''
 					});
+
+					loadPlayerOptions(function(options) {
+						if(options.continuous)
+							playNextOrPrevious(true);
+					});
 				};
 
 				setCurrentTimeFromEpisode();
@@ -308,6 +313,23 @@ var AudioPlayerManager;
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
+		}).onMessage('getOptions', function(messageContent, sendResponse) {
+			loadPlayerOptions(function(options) {
+				sendResponse(options);
+			});
+			return true;
+		}).onMessage('setOptions', function(messageContent) {
+			loadPlayerOptions(function(options) {
+				if(messageContent.order)
+					options.order = messageContent.order;
+
+				if(messageContent.continuous !== undefined)
+					options.continuous = messageContent.continuous;
+
+				messageService.for('audioPlayer').sendMessage('optionsChanged', options);
+
+				return true;
+			});
 		});
 
 		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
