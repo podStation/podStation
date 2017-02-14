@@ -16,9 +16,10 @@
 						</td>
 						<td>
 							<div class="textView">
-								<a ng-href="{{searchResult.link}}" target="_blank">
+								<a ng-href="{{searchResult.link}}" ng-if="searchResult.link" target="_blank">
 									<span class="itemTitle">{{searchResult.title}}</span>
 								</a>
+								<span class="itemTitle" ng-if="!searchResult.link">{{searchResult.title}}</span>
 								<br>
 								<a href="" ng-if="!searchResult.subscribed" ng-click="addPodcast(searchResult)"><b>{{ 'subscribe' | chrome_i18n }}</b></a>
 								<span ng-if="searchResult.subscribed"><b>{{'feed_in_list' | chrome_i18n}}</b></span>
