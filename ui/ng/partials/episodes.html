@@ -17,16 +17,17 @@
 					<td>
 						<div class="itemMenu">
 							<div ng-if="episode.url">
-								<a href="" ng-click="episode.play()"><i class="fa fa-play"></i></a> |
+								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a> |
 								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
 							</div>
 						</div>
 						<div class="textView">
 							<div class="itemHeader" style="width: 900px">
-								<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank">
-									<span class="itemTitle episodeTitle">{{episode.title}}</span>
-								</a>
-								<span ng-if="!episode.link || episode.link === '' " class="itemTitle episodeTitle">{{episode.title}}</span>
+								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="itemTitle episodeTitle">{{episode.title}}</a>
+								<span ng-if="episode.link">
+									<br>
+									<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
+								</span>
 								<br>
 								<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 							</div>

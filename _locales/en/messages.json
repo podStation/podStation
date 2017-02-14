@@ -101,6 +101,12 @@
 	"updating_podcasts": {
 		"message": "Updating podcasts..."
 	},
+	"show_episodes": {
+		"message": "Show episodes"
+	},
+	"open_podcast_website": {
+		"message": "Open podcast website"
+	},
 	// episodes
 	"all_eps_from": {
 		"message": "All episodes from <i>$podcast$</i>",
@@ -132,6 +138,12 @@
 	},
 	"paused_at": {
 		"message": "Paused at"
+	},
+	"play_episode": {
+		"message": "Play episode"
+	},
+	"open_episode_website": {
+		"message": "Open episode website"
 	},
 	// options
 	"auto_update": {
