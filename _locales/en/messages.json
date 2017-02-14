@@ -60,6 +60,9 @@
 		"message": "play next episode when current episode ends"
 	},
 	// search
+	"subscribe": {
+		"message": "Subscribe to this podcast in podStation"
+	},
 	"open_in_itunes": {
 		"message": "Open in iTunes"
 	},

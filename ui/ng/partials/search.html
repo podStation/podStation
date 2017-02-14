@@ -4,7 +4,7 @@
 	<p>{{ 'itunes_trademark' | chrome_i18n }}</p>
 	<div class="listEntry" ng-repeat="searchResult in searchResults">
 		<div class="itemMenu">
-			<a href="" ng-if="!searchResult.subscribed" title="{{ 'add_feed' | chrome_i18n }}" ng-click="addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
+			<a href="" ng-if="!searchResult.subscribed" title="{{ 'subscribe' | chrome_i18n }}" ng-click="addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
 			<i ng-if="searchResult.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
 		</div>
 		<div>
@@ -20,6 +20,9 @@
 									<span class="itemTitle">{{searchResult.title}}</span>
 								</a>
 								<br>
+								<a href="" ng-if="!searchResult.subscribed" ng-click="addPodcast(searchResult)"><b>{{ 'subscribe' | chrome_i18n }}</b></a>
+								<span ng-if="searchResult.subscribed"><b>{{'feed_in_list' | chrome_i18n}}</b></span>
+								<br>
 								<a ng-if="searchResult.itunesLink" ng-href="{{searchResult.itunesLink}}" target="_blank">{{ 'open_in_itunes' | chrome_i18n }}</a>
 								<div class="itemDescription">
 									{{searchResult.description}}
@@ -31,5 +34,6 @@
 			</table>
 		</div>
 	</div>
+
 	<h3 ng-if="!searchResults.length">{{ 'no_results' | chrome_i18n }}</h3>
 </div>

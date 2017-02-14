@@ -60,6 +60,9 @@
 		"message": "reproduzir próximo episódio quando o atual acabar"
 	},
 	// search
+	"subscribe": {
+		"message": "Adicionar este feed ao podStation"
+	},
 	"open_in_itunes": {
 		"message": "Abrir no iTunes"
 	},
