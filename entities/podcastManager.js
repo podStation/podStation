@@ -145,7 +145,9 @@ var PodcastManager;
 		});
 
 		messageService.for('podcastManager')
-		  .onMessage('setEpisodeInProgress', function(message) {
+		  .onMessage('addPodcasts', function(message) {
+			instance.addPodcasts(message.podcasts);
+		}).onMessage('setEpisodeInProgress', function(message) {
 			setEpisodeInProgress(message.url, message.episodeId, message.currentTime);
 		}).onMessage('getEpisodeProgress', function(message, sendResponse) {
 			getStoredEpisodeInfo(message.url, message.episodeId, function(storedEpisodeInfo) {
@@ -193,40 +195,56 @@ var PodcastManager;
 
 		this.addPodcast = function(url) {
 			if(url !== '') {
+				this.addPodcasts([url]);
+			}
+		};
+
+		this.addPodcasts = function(urls) {
+			if(urls && urls.length) {
 				var that = this;
 				loadPodcastsFromSync(function(syncPodcastList) {
-					var podcastExistInStorage = false;
-					syncPodcastList.forEach(function(podcast) {
-						if(podcast.url && podcast.url === url) {
-							podcastExistInStorage = true;
+					var listChanged = false;
+					
+					urls.forEach(function(url) {
+						var podcastExistInStorage = false;
+						syncPodcastList.forEach(function(podcast) {
+							if(podcast.url && podcast.url === url) {
+								podcastExistInStorage = true;
+							}
+						});
+
+						if(podcastExistInStorage) {
+							return;
 						}
+
+						var podcastForSync = {
+							url: url,
+							i: findNextFreeId(syncPodcastList)
+						};
+
+						syncPodcastList.unshift(podcastForSync);
+
+						var podcast = new Podcast(podcastForSync.url);
+
+						that.podcastList.unshift(podcast);
+
+						listChanged = true;
+
+						// podcast.load();
 					});
 
-					if(podcastExistInStorage) {
-						return;
+					if(listChanged) {
+						that.updatePodcast(urls);
+
+						chrome.runtime.sendMessage({
+							type: 'podcastListChanged',
+						});
+
+						return true;
 					}
-
-					var podcastForSync = {
-						url: url,
-						i: findNextFreeId(syncPodcastList)
-					};
-
-					syncPodcastList.unshift(podcastForSync);
-
-					var podcast = new Podcast(podcastForSync.url);
-
-					that.podcastList.unshift(podcast);
-
-					podcast.load();
-
-					chrome.runtime.sendMessage({
-						type: 'podcastListChanged',
-					});
-
-					return true;
 				});
 			}
-		}
+		};
 
 		this.deletePodcast = function(url) {
 			var that = this;
@@ -256,7 +274,7 @@ var PodcastManager;
 		}
 
 		this.updatePodcast = function(url) {
-			if(url && url !== '') {
+			if(typeof url === "string" && url !== '') {
 				var podcast;
 				podcast = this.getPodcast(url);
 
@@ -266,6 +284,8 @@ var PodcastManager;
 				var podcastIndex;
 				var maxConcurrentUpdates = 3;
 				var that = this;
+
+				var podcastsToUpdate = Array.isArray(url) ? url : undefined;
 
 				that.podcastList.forEach(function(podcast) {
 					if(podcast.isUpdating())
@@ -279,7 +299,11 @@ var PodcastManager;
 					if(podcastIndex >= that.podcastList.length)
 						return;
 
-					var jqxhr = that.podcastList[podcastIndex].update();
+					var jqxhr;
+
+					if(!podcastsToUpdate || podcastsToUpdate.indexOf(that.podcastList[podcastIndex].url) >= 0) {
+						jqxhr = that.podcastList[podcastIndex].update();
+					}
 
 					if(jqxhr) {
 						jqxhr.always(function() {
@@ -289,6 +313,7 @@ var PodcastManager;
 					}
 					else {
 						// most likely, it is already updating
+						// or not selected for update
 						setTimeout(function() {
 							// we want it to be async because of the loop below
 							podcastIndex++;
@@ -300,6 +325,9 @@ var PodcastManager;
 				for(podcastIndex = 0; podcastIndex < maxConcurrentUpdates; podcastIndex++) {
 					podcastUpdate();
 				}
+
+				// we want it to remain in the last podcastIndex that the look actually processed
+				podcastIndex--;
 			}
 		}
 

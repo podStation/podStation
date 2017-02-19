@@ -180,6 +180,9 @@
 	"in_progress": {
 		"message": "Episodes in progress"
 	},
+	"import_opml": {
+		"message": "Import feeds from OPML file"
+	},
 	"review": {
 		"message": "Send love, leave a review"
 	},
