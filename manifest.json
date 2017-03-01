@@ -23,6 +23,7 @@
 		"http://*/",
 		"https://*/"
 	],
+	"content_security_policy": "script-src 'self' https://www.gstatic.com blob: filesystem: chrome-extension-resource:; object-src 'self'",
 	"browser_action": {
 		"default_title": "podStation"
 	},

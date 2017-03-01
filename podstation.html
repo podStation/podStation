@@ -25,7 +25,12 @@
 		<script type="text/javascript" src="ui/ng/controllers/aboutController.js"></script>
 		
 		<script type="text/javascript" src="podstation.js"></script>
-		
+
+		<!--we ommit the argument ?loadCastFramework=1 because it will fail, since it will try to load it from 
+		    chrome-extension:// instead of https://, so we have to load cast_frameword.js explicitly-->
+		<script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js"></script>
+		<script type="text/javascript" src="https:www.gstatic.com/cast/sdk/libs/sender/1.0/cast_framework.js"></script>
+
 		<link rel="stylesheet" type="text/css" href="podstation.css">
 		<link rel="stylesheet" href="lib/font-awesome.min.css">
 	</head>
@@ -121,6 +126,19 @@
 				<a class="icon" href="#" id="updateAll" title="{{'update_all' | chrome_i18n }}">
 					<i class="fa fa-refresh"></i>
 				</a> |
+				<style>
+					#cast_button {
+						top: 4px;
+						height: 16px;
+						width: 18px;
+						border: 0px;
+						padding: 0px;
+						position: relative;
+						background-color: transparent;
+						cursor: pointer;
+					}
+				</style>
+				<button id="cast_button" is="google-cast-button" ></button> |
 				<a class="icon" href="#/InProgress" title="{{'in_progress' | chrome_i18n }}">
 					<i class="fa fa-tasks"></i>
 				</a> |
