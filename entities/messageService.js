@@ -1,1 +1,0 @@
-var messageService = new ChromeExtensionMessageService(true);

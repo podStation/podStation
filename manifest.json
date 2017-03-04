@@ -36,19 +36,7 @@
 		}
 	],
 	"background": {
-		"scripts": [
-			"lib/jquery.min.js",
-			"lib/jsmediatags.min.js",
-			"reuse/comparison.js",
-			"reuse/messageServiceDefinition.js",
-			"entities/messageService.js",
-			"entities/notificationManager.js",
-			"entities/optionsManager.js",
-			"entities/podcast.js",
-			"entities/podcastManager.js",
-			"entities/audioPlayer.js",
-			"podstation_bg.js"
-		],
+		"page": "background/background.html",
 		"persistent": false
 	},
 	"manifest_version": 2,
