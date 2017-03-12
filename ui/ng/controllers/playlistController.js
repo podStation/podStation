@@ -31,14 +31,24 @@
 						}) !== undefined;
 					});
 
+					var unsortedEntries = episodeContainers.map(function(episodeContainer) {
+						return {
+							title: episodeContainer.episode.title,
+							image: episodeContainer.podcast.image,
+							episodeGuid: episodeContainer.episode.guid,
+							podcastUrl: episodeContainer.podcast.url
+						}; 
+					});
+
 					$scope.$apply(function() {
-						playlist.entries = episodeContainers.map(function(episodeContainer) {
-							return {
-								title: episodeContainer.episode.title,
-								image: episodeContainer.podcast.image,
-								episodeGuid: episodeContainer.episode.guid,
-								podcastUrl: episodeContainer.podcast.url
-							}; 
+						// sort entries according to playlistEntries
+						playlist.entries = [];
+
+						playlistEntries.forEach(function(entry) {
+							playlist.entries.push(unsortedEntries.find(function(unsortedEntry) {
+								return entry.podcastUrl  === unsortedEntry.podcastUrl && 
+								       entry.episodeGuid === unsortedEntry.episodeGuid;
+							}));
 						});
 					});
 				});
