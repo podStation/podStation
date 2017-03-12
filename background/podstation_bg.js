@@ -85,3 +85,7 @@ if(chrome.i18n.getUILanguage() === 'pt-BR') {
 else {
 	chrome.runtime.setUninstallURL('https://goo.gl/forms/80WF29XcdmLnSuAY2');
 }
+
+angular.module('podstationBackgroundApp').run(['playlist', function(playlist) {
+	// this is only to ensure the services are created as soon as possible
+}]);

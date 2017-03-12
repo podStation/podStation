@@ -416,11 +416,14 @@ var PodcastManager;
 			});
 		}
 
-		this.getAllEpisodes = function() {
+		this.getAllEpisodes = function(episodesFilter) {
 			var allEpisodes = [];
 
 			this.podcastList.forEach(function(podcast, podcastIndex) {
 				podcast.episodes.forEach(function(episode) {
+					if(episodesFilter && !episodesFilter(podcast, episode))
+						return;
+
 					var episodeContainer = {
 						podcastIndex: podcastIndex,
 						podcast: podcast,
@@ -429,13 +432,32 @@ var PodcastManager;
 					};
 
 					allEpisodes.push(episodeContainer);
-				})
+				});
 			});
 
 			allEpisodes.sort(function (a, b) { return b.pubDate - a.pubDate; });
 
 			return allEpisodes;
 		}
+
+		this.getPodcastIds = function(podcastUrls, callback) {
+			loadPodcastsFromSync(function(syncPodcastList) {
+				var urlAndIds = syncPodcastList.map(function(syncPodcast) {
+					return {
+						url: syncPodcast.url,
+						id: syncPodcast.i
+					};
+				});
+
+				if(podcastUrls.length) {
+					urlAndIds = urlAndIds.filter(function(urlAndId) { 
+						return podcastUrls.indexOf(urlAndId.url) >= 0;
+					})
+				}
+
+				callback(urlAndIds);
+			});
+		};
 
 		instance = this;
 

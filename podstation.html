@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="ui/ng/services/messageServiceWrapper.js"></script>
 		<script type="text/javascript" src="ui/ng/services/searchService.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/episodePlayerController.js"></script>
+		<script type="text/javascript" src="ui/ng/controllers/playlistController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/headerController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/menuController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/podcastsController.js"></script>
@@ -112,6 +113,8 @@
 					</tbody>
 				</table>
 			</div>
+		</div>
+		<div ng-include="'ui/ng/partials/playlist.html'">
 		</div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu" ng-controller="menuController">

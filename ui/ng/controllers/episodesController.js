@@ -33,6 +33,12 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 									podcastUrl: this.podcastUrl
 								});
 							}
+							this.addToPlaylist = function() {
+								messageService.for('playlist').sendMessage('add', {
+									podcastUrl: this.podcastUrl,
+									episodeGuid: this.guid
+								});
+							}
 						}
 					};
 

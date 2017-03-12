@@ -1,0 +1,21 @@
+<style>
+#playlist {
+	background-color: dimgrey;
+	color: white;
+	padding: 10px;
+	white-space: nowrap;
+}
+
+.playlist_button {
+	cursor: pointer;
+}
+</style>
+<div id="playlist" ng-controller="playlistController as playlist">
+	<div ng-repeat="entry in playlist.entries">
+		<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
+		<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
+		<img ng-src="{{entry.image}}" style="height: 18px"></img>
+		<span>{{entry.title}}</span>
+		<hr ng-if="!$last" style="border-color: lightgray">
+	</div>
+</div>
