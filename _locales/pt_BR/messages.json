@@ -59,6 +59,10 @@
 	"continue_playing_description": {
 		"message": "reproduzir próximo episódio quando o atual acabar"
 	},
+	// playlist
+	"empty_playlist": {
+		"message": "Sua playlist está vazia"
+	},
 	// search
 	"subscribe": {
 		"message": "Adicionar este feed ao podStation"

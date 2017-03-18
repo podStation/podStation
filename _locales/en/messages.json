@@ -59,6 +59,10 @@
 	"continue_playing_description": {
 		"message": "play next episode when current episode ends"
 	},
+	// playlist
+	"empty_playlist": {
+		"message": "Your playlist is empty"
+	},
 	// search
 	"subscribe": {
 		"message": "Subscribe to this podcast in podStation"

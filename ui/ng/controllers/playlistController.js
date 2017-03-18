@@ -6,6 +6,7 @@
 
 		playlist.play = play;
 		playlist.remove = remove;
+		playlist.isVisible = isVisible;
 		
 		initialize();
 
@@ -70,6 +71,10 @@
 				episodeGuid: playlistEntry.episodeGuid,
 				podcastUrl: playlistEntry.podcastUrl
 			});
+		}
+
+		function isVisible() {
+			return playlist.visible;
 		}
 	}
 })();

@@ -11,7 +11,7 @@
 }
 </style>
 <div ng-controller="playlistController as playlist">
-	<div id="playlist" ng-if="playlist.visible">
+	<div id="playlist" ng-if="playlist.isVisible()">
 		<div ng-repeat="entry in playlist.entries">
 			<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
 			<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
@@ -19,5 +19,6 @@
 			<span>{{entry.title}}</span>
 			<hr ng-if="!$last" style="border-color: lightgray">
 		</div>
+		<span ng-if="!playlist.entries.length"><i class="fa fa-music"></i> {{ 'empty_playlist' | chrome_i18n }}</span>
 	</div>
 </div>
