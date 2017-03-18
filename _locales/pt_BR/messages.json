@@ -180,6 +180,9 @@
 	"in_progress": {
 		"message": "Episódios em progresso"
 	},
+	"toggle_playlist": {
+		"message": "Mostrar/esconder playlist"
+	},
 	"import_opml": {
 		"message": "Importar feeds de um arquivo OPML"
 	},

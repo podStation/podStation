@@ -74,6 +74,8 @@
 								<a href="" ng-click="speedUp()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
 								<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
 								<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
+								<a href="" ng-click="tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
+								
 								<span>
 									<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
 									<span ng-if="!timeMouseOver">{{time}}</span>
@@ -126,6 +128,9 @@
 				</a> |
 				<a class="icon" href="#/InProgress" title="{{'in_progress' | chrome_i18n }}">
 					<i class="fa fa-tasks"></i>
+				</a> |
+				<a class="icon" href="" ng-click="togglePlaylistVisibility()" title="{{'toggle_playlist' | chrome_i18n }}">
+					<i class="fa fa-list"></i>
 				</a> |
 				<a class="icon" href="" ng-click="importOpml()" title="{{'import_opml' | chrome_i18n }}">
 					<i class="fa fa-upload"></i>

@@ -10,12 +10,14 @@
 	cursor: pointer;
 }
 </style>
-<div id="playlist" ng-controller="playlistController as playlist">
-	<div ng-repeat="entry in playlist.entries">
-		<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
-		<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
-		<img ng-src="{{entry.image}}" style="height: 18px"></img>
-		<span>{{entry.title}}</span>
-		<hr ng-if="!$last" style="border-color: lightgray">
+<div ng-controller="playlistController as playlist">
+	<div id="playlist" ng-if="playlist.visible">
+		<div ng-repeat="entry in playlist.entries">
+			<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
+			<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
+			<img ng-src="{{entry.image}}" style="height: 18px"></img>
+			<span>{{entry.title}}</span>
+			<hr ng-if="!$last" style="border-color: lightgray">
+		</div>
 	</div>
 </div>

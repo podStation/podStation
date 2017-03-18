@@ -1,6 +1,8 @@
 angular.module('podstationBackgroundApp').factory('playlist', ['messageService', '$log', 'browser', function(messageService, $log, browserService) {
 	var playlist = {};
 
+	playlist.visible = false;
+
 	playlist.add = add;
 	playlist.remove = remove;
 	playlist.get = get;
@@ -15,6 +17,9 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 			sendResponse(playlistData);
 		});
 		return true;
+	}).onMessage('toggleVisibility', function() {
+		playlist.visible = !playlist.visible;
+		messageService.for('playlist').sendMessage('changed');
 	});
 
 	$log.debug('playlist handler created');
@@ -68,6 +73,8 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 		loadPlaylistFromSync('default', function(syncPlaylist) {
 			window.podcastManager.getPodcastIds([], function(podcastIds) {
 				var playlistData = {};
+
+				playlistData.visible = playlist.visible;
 
 				playlistData.entries = syncPlaylist.e.map(function(syncEntry) {
 					podcastUrlAndId = podcastIds.find(function(item) { return item.id === syncEntry.p });

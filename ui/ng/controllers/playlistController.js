@@ -17,7 +17,7 @@
 
 		function initialize() {
 			playlist.entries = [];
-			playlist.visible = true;
+			playlist.visible = false;
 		}
 
 		function updateList() {
@@ -41,10 +41,13 @@
 					});
 
 					$scope.$apply(function() {
+						playlist.visible = response.visible;
+						
 						// sort entries according to playlistEntries
 						playlist.entries = [];
 
 						playlistEntries.forEach(function(entry) {
+				
 							playlist.entries.push(unsortedEntries.find(function(unsortedEntry) {
 								return entry.podcastUrl  === unsortedEntry.podcastUrl && 
 								       entry.episodeGuid === unsortedEntry.episodeGuid;

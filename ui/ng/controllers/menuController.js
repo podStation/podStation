@@ -3,6 +3,8 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 		$('#opmlUploader').trigger('click');
 	};
 
+	$scope.togglePlaylistVisibility = togglePlaylistVisibility;
+
 	// ng-change is not supported for input type='file'
 	$document[0].getElementById('opmlUploader').addEventListener('change', fileNameChanged);
 
@@ -37,4 +39,8 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 
 		reader.readAsText(file);
 	};
+
+	function togglePlaylistVisibility() {
+		messageService.for('playlist').sendMessage('toggleVisibility');
+	}
 }]);

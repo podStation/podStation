@@ -1,5 +1,5 @@
-myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'episodePlayer',
-  function($scope, $document, $window, episodePlayer) {
+myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'episodePlayer', 'messageService',
+  function($scope, $document, $window, episodePlayer, messageService) {
 
 	var durationInSeconds;
 
@@ -124,6 +124,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	$scope.toggleShowOptions = function() {
 		$scope.showOptions = !$scope.showOptions;
+	};
+
+	$scope.tooglePlaylistVisibility = function() {
+		messageService.for('playlist').sendMessage('toggleVisibility');
 	};
 
 	function getAudioInfoCallback(audioInfo) {
