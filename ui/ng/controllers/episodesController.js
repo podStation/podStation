@@ -110,6 +110,12 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 										podcastUrl: storedPodcast.url
 									});
 								}
+								this.addToPlaylist = function() {
+								messageService.for('playlist').sendMessage('add', {
+									podcastUrl: storedPodcast.url,
+									episodeGuid: this.guid
+								});
+							}
 							}
 						};
 

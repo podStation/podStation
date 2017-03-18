@@ -17,6 +17,7 @@
 					<td>
 						<div class="itemMenu">
 							<div ng-if="episode.url">
+								<a href="" ng-click="episode.addToPlaylist()" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a> |
 								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a> |
 								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
 							</div>
