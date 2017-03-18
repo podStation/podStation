@@ -33,9 +33,8 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 			
 			loadPlaylistFromSync('default', function(syncPlaylist) {
 				if(syncPlaylist.e.find(function(entry) {
-					return
-					  entry.p === podcastIds[0].id &&
-					  entry.e === episodeGuid;
+					return entry.p === podcastIds[0].id &&
+					       entry.e === episodeGuid;
 				})) {
 					return false;
 				}
