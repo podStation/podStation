@@ -60,6 +60,9 @@
 		"message": "reproduzir próximo episódio quando o atual acabar"
 	},
 	// playlist
+	"add_to_playlist": {
+		"message": "Adicionar à playlist"
+	},
 	"empty_playlist": {
 		"message": "Sua playlist está vazia"
 	},

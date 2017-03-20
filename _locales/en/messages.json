@@ -60,6 +60,9 @@
 		"message": "play next episode when current episode ends"
 	},
 	// playlist
+	"add_to_playlist": {
+		"message": "Add to playlist"
+	},
 	"empty_playlist": {
 		"message": "Your playlist is empty"
 	},
