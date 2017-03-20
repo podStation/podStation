@@ -9,16 +9,39 @@
 .playlist_button {
 	cursor: pointer;
 }
+
+.dndDraggingSource {
+	display: none;
+}
+
+.playlistEntry {
+	border-bottom-style: solid;
+	border-bottom-color: lightgray;
+	border-bottom-width: 1px;
+	padding: 4px 0px;
+}
+
+.playlistEntry:last-child {
+	border-bottom-width: 0px;
+}
+
 </style>
 <div ng-controller="playlistController as playlist">
-	<div id="playlist" ng-if="playlist.isVisible()">
-		<div ng-repeat="entry in playlist.entries">
+	<ul id="playlist" ng-if="playlist.isVisible()" dnd-list="playlist.entries">
+		<li class="playlistEntry" ng-repeat="entry in playlist.entries" 
+		     dnd-draggable="entry"
+		     dnd-effect-allowed="move"
+		     dnd-moved="playlist.entries.splice($index, 1)"
+		     dnd-dragend="playlist.dragEnded()">
 			<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
 			<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
 			<img ng-src="{{entry.image}}" style="height: 18px"></img>
 			<span>{{entry.title}}</span>
-			<hr ng-if="!$last" style="border-color: lightgray">
-		</div>
-		<span ng-if="!playlist.entries.length"><i class="fa fa-music"></i> {{ 'empty_playlist' | chrome_i18n }}</span>
-	</div>
+		</li>
+		<li class="dndPlaceholder playlistEntry">
+			<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
+			<span class="playlist_button"><i class="fa fa-remove"></i></span>-->
+		</li>
+		<li ng-if="!playlist.entries.length"><i class="fa fa-list"></i> {{ 'empty_playlist' | chrome_i18n }}</lit>
+	</ul>
 </div>

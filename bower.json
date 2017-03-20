@@ -25,6 +25,7 @@
     "angular": "1.4.7",
     "angular-route": "1.4.7",
     "angular-sanitize": "1.4.7",
+    "angular-drag-and-drop-lists": "2.1.0",
     "font-awesome": "4.4.0",
     "jsmediatags": "git@github.com:aadsm/jsmediatags.git",
     "ngInfiniteScroll": "git@github.com:sroze/ngInfiniteScroll.git#1.0.0"

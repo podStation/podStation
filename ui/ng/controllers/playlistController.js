@@ -6,6 +6,8 @@
 
 		playlist.play = play;
 		playlist.remove = remove;
+		playlist.dragEnded = dragEnded;
+
 		playlist.isVisible = isVisible;
 		
 		initialize();
@@ -71,6 +73,11 @@
 				episodeGuid: playlistEntry.episodeGuid,
 				podcastUrl: playlistEntry.podcastUrl
 			});
+		}
+
+		function dragEnded() {
+			// playlist.entries should sufice for the moment
+			messageService.for('playlist').sendMessage('set', { entries: playlist.entries });
 		}
 
 		function isVisible() {

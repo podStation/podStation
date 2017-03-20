@@ -5,6 +5,7 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 	playlist.add = add;
 	playlist.remove = remove;
+	playlist.set = set;
 	playlist.get = get;
 
 	messageService.for('playlist')
@@ -12,6 +13,8 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 		playlist.add(message.podcastUrl, message.episodeGuid);
 	}).onMessage('remove', function(message) {
 		playlist.remove(message.podcastUrl, message.episodeGuid);
+	}).onMessage('set', function(message) {
+		playlist.set(message);
 	}).onMessage('get', function(message, sendResponse) {
 		playlist.get(function(playlistData) {
 			sendResponse(playlistData);
@@ -63,6 +66,29 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 				messageService.for('playlist').sendMessage('changed');
 				
+				return true;
+			});
+		});
+	}
+
+	function set(playlistData) {	
+		window.podcastManager.getPodcastIds([], function(podcastIds) {
+			loadPlaylistFromSync('default', function(syncPlaylist) {
+				
+				syncPlaylist.e = playlistData.entries.map(function(entry) {
+					podcastUrlAndId = podcastIds.find(function(item) { return item.url === entry.podcastUrl });
+					
+					return {
+						p: podcastUrlAndId.id,
+						e: entry.episodeGuid
+					};
+				});
+
+				// we have to wait until it is saved
+				setTimeout(function() {
+					messageService.for('playlist').sendMessage('changed');
+				}, 1);
+
 				return true;
 			});
 		});
