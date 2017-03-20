@@ -25,6 +25,12 @@
 	border-bottom-width: 0px;
 }
 
+span[dnd-handle] {
+	cursor: move;
+	font-size: 10px;
+	color: lightgray;
+}
+
 </style>
 <div ng-controller="playlistController as playlist">
 	<ul id="playlist" ng-if="playlist.isVisible()" dnd-list="playlist.entries">
@@ -33,10 +39,13 @@
 		     dnd-effect-allowed="move"
 		     dnd-moved="playlist.entries.splice($index, 1)"
 		     dnd-dragend="playlist.dragEnded()">
-			<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
-			<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
-			<img ng-src="{{entry.image}}" style="height: 18px"></img>
-			<span>{{entry.title}}</span>
+			<dnd-nodrag>
+				<span dnd-handle><i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i></span>&nbsp;
+				<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
+				<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
+				<img ng-src="{{entry.image}}" style="height: 18px"></img>
+				<span>{{entry.title}}</span>
+			</dnd-nodrag>
 		</li>
 		<li class="dndPlaceholder playlistEntry">
 			<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
