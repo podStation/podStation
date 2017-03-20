@@ -10,19 +10,30 @@
 	cursor: pointer;
 }
 
-.dndDraggingSource {
-	display: none;
-}
-
 .playlistEntry {
 	border-bottom-style: solid;
 	border-bottom-color: lightgray;
 	border-bottom-width: 1px;
-	padding: 4px 0px;
+	padding: 1px 0px 5px 0px;
 }
 
 .playlistEntry:last-child {
 	border-bottom-width: 0px;
+}
+
+.playlistImage {
+	height: 18px;
+	border-radius: 4px;
+	position: relative;
+	top: 4px;
+}
+
+.dndDraggingSource {
+	display: none;
+}
+
+.dndPlaceholder {
+	height: 21px;
 }
 
 span[dnd-handle] {
@@ -43,7 +54,7 @@ span[dnd-handle] {
 				<span dnd-handle><i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i></span>&nbsp;
 				<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
 				<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
-				<img ng-src="{{entry.image}}" style="height: 18px"></img>
+				<img ng-src="{{entry.image}}" class="playlistImage"></img>
 				<span>{{entry.title}}</span>
 			</dnd-nodrag>
 		</li>
