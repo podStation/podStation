@@ -61,64 +61,8 @@
 				</div>
 			</div>
 		</div>
-		<div ng-controller="episodePlayerController">
-			<div id="audioPlayer" ng-if="visible">
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								<i class="fa fa-refresh fa-spin" ng-if="loading" title="Loading"></i>
-								<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
-								<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="speedDown()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-backward" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></i></a>
-								<a href="" ng-click="speedUp()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
-								<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
-								
-								<span>
-									<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
-									<span ng-if="!timeMouseOver">{{time}}</span>
-									<span> / {{duration}}</span>
-								</span>
-								<br>
-								<a href="" ng-click="toggleShowOptions()" ng-if="!showOptions"><i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="toggleShowOptions()" ng-if="showOptions"><i class="fa fa-angle-double-down" title=""></i></a>
-								<div id="playerOptions" ng-if="showOptions">
-									<span>{{'order_next_previous' | chrome_i18n}}</span>
-									<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
-										<option value="from_podcast">{{'order_from_podcast' | chrome_i18n}}</option>
-										<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
-									</select>
-									<br>
-									<div title="{{'continue_playing_description' | chrome_i18n}}">
-										<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
-										<span> {{'continue_playing' | chrome_i18n}}</span>
-									</div>
-								</div>
-							</td>
-							<td ng-if="imageUrl">
-								<img ng-src="{{imageUrl}}" id="playerImage"></img>
-							</td>
-							<td>
-								<div id="playingTitle">
-									<span><b>{{'playing' | chrome_i18n }}:</b> </span>
-									<a ng-if="mediaLink" ng-href="{{mediaLink}}" target="_blank">{{mediaTitle}}</a>
-									<span ng-if="!mediaLink">{{mediaTitle}}</span>
-								</div>
-								<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
-								ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
-									<div id="progressIn" style="width: {{timePercent}}%"></div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-		<div ng-include="'ui/ng/partials/playlist.html'">
-		</div>
+		<div ng-include="'ui/ng/partials/episodePlayer.html'"></div>
+		<div ng-include="'ui/ng/partials/playlist.html'"></div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu" ng-controller="menuController">
 				<a href="#/Podcasts">Podcasts</a> |
