@@ -388,6 +388,37 @@ var PodcastManager;
 			}
 		}
 
+		function getEpisodeFromPlaylist(currentEpisode, delta, callback) {
+			messageService.for('playlist').sendMessage('get', {}, function(response) {
+				for(var i = 0; i < response.entries.length; i++) {
+					if(response.entries[i].podcastUrl  === currentEpisode.podcastUrl &&
+					   response.entries[i].episodeGuid === currentEpisode.episodeGuid) {
+						
+						// The playlist goes backwards, because episodes are ordered by
+						// pubdate descending. For the playlist we want the next to go
+						// "down" the list, not up.
+						var indexWithDelta = i - delta;
+
+						if(indexWithDelta >= 0 && indexWithDelta < response.entries.length) {
+							callback({
+								podcastUrl:  response.entries[indexWithDelta].podcastUrl,
+								episodeGuid: response.entries[indexWithDelta].episodeGuid
+							});
+
+							return;
+						}
+					}
+				}
+
+				if(response.entries.length) {
+					callback({
+						podcastUrl:  response.entries[0].podcastUrl,
+						episodeGuid: response.entries[0].episodeGuid
+					});
+				}
+			});
+		}
+
 		function getEpisode(order, currentEpisode, delta, callback) {
 			switch(order ? order : 'from_last_episodes') {
 				case 'from_podcast':
@@ -396,6 +427,9 @@ var PodcastManager;
 					break;
 				case 'from_last_episodes':
 					getEpisodeFromLastEpisodes(currentEpisode, delta, callback);
+					break;
+				case 'from_playlist':
+					getEpisodeFromPlaylist(currentEpisode, delta, callback);
 					break;
 			}
 		}

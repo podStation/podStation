@@ -25,8 +25,9 @@
 						<div id="playerOptions" ng-if="showOptions">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
 							<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
-								<option value="from_podcast">{{'order_from_podcast' | chrome_i18n}}</option>
+								<option value="from_podcast"      >{{'order_from_podcast'       | chrome_i18n}}</option>
 								<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
+								<option value="from_playlist"     >{{'order_from_playlist'      | chrome_i18n}}</option>
 							</select>
 							<br>
 							<div title="{{'continue_playing_description' | chrome_i18n}}">

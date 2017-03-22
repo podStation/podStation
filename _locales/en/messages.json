@@ -53,6 +53,9 @@
 	"order_from_last_episodes": {
 		"message": "from last episodes"
 	},
+	"order_from_playlist": {
+		"message": "from playlist"
+	},
 	"continue_playing": {
 		"message": "Continue playing"
 	},
