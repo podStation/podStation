@@ -51,6 +51,10 @@ span[dnd-handle] {
 	color: lightgray;
 }
 
+span.isPlaying {
+	font-weight: bold;
+}
+
 </style>
 <div ng-controller="playlistController as playlist">
 	<div id="playlist" ng-if="playlist.isVisible()"> 
@@ -70,7 +74,7 @@ span[dnd-handle] {
 					<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
 					<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
 					<img ng-src="{{entry.image}}" class="playlistImage"></img>
-					<span>{{entry.title}}</span>
+					<span ng-class="{isPlaying: entry.isPlaying}">{{entry.title}}</span>
 				</dnd-nodrag>
 			</li>
 			<li class="dndPlaceholder playlistEntry">

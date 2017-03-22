@@ -18,6 +18,13 @@
 			updateList();
 		});
 
+		// I'm not using episodePlayer.changed at the moment because it 
+		// has a single listener, if I do there will be a conflict with 
+		// the existing listener.
+		messageService.for('audioPlayer').onMessage('changed', function() {
+			updateList();
+		});
+
 		function initialize() {
 			playlist.entries = [];
 			playlist.visible = false;
@@ -43,18 +50,25 @@
 						}; 
 					});
 
-					$scope.$apply(function() {
-						playlist.visible = response.visible;
-						
-						// sort entries according to playlistEntries
-						playlist.entries = [];
+					playlist.visible = response.visible;
+					
+					// sort entries according to playlistEntries
+					playlist.entries = [];
 
-						playlistEntries.forEach(function(entry) {
-				
-							playlist.entries.push(unsortedEntries.find(function(unsortedEntry) {
-								return entry.podcastUrl  === unsortedEntry.podcastUrl && 
-								       entry.episodeGuid === unsortedEntry.episodeGuid;
-							}));
+					playlistEntries.forEach(function(entry) {
+			
+						playlist.entries.push(unsortedEntries.find(function(unsortedEntry) {
+							return entry.podcastUrl  === unsortedEntry.podcastUrl && 
+									entry.episodeGuid === unsortedEntry.episodeGuid;
+						}));
+					});
+
+					episodePlayer.getAudioInfo(function(audioInfo) {
+						$scope.$apply(function() {
+							playlist.entries.forEach(function(entry) {
+								entry.isPlaying = entry.podcastUrl  === audioInfo.episode.podcastUrl &&
+								                  entry.episodeGuid === audioInfo.episode.episodeGuid;
+							});
 						});
 					});
 				});

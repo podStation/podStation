@@ -207,6 +207,8 @@ var AudioPlayerManager;
 				getAudioTags(function(tags) {
 					episodeInfo.audioTags = tags;
 				});
+
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 
 			audioPlayer.play();
