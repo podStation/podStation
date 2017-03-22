@@ -3,7 +3,14 @@
 	background-color: dimgrey;
 	color: white;
 	padding: 10px;
+	padding-bottom: 0px;
 	white-space: nowrap;
+}
+
+#playlist ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
 }
 
 .playlist_button {
@@ -46,24 +53,31 @@ span[dnd-handle] {
 
 </style>
 <div ng-controller="playlistController as playlist">
-	<ul id="playlist" ng-if="playlist.isVisible()" dnd-list="playlist.entries">
-		<li class="playlistEntry" ng-repeat="entry in playlist.entries" 
-		     dnd-draggable="entry"
-		     dnd-effect-allowed="move"
-		     dnd-moved="playlist.entries.splice($index, 1)"
-		     dnd-dragend="playlist.dragEnded()">
-			<dnd-nodrag>
-				<span dnd-handle><i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i></span>&nbsp;
-				<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
-				<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
-				<img ng-src="{{entry.image}}" class="playlistImage"></img>
-				<span>{{entry.title}}</span>
-			</dnd-nodrag>
-		</li>
-		<li class="dndPlaceholder playlistEntry">
-			<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
-			<span class="playlist_button"><i class="fa fa-remove"></i></span>-->
-		</li>
-		<li ng-if="!playlist.entries.length"><i class="fa fa-list"></i> {{ 'empty_playlist' | chrome_i18n }}</lit>
-	</ul>
+	<div id="playlist" ng-if="playlist.isVisible()"> 
+		<ul>
+			<li class="playlistEntry" style="border-bottom-width: 1px;">
+				<strong><span style="font-size: 14px" class="fa fa-list"></span> Playlist</strong>
+			</li>
+		</ul>
+		<ul dnd-list="playlist.entries">
+			<li class="playlistEntry" ng-repeat="entry in playlist.entries" 
+				dnd-draggable="entry"
+				dnd-effect-allowed="move"
+				dnd-moved="playlist.entries.splice($index, 1)"
+				dnd-dragend="playlist.dragEnded()">
+				<dnd-nodrag>
+					<span dnd-handle><i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i></span>&nbsp;
+					<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
+					<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
+					<img ng-src="{{entry.image}}" class="playlistImage"></img>
+					<span>{{entry.title}}</span>
+				</dnd-nodrag>
+			</li>
+			<li class="dndPlaceholder playlistEntry">
+				<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
+				<span class="playlist_button"><i class="fa fa-remove"></i></span>-->
+			</li>
+			<li ng-if="!playlist.entries.length"><i class="fa fa-list"></i> {{ 'empty_playlist' | chrome_i18n }}</lit>
+		</ul>
+	</div>
 </div>
