@@ -81,7 +81,7 @@ span.isPlaying {
 				<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
 				<span class="playlist_button"><i class="fa fa-remove"></i></span>-->
 			</li>
-			<li ng-if="!playlist.entries.length"><i class="fa fa-list"></i> {{ 'empty_playlist' | chrome_i18n }}</lit>
+			<li class="playlistEntry" ng-if="!playlist.entries.length">{{ 'empty_playlist' | chrome_i18n }}</li>
 		</ul>
 	</div>
 </div>
