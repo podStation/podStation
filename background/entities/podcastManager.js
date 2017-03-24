@@ -390,6 +390,14 @@ var PodcastManager;
 
 		function getEpisodeFromPlaylist(currentEpisode, delta, callback) {
 			messageService.for('playlist').sendMessage('get', {}, function(response) {
+				if(!response) {
+					// TODO: investigate why the messageService is calling the response
+					// callback with empty response before calling it with a proper
+					// reponse
+					console.log('podcastManager - get playlist - empty reponse');
+					return;
+				}
+
 				for(var i = 0; i < response.entries.length; i++) {
 					if(response.entries[i].podcastUrl  === currentEpisode.podcastUrl &&
 					   response.entries[i].episodeGuid === currentEpisode.episodeGuid) {
