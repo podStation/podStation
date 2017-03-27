@@ -197,8 +197,16 @@ var AudioPlayerManager;
 					});
 
 					loadPlayerOptions(function(options) {
+						if(options.removeWhenFinished) {
+							messageService.for('playlist').sendMessage('remove', {
+								podcastUrl: episodeInfo.podcastUrl,
+								episodeGuid: episodeInfo.episodeGuid
+							});
+						}
+
 						if(options.continuous)
 							playNextOrPrevious(true);
+
 					});
 				};
 
@@ -327,6 +335,9 @@ var AudioPlayerManager;
 
 				if(messageContent.continuous !== undefined)
 					options.continuous = messageContent.continuous;
+
+				if(messageContent.removeWhenFinished !== undefined)
+					options.removeWhenFinished = messageContent.removeWhenFinished;
 
 				messageService.for('audioPlayer').sendMessage('optionsChanged', options);
 

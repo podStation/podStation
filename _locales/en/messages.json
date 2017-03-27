@@ -62,6 +62,9 @@
 	"continue_playing_description": {
 		"message": "play next episode when current episode ends"
 	},
+	"remove_when_finished": {
+		"message": "Remove from playlist when finished"
+	},
 	// playlist
 	"add_to_playlist": {
 		"message": "Add to playlist"

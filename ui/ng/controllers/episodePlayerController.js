@@ -22,7 +22,8 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		// are direclty placed in $scope	
 		$scope.options = {
 			order: 'from_podcast',
-			continuous: false
+			continuous: false,
+			removeWhenFinished: true
 		};
 
 		readOptions();
@@ -36,6 +37,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.$apply(function() {
 			$scope.options.order = options.order ? options.order : 'from_podcast';
 			$scope.options.continuous = options.continuous ? options.continuous : false;
+			$scope.options.removeWhenFinished = typeof options.removeWhenFinished !== 'undefined' ? options.removeWhenFinished : true;
 		});
 	}
 
@@ -120,6 +122,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	$scope.continuousChanged = function() {
 		episodePlayer.setOptions({continuous: $scope.options.continuous});
+	};
+
+	$scope.onChangeRemoveWhenFinished = function() {
+		episodePlayer.setOptions({removeWhenFinished: $scope.options.removeWhenFinished});
 	};
 
 	$scope.toggleShowOptions = function() {
