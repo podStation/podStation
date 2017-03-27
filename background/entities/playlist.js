@@ -47,6 +47,9 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 					e: episodeGuid
 				});
 
+				// force visible when something is added
+				playlist.visible = true;
+
 				messageService.for('playlist').sendMessage('changed');
 				
 				return true;
