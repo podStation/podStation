@@ -34,9 +34,9 @@
 								<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
 								<span> {{'continue_playing' | chrome_i18n}}</span>
 							</div>
-							<div title="{{'continue_playing_description' | chrome_i18n}}">
-								<input type="checkbox" name="continuous_play" ng-model="options.removeWhenFinished" ng-change="onChangeRemoveWhenFinished()" />
-								<span> Remove from playlist when finished</span>
+							<div>
+								<input type="checkbox" name="remove_when_finished" ng-model="options.removeWhenFinished" ng-change="onChangeRemoveWhenFinished()" />
+								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>
 						</div>
 					</td>
