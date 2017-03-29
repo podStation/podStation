@@ -16,6 +16,8 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.loading = false;
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
+		$scope.volume = {};
+		$scope.volume.value = 100;
 
 		$scope.showOptions = false;
 		// The data binding will not work properly if the components
@@ -116,6 +118,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.timeMouseOver = '';
 	}
 
+	$scope.volumeChanged = function() {
+		episodePlayer.setVolume($scope.volume.value / 100.0);
+	}
+
 	$scope.orderChanged = function() {
 		episodePlayer.setOptions({order: $scope.options.order});
 	};
@@ -157,6 +163,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 				$scope.loading = audioInfo.audio.url && !audioInfo.audio.duration;
 				$scope.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
 				$scope.playbackRate = audioInfo.audio.playbackRate;
+				$scope.volume.value = audioInfo.audio.volume * 100;
 
 				durationInSeconds = audioInfo.audio.duration;
 			});
@@ -245,6 +252,12 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 	episodePlayer.shiftPlaybackRate = function(delta) {
 		messageService.for('audioPlayer').sendMessage('shiftPlaybackRate', {
 			delta: delta
+		});
+	};
+
+	episodePlayer.setVolume = function(value) {
+		messageService.for('audioPlayer').sendMessage('setVolume', {
+			value: value
 		});
 	};
 

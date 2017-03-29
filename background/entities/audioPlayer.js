@@ -112,7 +112,8 @@ var AudioPlayerManager;
 					imageUrl: imageUrl(),
 					currentTime: audioPlayer ? audioPlayer.currentTime : 0,
 					duration: audioPlayer ? audioPlayer.duration : 0,
-					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0
+					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0,
+					volume: audioPlayer ? audioPlayer.volume : 0 
 				},
 				episode: {
 					podcastUrl: episodeInfo ? episodeInfo.podcastUrl : undefined,
@@ -320,6 +321,10 @@ var AudioPlayerManager;
 			playNextOrPrevious(true);
 		}).onMessage('playPrevious', function() {
 			playNextOrPrevious(false);
+		}).onMessage('setVolume', function(message) {
+			if(audioPlayer) {
+				audioPlayer.volume = message.value;
+			}
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;

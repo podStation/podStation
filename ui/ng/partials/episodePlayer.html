@@ -108,6 +108,10 @@
 						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
 							<div id="progressIn" style="width: {{timePercent}}%"></div>
 						</div>
+						<div id="volumeControl">
+							<i class="fa fa-volume-up"></i>
+							<input type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
+						</div>
 					</td>
 				</tr>
 			</tbody>
