@@ -80,60 +80,6 @@ td:last-of-type {
 	color: lightgrey;
 }
 
-#audioPlayer {
-	margin-top: -10;
-}
-
-#playerImage {
-	max-width: 200px;
-	height: 80px;
-}
-
-#audioPlayer table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-#audioPlayer td {
-	background-color: black;
-	color: white;
-	padding: 10px;
-	white-space: nowrap;
-}
-
-#audioPlayer td a {
-	color: white;
-}
-
-.playerButtonDisabled {
-	color: gray !important;
-	cursor: default;
-}
-
-#audioPlayer td:last-child{
-	width:100%;
-}
-
-#progressOut {
-	margin-top: 5px;
-	height: 10px;
-	background-color: white;
-	border-radius: 4px;
-	cursor: pointer;
-}
-
-#progressIn {
-	height: inherit;
-	background-color: grey;
-	border-radius: inherit;
-}
-
-#playerOptions {
-	background-color: gray;
-	padding: 5px;
-	border-radius: 5px;
-}
-
 #header {
 	background-color: Gainsboro;
 	height: 50px;
