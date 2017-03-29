@@ -52,6 +52,46 @@
 	padding: 5px;
 	border-radius: 5px;
 }
+
+#volumeControl {
+	padding-top: 10px;
+}
+
+#volumeIcon {
+	font-size: 16px;
+	position: relative;
+	top: 3px;
+}
+
+input[type=range]{
+	-webkit-appearance: none;
+}
+
+input[type=range]::-webkit-slider-runnable-track {
+	width: 300px;
+	height: 5px;
+	background: #ddd;
+	border: none;
+}
+
+input[type=range]::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	border: none;
+	height: 16px;
+	width: 8px;
+	border-radius: 4px;
+	background: grey;
+	margin-top: -6px;
+}
+
+input[type=range]:focus {
+	outline: none;
+}
+
+input[type=range]:focus::-webkit-slider-runnable-track {
+	background: #ccc;
+}
+
 </style>
 <div ng-controller="episodePlayerController">
 	<div id="audioPlayer" ng-if="visible">
@@ -109,8 +149,8 @@
 							<div id="progressIn" style="width: {{timePercent}}%"></div>
 						</div>
 						<div id="volumeControl">
-							<i class="fa fa-volume-up"></i>
-							<input type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
+							<i id="volumeIcon" class="fa fa-volume-up"></i>
+							<input id="volumeSlider" type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
 						</div>
 					</td>
 				</tr>
