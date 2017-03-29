@@ -15,8 +15,8 @@ var AudioPlayerManager;
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
-		function loadPlayerOptions(loaded) {
-			chrome.storage.sync.get('playerOptions', function(storageObject) {
+		function loadPlayerOptions(storage, loaded) {
+			storage.get('playerOptions', function(storageObject) {
 				var playerOptions;
 
 				if(typeof storageObject.playerOptions === "undefined") {
@@ -27,9 +27,17 @@ var AudioPlayerManager;
 				}
 
 				if( loaded(playerOptions) ) {
-					chrome.storage.sync.set({'playerOptions': playerOptions});
+					storage.set({'playerOptions': playerOptions});
 				}
 			});
+		}
+
+		function loadLocalPlayerOptions(loaded) {
+			loadPlayerOptions(chrome.storage.local, loaded);
+		}
+
+		function loadSyncPlayerOptions(loaded) {
+			loadPlayerOptions(chrome.storage.sync, loaded);
 		};
 
 		function getPodcastAndEpisode(podcastUrl, episodeGuid) {
@@ -189,6 +197,11 @@ var AudioPlayerManager;
 				
 				episodeInfo = playData.episode;
 
+				loadLocalPlayerOptions(function(playerOptions) {
+					audioPlayer.volume = playerOptions.volume ? playerOptions.volume : 1.0;
+					messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+				});
+
 				audioPlayer.onended = function() {
 					setEpisodeInProgress(episodeInfo, 0);
 					pauseTimeOut();
@@ -197,7 +210,7 @@ var AudioPlayerManager;
 						text: ''
 					});
 
-					loadPlayerOptions(function(options) {
+					loadSyncPlayerOptions(function(options) {
 						if(options.removeWhenFinished) {
 							messageService.for('playlist').sendMessage('remove', {
 								podcastUrl: episodeInfo.podcastUrl,
@@ -240,7 +253,7 @@ var AudioPlayerManager;
 			if(!episodeInfo)
 				return;
 
-			loadPlayerOptions(function(playerOptions) {
+			loadSyncPlayerOptions(function(playerOptions) {
 				window.podcastManager.getNextOrPreviousEpisode(isNext, playerOptions.order, {
 					podcastUrl: episodeInfo.podcastUrl,	
 					episodeGuid: episodeInfo.episodeGuid
@@ -324,17 +337,22 @@ var AudioPlayerManager;
 		}).onMessage('setVolume', function(message) {
 			if(audioPlayer) {
 				audioPlayer.volume = message.value;
+
+				loadLocalPlayerOptions(function(playerOptions) {
+					playerOptions.volume = message.value;
+					return true;
+				});
 			}
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
 		}).onMessage('getOptions', function(messageContent, sendResponse) {
-			loadPlayerOptions(function(options) {
+			loadSyncPlayerOptions(function(options) {
 				sendResponse(options);
 			});
 			return true;
 		}).onMessage('setOptions', function(messageContent) {
-			loadPlayerOptions(function(options) {
+			loadSyncPlayerOptions(function(options) {
 				if(messageContent.order)
 					options.order = messageContent.order;
 
