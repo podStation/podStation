@@ -1,4 +1,5 @@
 myApp.controller('podcastsController', ['$scope', 'messageService', function($scope, messageService) {
+	$scope.listType = 'big_list';
 	$scope.podcasts = [];
 
 	function getStatusClass(status) {

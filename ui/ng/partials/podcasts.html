@@ -2,7 +2,13 @@
 	<h1 class="sectionTitle">Podcasts</h1>
 	<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
 	<div id="podcastList">
-		<div ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
+		<div id="listMenu">
+			<select ng-model="listType" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<option value="big_list"  >&#xf00b; Big list</option>
+				<option value="small_list">&#xf03a; Small list</option>
+			</select>
+		</div>
+		<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
 			<div class="itemMenu">
 				<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
 				<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
@@ -40,6 +46,24 @@
 				</tr>
 			</table>
 			</div>
+		</div>
+		<div ng-if="listType!=='big_list'" style="padding-top: 5px">
+			<ul class="contentList">
+				<li ng-repeat="podcast in podcasts" class="listItemSmall">
+					<div class="listItemImageSmall">
+						<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
+					</div>
+					<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a>
+					<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+					<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
+					<span ng-if="podcast.link">
+					<a ng-href="{{podcast.link}}" target="_blank">
+						<span>{{'open_podcast_website' | chrome_i18n }}</span>
+					</a> -
+					</span>
+					<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+				</li>
+			</ul>
 		</div>
 	</div>
 </div>

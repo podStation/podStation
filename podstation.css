@@ -181,6 +181,41 @@ h1 {
 	height: auto;
 }
 
+/* Small list */
+ul.contentList {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.listItemSmall {
+	border: solid;
+	border-color: gray;
+	border-width: 0px 0px 1px 0px;
+	padding-bottom: 4px;
+}
+
+.listItemSmall:first-child {
+	border-width: 1px 0px 1px 0px;
+}
+
+div.listItemImageSmall {
+	min-width: 18px; 
+	text-align: center;
+	display: inline-block;
+}
+
+img.listItemImageSmall {
+	height: 18px;
+	position: relative;
+	top: 4px;
+}
+
+.listItemTitleSmall {
+	font-weight: bold;
+}
+
+
 #aboutContent {
 	font-size: medium;
 }
