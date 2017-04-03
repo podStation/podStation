@@ -116,7 +116,7 @@ var Podcast = function(url) {
 				that.pubDate = postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
 			}
 
-			that.image = xml.find('rss > channel > image > url').text();
+			that.image = $(xml.find('rss > channel > image > url')[0]).text();
 			if(that.image === undefined || that.image === "") {
 				that.image = xml.find('rss > channel > image').attr('href');
 			}
