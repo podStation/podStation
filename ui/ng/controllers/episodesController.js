@@ -1,6 +1,7 @@
 myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
 	function($scope, $routeParams, episodePlayer, messageService) {
 
+	$scope.listType = 'big_list';
 	$scope.episodes = [];
 	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
 
