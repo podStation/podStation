@@ -27,7 +27,7 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		templateUrl: '/ui/ng/partials/options.html',
 		controller: 'optionsController'
 	}).otherwise({
-		redirectTo: '/LastEpisodes/20'
+		redirectTo: '/LastEpisodes'
 	});
 }]);
 
