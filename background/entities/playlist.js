@@ -107,10 +107,13 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 				playlistData.entries = syncPlaylist.e.map(function(syncEntry) {
 					podcastUrlAndId = podcastIds.find(function(item) { return item.id === syncEntry.p });
 					
+					// undefined podcastUrlAndId can mean the podcast was removed
 					return podcastUrlAndId ? {
 						podcastUrl: podcastUrlAndId.url,
 						episodeGuid: syncEntry.e
 					} : {};
+				}).filter(function(entry) {
+					return entry.podcastUrl !== undefined;
 				});
 
 				callback(playlistData);
