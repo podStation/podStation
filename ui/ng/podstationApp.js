@@ -8,7 +8,7 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 	$routeProvider.when('/Podcasts', {
 		templateUrl: '/ui/ng/partials/podcasts.html',
 		controller: 'podcastsController'
-	}).when('/LastEpisodes/:numberEpisodes', {
+	}).when('/LastEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
 		controller: 'lastEpisodesController'
 	}).when('/Episodes/:podcastIndex', {

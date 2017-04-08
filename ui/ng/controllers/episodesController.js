@@ -3,7 +3,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
-	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
+	$scope.numberEpisodes = 50;
 
 	$scope.updateEpisodes = function() {
 		var that = this;
