@@ -102,6 +102,7 @@ h1 {
 	float: right;
 	padding: 15px;
 	padding-right: 0px;
+	padding-bottom: 0px;
 	font-size: 14px;
 }
 
@@ -120,6 +121,11 @@ h1 {
 	font-size: 30px;
 }
 
+#listMenu {
+	text-align: right;
+}
+
+/* big list*/
 .itemMenu {
 	font-size: 12px;
 	float: right;
