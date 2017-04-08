@@ -149,8 +149,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
 	function($scope, $routeParams, episodePlayer, messageService) {
 
+	$scope.listType = 'big_list';
 	$scope.episodes = [];
-	$scope.numberEpisodes = parseInt($routeParams.numberEpisodes ? $routeParams.numberEpisodes : 0);
 
 	// copied from episodePlayerController
 	// TODO: put in a service to be reused
