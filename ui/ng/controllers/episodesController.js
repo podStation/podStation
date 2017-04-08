@@ -70,8 +70,9 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
 	function($scope, $routeParams, episodePlayer, messageService) {
 
+	$scope.listType = 'big_list';
 	$scope.episodes = [];
-	$scope.numberEpisodes = 20;
+	$scope.numberEpisodes = 50;
 	$scope.podcastUrl = '';
 
 	$scope.updateEpisodes = function() {

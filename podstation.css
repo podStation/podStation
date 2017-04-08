@@ -195,6 +195,10 @@ ul.contentList {
 	padding-bottom: 4px;
 }
 
+.listItemSmallNoImage {
+	padding-top: 4px;
+}
+
 .listItemSmall:first-child {
 	border-width: 1px 0px 1px 0px;
 }
