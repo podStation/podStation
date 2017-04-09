@@ -37,7 +37,17 @@ var AudioPlayerManager;
 		}
 
 		function loadSyncPlayerOptions(loaded) {
-			loadPlayerOptions(chrome.storage.sync, loaded);
+			loadPlayerOptions(chrome.storage.sync, function(playerOptions) {
+				// handling of default values
+				
+				if(!playerOptions.order)
+					playerOptions.order = 'from_podcast';
+				
+				if(typeof playerOptions.removeWhenFinished === 'undefined')
+					playerOptions.removeWhenFinished = true;
+
+				return loaded(playerOptions);
+			});
 		};
 
 		function getPodcastAndEpisode(podcastUrl, episodeGuid) {

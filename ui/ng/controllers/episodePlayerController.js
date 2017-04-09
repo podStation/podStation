@@ -25,7 +25,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.options = {
 			order: 'from_podcast',
 			continuous: false,
-			removeWhenFinished: true
+			removeWhenFinished: false
 		};
 
 		readOptions();
@@ -37,9 +37,9 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	function setScopeOptions(options) {
 		$scope.$apply(function() {
-			$scope.options.order = options.order ? options.order : 'from_podcast';
-			$scope.options.continuous = options.continuous ? options.continuous : false;
-			$scope.options.removeWhenFinished = typeof options.removeWhenFinished !== 'undefined' ? options.removeWhenFinished : true;
+			$scope.options.order = options.order;
+			$scope.options.continuous = options.continuous;
+			$scope.options.removeWhenFinished = options.removeWhenFinished;
 		});
 	}
 
