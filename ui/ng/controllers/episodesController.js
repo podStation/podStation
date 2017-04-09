@@ -1,5 +1,5 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
-	function($scope, $routeParams, episodePlayer, messageService) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService',
+	function($scope, $routeParams, episodePlayer, messageService, storageService) {
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
@@ -56,6 +56,12 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 		console.log('Paging function - ' + $scope.numberEpisodes);
 	};
 
+	$scope.listTypeChanged = listTypeChanged;
+
+	storageService.loadSyncUIOptions(function(uiOptions) {
+		$scope.listType = uiOptions.llt;
+	});
+
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
 		if(messageContent.episodeListChanged) {
 			$scope.$apply(function() {
@@ -65,10 +71,20 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	});
 
 	$scope.updateEpisodes();
+
+	return;
+
+	function listTypeChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.llt = $scope.listType;
+
+			return true;
+		});
+	}
 }]);
 
-myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
-	function($scope, $routeParams, episodePlayer, messageService) {
+myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService',
+	function($scope, $routeParams, episodePlayer, messageService, storageService) {
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
@@ -135,6 +151,12 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 		console.log('Paging function - ' + $scope.numberEpisodes);
 	};
 
+	$scope.listTypeChanged = listTypeChanged;
+
+	storageService.loadSyncUIOptions(function(uiOptions) {
+		$scope.listType = uiOptions.elt;
+	});
+
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
 		if(messageContent.episodeListChanged && messageContent.podcast.url === $scope.podcastUrl) {
 			$scope.$apply(function() {
@@ -144,10 +166,20 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	});
 
 	$scope.updateEpisodes();
+
+	return;
+
+	function listTypeChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.elt = $scope.listType;
+
+			return true;
+		});
+	}
 }]);
 
-myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService',
-	function($scope, $routeParams, episodePlayer, messageService) {
+myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService',
+	function($scope, $routeParams, episodePlayer, messageService, storageService) {
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
@@ -233,6 +265,12 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 		console.log('Paging function - ' + $scope.numberEpisodes);
 	};
 
+	$scope.listTypeChanged = listTypeChanged;
+
+	storageService.loadSyncUIOptions(function(uiOptions) {
+		$scope.listType = uiOptions.ilt;
+	});
+
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
 		if(messageContent.episodeListChanged) {
 			$scope.$apply(function() {
@@ -248,4 +286,14 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	});
 
 	$scope.updateEpisodes();
+
+	return;
+
+	function listTypeChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.ilt = $scope.listType;
+
+			return true;
+		});
+	}
 }]);

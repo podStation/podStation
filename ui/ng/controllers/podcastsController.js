@@ -1,4 +1,4 @@
-myApp.controller('podcastsController', ['$scope', 'messageService', function($scope, messageService) {
+myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', function($scope, messageService, storageService) {
 	$scope.listType = 'big_list';
 	$scope.podcasts = [];
 
@@ -76,7 +76,13 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 		});
 	}
 
+	$scope.listTypeChanged = listTypeChanged;
+
 	$scope.updatePodcastList();
+
+	storageService.loadSyncUIOptions(function(uiOptions) {
+		$scope.listType = uiOptions.plt;
+	});
 
 	chrome.runtime.onMessage.addListener(function(message) {
 		$scope.$apply(function() {
@@ -93,4 +99,14 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
 		$scope.updatePodcast(messageContent.podcast);
 	});
+
+	return;
+
+	function listTypeChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.plt = $scope.listType;
+
+			return true;
+		});
+	}
 }]);
