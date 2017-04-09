@@ -1,69 +1,71 @@
 <div id="podcasts" class="mainContentBox">
 	<h1 class="sectionTitle">Podcasts</h1>
-	<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
-	<div id="podcastList" ng-show="podcasts.length">
-		<div id="listMenu">
-			<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
-				<option value="big_list"  >&#xf00b; Big list</option>
-				<option value="small_list">&#xf03a; Small list</option>
-			</select>
-		</div>
-		<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
-			<div class="itemMenu">
-				<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
-				<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+	<div ng-show="ready()">
+		<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
+		<div id="podcastList" ng-show="podcasts.length">
+			<div id="listMenu">
+				<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+					<option value="big_list"  >&#xf00b; Big list</option>
+					<option value="small_list">&#xf03a; Small list</option>
+				</select>
 			</div>
-			<div>
-			<table>
-				<tr>
-					<td>
-						<img ng-src="{{podcast.image}}" class="podcastImage" width="100"></img>
-					</td>
-					<td>
-						<div class="textView">
-							<div class="itemHeader">
-								<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
-								<br>
-								<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
-									<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span>
-								</a>
-								<span ng-if="podcast.link">
-									<span> - </span>
-									<a ng-href="{{podcast.link}}" target="_blank">
-										<span>{{'open_podcast_website' | chrome_i18n }}</span>
-									</a>
-								</span>
-								<br>
-								<!--must add a check for pubdate-->
-								<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
-								<br>
-								<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
-							</div>
-							<div class="itemDescription" ng-bind-html="podcast.description">
-							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-			</div>
-		</div>
-		<div ng-if="listType!=='big_list'" style="padding-top: 5px">
-			<ul class="contentList">
-				<li ng-repeat="podcast in podcasts" class="listItemSmall">
-					<div class="listItemImageSmall">
-						<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
-					</div>
-					<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a>
+			<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts" id="podcast_{{podcast.url}}" class="podcastEntry">
+				<div class="itemMenu">
+					<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
 					<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
-					<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
-					<span ng-if="podcast.link">
-					<a ng-href="{{podcast.link}}" target="_blank">
-						<span>{{'open_podcast_website' | chrome_i18n }}</span>
-					</a> -
-					</span>
-					<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
-				</li>
-			</ul>
+				</div>
+				<div>
+				<table>
+					<tr>
+						<td>
+							<img ng-src="{{podcast.image}}" class="podcastImage" width="100"></img>
+						</td>
+						<td>
+							<div class="textView">
+								<div class="itemHeader">
+									<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
+									<br>
+									<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
+										<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span>
+									</a>
+									<span ng-if="podcast.link">
+										<span> - </span>
+										<a ng-href="{{podcast.link}}" target="_blank">
+											<span>{{'open_podcast_website' | chrome_i18n }}</span>
+										</a>
+									</span>
+									<br>
+									<!--must add a check for pubdate-->
+									<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+									<br>
+									<span class="podcastStatus">Status: <i class="fa {{podcast.statusClass}}"></i></span>
+								</div>
+								<div class="itemDescription" ng-bind-html="podcast.description">
+								</div>
+							</div>
+						</td>
+					</tr>
+				</table>
+				</div>
+			</div>
+			<div ng-if="listType!=='big_list'" style="padding-top: 5px">
+				<ul class="contentList">
+					<li ng-repeat="podcast in podcasts" class="listItemSmall">
+						<div class="listItemImageSmall">
+							<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
+						</div>
+						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a>
+						<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+						<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
+						<span ng-if="podcast.link">
+						<a ng-href="{{podcast.link}}" target="_blank">
+							<span>{{'open_podcast_website' | chrome_i18n }}</span>
+						</a> -
+						</span>
+						<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>

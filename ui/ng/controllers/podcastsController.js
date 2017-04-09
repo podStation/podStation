@@ -2,6 +2,9 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	$scope.listType = 'big_list';
 	$scope.podcasts = [];
 
+	var podcastsLoaded = false;
+	var optionsLoaded = false;
+
 	function getStatusClass(status) {
 		if(status === 'updating') {
 			return 'fa-refresh fa-spin';
@@ -23,8 +26,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			that.podcasts = [];
 
-			bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
-				$scope.$apply(function() {
+			$scope.$apply(function() {
+				bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
 					var podcastForController;
 
 					podcastForController = {
@@ -63,6 +66,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 
 					that.podcasts.push(podcastForController);
 				});
+
+				podcastsLoaded = true;
 			});
 		});
 	};
@@ -77,11 +82,13 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	}
 
 	$scope.listTypeChanged = listTypeChanged;
+	$scope.ready = ready;
 
 	$scope.updatePodcastList();
 
 	storageService.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.plt;
+		optionsLoaded = true;
 	});
 
 	chrome.runtime.onMessage.addListener(function(message) {
@@ -108,5 +115,9 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 
 			return true;
 		});
+	}
+
+	function ready() {
+		return podcastsLoaded && optionsLoaded;
 	}
 }]);
