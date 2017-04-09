@@ -5,6 +5,9 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	$scope.episodes = [];
 	$scope.numberEpisodes = 50;
 
+	var episodesLoaded = false;
+	var optionsLoaded = false;
+
 	$scope.updateEpisodes = function() {
 		var that = this;
 
@@ -47,6 +50,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 					that.episodes.push(episodeForController);
 				});
+
+				episodesLoaded = true;
 			});
 		});
 	};
@@ -57,9 +62,11 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	};
 
 	$scope.listTypeChanged = listTypeChanged;
+	$scope.ready = ready;
 
 	storageService.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.llt;
+		optionsLoaded = true;
 	});
 
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
@@ -80,6 +87,10 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 			return true;
 		});
+	}
+
+	function ready() {
+		return episodesLoaded && optionsLoaded;
 	}
 }]);
 
@@ -184,6 +195,9 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
 
+	var episodesLoaded = false;
+	var optionsLoaded = false;
+
 	// copied from episodePlayerController
 	// TODO: put in a service to be reused
 	function formatSeconds(seconds) {
@@ -254,6 +268,8 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 						that.episodes.sort(function(a, b) {
 							return b.lastTimePlayed - a.lastTimePlayed;
 						});
+
+						episodesLoaded = true;
 					});
 				});
 			});
@@ -266,9 +282,11 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	};
 
 	$scope.listTypeChanged = listTypeChanged;
+	$scope.ready = ready;
 
 	storageService.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.ilt;
+		optionsLoaded = true;
 	});
 
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
@@ -295,5 +313,9 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 
 			return true;
 		});
+	}
+
+	function ready() {
+		return episodesLoaded && optionsLoaded;
 	}
 }]);

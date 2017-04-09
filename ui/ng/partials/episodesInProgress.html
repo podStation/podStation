@@ -1,62 +1,64 @@
 <div id="episodes" class="mainContentBox">
 	<h1 class="sectionTitle episodesSectionTitle">{{'in_progress' | chrome_i18n }}</h1>
-	<h3 ng-if="!episodes.length">{{'no_podcast_in_progress' | chrome_i18n }}</h3>
-	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
-		<div id="listMenu" ng-show="episodes.length">
-			<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
-				<option value="big_list"  >&#xf00b; Big list</option>
-				<option value="small_list">&#xf03a; Small list</option>
-			</select>
-		</div>
-		<div ng-if="listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
-			<table>
-				<tr>
-					<td ng-if="episode.image">
-						<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
-					</td>
-					<td>
-						<div class="itemMenu">
-							<div ng-if="episode.url">
-								<a href="" ng-click="episode.remove()"><i class="fa fa-remove"></i></a> |
-								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
+	<div ng-show="ready()">
+		<h3 ng-if="!episodes.length">{{'no_podcast_in_progress' | chrome_i18n }}</h3>
+		<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
+			<div id="listMenu" ng-show="episodes.length">
+				<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+					<option value="big_list"  >&#xf00b; Big list</option>
+					<option value="small_list">&#xf03a; Small list</option>
+				</select>
+			</div>
+			<div ng-if="listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
+				<table>
+					<tr>
+						<td ng-if="episode.image">
+							<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
+						</td>
+						<td>
+							<div class="itemMenu">
+								<div ng-if="episode.url">
+									<a href="" ng-click="episode.remove()"><i class="fa fa-remove"></i></a> |
+									<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
+								</div>
 							</div>
-						</div>
-						<div class="textView">
-							<div class="itemHeader">
-								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="itemTitle episodeTitle">{{episode.title}}</a>
-								<span ng-if="episode.link">
+							<div class="textView">
+								<div class="itemHeader">
+									<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="itemTitle episodeTitle">{{episode.title}}</a>
+									<span ng-if="episode.link">
+										<br>
+										<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
+									</span>
 									<br>
-									<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
-								</span>
-								<br>
-								<span>{{'last_time_played' | chrome_i18n }}: {{ episode.lastTimePlayedFormatted }}</span>
-								<br>
-								<span>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt}}</span>
+									<span>{{'last_time_played' | chrome_i18n }}: {{ episode.lastTimePlayedFormatted }}</span>
+									<br>
+									<span>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt}}</span>
+								</div>
 							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div ng-if="listType!=='big_list'" style="padding-top: 5px">
+				<ul class="contentList">
+					<li ng-repeat="episode in episodes | limitTo:numberEpisodes" class="listItemSmall">
+						<div class="listItemImageSmall">
+							<img ng-src="{{episode.image}}" class="listItemImageSmall"></img>
 						</div>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div ng-if="listType!=='big_list'" style="padding-top: 5px">
-			<ul class="contentList">
-				<li ng-repeat="episode in episodes | limitTo:numberEpisodes" class="listItemSmall">
-					<div class="listItemImageSmall">
-						<img ng-src="{{episode.image}}" class="listItemImageSmall"></img>
-					</div>
-					<a href="" ng-click="episode.remove()"><i class="fa fa-remove"></i></a>
-					<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
-					<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
+						<a href="" ng-click="episode.remove()"><i class="fa fa-remove"></i></a>
+						<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
+						<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
 
-					<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="listItemTitleSmall">{{episode.title}}</a> -
-					<span ng-if="episode.link">
-					<a ng-href="{{episode.link}}" target="_blank">
-						<span>{{'open_episode_website' | chrome_i18n}}</span>
-					</a> -
-					</span>
-					<span>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt}}</span>
-				</li>
-			</ul>
+						<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="listItemTitleSmall">{{episode.title}}</a> -
+						<span ng-if="episode.link">
+						<a ng-href="{{episode.link}}" target="_blank">
+							<span>{{'open_episode_website' | chrome_i18n}}</span>
+						</a> -
+						</span>
+						<span>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt}}</span>
+					</li>
+				</ul>
+			</div>
 		</div>
 	</div>
 </div>
