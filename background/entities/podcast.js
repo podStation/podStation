@@ -1,3 +1,95 @@
+function parsePodcastFeed(feedContent) {
+
+	var result;
+	var xml = $(feedContent);
+
+	if(!xml.find('rss > channel')[0]) {
+		return result;
+	}
+
+	result = {};
+	result.podcast = {};
+	result.episodes = [];
+
+	result.podcast.title = xml.find('rss > channel > title').text();
+	result.podcast.description = processMultiTagText(xml.find('rss > channel > description'));
+	result.podcast.link = xml.find('rss > channel > link').text();
+
+	result.podcast.pubDate = postProcessPubDate(xml.find('rss > channel > pubDate').text());
+	if(result.podcast.pubDate === '') {
+		result.podcast.pubDate = postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
+	}
+
+	result.podcast.image = $(xml.find('rss > channel > image > url')[0]).text();
+	if(result.podcast.image === undefined || result.podcast.image === "") {
+		result.podcast.image = xml.find('rss > channel > image').attr('href');
+	}
+
+	xml.find('rss > channel > item').each(function() {
+		var feedItem = $(this);
+		var episode = {};
+		var enclosure;
+
+		// the selector will find 'title' for all namespaces, we may find more
+		// than one. They are in theory all the same, so we take the first.
+		episode.title = $(feedItem.find('title')[0]).text();
+		episode.link = feedItem.find('link').text();
+		episode.pubDate = postProcessPubDate(feedItem.find('pubDate').text());
+		episode.parsedPubDate = new Date(episode.pubDate);
+		episode.description = feedItem.find('description').text();
+		episode.guid = feedItem.find('guid').text();
+		enclosure = feedItem.find('enclosure');
+		episode.enclosure = {
+			url: enclosure.attr('url'),
+			length: enclosure.attr('length'),
+			type: enclosure.attr('type')
+		};
+
+		result.episodes.push(episode);
+	});
+
+	result.episodes.sort(function(a, b) {
+		return b.parsedPubDate - a.parsedPubDate;
+	});
+
+	// if the podcast pubdate is missing or older then the most recent episode, 
+	// we want to show the pubdate of the most recent e espisode
+	if(result.episodes[0] && result.episodes[0].pubDate  &&
+		(
+			result.podcast.pubDate === undefined || result.podcast.pubDate === '' ||
+			(new Date(result.episodes[0].pubDate)) > (new Date(result.podcast.pubDate))
+		)
+	) {
+		result.podcast.pubDate = result.episodes[0].pubDate;
+	}
+
+	return result;
+
+	function postProcessPubDate(pubDate) {
+		return pubDate.replace('GTM', 'GMT');
+	}
+
+	function processMultiTagText(selectedTags) {
+		var text = '';
+		var texts = [];
+
+		selectedTags.each(function() {
+			var selectedTag = $(this);
+			if(texts.indexOf(selectedTag.text()) < 0) {
+				if(text) {
+					text += '<br>';
+				}
+
+				text += selectedTag.text();
+
+				texts.push(selectedTag.text());
+			}
+		});
+
+		return text;
+	}
+}
+
 var Podcast = function(url) {
 	var defaultImage = 'images/rss-alt-8x.png';
 
@@ -14,20 +106,6 @@ var Podcast = function(url) {
 			podcast: podcast,
 			episodeListChanged: episodeListChanged ? true : false
 		});
-	}
-
-	function guidsFromEpisodes(episodes) {
-		var guids = [];
-
-		episodes.forEach(function(episode) {
-			guids.push(episode.guid);
-		});
-
-		return guids;
-	}
-	
-	function postProcessPubDate(pubDate) {
-		return pubDate.replace('GTM', 'GMT');
 	}
 
 	this.getKey = function() {
@@ -55,26 +133,6 @@ var Podcast = function(url) {
 		chrome.storage.local.remove(this.getKey());
 	};
 
-	function processMultiTagText(selectedTags) {
-		var text = '';
-		var texts = [];
-
-		selectedTags.each(function() {
-			var selectedTag = $(this);
-			if(texts.indexOf(selectedTag.text()) < 0) {
-				if(text) {
-					text += '<br>';
-				}
-
-				text += selectedTag.text();
-
-				texts.push(selectedTag.text());
-			}
-		});
-
-		return text;
-	}
-
 	this.isUpdating = function() {
 		return this.status == 'updating';
 	};
@@ -99,71 +157,22 @@ var Podcast = function(url) {
 		});
 
 		var jqxhr = $.get(this.url, function(data) {
-			var xml = $(data);
+			var feedParseResult = parsePodcastFeed(data);
 
-			if(!xml.find('rss > channel')[0]) {
+			if(!feedParseResult) {
 				that.status = 'failed';
 				podcastChanged(that);
 				return;
 			}
 
-			that.title = xml.find('rss > channel > title').text();
-			that.description = processMultiTagText(xml.find('rss > channel > description'));
-			that.link = xml.find('rss > channel > link').text();
+			var oldGuids = that.episodes ? that.episodes.map(function(episode) {return episode.guid}) : [];
 
-			that.pubDate = postProcessPubDate(xml.find('rss > channel > pubDate').text());
-			if(that.pubDate === '') {
-				that.pubDate = postProcessPubDate(xml.find('rss > channel > lastBuildDate').text());
-			}
-
-			that.image = $(xml.find('rss > channel > image > url')[0]).text();
-			if(that.image === undefined || that.image === "") {
-				that.image = xml.find('rss > channel > image').attr('href');
-			}
-			if(that.image === undefined || that.image === "") {
-				that.image = defaultImage;
-			}
-
-			var newEpisodesCount = 0;
-			var guids = guidsFromEpisodes(that.episodes);
-			that.episodes = [];
-
-			xml.find('rss > channel > item').each(function() {
-				var feedItem = $(this);
-				var episode = {};
-				var enclosure;
-
-				// the selector will find 'title' for all namespaces, we may find more
-				// than one. They are in theory all the same, so we take the first.
-				episode.title = $(feedItem.find('title')[0]).text();
-				episode.link = feedItem.find('link').text();
-				episode.pubDate = postProcessPubDate(feedItem.find('pubDate').text());
-				episode.description = feedItem.find('description').text();
-				episode.guid = feedItem.find('guid').text();
-				enclosure = feedItem.find('enclosure');
-				episode.enclosure = {
-					url: enclosure.attr('url'),
-					length: enclosure.attr('length'),
-					type: enclosure.attr('type')
-				};
-
-				if(guids.indexOf(episode.guid) < 0) {
-					newEpisodesCount++;
-				}
-
-				that.episodes.push(episode);
-			});
-
-			that.episodes.sort(byPubDateDescending);
-
-			if(that.episodes[0] && that.episodes[0].pubDate  &&
-				(
-					that.pubDate === undefined || that.pubDate === '' ||
-					(new Date(that.episodes[0].pubDate)) > (new Date(that.pubDate))
-				)
-			) {
-				that.pubDate = that.episodes[0].pubDate;
-			}
+			that.title = feedParseResult.podcast.title;
+			that.description = feedParseResult.podcast.description;
+			that.link = feedParseResult.podcast.link;
+			that.pubDate = feedParseResult.podcast.pubDate;
+			that.image = feedParseResult.podcast.image ? feedParseResult.podcast.image : that.image = defaultImage;;
+			that.episodes = feedParseResult.episodes;
 			
 			that.status = 'loaded';
 			podcastChanged(that, true);
@@ -172,6 +181,11 @@ var Podcast = function(url) {
 			if(idNotificationFailed) {
 				notificationManager.removeNotification(idNotificationFailed);
 			}
+
+			var newEpisodesCount = feedParseResult.episodes.reduce(function(previousValue, currentValue) {
+				
+				return oldGuids.indexOf(currentValue.guid) < 0 ? previousValue + 1 : previousValue;
+			}, 0);
 
 			if(newEpisodesCount) {
 				idNotificationNewEpisodes = notificationManager.updateNotification(idNotificationNewEpisodes, {
