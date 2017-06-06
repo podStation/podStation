@@ -56,11 +56,15 @@
 					playlist.entries = [];
 
 					playlistEntries.forEach(function(entry) {
-			
-						playlist.entries.push(unsortedEntries.find(function(unsortedEntry) {
+						var entryForView = unsortedEntries.find(function(unsortedEntry) {
 							return entry.podcastUrl  === unsortedEntry.podcastUrl && 
-									entry.episodeGuid === unsortedEntry.episodeGuid;
-						}));
+							       entry.episodeGuid === unsortedEntry.episodeGuid;
+						});
+
+						// If guid has changed, or episode was removed from the feed ...
+						if(entryForView) {
+							playlist.entries.push(entryForView);
+						}
 					});
 
 					episodePlayer.getAudioInfo(function(audioInfo) {
