@@ -98,6 +98,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	function($scope, $routeParams, episodePlayer, messageService, storageService) {
 
 	$scope.listType = 'big_list';
+	$scope.sorting = 'by_pubdate_descending';
 	$scope.episodes = [];
 	$scope.numberEpisodes = 50;
 	$scope.podcastUrl = '';
@@ -131,7 +132,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 								this.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
 								this.url = storedEpisode.enclosure.url;
 								this.description = storedEpisode.description;
-								this.pubDate = formatDate(new Date(storedEpisode.pubDate));
+								this.pubDateUnformatted = new Date(storedEpisode.pubDate);
+								this.pubDate = formatDate(this.pubDateUnformatted);
 								this.guid = storedEpisode.guid;
 								this.play = function() {
 									episodePlayer.play({
@@ -163,9 +165,12 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	};
 
 	$scope.listTypeChanged = listTypeChanged;
+	$scope.sortingChanged = sortingChanged;
+	$scope.isReverseOrder = isReverseOrder;
 
 	storageService.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.elt;
+		$scope.sorting = uiOptions.es;
 	});
 
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
@@ -186,6 +191,18 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 
 			return true;
 		});
+	}
+
+	function sortingChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.es = $scope.sorting;
+
+			return true;
+		});
+	}
+
+	function isReverseOrder() {
+		return $scope.sorting === 'by_pubdate_descending';
 	}
 }]);
 

@@ -158,6 +158,12 @@
 	"open_episode_website": {
 		"message": "Open episode website"
 	},
+	"oldest": {
+		"message": "Oldest"
+	},
+	"most_recent": {
+		"message": "Most recent"
+	},
 	// options
 	"auto_update": {
 		"message": "Auto update podcasts"

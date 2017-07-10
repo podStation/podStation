@@ -24,6 +24,10 @@
 				if(typeof uiOptions.elt === 'undefined')
 					uiOptions.elt = 'big_list';
 
+				// podcast episodes sorting
+				if(typeof uiOptions.es === 'undefined')
+					uiOptions.es = 'by_pubdate_descending';
+
 				// last episodes list type
 				if(typeof uiOptions.llt === 'undefined')
 					uiOptions.llt = 'big_list';
