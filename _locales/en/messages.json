@@ -66,6 +66,9 @@
 		"message": "Remove from playlist when finished"
 	},
 	// playlist
+	"remove_from_playlist": {
+		"message": "Remove from playlist"
+	},
 	"add_to_playlist": {
 		"message": "Add to playlist"
 	},

@@ -16,40 +16,25 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 				that.episodes = [];
 				var storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
 
-				storedEpisodeContainers.forEach(function(storedEpisodeContainer, index) {
-					var episodeForController;
+				that.episodes = storedEpisodeContainers.map(function(storedEpisodeContainer) {
+					var episode = {};
 
-					episodeForController = {
-						fromStoredEpisode: function(storedEpisodeContainer) {
-							this.link = storedEpisodeContainer.episode.link;
-							this.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
-							this.image = storedEpisodeContainer.podcast.image;
-							this.podcastIndex = storedEpisodeContainer.podcastIndex;
-							this.podcastTitle = storedEpisodeContainer.podcast.title;
-							this.podcastUrl = storedEpisodeContainer.podcast.url;
-							this.url = storedEpisodeContainer.episode.enclosure.url;
-							this.description = storedEpisodeContainer.episode.description;
-							this.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
-							this.guid = storedEpisodeContainer.episode.guid;
-							this.play = function() {
-								episodePlayer.play({
-									episodeGuid: this.guid,
-									podcastUrl: this.podcastUrl
-								});
-							}
-							this.addToPlaylist = function() {
-								messageService.for('playlist').sendMessage('add', {
-									podcastUrl: this.podcastUrl,
-									episodeGuid: this.guid
-								});
-							}
-						}
-					};
+					episode.link = storedEpisodeContainer.episode.link;
+					episode.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
+					episode.image = storedEpisodeContainer.podcast.image;
+					episode.podcastIndex = storedEpisodeContainer.podcastIndex;
+					episode.podcastTitle = storedEpisodeContainer.podcast.title;
+					episode.podcastUrl = storedEpisodeContainer.podcast.url;
+					episode.url = storedEpisodeContainer.episode.enclosure.url;
+					episode.description = storedEpisodeContainer.episode.description;
+					episode.pubDate = formatDate(new Date(storedEpisodeContainer.episode.pubDate));
+					episode.guid = storedEpisodeContainer.episode.guid;
+					episode.isInPlaylist = false;
 
-					episodeForController.fromStoredEpisode(storedEpisodeContainer);
-
-					that.episodes.push(episodeForController);
+					return episode;
 				});
+
+				updateIsInPlaylist();
 
 				episodesLoaded = true;
 			});
@@ -77,6 +62,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 		}
 	});
 
+	messageService.for('playlist').onMessage('changed', function() { updateIsInPlaylist() });
+
 	$scope.updateEpisodes();
 
 	return;
@@ -91,6 +78,19 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 	function ready() {
 		return episodesLoaded && optionsLoaded;
+	}
+
+	function updateIsInPlaylist() {
+		messageService.for('playlist').sendMessage('get', {}, function(playlist) {
+			$scope.$apply(function() {
+				$scope.episodes.forEach(function(episode) {
+					episode.isInPlaylist = playlist.entries.find(function(entry) {
+						return entry.podcastUrl  === episode.podcastUrl &&
+							entry.episodeGuid === episode.guid;
+					}) !== undefined;
+				});
+			});
+		});
 	}
 }]);
 
