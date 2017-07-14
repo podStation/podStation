@@ -8,6 +8,7 @@
 				episodes: '=episodes',
 				listType: '=listType',
 				limitTo: '=limitTo',
+				reverseOrder: '=reverseOrder'
 			},
 			controller: EpisodeListController,
 			controllerAs: 'episodeList',
@@ -21,6 +22,8 @@
 			episodeListController.play = play;
 			episodeListController.addToPlaylist = addToPlaylist;
 			episodeListController.removeFromPlaylist = removeFromPlaylist;
+			
+			episodeListController.isReverseOrder = isReverseOrder;
 
 			return episodeListController;
 
@@ -43,6 +46,10 @@
 					podcastUrl:  episode.podcastUrl,
 					episodeGuid: episode.guid
 				});
+			}
+
+			function isReverseOrder() {
+				return episodeListController.reverseOrder !== undefined ? episodeListController.reverseOrder : true;
 			}
 		}
 	}

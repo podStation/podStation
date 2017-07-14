@@ -1,4 +1,4 @@
-<div ng-if="episodeList.listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodeList.episodes | limitTo:episodeList.limitTo">
+<div ng-if="episodeList.listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodeList.episodes | orderBy:'pubDateUnformatted':episodeList.isReverseOrder() | limitTo:episodeList.limitTo">
 	<table>
 		<tr>
 			<td ng-if="episode.image">
@@ -25,10 +25,12 @@
 							<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
 						</span>
 						<br>
-						<a ng-href="#/Episodes/{{episode.podcastIndex}}">
-							<span ng-bind-html="{ message: 'all_eps_from', arguments: [episode.podcastTitle]} | chrome_i18n"></span>
-						</a>
-						<br>
+						<span ng-if="episode.podcastIndex !== undefined">
+							<a ng-href="#/Episodes/{{episode.podcastIndex}}">
+								<span ng-bind-html="{ message: 'all_eps_from', arguments: [episode.podcastTitle]} | chrome_i18n"></span>
+							</a>
+							<br>
+						</span>
 						<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 					</div>
 					<div class="itemDescription" ng-bind-html="episode.description">
@@ -40,8 +42,8 @@
 </div>
 <div ng-if="episodeList.listType!=='big_list'" style="padding-top: 5px">
 	<ul class="contentList">
-		<li ng-repeat="episode in episodeList.episodes | limitTo:episodeList.limitTo" class="listItemSmall">
-			<div class="listItemImageSmall">
+		<li ng-repeat="episode in episodeList.episodes | orderBy:'pubDateUnformatted':episodeList.isReverseOrder() | limitTo:episodeList.limitTo" class="listItemSmall">
+			<div ng-if="episode.image" class="listItemImageSmall">
 				<img ng-src="{{episode.image}}" class="listItemImageSmall"></img>
 			</div>
 			<a href="" ng-click="episodeList.addToPlaylist(episode)" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a>

@@ -18,53 +18,6 @@
 				<option value="small_list">&#xf03a; Small list</option>
 			</select>
 		</div>
-		<div ng-if="listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodes | orderBy:'pubDateUnformatted':isReverseOrder() | limitTo:numberEpisodes">
-			<table>
-				<tr>
-					<td ng-if="episode.image">
-						<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
-					</td>
-					<td>
-						<div class="itemMenu">
-							<div ng-if="episode.url">
-								<a href="" ng-click="episode.addToPlaylist()" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a> |
-								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a> |
-								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
-							</div>
-						</div>
-						<div class="textView">
-							<div class="itemHeader">
-								<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="itemTitle episodeTitle">{{episode.title}}</a>
-								<span ng-if="episode.link">
-									<br>
-									<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
-								</span>
-								<br>
-								<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
-							</div>
-							<div class="itemDescription" ng-bind-html="episode.description">
-							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
-		</div>
-		<div ng-if="listType!=='big_list'" style="padding-top: 5px">
-			<ul class="contentList">
-				<li ng-repeat="episode in episodes | orderBy:'pubDateUnformatted':isReverseOrder() | limitTo:numberEpisodes" class="listItemSmall listItemSmallNoImage">
-					<a href="" ng-click="episode.addToPlaylist()" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a>
-					<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
-					<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
-
-					<a href="" ng-click="episode.play()" title="{{'play_episode' | chrome_i18n}}" class="listItemTitleSmall">{{episode.title}}</a> -
-					<span ng-if="episode.link">
-					<a ng-href="{{episode.link}}" target="_blank">
-						<span>{{'open_episode_website' | chrome_i18n}}</span>
-					</a> -
-					</span>
-					<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
-				</li>
-			</ul>
-		</div>
+		<ps-episode-list episodes="episodes" list-type="listType" limit-to="numberEpisodes" reverse-order="isReverseOrder()" />
 	</div>
 </div>
