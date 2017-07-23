@@ -238,19 +238,6 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 									this.lastTimePlayed = new Date(syncEpisodeInfo.l);
 									this.lastTimePlayedFormatted = formatDate(this.lastTimePlayed);;
 									this.pausedAt = formatSeconds(syncEpisodeInfo.t);
-									this.play = function() {
-										episodePlayer.play({
-											episodeGuid: this.guid,
-											podcastUrl: this.podcastUrl
-										});
-									};
-									this.remove = function() {
-										messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-											url: this.podcastUrl,
-											episodeId: this.guid,
-											currentTime: 0
-										});
-									}
 								}
 							};
 
@@ -258,9 +245,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 							that.episodes.push(episodeForController);
 						});
 
-						that.episodes.sort(function(a, b) {
-							return b.lastTimePlayed - a.lastTimePlayed;
-						});
+						updateIsInPlaylist($scope, messageService)
 
 						episodesLoaded = true;
 					});
@@ -295,6 +280,8 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 			$scope.updateEpisodes();
 		});
 	});
+
+	messageService.for('playlist').onMessage('changed', function() { updateIsInPlaylist($scope, messageService); });
 
 	$scope.updateEpisodes();
 

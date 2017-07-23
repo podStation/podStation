@@ -167,6 +167,9 @@
 	"most_recent": {
 		"message": "Most recent"
 	},
+	"remove_progress": {
+		"message": "Remove progress"
+	},
 	// options
 	"auto_update": {
 		"message": "Auto update podcasts"

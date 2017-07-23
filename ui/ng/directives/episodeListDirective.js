@@ -8,7 +8,8 @@
 				episodes: '=episodes',
 				listType: '=listType',
 				limitTo: '=limitTo',
-				reverseOrder: '=reverseOrder'
+				reverseOrder: '=reverseOrder',
+				orderByField: '=orderBy'
 			},
 			controller: EpisodeListController,
 			controllerAs: 'episodeList',
@@ -22,8 +23,10 @@
 			episodeListController.play = play;
 			episodeListController.addToPlaylist = addToPlaylist;
 			episodeListController.removeFromPlaylist = removeFromPlaylist;
+			episodeListController.deletePlayTime = deletePlayTime;
 			
 			episodeListController.isReverseOrder = isReverseOrder;
+			episodeListController.orderBy = orderBy;
 
 			return episodeListController;
 
@@ -48,8 +51,20 @@
 				});
 			}
 
+			function deletePlayTime(episode) {
+				messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
+					url: episode.podcastUrl,
+					episodeId: episode.guid,
+					currentTime: 0
+				});
+			}
+
 			function isReverseOrder() {
 				return episodeListController.reverseOrder !== undefined ? episodeListController.reverseOrder : true;
+			}
+
+			function orderBy() {
+				return episodeListController.orderByField ? episodeListController.orderByField : 'pubDateUnformatted';
 			}
 		}
 	}
