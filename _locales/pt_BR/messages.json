@@ -180,6 +180,9 @@
 	"minutes": {
 		"message": "minutos"
 	},
+	"integrate_screen_shader": {
+		"message": "Integração com <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
+	},
 	"save": {
 		"message": "Salvar"
 	},
@@ -189,6 +192,9 @@
 	},
 	"about_long_text" : {
 		"message": "<p>Podstation é um simples agregador de podcasts.</p><p>Este é um trabalho em desenvolvimento, para ver as melhorias planejadas ou sugerir novas funções, visite a nossa		<a href=\"https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open\" target=\"_blank\">pagina de rastreamento de bugs</a>.</p><p>Podstation é desenvolvido por <a href=\"https://de.linkedin.com/pub/guilherme-dellagustin/28/957/154\" target=\"_blank\">Guilherme Dellagustin</a> e é um projeto open source, veja o código no <a href=\"https://github.com/podStation/podStation\" target=\"_blank\">GitHub</a>.</p>"
+	},
+	"integrated_with": {
+		"message": "Intragrado com"
 	},
 	"stats_for_nerds": {
 		"message": "Estatísticas para Nerds"

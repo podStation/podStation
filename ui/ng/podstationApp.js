@@ -41,3 +41,24 @@ myApp.filter('chrome_i18n', function() {
 		}
 	};
 });
+
+// Shade your extension's page using Screen Shader.  Code snippet courtesy of Marc Guiselin 2015
+function updSS(){
+	chrome.runtime.sendMessage("fmlboobidmkelggdainpknloccojpppi", {}, function(response) {
+		if(response){
+			setTimeout(updSS, 1000);
+			var s = document.getElementById("ssHTML");
+			if(s)
+				s.parentElement.removeChild(s);
+			document.body.firstElementChild.insertAdjacentHTML('beforebegin', response.ssHTML);
+		}
+	});
+}
+
+angular.module('podstationApp').run(['messageService', function(messageService) {
+	messageService.for('optionsManager').sendMessage('getOptions', {}, function(options) {
+		if(options.integrateWithScreenShader) {
+			updSS();	
+		}
+	});
+}]);

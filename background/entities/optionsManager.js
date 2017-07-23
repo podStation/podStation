@@ -21,11 +21,16 @@ var OptionsManager;
 				if(typeof storageObject.syncOptions === "undefined") {
 					syncOptions = {
 						autoUpdate: true,
-						autoUpdateEvery: 60
+						autoUpdateEvery: 60,
+						integrateWithScreenShader: true
 					};
 				}
 				else {
 					syncOptions = storageObject.syncOptions;
+
+					if(typeof syncOptions.integrateWithScreenShader === 'undefined') {
+						syncOptions.integrateWithScreenShader = true;
+					}
 				}
 
 				sendResponse(syncOptions);

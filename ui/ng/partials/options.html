@@ -10,11 +10,15 @@
 <div class="mainContentBox">
 	<h1 class="sectionTitle">{{ 'options' | chrome_i18n }}</h1>
 	<div class="listEntry">
+		<h2>Feeds</h2>
 		<input type="checkbox" ng-model="options.autoUpdate"><span>{{ 'auto_update' | chrome_i18n }}</span>
 		<br>
 		<span>{{ 'update_frequency' | chrome_i18n }}:</span>
 		<input id="updatePeriod" ng-model="options.autoUpdateEvery" ng-disabled="!options.autoUpdate">
 		<span> {{ 'minutes' | chrome_i18n }}</span>
+		<br>
+		<h2>Integration with other extensions</h2>
+		<input type="checkbox" ng-model="options.integrateWithScreenShader"><span ng-bind-html="'integrate_screen_shader' | chrome_i18n"></span>
 		<br>
 		<button ng-click="save()">{{ 'save' | chrome_i18n }}</button>
 	</div>
