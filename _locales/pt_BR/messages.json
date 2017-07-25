@@ -229,6 +229,9 @@
 	"about": {
 		"message": "Sobre..."
 	},
+	"donate": {
+		"message": "Doar"
+	},
 	// pop up
 	"open": {
 		"message": "abrir"
