@@ -35,6 +35,7 @@
 
 #progressOut {
 	margin-top: 5px;
+	margin-bottom: 5px;
 	height: 10px;
 	background-color: white;
 	border-radius: 4px;
@@ -48,9 +49,11 @@
 }
 
 #playerOptions {
-	background-color: gray;
 	padding: 5px;
 	border-radius: 5px;
+	border-width: 1px;
+	border-color: white;
+	border-style: dashed;
 }
 
 #volumeControl {
@@ -92,22 +95,13 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	background: #ccc;
 }
 
-.opaqueHover {
-	opacity: .5;
-	transition-duration: .5s
-}
-
-.opaqueHover:hover {
-	opacity: 1;
-	transition-duration: .5s
-}
-
 button.transparent {
 	border-width: 0px;
 	padding: 0px;
 	color: inherit;
 	background-color: inherit;
 	cursor: pointer;
+	font: inherit;
 }
 </style>
 <div ng-controller="episodePlayerController">
@@ -132,8 +126,34 @@ button.transparent {
 							<span> / {{duration}}</span>
 						</span>
 						<br>
-						<a href="" ng-click="toggleShowOptions()" ng-if="!showOptions"><i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="toggleShowOptions()" ng-if="showOptions"><i class="fa fa-angle-double-down" title=""></i></a>
+						<div id="volumeControl">
+							<i id="volumeIcon" class="fa fa-volume-up"></i>
+							<input id="volumeSlider" type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
+						</div>
+						<div id="speedControl" style="padding-top: 10px">
+							<span>{{'speed' | chrome_i18n}}</span>
+							<button class="transparent" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
+							<button class="transparent" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
+							<span>{{currentPlaybackRate()}}x</span>
+						</div>
+					</td>
+					<td ng-if="imageUrl">
+						<img ng-src="{{imageUrl}}" id="playerImage"></img>
+					</td>
+					<td>
+						<div id="playingTitle">
+							<span><b>{{'playing' | chrome_i18n }}:</b> </span>
+							<a ng-if="mediaLink" ng-href="{{mediaLink}}" target="_blank">{{mediaTitle}}</a>
+							<span ng-if="!mediaLink">{{mediaTitle}}</span>
+						</div>
+						<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
+						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
+							<div id="progressIn" style="width: {{timePercent}}%"></div>
+						</div>
+						<div style="padding-bottom: 5px;">
+							<button class="transparent" href="" ng-click="toggleShowOptions()" ng-if="!showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
+							<button class="transparent" ng-click="toggleShowOptions()" ng-if="showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
+						</div>
 						<div id="playerOptions" ng-if="showOptions">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
 							<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
@@ -150,32 +170,6 @@ button.transparent {
 								<input type="checkbox" name="remove_when_finished" ng-model="options.removeWhenFinished" ng-change="onChangeRemoveWhenFinished()" />
 								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>
-						</div>
-					</td>
-					<td ng-if="imageUrl">
-						<img ng-src="{{imageUrl}}" id="playerImage"></img>
-					</td>
-					<td>
-						<div id="playingTitle">
-							<span><b>{{'playing' | chrome_i18n }}:</b> </span>
-							<a ng-if="mediaLink" ng-href="{{mediaLink}}" target="_blank">{{mediaTitle}}</a>
-							<span ng-if="!mediaLink">{{mediaTitle}}</span>
-						</div>
-						<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
-						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
-							<div id="progressIn" style="width: {{timePercent}}%"></div>
-						</div>
-						<div id="volumeControl" class="opaqueHover">
-							<i id="volumeIcon" class="fa fa-volume-up"></i>
-							<input id="volumeSlider" type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
-						</div>
-						<div id="speedControl" class="opaqueHover" style="padding-top: 10px">
-							<span>{{'speed'}}</span>
-							<!--<i id="volumeIcon" class="fa fa-fast-forward"></i>-->
-							<!--<input id="speedSlider" type="range" name="range" ng-model="speed.value" ng-change="speedChanged()"></input>-->
-							<button class="transparent fa fa-chevron-up" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></button>
-							<button class="transparent fa fa-chevron-down" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></button>
-							<span>{{currentPlaybackRate()}}x</span>
 						</div>
 					</td>
 				</tr>

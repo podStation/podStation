@@ -53,6 +53,9 @@
 	"show_player_options": {
 		"message": "Show player options"
 	},
+	"hide_player_options": {
+		"message": "Hide player options"
+	},
 	"order_next_previous": {
 		"message": "Next/Previous"
 	},
