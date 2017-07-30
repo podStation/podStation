@@ -23,6 +23,15 @@
 	"stop": {
 		"message": "Stop"
 	},
+	"forward": {
+		"message": "Skip ahead 15 seconds"
+	},
+	"backward": {
+		"message": "Go back 15 seconds"
+	},
+	"speed": {
+		"message": "Speed"
+	},
 	"speed_down": {
 		"message": "Speed Down"
 	},

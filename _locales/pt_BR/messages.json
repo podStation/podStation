@@ -23,6 +23,15 @@
 	"stop": {
 		"message": "Parar"
 	},
+	"forward": {
+		"message": "Pular 15 segundos"
+	},
+	"backward": {
+		"message": "Voltar 15 segundos"
+	},
+	"speed": {
+		"message": "Velocidade"
+	},
 	"speed_down": {
 		"message": "Diminuir velocidade"
 	},

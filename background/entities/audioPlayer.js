@@ -340,6 +340,18 @@ var AudioPlayerManager;
 
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
+		}).onMessage('forward', function() {
+			if(audioPlayer) {
+				const targetTime = audioPlayer.currentTime + 15;
+				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
+		}).onMessage('backward', function() {
+			if(audioPlayer) {
+				const targetTime = audioPlayer.currentTime - 15;
+				audioPlayer.currentTime = Math.max(0, targetTime);
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
 		}).onMessage('playNext', function() {
 			playNextOrPrevious(true);
 		}).onMessage('playPrevious', function() {

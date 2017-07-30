@@ -31,6 +31,9 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		readOptions();
 	}
 
+	$scope.forward = forward;
+	$scope.backward = backward;
+
 	function readOptions() {
 		episodePlayer.getOptions(setScopeOptions);
 	}
@@ -71,6 +74,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	$scope.nextPlaybackRateDown = function() {
 		return formatPlaybackRate($scope.playbackRate + playbackRateStepDown());
 	};
+
+	$scope.currentPlaybackRate = function() {
+		return formatPlaybackRate($scope.playbackRate);
+	}
 
 	$scope.play = function() {
 		episodePlayer.play();
@@ -212,6 +219,14 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	reset();
 
 	episodePlayer.getAudioInfo(getAudioInfoCallback);
+
+	function forward() {
+		episodePlayer.forward();
+	}
+
+	function backward() {
+		episodePlayer.backward();
+	}
 }]);
 
 myApp.factory('episodePlayer', ['messageService', function(messageService) {
@@ -247,6 +262,14 @@ myApp.factory('episodePlayer', ['messageService', function(messageService) {
 		messageService.for('audioPlayer').sendMessage('seek', {
 			position: position
 		});
+	};
+
+	episodePlayer.forward = function() {
+		messageService.for('audioPlayer').sendMessage('forward');
+	};
+
+	episodePlayer.backward = function() {
+		messageService.for('audioPlayer').sendMessage('backward');
 	};
 
 	episodePlayer.shiftPlaybackRate = function(delta) {

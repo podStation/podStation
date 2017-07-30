@@ -92,6 +92,23 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	background: #ccc;
 }
 
+.opaqueHover {
+	opacity: .5;
+	transition-duration: .5s
+}
+
+.opaqueHover:hover {
+	opacity: 1;
+	transition-duration: .5s
+}
+
+button.transparent {
+	border-width: 0px;
+	padding: 0px;
+	color: inherit;
+	background-color: inherit;
+	cursor: pointer;
+}
 </style>
 <div ng-controller="episodePlayerController">
 	<div id="audioPlayer" ng-if="visible">
@@ -103,8 +120,8 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 						<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
 						<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="speedDown()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-backward" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></i></a>
-						<a href="" ng-click="speedUp()" ng-class="{playerButtonDisabled: loading}"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
+						<a href="" ng-click="backward()" ng-class="{playerButtonDisabled: loading}" title="{{'backward' | chrome_i18n }}"><i class="fa fa-backward"></i></a>
+						<a href="" ng-click="forward()" ng-class="{playerButtonDisabled: loading}" title="{{'forward' | chrome_i18n }}"><i class="fa fa-forward"></i></a>
 						<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
@@ -148,9 +165,17 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
 							<div id="progressIn" style="width: {{timePercent}}%"></div>
 						</div>
-						<div id="volumeControl">
+						<div id="volumeControl" class="opaqueHover">
 							<i id="volumeIcon" class="fa fa-volume-up"></i>
 							<input id="volumeSlider" type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
+						</div>
+						<div id="speedControl" class="opaqueHover" style="padding-top: 10px">
+							<span>{{'speed'}}</span>
+							<!--<i id="volumeIcon" class="fa fa-fast-forward"></i>-->
+							<!--<input id="speedSlider" type="range" name="range" ng-model="speed.value" ng-change="speedChanged()"></input>-->
+							<button class="transparent fa fa-chevron-up" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></button>
+							<button class="transparent fa fa-chevron-down" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></button>
+							<span>{{currentPlaybackRate()}}x</span>
 						</div>
 					</td>
 				</tr>
