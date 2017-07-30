@@ -55,11 +55,11 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	}
 
 	playbackRateStepUp = function() {
-		return $scope.playbackRate >= 1.0 ? 0.5 : 0.05;
+		return $scope.playbackRate >= 1.0 ? 0.25 : 0.05;
 	}
 
 	playbackRateStepDown = function() {
-		return -($scope.playbackRate > 1.0 ? 0.5 : 0.05);
+		return -($scope.playbackRate > 1.0 ? 0.25 : 0.05);
 	}
 
 	function formatPlaybackRate (playbackRate) {
