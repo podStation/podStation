@@ -20,6 +20,7 @@
 		"unlimitedStorage",
 		"alarms",
 		"notifications",
+		"contextMenus",
 		"http://*/",
 		"https://*/"
 	],

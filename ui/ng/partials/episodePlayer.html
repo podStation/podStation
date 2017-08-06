@@ -118,7 +118,7 @@ button.transparent {
 				<tr>
 					<td>
 						<i class="fa fa-refresh fa-spin" ng-if="loading" title="Loading"></i>
-						<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
+						<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="{{'play' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="backward()" ng-class="{playerButtonDisabled: loading}" title="{{'backward' | chrome_i18n }}"><i class="fa fa-backward"></i></a>

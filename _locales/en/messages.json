@@ -17,8 +17,14 @@
 		"message": "click to dismiss..."
 	},
 	// player
+	"play": {
+		"message": "Play"
+	},
 	"pause": {
 		"message": "Pause"
+	},
+	"play_pause": {
+		"message": "Play/Pause"
 	},
 	"stop": {
 		"message": "Stop"

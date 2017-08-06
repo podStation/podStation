@@ -17,8 +17,14 @@
 		"message": "clique para dispensar..."
 	},
 	// player
+	"play": {
+		"message": "Tocar"
+	},
 	"pause": {
 		"message": "Pausar"
+	},
+	"play_pause": {
+		"message": "Tocar/Pausar"
 	},
 	"stop": {
 		"message": "Parar"
