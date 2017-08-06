@@ -131,7 +131,8 @@ var AudioPlayerManager;
 					currentTime: audioPlayer ? audioPlayer.currentTime : 0,
 					duration: audioPlayer ? audioPlayer.duration : 0,
 					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0,
-					volume: audioPlayer ? audioPlayer.volume : 0 
+					volume: audioPlayer ? audioPlayer.volume : 0,
+					error: audioPlayer ? audioPlayer.error : 0
 				},
 				episode: {
 					podcastUrl: episodeInfo ? episodeInfo.podcastUrl : undefined,
@@ -212,27 +213,8 @@ var AudioPlayerManager;
 					messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 				});
 
-				audioPlayer.onended = function() {
-					setEpisodeInProgress(episodeInfo, 0);
-					pauseTimeOut();
-
-					chrome.browserAction.setBadgeText({
-						text: ''
-					});
-
-					loadSyncPlayerOptions(function(options) {
-						if(options.removeWhenFinished) {
-							messageService.for('playlist').sendMessage('remove', {
-								podcastUrl: episodeInfo.podcastUrl,
-								episodeGuid: episodeInfo.episodeGuid
-							});
-						}
-
-						if(options.continuous)
-							playNextOrPrevious(true);
-
-					});
-				};
+				audioPlayer.onended = onAudioEnded;
+				audioPlayer.onerror = onAudioError;
 
 				setCurrentTimeFromEpisode();
 
@@ -241,6 +223,11 @@ var AudioPlayerManager;
 				});
 
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
+
+			if(audioPlayer.error) {
+				audioPlayer.load();
+				setCurrentTimeFromEpisode();
 			}
 
 			audioPlayer.play();
@@ -257,6 +244,34 @@ var AudioPlayerManager;
 			chrome.browserAction.setBadgeText({
 				text: 'I>'
 			});
+
+			return;
+
+			function onAudioEnded() {
+				setEpisodeInProgress(episodeInfo, 0);
+				pauseTimeOut();
+
+				chrome.browserAction.setBadgeText({
+					text: ''
+				});
+
+				loadSyncPlayerOptions(function(options) {
+					if(options.removeWhenFinished) {
+						messageService.for('playlist').sendMessage('remove', {
+							podcastUrl: episodeInfo.podcastUrl,
+							episodeGuid: episodeInfo.episodeGuid
+						});
+					}
+
+					if(options.continuous)
+						playNextOrPrevious(true);
+
+				});
+			};
+
+			function onAudioError() {
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
 		}
 
 		function playNextOrPrevious(isNext) {

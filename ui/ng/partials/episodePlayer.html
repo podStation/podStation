@@ -171,6 +171,9 @@ button.transparent {
 								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>
 						</div>
+						<div ng-show="error" id="playerErrorInfo"> 
+							Error loading data for your episode, click play to retry
+						</div>
 					</td>
 				</tr>
 			</tbody>

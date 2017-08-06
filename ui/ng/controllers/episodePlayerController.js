@@ -14,6 +14,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		$scope.visible = false;
 		$scope.playing = false;
 		$scope.loading = false;
+		$scope.error = false;
 		$scope.timeMouseOver = '';
 		$scope.playbackRate = 1.0;
 		$scope.volume = {};
@@ -167,10 +168,15 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 				$scope.duration = formatSeconds(audioInfo.audio.duration);
 				$scope.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
 				$scope.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
-				$scope.loading = audioInfo.audio.url && !audioInfo.audio.duration;
+				$scope.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
+				$scope.error = audioInfo.audio.error ? true : false;
 				$scope.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
 				$scope.playbackRate = audioInfo.audio.playbackRate;
 				$scope.volume.value = audioInfo.audio.volume * 100;
+
+				if($scope.error) {
+					$scope.playing = false;
+				}
 
 				durationInSeconds = audioInfo.audio.duration;
 			});
