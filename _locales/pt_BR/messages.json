@@ -77,6 +77,9 @@
 	"remove_when_finished": {
 		"message": "Remover da playlist ao finalizar"
 	},
+	"player_error" : {
+		"message": "Erro carregando seu episódio, clique no play para tentar novamente"
+	},
 	// playlist
 	"remove_from_playlist": {
 		"message": "Remover da playlist"
