@@ -54,6 +54,7 @@
 	border-width: 1px;
 	border-color: white;
 	border-style: dashed;
+	margin-bottom: 5px;
 }
 
 #volumeControl {
@@ -102,6 +103,12 @@ button.transparent {
 	background-color: inherit;
 	cursor: pointer;
 	font: inherit;
+}
+
+#playerErrorInfo {
+	background-color: darkred;
+	padding: 5px;
+	border-radius: 5px;
 }
 </style>
 <div ng-controller="episodePlayerController">
@@ -172,7 +179,7 @@ button.transparent {
 							</div>
 						</div>
 						<div ng-show="error" id="playerErrorInfo"> 
-							Error loading data for your episode, click play to retry
+							<i class="fa fa-exclamation"></i> Error loading your episode, click play to retry
 						</div>
 					</td>
 				</tr>
