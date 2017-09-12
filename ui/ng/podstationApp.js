@@ -1,6 +1,6 @@
-var myApp = angular.module('podstationApp', ['podStationReusables', 'ngRoute', 'ngSanitize', 'infinite-scroll', 'dndLists']);
+var myApp = angular.module('podstationApp', ['podstationInternalReuse', 'podStationReusables', 'ngRoute', 'ngSanitize', 'infinite-scroll', 'dndLists']);
 
-myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider) {
+myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
 	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension|data):/;
 	$compileProvider.aHrefSanitizationWhitelist(whiteList);
 	$compileProvider.imgSrcSanitizationWhitelist(whiteList);
@@ -55,10 +55,23 @@ function updSS(){
 	});
 }
 
-angular.module('podstationApp').run(['messageService', function(messageService) {
+angular.module('podstationApp').run(['messageService', '$rootScope', 'analyticsService', function(messageService, $rootScope, analyticsService) {
 	messageService.for('optionsManager').sendMessage('getOptions', {}, function(options) {
 		if(options.integrateWithScreenShader) {
 			updSS();	
 		}
 	});
+
+	$rootScope.$on('$routeChangeSuccess', function(e, current, previous) {
+		analyticsService.trackPageView(current.$$route.originalPath);
+	});
 }]);
+
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-67249070-2', 'auto');
+// https://stackoverflow.com/questions/16135000/how-do-you-integrate-universal-analytics-in-to-chrome-extensions/17770829#17770829
+ga('set', 'checkProtocolTask', function(){});

@@ -204,6 +204,7 @@ var AudioPlayerManager;
 
 				var podcastAndEpisode = getPodcastAndEpisode(playData.episode.podcastUrl, playData.episode.episodeGuid);
 
+				analyticsService.trackEvent('audio', 'play_new', podcastAndEpisode.episode.enclosure.url);
 				audioPlayer = new Audio(podcastAndEpisode.episode.enclosure.url);
 				
 				episodeInfo = playData.episode;
