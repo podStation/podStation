@@ -42,7 +42,7 @@ myApp.filter('chrome_i18n', function() {
 	};
 });
 
-// Shade your extension's page using Screen Shader.  Code snippet courtesy of Marc Guiselin 2015
+// Shade your extension's page using Screen Shader. Code snippet courtesy of Marc Guiselin 2015
 function updSS(){
 	chrome.runtime.sendMessage("fmlboobidmkelggdainpknloccojpppi", {}, function(response) {
 		if(response){

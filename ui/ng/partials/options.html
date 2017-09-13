@@ -20,6 +20,9 @@
 		<h2>Integration with other extensions</h2>
 		<input type="checkbox" ng-model="options.integrateWithScreenShader"><span ng-bind-html="'integrate_screen_shader' | chrome_i18n"></span>
 		<br>
+		<h2>Others</h2>
+		<input type="checkbox" ng-model="options.analytics"><span ng-bind-html="'analytics' | chrome_i18n"></span>
+		<br>
 		<button ng-click="save()">{{ 'save' | chrome_i18n }}</button>
 	</div>
 </div>

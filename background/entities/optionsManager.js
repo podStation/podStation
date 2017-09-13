@@ -22,7 +22,8 @@ var OptionsManager;
 					syncOptions = {
 						autoUpdate: true,
 						autoUpdateEvery: 60,
-						integrateWithScreenShader: true
+						integrateWithScreenShader: true,
+						analytics: true
 					};
 				}
 				else {
@@ -30,6 +31,10 @@ var OptionsManager;
 
 					if(typeof syncOptions.integrateWithScreenShader === 'undefined') {
 						syncOptions.integrateWithScreenShader = true;
+					}
+
+					if(typeof syncOptions.analytics === 'undefined') {
+						syncOptions.analytics = true;
 					}
 				}
 

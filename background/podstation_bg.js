@@ -86,6 +86,20 @@ else {
 	chrome.runtime.setUninstallURL('https://goo.gl/forms/80WF29XcdmLnSuAY2');
 }
 
-angular.module('podstationBackgroundApp').run(['playlist', function(playlist) {
+angular.module('podstationBackgroundApp').run(['$window', 'playlist', 'browser', function($window, playlist, browser) {
 	// this is only to ensure the services are created as soon as possible
+
+	browser.runtime.onInstalled.addListener(function(details) {
+		var appDetails = browser.app.getDetails();
+
+		if(details.reason === 'update') {
+			switch(appDetails.version) {
+				case '1.14.7':
+					$window.open('https://podstation.blogspot.de/2017/09/v1147-important-update-on-collection-of.html')
+					break;
+			}
+		}
+
+		console.log(details);
+	});
 }]);
