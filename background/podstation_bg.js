@@ -70,6 +70,7 @@ messageService.for('optionsManager').onMessage('optionsChanged', function(option
 chrome.commands.onCommand.addListener(function(command) {
 	switch(command) {
 		case 'play_pause':
+			analyticsService.trackEvent('audio', 'play_pause_hotkey');
 			messageService.for('audioPlayer').sendMessage('togglePlayPause');
 			break;
 	}

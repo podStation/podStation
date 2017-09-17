@@ -233,6 +233,7 @@ var AudioPlayerManager;
 				setCurrentTimeFromEpisode();
 			}
 
+			analyticsService.trackEvent('audio', 'play');
 			audioPlayer.play();
 
 			if(playData && playData.showNotification) {
@@ -253,6 +254,7 @@ var AudioPlayerManager;
 			function onAudioEnded() {
 				const currentEpisodeInfo = episodeInfo;
 
+				analyticsService.trackEvent('audio', 'ended');
 				stop();
 
 				loadSyncPlayerOptions(function(options) {
@@ -270,11 +272,20 @@ var AudioPlayerManager;
 			};
 
 			function onAudioError() {
+				analyticsService.trackEvent('audio', 'error');
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}
 
 		function playNextOrPrevious(isNext, argEpisodeInfo) {
+
+			if(isNext) {
+				analyticsService.trackEvent('audio', 'play_next');
+			}
+			else {
+				analyticsService.trackEvent('audio', 'play_prev');
+			}
+
 			const refEpisodeInfo = argEpisodeInfo ? argEpisodeInfo : episodeInfo;
 
 			if(!refEpisodeInfo)
@@ -298,6 +309,7 @@ var AudioPlayerManager;
 		}
 
 		function pause(options) {
+			analyticsService.trackEvent('audio', 'stop');
 			pauseTimeOut();
 			audioPlayer.pause();
 
@@ -314,6 +326,8 @@ var AudioPlayerManager;
 		}
 
 		function stop() {
+			analyticsService.trackEvent('audio', 'stop');
+
 			pauseTimeOut();
 			audioPlayer.pause();
 			setEpisodeInProgress(episodeInfo, 0);
@@ -360,6 +374,8 @@ var AudioPlayerManager;
 			}
 		}).onMessage('seek', function(messageContent) {
 			if(audioPlayer && audioPlayer.duration) {
+				analyticsService.trackEvent('audio', 'seek');
+
 				audioPlayer.currentTime = messageContent.position * audioPlayer.duration;
 
 				setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
@@ -368,12 +384,15 @@ var AudioPlayerManager;
 			}
 		}).onMessage('forward', function() {
 			if(audioPlayer) {
+				analyticsService.trackEvent('audio', 'forward');
+
 				const targetTime = audioPlayer.currentTime + 15;
 				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}).onMessage('backward', function() {
 			if(audioPlayer) {
+				analyticsService.trackEvent('audio', 'backward');
 				const targetTime = audioPlayer.currentTime - 15;
 				audioPlayer.currentTime = Math.max(0, targetTime);
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
@@ -384,6 +403,8 @@ var AudioPlayerManager;
 			playNextOrPrevious(false);
 		}).onMessage('setVolume', function(message) {
 			if(audioPlayer) {
+				analyticsService.trackEvent('audio', 'change_volume');
+
 				audioPlayer.volume = message.value;
 
 				loadLocalPlayerOptions(function(playerOptions) {
@@ -422,6 +443,7 @@ var AudioPlayerManager;
 
 		chrome.contextMenus.onClicked.addListener(function(info) {
 			if(info.menuItemId === 'browser_action_play_pause') {
+				analyticsService.trackEvent('audio', 'play_pause_browser_action_button');
 				togglePlayPause();
 			}
 		});

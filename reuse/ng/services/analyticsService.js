@@ -21,14 +21,20 @@ var analyticsService;
 
 		return service;
 
+		function _ga() {
+			if(typeof ga === 'function') {
+				ga.apply(null, arguments);
+			}
+		}
+
 		function trackPageView(page) {
-			ga('send', 'pageview', {
+			_ga('send', 'pageview', {
 				page: page
 			});
 		}
 
 		function trackEvent(category, action, label, value) {
-			ga('send', 'event', {
+			_ga('send', 'event', {
 				eventCategory: category,
 				eventAction: action,
 				eventLabel: label,
