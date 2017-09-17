@@ -204,6 +204,9 @@
 	"integrate_screen_shader": {
 		"message": "Integração com <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
 	},
+	"analytics": {
+		"message": "Enviar dados anônimos de uso (analytics, more information <a href=\"https://podstation.blogspot.de/2017/09/anonymous-usage-data-and-analytics.html\" target=\"_blank\">here</a>)"
+	},
 	"save": {
 		"message": "Salvar"
 	},

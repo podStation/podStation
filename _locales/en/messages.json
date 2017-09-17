@@ -202,7 +202,10 @@
 		"message": "minutes"
 	},
 	"integrate_screen_shader": {
-		"message": "Integração com <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
+		"message": "Integration with <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
+	},
+	"analytics": {
+		"message": "Send anonymous usage data (analytics, more information <a href=\"https://podstation.blogspot.de/2017/09/anonymous-usage-data-and-analytics.html\" target=\"_blank\">here</a>)"
 	},
 	"save": {
 		"message": "Save"
