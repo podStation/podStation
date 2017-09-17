@@ -5,8 +5,6 @@ var analyticsService;
 (function() {
 	'use strict';
 
-	angular.module('podstationInternalReuse', []);
-
 	angular
 		.module('podstationInternalReuse')
 		.factory('analyticsService', [_analyticsService]);
