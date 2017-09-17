@@ -210,6 +210,7 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 	$document[0].body.onkeyup = function(e) {
 		if(e.key === ' ' && $scope.visible && e.target.localName !== 'input') {
+			analyticsService.trackEvent('audio', 'play_pause_space_key');
 			episodePlayer.togglePlayPause();
 		}
 	}
