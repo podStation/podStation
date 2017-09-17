@@ -309,7 +309,7 @@ var AudioPlayerManager;
 		}
 
 		function pause(options) {
-			analyticsService.trackEvent('audio', 'stop');
+			analyticsService.trackEvent('audio', 'pause');
 			pauseTimeOut();
 			audioPlayer.pause();
 
