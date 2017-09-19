@@ -204,7 +204,7 @@ var AudioPlayerManager;
 
 				var podcastAndEpisode = getPodcastAndEpisode(playData.episode.podcastUrl, playData.episode.episodeGuid);
 
-				analyticsService.trackEvent('audio', 'play_podcast_url', playData.episode.podcastUrl);
+				analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(playData.episode.podcastUrl));
 				audioPlayer = new Audio(podcastAndEpisode.episode.enclosure.url);
 				
 				episodeInfo = playData.episode;
@@ -460,6 +460,13 @@ var AudioPlayerManager;
 
 		function removeButtons() {
 			chrome.contextMenus.remove('browser_action_play_pause');
+		}
+
+		function stripAuthFromURI(uri) {
+			var parser = document.createElement('a');
+			parser.href = uri;
+
+			return parser.protocol + '//' + parser.host + parser.pathname + parser.search + parser.hash;
 		}
 	}
 })();
