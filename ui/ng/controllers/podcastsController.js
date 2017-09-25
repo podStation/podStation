@@ -48,6 +48,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							// As the bgPage is an event page, it is better not to thrust
 							// in the contet of the bgPage variable at this moment.
 							chrome.runtime.getBackgroundPage(function(bgPage) {
+								analyticsService.trackEvent('feed', 'user_update_one');
 								bgPage.podcastManager.updatePodcast(that1.url);
 							});
 						},

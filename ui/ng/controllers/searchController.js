@@ -7,6 +7,7 @@ myApp.controller('searchController', ['$scope', '$routeParams', '$location', 'se
 	function addPodcast(searchResult) {
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			$scope.$apply(function() {
+				analyticsService.trackEvent('feed', 'add_by_search');
 				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
 
 				$location.path('/Podcasts');

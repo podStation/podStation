@@ -371,6 +371,7 @@ var AudioPlayerManager;
 		}).onMessage('shiftPlaybackRate', function(messageContent) {
 			if(audioPlayer && audioPlayer.playbackRate + messageContent.delta > 0) {
 				audioPlayer.playbackRate += messageContent.delta;
+				analyticsService.trackEvent('audio', 'change_playback_rate', undefined, Math.round(100*audioPlayer.playbackRate));
 			}
 		}).onMessage('seek', function(messageContent) {
 			if(audioPlayer && audioPlayer.duration) {

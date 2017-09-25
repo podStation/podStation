@@ -201,6 +201,7 @@ var PodcastManager;
 
 		this.addPodcasts = function(urls) {
 			if(urls && urls.length) {
+				analyticsService.trackEvent('feed', 'add', undefined, urls.length);
 				var that = this;
 				loadPodcastsFromSync(function(syncPodcastList) {
 					var listChanged = false;
@@ -250,6 +251,7 @@ var PodcastManager;
 			var that = this;
 			this.podcastList.forEach(function(item) {
 				if( item.url === url) {
+					analyticsService.trackEvent('feed', 'delete');
 					item.deleteFromStorage();
 					that.podcastList.splice(that.podcastList.indexOf(item), 1);
 					return false;

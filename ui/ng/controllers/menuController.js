@@ -1,4 +1,4 @@
-myApp.controller('menuController', ['$scope', '$document', '$location', 'messageService', function($scope, $document, $location, messageService) {
+myApp.controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', function($scope, $document, $location, messageService, analyticsService) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
 	};
@@ -33,6 +33,7 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 
 			if(podcasts.length) {
 				$location.path('/Podcasts');
+				analyticsService.trackEvent('feed', 'add_by_opml_file', undefined, podcasts.length);
 				messageService.for('podcastManager').sendMessage('addPodcasts', { podcasts: podcasts});
 			}
 		};
