@@ -35,6 +35,9 @@
 	"backward": {
 		"message": "Voltar 15 segundos"
 	},
+	"refresh_player": {
+		"message": "Recarrecar tocador"
+	},
 	"speed": {
 		"message": "Velocidade"
 	},

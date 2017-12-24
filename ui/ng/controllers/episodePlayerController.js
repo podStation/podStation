@@ -84,6 +84,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		episodePlayer.play();
 	};
 
+	$scope.refresh = function() {
+		episodePlayer.refresh();
+	};
+
 	$scope.pause = function() {
 		episodePlayer.pause();
 	};
@@ -238,6 +242,10 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 
 myApp.factory('episodePlayer', ['messageService', function(messageService) {
 	var episodePlayer = {};
+
+	episodePlayer.refresh = function(episode) {
+		messageService.for('audioPlayer').sendMessage('refresh');
+	};
 
 	episodePlayer.play = function(episode) {
 		messageService.for('audioPlayer').sendMessage('play', {

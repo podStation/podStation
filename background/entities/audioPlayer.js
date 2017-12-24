@@ -186,6 +186,15 @@ var AudioPlayerManager;
 			}
 		}
 
+		function refresh() {
+			var playData = {
+				episode: episodeInfo
+			}
+
+			stop(true);
+			play(playData);
+		}
+
 		function play(playData) {
 			if(playData && playData.episode &&
 				(!audioPlayer || 
@@ -325,13 +334,16 @@ var AudioPlayerManager;
 			});
 		}
 
-		function stop() {
+		function stop(keepProgress) {
 			analyticsService.trackEvent('audio', 'stop');
 
 			pauseTimeOut();
 			audioPlayer.pause();
-			setEpisodeInProgress(episodeInfo, 0);
-			
+
+			if(!keepProgress) {
+				setEpisodeInProgress(episodeInfo, 0);
+			}
+
 			audioPlayer = undefined;
 			episodeInfo = undefined;
 
@@ -362,6 +374,8 @@ var AudioPlayerManager;
 		messageService.for('audioPlayer')
 		.onMessage('play', function(messageContent) {
 			play(messageContent);
+		}).onMessage('refresh', function(messageContent) {
+			refresh(messageContent);
 		}).onMessage('pause', function() {
 			pause();
 		}).onMessage('togglePlayPause', function() {

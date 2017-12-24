@@ -126,6 +126,7 @@ button.transparent {
 						<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="refresh()" ng-if="!loading"><i class="fa fa-refresh" title="{{'refresh_player' | chrome_i18n }}"></i></a>
 						
 						<span>
 							<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
