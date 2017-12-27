@@ -23,10 +23,17 @@
 				<div class="textView">
 					<div class="itemHeader">
 						<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}" class="itemTitle episodeTitle">{{episode.title}}</a>
+						<br>
 						<span ng-if="episode.link">
-							<br>
-							<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a>
+							<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a> - 
 						</span>
+						<span class="psBtn icon_twitter" title="Tweet this episode" ng-click="episodeList.tweet(episode)">
+							<i class="fa fa-twitter"></i> Tweet
+						</span>
+						<!--<span> | </span>
+						<span class="psBtn icon_facebook" title="Share this episode" ng-click="episodeList.shareWithFacebook(episode)">
+							<i class="fa fa-facebook"></i> Share
+						</span>-->
 						<span ng-if="episode.podcastIndex !== undefined">
 							<br>
 							<a ng-href="#/Episodes/{{episode.podcastIndex}}">

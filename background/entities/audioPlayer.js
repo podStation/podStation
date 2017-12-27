@@ -51,16 +51,10 @@ var AudioPlayerManager;
 		};
 
 		function getPodcastAndEpisode(podcastUrl, episodeGuid) {
-			var podcast = window.podcastManager.getPodcast(podcastUrl);
-
-			var episode = podcast.episodes.find(function(episode) {
-				return episode.guid === episodeGuid;
+			return window.podcastManager.getPodcastAndEpisode({
+				podcastUrl: podcastUrl,
+				episodeGuid: episodeGuid
 			});
-
-			return {
-				podcast: podcast,
-				episode: episode
-			};
 		}
 
 		function imageUrl() {
@@ -136,7 +130,8 @@ var AudioPlayerManager;
 				},
 				episode: {
 					podcastUrl: episodeInfo ? episodeInfo.podcastUrl : undefined,
-					episodeGuid: episodeInfo ? episodeInfo.episodeGuid : undefined
+					episodeGuid: episodeInfo ? episodeInfo.episodeGuid : undefined,
+					episodeId: episodeInfo ? window.podcastManager.buildEpisodeId(podcastAndEpisode.episode, podcastAndEpisode.podcast) : undefined
 				}
 			}
 		}

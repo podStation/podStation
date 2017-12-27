@@ -80,6 +80,14 @@ td:last-of-type {
 	color: lightgrey;
 }
 
+.psBtn {
+	transition: 0.5s;
+}
+
+.psBtn:hover {
+	cursor: pointer;
+}
+
 #header {
 	background-color: Gainsboro;
 	height: 50px;

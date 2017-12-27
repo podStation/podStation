@@ -35,6 +35,9 @@
 	"backward": {
 		"message": "Go back 15 seconds"
 	},
+	"refresh_player": {
+		"message": "Refresh player"
+	},
 	"speed": {
 		"message": "Speed"
 	},

@@ -1,7 +1,7 @@
 (function() {
-	angular.module('podstationApp').directive('psEpisodeList', ['episodePlayer', 'messageService', EpisodeListDirective]);
+	angular.module('podstationApp').directive('psEpisodeList', ['$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
-	function EpisodeListDirective(episodePlayer, messageService) {
+	function EpisodeListDirective($window, podcastManagerService, episodePlayer, messageService, socialService) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -24,6 +24,8 @@
 			episodeListController.addToPlaylist = addToPlaylist;
 			episodeListController.removeFromPlaylist = removeFromPlaylist;
 			episodeListController.deletePlayTime = deletePlayTime;
+			episodeListController.tweet = tweet;
+			episodeListController.shareWithFacebook = shareWithFacebook;
 			
 			episodeListController.isReverseOrder = isReverseOrder;
 			episodeListController.orderBy = orderBy;
@@ -56,6 +58,18 @@
 					url: episode.podcastUrl,
 					episodeId: episode.guid,
 					currentTime: 0
+				});
+			}
+
+			function tweet(episode) {
+				podcastManagerService.buildEpisodeId(episode).then(function(episodeId) {
+					socialService.tweet(episodeId);
+				});
+			}
+
+			function shareWithFacebook(episode) {
+				podcastManagerService.buildEpisodeId(episode).then(function(episodeId) {
+					socialService.shareWithFacebook(episodeId);
 				});
 			}
 

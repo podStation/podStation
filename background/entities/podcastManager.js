@@ -484,6 +484,19 @@ var PodcastManager;
 			return allEpisodes;
 		}
 
+		this.getPodcastAndEpisode = function(episodeId) {
+			var podcast = window.podcastManager.getPodcast(episodeId.podcastUrl);
+
+			var episode = podcast.episodes.find(function(episode) {
+				return episode.guid === episodeId.episodeGuid;
+			});
+
+			return {
+				podcast: podcast,
+				episode: episode
+			};
+		};
+
 		this.getPodcastIds = function(podcastUrls, callback) {
 			loadPodcastsFromSync(function(syncPodcastList) {
 				var urlAndIds = syncPodcastList.map(function(syncPodcast) {
@@ -501,6 +514,27 @@ var PodcastManager;
 
 				callback(urlAndIds);
 			});
+		};
+
+		this.buildEpisodeId = function(episode, podcast) {
+			var podcastUrl;
+
+			if(episode.podcastUrl) {
+				podcastUrl = episode.podcastUrl;
+			}
+			else if(typeof podcast === 'string') {
+				podcastUrl = podcast;
+			}
+			else {
+				podcastUrl = podcast.url;
+			}
+
+			const episodeId = {
+				podcastUrl: podcastUrl,
+				episodeGuid: episode.guid
+			};
+
+			return episodeId;
 		};
 
 		instance = this;

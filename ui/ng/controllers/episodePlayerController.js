@@ -1,7 +1,8 @@
-myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'episodePlayer', 'messageService',
-  function($scope, $document, $window, episodePlayer, messageService) {
+myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService',
+  function($scope, $document, $window, podcastManagerService, episodePlayer, messageService, socialService) {
 
 	var durationInSeconds;
+	var episodeId;
 
 	function reset() {
 		$scope.time = '';
@@ -154,36 +155,41 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		messageService.for('playlist').sendMessage('toggleVisibility');
 	};
 
+	$scope.tweet = function() {
+		socialService.tweet(episodeId);
+	};
+
+	$scope.shareWithFacebook = function() {
+		socialService.shareWithFacebook(episodeId);
+	};
+
 	function getAudioInfoCallback(audioInfo) {
 		if(!audioInfo.episode.podcastUrl)
 			return;
 
-		chrome.runtime.getBackgroundPage(function(bgPage) {
-			var podcast = bgPage.podcastManager.getPodcast(audioInfo.episode.podcastUrl);
+		episodeId = audioInfo.episode.episodeId;
 
-			var episode = podcast.episodes.find(function(episode) {
-				return episode.guid === audioInfo.episode.episodeGuid;
-			});
-		
-			$scope.$apply(function(){
-				$scope.mediaTitle = episode.title;
-				$scope.mediaLink = episode.link;
-				$scope.time = formatSeconds(audioInfo.audio.currentTime);
-				$scope.duration = formatSeconds(audioInfo.audio.duration);
-				$scope.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
-				$scope.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
-				$scope.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
-				$scope.error = audioInfo.audio.error ? true : false;
-				$scope.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
-				$scope.playbackRate = audioInfo.audio.playbackRate;
-				$scope.volume.value = audioInfo.audio.volume * 100;
+		podcastManagerService.getPodcastAndEpisode(episodeId).then(function(result) {
+			var podcast = result.podcast;
+			var episode = result.episode;
 
-				if($scope.error) {
-					$scope.playing = false;
-				}
+			$scope.mediaTitle = episode.title;
+			$scope.mediaLink = episode.link;
+			$scope.time = formatSeconds(audioInfo.audio.currentTime);
+			$scope.duration = formatSeconds(audioInfo.audio.duration);
+			$scope.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
+			$scope.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
+			$scope.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
+			$scope.error = audioInfo.audio.error ? true : false;
+			$scope.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
+			$scope.playbackRate = audioInfo.audio.playbackRate;
+			$scope.volume.value = audioInfo.audio.volume * 100;
 
-				durationInSeconds = audioInfo.audio.duration;
-			});
+			if($scope.error) {
+				$scope.playing = false;
+			}
+
+			durationInSeconds = audioInfo.audio.duration;
 		});
 	}
 

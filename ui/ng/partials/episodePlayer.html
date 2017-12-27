@@ -24,11 +24,6 @@
 	color: white;
 }
 
-.playerButtonDisabled {
-	color: gray !important;
-	cursor: default;
-}
-
 #audioPlayer td:last-child{
 	width:100%;
 }
@@ -96,13 +91,32 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	background: #ccc;
 }
 
-button.transparent {
+.playerButtonDisabled {
+	color: gray !important;
+	cursor: default;
+}
+
+.psTransparent {
 	border-width: 0px;
 	padding: 0px;
 	color: inherit;
 	background-color: inherit;
 	cursor: pointer;
 	font: inherit;
+}
+
+.psPlayerBtnSecondary {
+	cursor: pointer;
+	color: gray;
+	transition: 0.5s;
+}
+
+.psPlayerBtnSecondary:hover {
+	color: inherit;
+}
+
+.psPlayerBtnSecondaryTwitter:hover {
+	color: #1DA1F2;
 }
 
 #playerErrorInfo {
@@ -140,8 +154,8 @@ button.transparent {
 						</div>
 						<div id="speedControl" style="padding-top: 10px">
 							<span>{{'speed' | chrome_i18n}}</span>
-							<button class="transparent" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
-							<button class="transparent" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
+							<button class="psTransparent" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
+							<button class="psTransparent" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
 							<span>{{currentPlaybackRate()}}x</span>
 						</div>
 					</td>
@@ -158,9 +172,14 @@ button.transparent {
 						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
 							<div id="progressIn" style="width: {{timePercent}}%"></div>
 						</div>
+						<div style="padding-bottom: 4px;">
+							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="Tweet this episode" ng-click="tweet()"><i class="fa fa-twitter"></i> Tweet</span>
+							<!--<span style="color: gray;"> | </span>
+							<span class="psPlayerBtnSecondary icon_facebook" ng-click="shareWithFacebook()"><i class="fa fa-share"></i> Share</span>-->
+						</div>
 						<div style="padding-bottom: 5px;">
-							<button class="transparent" href="" ng-click="toggleShowOptions()" ng-if="!showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
-							<button class="transparent" ng-click="toggleShowOptions()" ng-if="showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
+							<button class="psPlayerBtnSecondary psTransparent" href="" ng-click="toggleShowOptions()" ng-if="!showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
+							<button class="psTransparent" ng-click="toggleShowOptions()" ng-if="showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
 						</div>
 						<div id="playerOptions" ng-if="showOptions">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
