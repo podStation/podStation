@@ -250,7 +250,7 @@ var AudioPlayerManager;
 			playingTimeOut();
 
 			chrome.browserAction.setBadgeText({
-				text: 'I>'
+				text: '\u25B6' // play symbol
 			});
 
 			return;
@@ -325,7 +325,7 @@ var AudioPlayerManager;
 			messageService.for('audioPlayer').sendMessage('paused');
 
 			chrome.browserAction.setBadgeText({
-				text: 'II'
+				text: '\u2759\u2759' // pause symbol
 			});
 		}
 
