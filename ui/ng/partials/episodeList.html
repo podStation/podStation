@@ -27,12 +27,12 @@
 						<span ng-if="episode.link">
 							<a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a> - 
 						</span>
-						<span class="psBtn icon_twitter" title="Tweet this episode" ng-click="episodeList.tweet(episode)">
-							<i class="fa fa-twitter"></i> Tweet
+						<span class="psBtn icon_twitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="episodeList.tweet(episode)">
+							<i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}
 						</span>
 						<!--<span> | </span>
-						<span class="psBtn icon_facebook" title="Share this episode" ng-click="episodeList.shareWithFacebook(episode)">
-							<i class="fa fa-facebook"></i> Share
+						<span class="psBtn icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="episodeList.shareWithFacebook(episode)">
+							<i class="fa fa-facebook"></i> {{'facebook_share' | chrome_i18n}}
 						</span>-->
 						<span ng-if="episode.podcastIndex !== undefined">
 							<br>

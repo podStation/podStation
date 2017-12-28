@@ -268,5 +268,18 @@
 	},
 	"feed_in_list": {
 		"message": "Hooray! you have this feed already."
+	},
+	// Social
+	"tweet": {
+		"message": "Tweet"
+	},
+	"tweet_this_episode": {
+		"message": "Tweet this episode"
+	},
+	"facebook_share": {
+		"message": "Share"
+	},
+	"facebook_share_this_episode": {
+		"message": "Share this episode on Facebook"
 	}
 }
