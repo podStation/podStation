@@ -83,6 +83,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	}
 
 	$scope.listTypeChanged = listTypeChanged;
+	$scope.sortingChanged = sortingChanged;
 	$scope.ready = ready;
 
 	$scope.updatePodcastList();
@@ -117,6 +118,9 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 			return true;
 		});
 	}
+
+	function sortingChanged() {
+	} 
 
 	function ready() {
 		return podcastsLoaded && optionsLoaded;
