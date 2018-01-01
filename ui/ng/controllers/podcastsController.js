@@ -1,5 +1,6 @@
 myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', function($scope, messageService, storageService) {
 	$scope.listType = 'big_list';
+	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
 
 	var podcastsLoaded = false;
@@ -39,7 +40,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							this.url =  storedPodcast.url;
 							this.description =  storedPodcast.description;
 							this.episodesNumber =  storedPodcast.episodes.length;
-							this.pubDate =  storedPodcast.pubDate ? formatDate(new Date(storedPodcast.pubDate)) : undefined;
+							this.pubDateUnformatted = new Date(storedPodcast.pubDate);
+							this.pubDate = storedPodcast.pubDate ? formatDate(this.pubDateUnformatted) : undefined;
 							this.statusClass =  getStatusClass(storedPodcast.status);
 						},
 						update: function() {
@@ -84,12 +86,15 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 
 	$scope.listTypeChanged = listTypeChanged;
 	$scope.sortingChanged = sortingChanged;
+	$scope.orderBy = orderBy;
+	$scope.isReverseOrder = isReverseOrder;
 	$scope.ready = ready;
 
 	$scope.updatePodcastList();
 
 	storageService.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.plt;
+		$scope.sorting = uiOptions.ps;
 		optionsLoaded = true;
 	});
 
@@ -120,7 +125,43 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	}
 
 	function sortingChanged() {
-	} 
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.ps = $scope.sorting;
+
+			return true;
+		});
+	}
+
+	function orderBy() {
+		switch($scope.sorting) {
+			default:
+				return 'index';
+			case 'by_subscription_ascending':
+			case 'by_subscription_descending':
+				return 'index';
+			case 'by_alpha_ascending':
+			case 'by_alpha_descending':
+				return 'title';
+			case 'by_pubdate_ascending':
+			case 'by_pubdate_descending':
+				return 'pubDateUnformatted';
+		}
+	}
+
+	function isReverseOrder() {
+		switch($scope.sorting) {
+			default:
+				return false;
+			case 'by_alpha_descending':
+			case 'by_pubdate_descending':
+			case 'by_subscription_ascending':
+				return true;
+			case 'by_pubdate_ascending':
+			case 'by_alpha_ascending':
+			case 'by_subscription_descending':
+				return false;
+		}
+	}
 
 	function ready() {
 		return podcastsLoaded && optionsLoaded;

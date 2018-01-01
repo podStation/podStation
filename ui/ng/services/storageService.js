@@ -20,6 +20,10 @@
 				if(typeof uiOptions.plt === 'undefined')
 					uiOptions.plt = 'big_list';
 
+				// podcast list type
+				if(typeof uiOptions.ps === 'undefined')
+					uiOptions.ps = 'by_subscription_descending';
+
 				// podcast episodes list type
 				if(typeof uiOptions.elt === 'undefined')
 					uiOptions.elt = 'big_list';

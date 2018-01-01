@@ -10,8 +10,8 @@
 	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
 		<div id="listMenu" ng-show="episodes.length">
 			<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
-				<option value="by_pubdate_ascending" >&#xf160; Oldest</option>
-				<option value="by_pubdate_descending">&#xf161; Most recent</option>
+				<option value="by_pubdate_ascending" >&#xf160; {{ 'oldest' | chrome_i18n}}</option>
+				<option value="by_pubdate_descending">&#xf161; {{ 'most_recent' | chrome_i18n}}</option>
 			</select>
 			<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 				<option value="big_list"  >&#xf00b; Big list</option>
