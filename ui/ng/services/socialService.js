@@ -18,7 +18,7 @@
 
 				tweetUrl = 'https://twitter.com/intent/tweet?' + $.param({
 					text: result.episode.title,
-					url: result.episode.link ? result.episode.link : result.episode.url, 
+					url: result.episode.link ? result.episode.link : result.episode.enclosure.url, 
 					hashtags: 'podcast,podstation', 
 					via: 'podstation_app'
 				});
@@ -36,7 +36,7 @@
 				shareUrl = 'https://www.facebook.com/dialog/share?' + $.param({
 					app_id: '405324126571182',
 					quote: result.episode.title,
-					href: result.episode.link ? result.episode.link : result.episode.url, 
+					href: result.episode.link ? result.episode.link : result.episode.enclosure.url, 
 					hashtag: '#podstation',
 				});
 
