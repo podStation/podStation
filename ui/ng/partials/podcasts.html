@@ -58,7 +58,7 @@
 			</div>
 			<div ng-if="listType!=='big_list'" style="padding-top: 5px">
 				<ul class="contentList">
-					<li ng-repeat="podcast in podcasts" class="listItemSmall">
+					<li ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder()" class="listItemSmall">
 						<div class="listItemImageSmall">
 							<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
 						</div>
