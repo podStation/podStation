@@ -186,6 +186,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	function($scope, $routeParams, episodePlayer, messageService, storageService) {
 
 	$scope.listType = 'big_list';
+	$scope.orderByField = 'lastTimePlayed';
 	$scope.episodes = [];
 
 	var episodesLoaded = false;
