@@ -42,6 +42,14 @@
 											<span>{{'open_podcast_website' | chrome_i18n }}</span>
 										</a>
 									</span>
+									<span>
+										<span> - </span>
+										<span ng-repeat="socialHandle in podcast.socialHandles">
+											<a ng-href="{{socialHandle.url}}" target="_blank" title="{{socialHandle.text}}">
+												<i class="fa fa-{{socialHandle.faIcon}}"></i></a>
+											<span>&nbsp;</span>
+										</span>
+									</span>
 									<br>
 									<!--must add a check for pubdate-->
 									<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>

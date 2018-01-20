@@ -1,4 +1,4 @@
-myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', function($scope, messageService, storageService) {
+myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', 'socialService', function($scope, messageService, storageService, socialService) {
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
@@ -42,7 +42,15 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							this.episodesNumber =  storedPodcast.episodes.length;
 							this.pubDateUnformatted = new Date(storedPodcast.pubDate);
 							this.pubDate = storedPodcast.pubDate ? formatDate(this.pubDateUnformatted) : undefined;
-							this.statusClass =  getStatusClass(storedPodcast.status);
+							this.statusClass = getStatusClass(storedPodcast.status);
+							this.email = storedPodcast.email;
+							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(function(socialHandle) {
+								return {
+									text: socialService.getTextForHandle(socialHandle),
+									faIcon: socialService.getIconForHandle(socialHandle),
+									url: socialService.getUrlForHandle(socialHandle),
+								}
+							}) : undefined;
 						},
 						update: function() {
 							var that1 = this;

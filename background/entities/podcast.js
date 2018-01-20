@@ -81,6 +81,8 @@ var Podcast = function(url) {
 			that.pubDate = feedParseResult.podcast.pubDate;
 			that.image = feedParseResult.podcast.image ? feedParseResult.podcast.image : that.image = defaultImage;;
 			that.episodes = feedParseResult.episodes;
+			that.email = feedParseResult.podcast.email;
+			that.socialHandles = feedParseResult.podcast.socialHandles;
 			
 			that.status = 'loaded';
 			podcastChanged(that, true);

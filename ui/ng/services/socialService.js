@@ -8,7 +8,10 @@
 	function socialService($window, podcastManagerService) {
 		var service = {
 			tweet: tweet,
-			shareWithFacebook: shareWithFacebook
+			shareWithFacebook: shareWithFacebook,
+			getUrlForHandle: getUrlForHandle,
+			getIconForHandle: getIconForHandle,
+			getTextForHandle: getTextForHandle
 		};
 
 		function tweet(episodeId) {
@@ -42,6 +45,71 @@
 
 				$window.open(shareUrl, '_blank', 'width=550,height=420');
 			});
+		}
+
+		function getUrlForHandle(socialHandle) {
+			switch(socialHandle.type) {
+				case 'telegram':
+				case 'telegram.group':
+					return 'https://t.me/' + socialHandle.handle;
+				case 'twitter':
+					return 'https://twitter.com/' + socialHandle.handle;
+				case 'youtube':
+					return 'https://youtube.com/user/' + socialHandle.handle;
+				case 'youtube.channel':
+					return 'https://youtube.com/channel/' + socialHandle.handle;;
+				case 'facebook':
+				case 'facebook.page':
+					return 'https://facebook.com/' + socialHandle.handle;;
+				case 'facebook.group':
+					return 'https://facebook.com/groups/' + socialHandle.handle;;
+				case 'instagram':
+					return 'https://instagram.com/' + socialHandle.handle;;
+			}
+
+			return socialHandle.url;
+		}
+
+		function getIconForHandle(socialHandle) {
+			switch(socialHandle.type) {
+				case 'telegram':
+				case 'telegram.group':
+					return 'telegram';
+				case 'twitter':
+					return 'twitter';
+				case 'youtube':
+				case 'youtube.channel':
+					return 'youtube-play';
+				case 'facebook':
+				case 'facebook.page':
+				case 'facebook.group':
+					return 'facebook';
+				case 'instagram':
+					return 'instagram';
+			}
+		}
+
+		function getTextForHandle(socialHandle) {
+			switch(socialHandle.type) {
+				case 'telegram':
+				case 'telegram.group':
+					return 'Telegram';
+				case 'twitter':
+					return 'Twitter';
+				case 'youtube':
+				case 'youtube.channel':
+					return 'Youtube';
+				case 'facebook':
+					return 'Facebook';
+				case 'facebook.page':
+					return 'Facebook Page';
+				case 'facebook.group':
+					return 'Facebook Group';
+				case 'instagram':
+					return 'Instagram';
+			}
+
+			return socialHandle.text;
 		}
 
 		return service;
