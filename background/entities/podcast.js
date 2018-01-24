@@ -30,6 +30,15 @@ var Podcast = function(url) {
 		storedPodcast.link = this.link;
 		storedPodcast.pubDate = this.pubDate;
 		storedPodcast.image = this.image;
+
+		// >>> social namespace
+		storedPodcast.email = this.email;
+		storedPodcast.socialHandles = this.socialHandles;
+		storedPodcast.monetizations = this.monetizations;
+		storedPodcast.participants = this.participants;
+		storedPodcast.participantReferences = this.participantReferences;
+		// <<< social namespace
+
 		storedPodcast.episodes = this.episodes;
 
 		storageObject[this.getKey()] = storedPodcast;
@@ -80,9 +89,16 @@ var Podcast = function(url) {
 			that.link = feedParseResult.podcast.link;
 			that.pubDate = feedParseResult.podcast.pubDate;
 			that.image = feedParseResult.podcast.image ? feedParseResult.podcast.image : that.image = defaultImage;;
-			that.episodes = feedParseResult.episodes;
+
+			// >>> social namespace
 			that.email = feedParseResult.podcast.email;
 			that.socialHandles = feedParseResult.podcast.socialHandles;
+			that.monetizations = feedParseResult.podcast.monetizations;
+			that.participants = feedParseResult.podcast.participants;
+			that.participantReferences = feedParseResult.podcast.participantReferences;
+			// <<< social namespace
+
+			that.episodes = feedParseResult.episodes;
 			
 			that.status = 'loaded';
 			podcastChanged(that, true);
@@ -134,6 +150,15 @@ var Podcast = function(url) {
 				that.link = storedPodcast.link;
 				that.pubDate = storedPodcast.pubDate;
 				that.image = storedPodcast.image;
+				
+				// >>> social namespace
+				that.email = storedPodcast.email;
+				that.socialHandles = storedPodcast.socialHandles;
+				that.monetizations = storedPodcast.monetizations;
+				that.participants = storedPodcast.participants;
+				that.participantReferences = storedPodcast.participantReferences;
+				// <<< social namespace
+				
 				that.episodes = storedPodcast.episodes;
 				that.status = 'loaded';
 			}

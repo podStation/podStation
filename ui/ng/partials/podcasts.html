@@ -34,20 +34,33 @@
 									<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
 									<br>
 									<a ng-href="#/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
-										<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span>
-									</a>
+										<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span><!--
+									--></a>
 									<span ng-if="podcast.link">
 										<span> - </span>
 										<a ng-href="{{podcast.link}}" target="_blank">
-											<span>{{'open_podcast_website' | chrome_i18n }}</span>
-										</a>
+											<span>{{'open_podcast_website' | chrome_i18n }}</span><!--
+										--></a>
 									</span>
-									<span>
+									<span ng-if="podcast.socialHandles || podcast.email">
 										<span> - </span>
+										<span ng-if="podcast.email">
+											<a ng-href="mailto:{{podcast.email}}" title="e-mail">
+												<i class="fa fa-envelope"></i><!--
+											--></a>
+										</span>
 										<span ng-repeat="socialHandle in podcast.socialHandles">
 											<a ng-href="{{socialHandle.url}}" target="_blank" title="{{socialHandle.text}}">
-												<i class="fa fa-{{socialHandle.faIcon}}"></i></a>
-											<span>&nbsp;</span>
+												<i class="fa fa-{{socialHandle.faIcon}}"></i><!--
+											--></a>
+										</span>
+									</span>
+									<span ng-if="podcast.monetizations">
+										<span> - <i class="fa fa-dollar"></i></span>
+										<span ng-repeat="monetization in podcast.monetizations">
+											<a ng-href="{{monetization.url}}" target="_blank" title="{{monetization.text}}">
+												<i ng-if="monetization.faIcon" class="fa fa-{{monetization.faIcon}}"></i>{{monetization.text}}</a><!--
+											--><span ng-if="!$last">, </span>
 										</span>
 									</span>
 									<br>

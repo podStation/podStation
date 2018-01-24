@@ -51,6 +51,14 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 									url: socialService.getUrlForHandle(socialHandle),
 								}
 							}) : undefined;
+
+							this.monetizations = storedPodcast.monetizations ? storedPodcast.monetizations.map(function(monetization) {
+								return {
+									text: socialService.getTextForHandle(monetization),
+									faIcon: socialService.getIconForHandle(monetization),
+									url: socialService.getUrlForHandle(monetization),
+								}
+							}) : undefined;
 						},
 						update: function() {
 							var that1 = this;

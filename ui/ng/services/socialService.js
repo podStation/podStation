@@ -49,6 +49,7 @@
 
 		function getUrlForHandle(socialHandle) {
 			switch(socialHandle.type) {
+				// >>> social handles
 				case 'telegram':
 				case 'telegram.group':
 					return 'https://t.me/' + socialHandle.handle;
@@ -64,7 +65,16 @@
 				case 'facebook.group':
 					return 'https://facebook.com/groups/' + socialHandle.handle;;
 				case 'instagram':
-					return 'https://instagram.com/' + socialHandle.handle;;
+					return 'https://instagram.com/' + socialHandle.handle;
+				// <<< social handles
+				// >>> monetization
+				case 'patreon':
+					return 'https://patreon.com/' + socialHandle.handle;
+				case 'padrim':
+					return 'https://www.padrim.com.br/' + socialHandle.handle;
+				case 'apoia.se':
+					return 'https://apoia.se/' + socialHandle.handle;
+				// <<< monetization
 			}
 
 			return socialHandle.url;
@@ -72,6 +82,7 @@
 
 		function getIconForHandle(socialHandle) {
 			switch(socialHandle.type) {
+				// >>> social handles
 				case 'telegram':
 				case 'telegram.group':
 					return 'telegram';
@@ -86,11 +97,17 @@
 					return 'facebook';
 				case 'instagram':
 					return 'instagram';
+				// <<< social handles
+				// >>> monetization
+				case 'paypal':
+					return 'paypal'
+				// <<< monetization
 			}
 		}
 
 		function getTextForHandle(socialHandle) {
 			switch(socialHandle.type) {
+				// >>> social handles
 				case 'telegram':
 				case 'telegram.group':
 					return 'Telegram';
@@ -107,6 +124,17 @@
 					return 'Facebook Group';
 				case 'instagram':
 					return 'Instagram';
+				// <<< social handles
+				// >>> monetization
+				case 'patreon':
+					return 'Patreon';
+				case 'padrim':
+					return 'Padrim';
+				case 'apoia.se':
+					return 'Apoia.se';
+				case 'paypal':
+					return 'PayPal'
+				// <<< monetization
 			}
 
 			return socialHandle.text;
