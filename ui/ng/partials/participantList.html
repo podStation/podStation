@@ -1,0 +1,16 @@
+<ul>
+	<li ng-repeat="participant in participantList.participants">
+		<span>{{participant.name}}</span>
+		<span> - </span>
+		<span ng-show="participant.email">
+			<a ng-href="mailto:{{podcast.email}}" title="e-mail">
+				<i class="fa fa-envelope"></i><!--
+			--></a>
+		</span>
+		<span ng-repeat="socialHandle in participant.socialHandles">
+			<a ng-href="{{socialHandle.url}}" target="_blank" title="{{socialHadle.text}}">
+				<i class="fa fa-{{socialHandle.faIcon}}"></i><!--
+			--></a>
+		</span>
+	</li>
+</ul>

@@ -43,14 +43,10 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							this.pubDateUnformatted = new Date(storedPodcast.pubDate);
 							this.pubDate = storedPodcast.pubDate ? formatDate(this.pubDateUnformatted) : undefined;
 							this.statusClass = getStatusClass(storedPodcast.status);
+							
+							// >>> social namespace
 							this.email = storedPodcast.email;
-							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(function(socialHandle) {
-								return {
-									text: socialService.getTextForHandle(socialHandle),
-									faIcon: socialService.getIconForHandle(socialHandle),
-									url: socialService.getUrlForHandle(socialHandle),
-								}
-							}) : undefined;
+							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(socialHandleMapping) : undefined;
 
 							this.monetizations = storedPodcast.monetizations ? storedPodcast.monetizations.map(function(monetization) {
 								return {
@@ -59,6 +55,24 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 									url: socialService.getUrlForHandle(monetization),
 								}
 							}) : undefined;
+
+							this.participants = storedPodcast.participants ? storedPodcast.participants.filter(function(participant) {
+								return participant.permanent;
+							}).map(function(participant) {
+								return {
+									name: participant.name,
+									socialHandles: participant.socialHandles.map(socialHandleMapping)
+								};
+							}) : undefined;
+
+							function socialHandleMapping(socialHandle) {
+								return {
+									text: socialService.getTextForHandle(socialHandle),
+									faIcon: socialService.getIconForHandle(socialHandle),
+									url: socialService.getUrlForHandle(socialHandle),
+								}
+							}
+							// <<< social namespace
 						},
 						update: function() {
 							var that1 = this;

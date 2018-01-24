@@ -71,6 +71,23 @@
 								</div>
 								<div class="itemDescription" ng-bind-html="podcast.description">
 								</div>
+								<div>
+									<hr>
+									<div style="
+										/* cursor: pointer; */
+										font-weight: bold;
+									">Show participants <i class="fa fa-angle-double-right"></i></div><div style="
+										background-color: lightgray;
+										padding: 1px;
+										margin: 10px 0px;
+										border-radius: 10px;
+									">
+										<ps-participant-list participants="podcast.participants"></ps-participant-list>
+									</div>
+									<div style="
+									">Show links <i class="fa fa-angle-double-right" title="Show player options"></i></div>
+									</div>
+								</div>
 							</div>
 						</td>
 					</tr>
