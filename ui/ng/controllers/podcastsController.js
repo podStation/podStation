@@ -48,11 +48,11 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							this.email = storedPodcast.email;
 							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(socialHandleMapping) : undefined;
 
-							this.monetizations = storedPodcast.monetizations ? storedPodcast.monetizations.map(function(monetization) {
+							this.crowdfundings = storedPodcast.crowdfundings ? storedPodcast.crowdfundings.map(function(crowdfunding) {
 								return {
-									text: socialService.getTextForHandle(monetization),
-									faIcon: socialService.getIconForHandle(monetization),
-									url: socialService.getUrlForHandle(monetization),
+									text: socialService.getTextForHandle(crowdfunding),
+									faIcon: socialService.getIconForHandle(crowdfunding),
+									url: socialService.getUrlForHandle(crowdfunding),
 								}
 							}) : undefined;
 

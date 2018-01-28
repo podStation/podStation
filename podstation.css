@@ -88,6 +88,15 @@ td:last-of-type {
 	cursor: pointer;
 }
 
+.psTransparent {
+	border-width: 0px;
+	padding: 0px;
+	color: inherit;
+	background-color: inherit;
+	cursor: pointer;
+	font: inherit;
+}
+
 #header {
 	background-color: Gainsboro;
 	height: 50px;

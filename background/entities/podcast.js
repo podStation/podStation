@@ -34,7 +34,7 @@ var Podcast = function(url) {
 		// >>> social namespace
 		storedPodcast.email = this.email;
 		storedPodcast.socialHandles = this.socialHandles;
-		storedPodcast.monetizations = this.monetizations;
+		storedPodcast.crowdfundings = this.crowdfundings;
 		storedPodcast.participants = this.participants;
 		storedPodcast.participantReferences = this.participantReferences;
 		// <<< social namespace
@@ -93,7 +93,7 @@ var Podcast = function(url) {
 			// >>> social namespace
 			that.email = feedParseResult.podcast.email;
 			that.socialHandles = feedParseResult.podcast.socialHandles;
-			that.monetizations = feedParseResult.podcast.monetizations;
+			that.crowdfundings = feedParseResult.podcast.crowdfundings;
 			that.participants = feedParseResult.podcast.participants;
 			that.participantReferences = feedParseResult.podcast.participantReferences;
 			// <<< social namespace
@@ -154,7 +154,7 @@ var Podcast = function(url) {
 				// >>> social namespace
 				that.email = storedPodcast.email;
 				that.socialHandles = storedPodcast.socialHandles;
-				that.monetizations = storedPodcast.monetizations;
+				that.crowdfundings = storedPodcast.crowdfundings;
 				that.participants = storedPodcast.participants;
 				that.participantReferences = storedPodcast.participantReferences;
 				// <<< social namespace

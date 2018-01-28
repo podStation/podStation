@@ -55,11 +55,11 @@
 											--></a>
 										</span>
 									</span>
-									<span ng-if="podcast.monetizations">
+									<span ng-if="podcast.crowdfundings">
 										<span> - <i class="fa fa-dollar"></i></span>
-										<span ng-repeat="monetization in podcast.monetizations">
-											<a ng-href="{{monetization.url}}" target="_blank" title="{{monetization.text}}">
-												<i ng-if="monetization.faIcon" class="fa fa-{{monetization.faIcon}}"></i>{{monetization.text}}</a><!--
+										<span ng-repeat="crowdfunding in podcast.crowdfundings">
+											<a ng-href="{{crowdfunding.url}}" target="_blank" title="{{crowdfunding.text}}">
+												<i ng-if="crowdfunding.faIcon" class="fa fa-{{crowdfunding.faIcon}}"></i>{{crowdfunding.text}}</a><!--
 											--><span ng-if="!$last">, </span>
 										</span>
 									</span>
@@ -71,23 +71,7 @@
 								</div>
 								<div class="itemDescription" ng-bind-html="podcast.description">
 								</div>
-								<div>
-									<hr>
-									<div style="
-										/* cursor: pointer; */
-										font-weight: bold;
-									">Show participants <i class="fa fa-angle-double-right"></i></div><div style="
-										background-color: lightgray;
-										padding: 1px;
-										margin: 10px 0px;
-										border-radius: 10px;
-									">
-										<ps-participant-list participants="podcast.participants"></ps-participant-list>
-									</div>
-									<div style="
-									">Show links <i class="fa fa-angle-double-right" title="Show player options"></i></div>
-									</div>
-								</div>
+								<ps-participant-list participants="podcast.participants"></ps-participant-list>
 							</div>
 						</td>
 					</tr>
