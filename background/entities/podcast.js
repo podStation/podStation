@@ -36,7 +36,6 @@ var Podcast = function(url) {
 		storedPodcast.socialHandles = this.socialHandles;
 		storedPodcast.crowdfundings = this.crowdfundings;
 		storedPodcast.participants = this.participants;
-		storedPodcast.participantReferences = this.participantReferences;
 		// <<< social namespace
 
 		storedPodcast.episodes = this.episodes;
@@ -95,10 +94,28 @@ var Podcast = function(url) {
 			that.socialHandles = feedParseResult.podcast.socialHandles;
 			that.crowdfundings = feedParseResult.podcast.crowdfundings;
 			that.participants = feedParseResult.podcast.participants;
-			that.participantReferences = feedParseResult.podcast.participantReferences;
 			// <<< social namespace
 
 			that.episodes = feedParseResult.episodes;
+
+			// post process episodes >>>
+			var participantsById = {};
+
+			that.participants && that.participants.forEach(function(participant) {
+				if(participant.id) {
+					participantsById[participant.id] = participant;
+				}
+			});
+
+			that.episodes.forEach(function(episode) {
+				episode.participantReferences && episode.participantReferences.forEach(function(participantReference) {
+					if(participantReference.id && participantsById[participantReference.id]) {
+						episode.participants = episode.participants || [];
+						episode.participants.push(participantsById[participantReference.id]);
+					} 
+				});
+			});
+			// <<< post process episodes >>>
 			
 			that.status = 'loaded';
 			podcastChanged(that, true);
@@ -156,7 +173,6 @@ var Podcast = function(url) {
 				that.socialHandles = storedPodcast.socialHandles;
 				that.crowdfundings = storedPodcast.crowdfundings;
 				that.participants = storedPodcast.participants;
-				that.participantReferences = storedPodcast.participantReferences;
 				// <<< social namespace
 				
 				that.episodes = storedPodcast.episodes;

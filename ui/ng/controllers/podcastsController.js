@@ -46,7 +46,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 							
 							// >>> social namespace
 							this.email = storedPodcast.email;
-							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(socialHandleMapping) : undefined;
+							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(socialService.socialHandleMapping) : undefined;
 
 							this.crowdfundings = storedPodcast.crowdfundings ? storedPodcast.crowdfundings.map(function(crowdfunding) {
 								return {
@@ -58,20 +58,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 
 							this.participants = storedPodcast.participants ? storedPodcast.participants.filter(function(participant) {
 								return participant.permanent;
-							}).map(function(participant) {
-								return {
-									name: participant.name,
-									socialHandles: participant.socialHandles.map(socialHandleMapping)
-								};
-							}) : undefined;
+							}).map(socialService.participantMapping) : undefined;
 
-							function socialHandleMapping(socialHandle) {
-								return {
-									text: socialService.getTextForHandle(socialHandle),
-									faIcon: socialService.getIconForHandle(socialHandle),
-									url: socialService.getUrlForHandle(socialHandle),
-								}
-							}
 							// <<< social namespace
 						},
 						update: function() {

@@ -11,8 +11,12 @@
 			shareWithFacebook: shareWithFacebook,
 			getUrlForHandle: getUrlForHandle,
 			getIconForHandle: getIconForHandle,
-			getTextForHandle: getTextForHandle
+			getTextForHandle: getTextForHandle,
+			socialHandleMapping: socialHandleMapping,
+			participantMapping: participantMapping
 		};
+
+		return service;
 
 		function tweet(episodeId) {
 			podcastManagerService.getPodcastAndEpisode(episodeId).then(function(result) {
@@ -140,7 +144,19 @@
 			return socialHandle.text;
 		}
 
-		return service;
+		function socialHandleMapping(socialHandle) {
+			return {
+				text: getTextForHandle(socialHandle),
+				faIcon: getIconForHandle(socialHandle),
+				url: getUrlForHandle(socialHandle),
+			}
+		}
+		
+		function participantMapping(participant) {
+			return {
+				name: participant.name,
+				socialHandles: participant.socialHandles.map(socialHandleMapping)
+			};
+		}
 	}
-
 })();

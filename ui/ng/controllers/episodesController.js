@@ -1,5 +1,5 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService',
-	function($scope, $routeParams, episodePlayer, messageService, storageService) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService', 'socialService',
+	function($scope, $routeParams, episodePlayer, messageService, storageService, socialService) {
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
@@ -31,6 +31,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 					episode.pubDate = formatDate(episode.pubDateUnformatted);
 					episode.guid = storedEpisodeContainer.episode.guid;
 					episode.isInPlaylist = false;
+					episode.participants = storedEpisodeContainer.episode.participants && storedEpisodeContainer.episode.participants.map(socialService.participantMapping);
 
 					return episode;
 				});
@@ -123,6 +124,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 						episode.pubDateUnformatted = new Date(storedEpisode.pubDate);
 						episode.pubDate = formatDate(episode.pubDateUnformatted);
 						episode.guid = storedEpisode.guid;
+						episode.participants = storedEpisode.participants && storedEpisode.participants.map(socialService.participantMapping);
 
 						return episode;
 					});
@@ -239,6 +241,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 									this.lastTimePlayed = new Date(syncEpisodeInfo.l);
 									this.lastTimePlayedFormatted = formatDate(this.lastTimePlayed);;
 									this.pausedAt = formatSeconds(syncEpisodeInfo.t);
+									this.participants = episode.participants && episode.participants.map(socialService.participantMapping);
 								}
 							};
 
