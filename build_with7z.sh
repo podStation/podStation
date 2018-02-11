@@ -4,6 +4,7 @@ rm build_output/output.zip
 
 7z a -tzip build_output/output.zip * \
 -x!README.md \
+-x!docs \
 -x!bower* \
 -x!.gitignore \
 -x!.git \
