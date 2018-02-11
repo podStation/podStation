@@ -26,7 +26,7 @@ The options are stored in `sync`.
 
 Here is the data structure:
 
-```json
+```js
 {
 	"syncOptions": {
 		// auto update podcast feeds
@@ -58,7 +58,7 @@ podStation supports a single playlist with the id `default`.
 
 Here is the data structure:
 
-```json
+```js
 {
 	// the playlist key in storage
 	"pl_default": {
@@ -96,7 +96,7 @@ The list of subscribed podcasts is stored in `sync`.
 
 Here is the data structure:
 
-```json
+```js
 {
 	"syncPodcastList": [
 		{
@@ -128,7 +128,7 @@ The key for each podcast is formed like `P<podcast id>`
 
 Here is the data structure:
 
-```json
+```js
 {
 	"P1": {
 		// episodes
