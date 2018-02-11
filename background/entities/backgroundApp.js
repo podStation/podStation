@@ -1,9 +1,5 @@
 angular.module('podstationBackgroundApp', ['podstationInternalReuse']);
 
-angular.module('podstationBackgroundApp').factory('browser', function() {
-	return chrome;
-});
-
 angular.module('podstationBackgroundApp').run(['$window', 'playlist', 'browser', 'analyticsService', 
 function($window, playlist, browser, analyticsService) {
 	

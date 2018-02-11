@@ -4,7 +4,7 @@
 	'use strict';
 
 	angular
-		.module('podstationApp')
+		.module('podstationInternalReuse')
 		.factory('podcastManagerService', ['$q', podcastManagerService]);
 
 	function podcastManagerService($q) {
@@ -13,6 +13,7 @@
 			getPodcastAndEpisode: getPodcastAndEpisode
 		};
 
+		// TODO: Delegate to episodeDataService
 		function buildEpisodeId(podcast, episode) {
 			return getBackgroundPage(function(bgPage, deferred) {
 				deferred.resolve(bgPage.podcastManager.buildEpisodeId(podcast, episode));

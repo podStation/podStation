@@ -1,4 +1,4 @@
-angular.module('podstationBackgroundApp').factory('playlist', ['messageService', '$log', 'browser', function(messageService, $log, browserService) {
+angular.module('podstationBackgroundApp').factory('playlist', ['$log', 'messageService', 'episodeDataService', 'browser', function($log, messageService, episodeDataService, browserService) {
 	var playlist = {};
 
 	playlist.visible = false;
@@ -10,9 +10,9 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 	messageService.for('playlist')
 	  .onMessage('add', function(message) {
-		playlist.add(message.podcastUrl, message.episodeGuid);
+		playlist.add(message.episodeId);
 	}).onMessage('remove', function(message) {
-		playlist.remove(message.podcastUrl, message.episodeGuid);
+		playlist.remove(message.episodeId);
 	}).onMessage('set', function(message) {
 		playlist.set(message);
 	}).onMessage('get', function(message, sendResponse) {
@@ -29,22 +29,27 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 	return playlist;
 
-	function add(podcastUrl, episodeGuid) {
+	function add(episodeId) {
 		window.podcastManager.getPodcastIds([podcastUrl], function(podcastIds) {
 			if(!podcastIds.length)
 				return;
+
+			episodeStorageId = episodeDataService.buildEpisodeStorageId(episodeId);
 			
 			loadPlaylistFromSync('default', function(syncPlaylist) {
 				if(syncPlaylist.e.find(function(entry) {
+					var et = entry.et || 'guid';
 					return entry.p === podcastIds[0].id &&
-					       entry.e === episodeGuid;
+					       entry.e === episodeStorageId.idValue &&
+						        et === episodeStorageId.idType;
 				})) {
 					return false;
 				}
 				
 				syncPlaylist.e.push({
 					p: podcastIds[0].id,
-					e: episodeGuid
+					e: episodeStorageId.idValue,
+					et: episodeStorageId.idType
 				});
 
 				// force visible when something is added

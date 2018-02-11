@@ -1,7 +1,7 @@
 (function() {
-	angular.module('podstationApp').directive('psEpisodeList', ['$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
+	angular.module('podstationApp').directive('psEpisodeList', ['$window', 'podcastManagerService', 'episodeDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
-	function EpisodeListDirective($window, podcastManagerService, episodePlayer, messageService, socialService) {
+	function EpisodeListDirective($window, podcastManagerService, episodeDataService, episodePlayer, messageService, socialService) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -40,16 +40,17 @@
 			}
 
 			function addToPlaylist(episode) {
-				messageService.for('playlist').sendMessage('add', {
-					podcastUrl:  episode.podcastUrl,
-					episodeGuid: episode.guid
+				podcastManagerService.buildEpisodeId(episode).then(function(episodeId) {
+					messageService.for('playlist').sendMessage('add', {
+						episodeId: episodeDataService.buildEpisodeId(episode)
+					});
 				});
+				
 			}
 
 			function removeFromPlaylist(episode) {
 				messageService.for('playlist').sendMessage('remove', {
-					podcastUrl:  episode.podcastUrl,
-					episodeGuid: episode.guid
+					episodeId:  episodeDataService.buildEpisodeId(episode)
 				});
 			}
 
