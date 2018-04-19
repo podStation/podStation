@@ -1,0 +1,87 @@
+<style>
+#playlist {
+	background-color: dimgrey;
+	color: white;
+	padding: 10px;
+	padding-bottom: 0px;
+	white-space: nowrap;
+}
+
+#playlist ul {
+	list-style-type: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.playlist_button {
+	cursor: pointer;
+}
+
+.playlistEntry {
+	border-bottom-style: solid;
+	border-bottom-color: lightgray;
+	border-bottom-width: 1px;
+	padding: 1px 0px 5px 0px;
+}
+
+.playlistEntry:last-child {
+	border-bottom-width: 0px;
+}
+
+.playlistImage {
+	height: 18px;
+	border-radius: 4px;
+	position: relative;
+	top: 4px;
+}
+
+.dndDraggingSource {
+	/*display: none;*/
+	background-color: black;
+	-webkit-transition: 1s;
+}
+
+.dndPlaceholder {
+	height: 21px;
+}
+
+span[dnd-handle] {
+	cursor: move;
+	font-size: 10px;
+	color: lightgray;
+}
+
+span.isPlaying {
+	font-weight: bold;
+}
+
+</style>
+<div ng-controller="playlistController as playlist">
+	<div id="playlist" ng-if="playlist.isVisible()"> 
+		<ul>
+			<li class="playlistEntry" style="border-bottom-width: 1px;">
+				<strong><span style="font-size: 14px" class="fa fa-list"></span> Playlist</strong>
+			</li>
+		</ul>
+		<ul dnd-list="playlist.entries">
+			<li class="playlistEntry" ng-repeat="entry in playlist.entries" 
+				dnd-draggable="entry"
+				dnd-effect-allowed="move"
+				dnd-moved="playlist.entries.splice($index, 1)"
+				dnd-dragend="playlist.dragEnded()">
+				<dnd-nodrag>
+					<span dnd-handle><i class="fa fa-ellipsis-v"></i> <i class="fa fa-ellipsis-v"></i></span>&nbsp;
+					<span class="playlist_button" ng-click="playlist.play(entry)"><i class="fa fa-play"></i></span>
+					<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
+					<img ng-src="{{entry.image}}" class="playlistImage"></img>
+					<span ng-class="{isPlaying: entry.isPlaying}">{{entry.title}}</span>
+				</dnd-nodrag>
+			</li>
+			<li class="dndPlaceholder playlistEntry">
+				<!--<span class="playlist_button"><i class="fa fa-play"></i></span>
+				<span class="playlist_button"><i class="fa fa-remove"></i></span>-->
+			</li>
+			<li class="playlistEntry" ng-if="!playlist.entries.length">{{ 'empty_playlist' | chrome_i18n }}</li>
+		</ul>
+	</div>
+</div>

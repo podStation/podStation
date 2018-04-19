@@ -1,0 +1,34 @@
+{
+  "name": "podstation_chrome_ext",
+  "version": "1.16.0",
+  "description": "podStation Podcast Player - Browser Extension",
+  "main": "podstation.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jasmine-core": "^3.1.0",
+    "karma": "^2.0.0",
+    "karma-chrome-launcher": "^2.2.0",
+    "karma-jasmine": "^1.1.1"
+  },
+  "scripts": {
+    "test": "karma start --browsers ChromeDebugging"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/podStation/podStation.git"
+  },
+  "keywords": [
+    "rss",
+    "podcast",
+    "player"
+  ],
+  "author": "Guilherme Dellagustin (dellagustin.developer@gmail.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/podStation/podStation/issues"
+  },
+  "homepage": "https://github.com/podStation/podStation#readme"
+}

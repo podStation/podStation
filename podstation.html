@@ -6,16 +6,28 @@
 		<script type="text/javascript" src="lib/angular.js"></script>
 		<script type="text/javascript" src="lib/angular-route.js"></script>
 		<script type="text/javascript" src="lib/angular-sanitize.js"></script>
+		<script type="text/javascript" src="lib/angular-drag-and-drop-lists.min.js"></script>
 		<script type='text/javascript' src='lib/ng-infinite-scroll.min.js'></script>
+		<script type='text/javascript' src='lib/podStationNGReuse.min.js'></script>
 		
 		<script type="text/javascript" src="reuse/messageServiceDefinition.js"></script>
 		
 		<script type="text/javascript" src="ui/common.js"></script>
 		<script type="text/javascript" src="ui/ng/podstationApp.js"></script>
-		<script type="text/javascript" src="ui/ng/services/messageServiceWrapper.js"></script>
-		<script type="text/javascript" src="ui/ng/services/searchService.js"></script>
+		<script type="text/javascript" src="reuse/ng/reuse.js"></script>
+		<script type="text/javascript" src="reuse/ng/services/podcastManagerService.js"></script>
+		<script type="text/javascript" src="reuse/ng/services/analyticsService.js"></script>
+		<script type="text/javascript" src="reuse/ng/services/podcastDataService.js"></script>
+		<script type="text/javascript" src="reuse/ng/services/messageService.js"></script>
+		<script type="text/javascript" src="reuse/ng/services/podcastManagerService.js"></script>
+		<script type="text/javascript" src="ui/ng/services/storageService.js"></script>
+		<script type="text/javascript" src="ui/ng/services/socialService.js"></script>
+		<script type="text/javascript" src="ui/ng/directives/episodeListDirective.js"></script>
+		<script type="text/javascript" src="ui/ng/directives/participantListDirective.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/episodePlayerController.js"></script>
+		<script type="text/javascript" src="ui/ng/controllers/playlistController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/headerController.js"></script>
+		<script type="text/javascript" src="ui/ng/controllers/menuController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/podcastsController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/episodesController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/searchController.js"></script>
@@ -58,43 +70,12 @@
 				</div>
 			</div>
 		</div>
-		<div ng-controller="episodePlayerController">
-			<div id="audioPlayer" ng-if="visible">
-				<table>
-					<tbody>
-						<tr>
-							<td>
-								<i class="fa fa-refresh fa-spin" ng-if="loading" title="Loading"></i>
-								<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="Play"></i></a>
-								<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
-								<a href="" ng-click="speedDown()" ng-if="playing && !loading"><i class="fa fa-backward" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"></i></a>
-								<a href="" ng-click="speedUp()" ng-if="playing && !loading"><i class="fa fa-forward" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"></i></a>
-								<span>
-									<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
-									<span ng-if="!timeMouseOver">{{time}}</span>
-									<span> / {{duration}}</span>
-								</span>
-							</td>
-							<td ng-if="imageUrl">
-								<img ng-src="{{imageUrl}}" id="playerImage"></img>
-							</td>
-							<td>
-								<div id="playingTitle">{{'playing' | chrome_i18n }}: {{mediaTitle}}</div>
-								<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
-								ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
-									<div id="progressIn" style="width: {{timePercent}}%"></div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
+		<div ng-include="'ui/ng/partials/episodePlayer.html'"></div>
+		<div ng-include="'ui/ng/partials/playlist.html'"></div>
 		<div id="contentBoxOut">
-			<div id="contentBoxMenu">
+			<div id="contentBoxMenu" ng-controller="menuController">
 				<a href="#/Podcasts">Podcasts</a> |
-				<a href="#/LastEpisodes/20">{{'last_episodes' | chrome_i18n }}</a> |
+				<a href="#/LastEpisodes">{{'last_episodes' | chrome_i18n }}</a> |
 				<a href="#/Options">{{'options' | chrome_i18n }}</a> |
 				<a class="icon" href="#" id="updateAll" title="{{'update_all' | chrome_i18n }}">
 					<i class="fa fa-refresh"></i>
@@ -102,11 +83,20 @@
 				<a class="icon" href="#/InProgress" title="{{'in_progress' | chrome_i18n }}">
 					<i class="fa fa-tasks"></i>
 				</a> |
+				<a class="icon" href="" ng-click="togglePlaylistVisibility()" title="{{'toggle_playlist' | chrome_i18n }}">
+					<i class="fa fa-list"></i>
+				</a> |
+				<a class="icon" href="" ng-click="importOpml()" title="{{'import_opml' | chrome_i18n }}">
+					<i class="fa fa-upload"></i>
+				</a> |
 				<a class="icon icon_red" href="https://chrome.google.com/webstore/detail/podstation-podcast-player/bpcagekijmfcocgjlnnhpdogbplajjfn/reviews" target="_blank" title="{{'review' | chrome_i18n }}">
 					<i class="fa fa-heart"></i>
 				</a> |
 				<a class="icon icon_facebook" href="https://www.facebook.com/podStation/" target="_blank" title="Facebook">
 					<i class="fa fa-facebook-official"></i>
+				</a> |
+				<a class="icon icon_twitter" href="https://www.twitter.com/podStation_app/" target="_blank" title="Follow us on Twitter">
+					<i class="fa fa-twitter"></i>
 				</a> |
 				<a class="icon icon_github" href="https://github.com/podStation/podStation" target="_blank" title="Fork it!">
 					<i class="fa fa-github-square"></i>
@@ -114,7 +104,11 @@
 				<a class="icon" href="https://bitbucket.org/dellagustin/podstation_chrome_ext/issues/new" target="_blank" title="{{'report_bug' | chrome_i18n }}">
 					<i class="fa fa-bug"></i>
 				</a> |
-				<a class="icon" href="#/About" title="{{'about' | chrome_i18n }}"><i class="fa fa-question"></i></a>
+				<a class="icon" href="#/About" title="{{'about_tb' | chrome_i18n }}"><i class="fa fa-question"></i></a> |
+				<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=DEQFCARLYBXXE" target="_blank">
+					<i class="fa fa-dollar"></i> {{ 'donate' | chrome_i18n}}
+				</a>
+				<input id="opmlUploader" type="file" style="display: none" accept=".opml">
 			</div>
 			<div id="contentBoxIn" ng-view>
 			<div>

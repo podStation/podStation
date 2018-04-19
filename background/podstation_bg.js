@@ -39,44 +39,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 window.podcastManager = new PodcastManager();
 
-function setupAutoUpdate(options, updateNow) {
-	chrome.alarms.clear('updatePodcasts');
-
-	if(!options.autoUpdate) {
-		return;
-	}
-
-	chrome.alarms.create('updatePodcasts', {
-		periodInMinutes: parseInt(options.autoUpdateEvery)
-	});
-
-	chrome.alarms.onAlarm.addListener(function (alarm) {
-		if(alarm.name !== 'updatePodcasts') {
-			return;
-		}
-
-		window.podcastManager.updatePodcast();
-	});
-
-	if(updateNow) {
-		window.podcastManager.updatePodcast();
-	}
-}
-
-messageService.for('optionsManager').onMessage('optionsChanged', function(options) {
-	setupAutoUpdate(options, false);
-});
-
 chrome.commands.onCommand.addListener(function(command) {
 	switch(command) {
 		case 'play_pause':
+			analyticsService.trackEvent('audio', 'play_pause_hotkey');
 			messageService.for('audioPlayer').sendMessage('togglePlayPause');
 			break;
 	}
-});
-
-optionsManager.getOptions(function(options) {
-	setupAutoUpdate(options, true);
 });
 
 if(chrome.i18n.getUILanguage() === 'pt-BR') {
@@ -85,3 +54,5 @@ if(chrome.i18n.getUILanguage() === 'pt-BR') {
 else {
 	chrome.runtime.setUninstallURL('https://goo.gl/forms/80WF29XcdmLnSuAY2');
 }
+
+angular.bootstrap(document, ['podstationBackgroundApp', 'podstationBackgroundAppRun']);

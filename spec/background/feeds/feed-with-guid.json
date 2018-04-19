@@ -1,0 +1,45 @@
+{
+	"podcasthttps://feed-with-guid.podstation.com": {
+		"title": "Feed1",
+		"description": "Description Feed 1",
+		"link": "http://feed1.podstation.com/",
+		"pubDate": "Wed, 28 Feb 2018 00:01:01 -0300",
+		"image": "images/rss-alt-8x.png",
+		"episodes": [{
+			"title": "Title 3",
+			"link": "http://feed1.podstation.com/?p=3",
+			"pubDate": "Wed, 28 Feb 2018 00:01:01 -0300",
+			"parsedPubDate": "2018-02-28T03:01:01.000Z",
+			"description": "Description 3",
+			"guid": "http://feed1.podstation.com/?p=3",
+			"enclosure": {
+				"url": "http://feed1.podstation.com/3.mp3",
+				"type": "audio/mpeg"
+			}
+		},
+		{
+			"title": "Title 2",
+			"link": "http://feed1.podstation.com/?p=2",
+			"pubDate": "Mon, 19 Feb 2018 12:01:01 -0300",
+			"parsedPubDate": "2018-02-19T15:01:01.000Z",
+			"description": "Description 2",
+			"guid": "http://feed1.podstation.com/?p=2",
+			"enclosure": {
+				"url": "http://feed1.podstation.com/2.mp3",
+				"type": "audio/mpeg"
+			}
+		},
+		{
+			"title": "Title 1",
+			"link": "http://feed1.podstation.com/?p=1",
+			"pubDate": "Mon, 04 Feb 2018 19:01:01 -0300",
+			"parsedPubDate": "2018-02-04T22:01:01.000Z",
+			"description": "Description 1",
+			"guid": "http://feed1.podstation.com/?p=1",
+			"enclosure": {
+				"url": "http://feed1.podstation.com/1.mp3",
+				"type": "audio/mpeg"
+			}
+		}]
+	}
+}

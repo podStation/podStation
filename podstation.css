@@ -39,12 +39,20 @@ a:visited {
 	color: #3b5998;
 }
 
+.icon_twitter:hover {
+	color: #1DA1F2;
+}
+
 .icon_github:hover {
 	color: #4078c0;
 }
 
 td {
 	vertical-align: top;
+}
+
+td:last-of-type {
+	width: 100%;
 }
 
 #notificationDrawer {
@@ -72,47 +80,21 @@ td {
 	color: lightgrey;
 }
 
-#audioPlayer {
-	margin-top: -10;
+.psBtn {
+	transition: 0.5s;
 }
 
-#playerImage {
-	max-width: 200px;
-	height: 80px;
-}
-
-#audioPlayer table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-#audioPlayer td {
-	background-color: black;
-	color: white;
-	padding: 10px;
-	white-space: nowrap;
-}
-
-#audioPlayer td a {
-	color: white;
-}
-
-#audioPlayer td:last-child{
-	width:100%;
-}
-
-#progressOut {
-	margin-top: 5px;
-	height: 10px;
-	background-color: white;
-	border-radius: 4px;
+.psBtn:hover {
 	cursor: pointer;
 }
 
-#progressIn {
-	height: inherit;
-	background-color: grey;
-	border-radius: inherit;
+.psTransparent {
+	border-width: 0px;
+	padding: 0px;
+	color: inherit;
+	background-color: inherit;
+	cursor: pointer;
+	font: inherit;
 }
 
 #header {
@@ -137,6 +119,8 @@ h1 {
 	float: right;
 	padding: 15px;
 	padding-right: 0px;
+	padding-bottom: 0px;
+	font-size: 14px;
 }
 
 #mainTitle {
@@ -154,18 +138,25 @@ h1 {
 	font-size: 30px;
 }
 
+#listMenu {
+	text-align: right;
+}
+
+/* big list*/
 .itemMenu {
 	font-size: 12px;
 	float: right;
 	padding: 10px;
 	position: absolute;
 	right: 0px;
+	background-color: white;
+	border-radius: 0px 0px 0px 5px;
 }
 
 .itemHeader {
 	background: #F2F2F2;
 	padding: 10px;
-	width: 800px;
+	width: 99%;
 }
 
 .podcastEntry, .episodeEntry, .listEntry {
@@ -212,6 +203,45 @@ h1 {
 	max-width: 400px;
 	height: auto;
 }
+
+/* Small list */
+ul.contentList {
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.listItemSmall {
+	border: solid;
+	border-color: gray;
+	border-width: 0px 0px 1px 0px;
+	padding-bottom: 4px;
+}
+
+.listItemSmallNoImage {
+	padding-top: 4px;
+}
+
+.listItemSmall:first-child {
+	border-width: 1px 0px 1px 0px;
+}
+
+div.listItemImageSmall {
+	min-width: 18px; 
+	text-align: center;
+	display: inline-block;
+}
+
+img.listItemImageSmall {
+	height: 18px;
+	position: relative;
+	top: 4px;
+}
+
+.listItemTitleSmall {
+	font-weight: bold;
+}
+
 
 #aboutContent {
 	font-size: medium;

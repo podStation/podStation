@@ -1,5 +1,10 @@
-myApp.controller('podcastsController', ['$scope', 'messageService', function($scope, messageService) {
+myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', 'socialService', function($scope, messageService, storageService, socialService) {
+	$scope.listType = 'big_list';
+	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
+
+	var podcastsLoaded = false;
+	var optionsLoaded = false;
 
 	function getStatusClass(status) {
 		if(status === 'updating') {
@@ -22,8 +27,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			that.podcasts = [];
 
-			bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
-				$scope.$apply(function() {
+			$scope.$apply(function() {
+				bgPage.podcastManager.podcastList.forEach(function(podcast, index) {
 					var podcastForController;
 
 					podcastForController = {
@@ -35,8 +40,27 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 							this.url =  storedPodcast.url;
 							this.description =  storedPodcast.description;
 							this.episodesNumber =  storedPodcast.episodes.length;
-							this.pubDate =  storedPodcast.pubDate ? formatDate(new Date(storedPodcast.pubDate)) : undefined;
-							this.statusClass =  getStatusClass(storedPodcast.status);
+							this.pubDateUnformatted = new Date(storedPodcast.pubDate);
+							this.pubDate = storedPodcast.pubDate ? formatDate(this.pubDateUnformatted) : undefined;
+							this.statusClass = getStatusClass(storedPodcast.status);
+							
+							// >>> social namespace
+							this.email = storedPodcast.email;
+							this.socialHandles = storedPodcast.socialHandles ? storedPodcast.socialHandles.map(socialService.socialHandleMapping) : undefined;
+
+							this.crowdfundings = storedPodcast.crowdfundings ? storedPodcast.crowdfundings.map(function(crowdfunding) {
+								return {
+									text: socialService.getTextForHandle(crowdfunding),
+									faIcon: socialService.getIconForHandle(crowdfunding),
+									url: socialService.getUrlForHandle(crowdfunding),
+								}
+							}) : undefined;
+
+							this.participants = storedPodcast.participants ? storedPodcast.participants.filter(function(participant) {
+								return participant.permanent;
+							}).map(socialService.participantMapping) : undefined;
+
+							// <<< social namespace
 						},
 						update: function() {
 							var that1 = this;
@@ -44,6 +68,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 							// As the bgPage is an event page, it is better not to thrust
 							// in the contet of the bgPage variable at this moment.
 							chrome.runtime.getBackgroundPage(function(bgPage) {
+								analyticsService.trackEvent('feed', 'user_update_one');
 								bgPage.podcastManager.updatePodcast(that1.url);
 							});
 						},
@@ -62,6 +87,8 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 
 					that.podcasts.push(podcastForController);
 				});
+
+				podcastsLoaded = true;
 			});
 		});
 	};
@@ -75,7 +102,19 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 		});
 	}
 
+	$scope.listTypeChanged = listTypeChanged;
+	$scope.sortingChanged = sortingChanged;
+	$scope.orderBy = orderBy;
+	$scope.isReverseOrder = isReverseOrder;
+	$scope.ready = ready;
+
 	$scope.updatePodcastList();
+
+	storageService.loadSyncUIOptions(function(uiOptions) {
+		$scope.listType = uiOptions.plt;
+		$scope.sorting = uiOptions.ps;
+		optionsLoaded = true;
+	});
 
 	chrome.runtime.onMessage.addListener(function(message) {
 		$scope.$apply(function() {
@@ -92,4 +131,57 @@ myApp.controller('podcastsController', ['$scope', 'messageService', function($sc
 	messageService.for('podcast').onMessage('changed', function(messageContent) {
 		$scope.updatePodcast(messageContent.podcast);
 	});
+
+	return;
+
+	function listTypeChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.plt = $scope.listType;
+
+			return true;
+		});
+	}
+
+	function sortingChanged() {
+		storageService.loadSyncUIOptions(function(uiOptions) {
+			uiOptions.ps = $scope.sorting;
+
+			return true;
+		});
+	}
+
+	function orderBy() {
+		switch($scope.sorting) {
+			default:
+				return 'index';
+			case 'by_subscription_ascending':
+			case 'by_subscription_descending':
+				return 'index';
+			case 'by_alpha_ascending':
+			case 'by_alpha_descending':
+				return 'title';
+			case 'by_pubdate_ascending':
+			case 'by_pubdate_descending':
+				return 'pubDateUnformatted';
+		}
+	}
+
+	function isReverseOrder() {
+		switch($scope.sorting) {
+			default:
+				return false;
+			case 'by_alpha_descending':
+			case 'by_pubdate_descending':
+			case 'by_subscription_ascending':
+				return true;
+			case 'by_pubdate_ascending':
+			case 'by_alpha_ascending':
+			case 'by_subscription_descending':
+				return false;
+		}
+	}
+
+	function ready() {
+		return podcastsLoaded && optionsLoaded;
+	}
 }]);

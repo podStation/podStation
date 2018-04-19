@@ -17,11 +17,29 @@
 		"message": "click to dismiss..."
 	},
 	// player
+	"play": {
+		"message": "Play"
+	},
 	"pause": {
 		"message": "Pause"
 	},
+	"play_pause": {
+		"message": "Play/Pause"
+	},
 	"stop": {
 		"message": "Stop"
+	},
+	"forward": {
+		"message": "Skip ahead 15 seconds"
+	},
+	"backward": {
+		"message": "Go back 15 seconds"
+	},
+	"refresh_player": {
+		"message": "Refresh player"
+	},
+	"speed": {
+		"message": "Speed"
 	},
 	"speed_down": {
 		"message": "Speed Down"
@@ -35,7 +53,56 @@
 	"paused": {
 		"message": "Paused"
 	},
+	"previous_episode": {
+		"message": "Previous episode"
+	},
+	"next_episode": {
+		"message": "Next episode"
+	},
+	"show_player_options": {
+		"message": "Show player options"
+	},
+	"hide_player_options": {
+		"message": "Hide player options"
+	},
+	"order_next_previous": {
+		"message": "Next/Previous"
+	},
+	"order_from_podcast": {
+		"message": "from podcast"
+	},
+	"order_from_last_episodes": {
+		"message": "from last episodes"
+	},
+	"order_from_playlist": {
+		"message": "from playlist"
+	},
+	"continue_playing": {
+		"message": "Continue playing"
+	},
+	"continue_playing_description": {
+		"message": "play next episode when current episode ends"
+	},
+	"remove_when_finished": {
+		"message": "Remove from playlist when finished"
+	},
+	"player_error" : {
+		"message": "Error loading your episode, click play to retry"
+	},
+	// playlist
+	"remove_from_playlist": {
+		"message": "Remove from playlist"
+	},
+	"add_to_playlist": {
+		"message": "Add to playlist"
+	},
+	"empty_playlist": {
+		"message": "Your playlist is empty"
+	},
 	// search
+	"subscribe": {
+		"message": "Subscribe to this podcast in podStation"
+	},
 	"open_in_itunes": {
 		"message": "Open in iTunes"
 	},
@@ -74,6 +141,18 @@
 	"updating_podcasts": {
 		"message": "Updating podcasts..."
 	},
+	"show_episodes": {
+		"message": "Show episodes"
+	},
+	"open_podcast_website": {
+		"message": "Open podcast website"
+	},
+	"first_added": {
+		"message": "First added"
+	},
+	"last_added": {
+		"message": "Last added"
+	},
 	// episodes
 	"all_eps_from": {
 		"message": "All episodes from <i>$podcast$</i>",
@@ -106,6 +185,21 @@
 	"paused_at": {
 		"message": "Paused at"
 	},
+	"play_episode": {
+		"message": "Play episode"
+	},
+	"open_episode_website": {
+		"message": "Open episode website"
+	},
+	"oldest": {
+		"message": "Oldest"
+	},
+	"most_recent": {
+		"message": "Most recent"
+	},
+	"remove_progress": {
+		"message": "Remove progress"
+	},
 	// options
 	"auto_update": {
 		"message": "Auto update podcasts"
@@ -116,6 +210,12 @@
 	"minutes": {
 		"message": "minutes"
 	},
+	"integrate_screen_shader": {
+		"message": "Integration with <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
+	},
+	"analytics": {
+		"message": "Send anonymous usage data (analytics, more information <a href=\"https://podstation.blogspot.de/2017/09/anonymous-usage-data-and-analytics.html\" target=\"_blank\">here</a>)"
+	},
 	"save": {
 		"message": "Save"
 	},
@@ -125,6 +225,9 @@
 	},
 	"about_long_text" : {
 		"message": "<p>Podstation is a simple podcast agregator.</p><p>This is a work in progress, to check the planned features or suggest new ones, visit our <a href=\"https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open\" target=\"_blank\">bug tracking page</a>.</p><p>Podstation is developed by <a href=\"https://de.linkedin.com/pub/guilherme-dellagustin/28/957/154\" target=\"_blank\">Guilherme Dellagustin</a> and it is an open source project, fork it at <a href=\"https://github.com/podStation/podStation\" target=\"_blank\">GitHub</a>.</p>"
+	},
+	"integrated_with": {
+		"message": "Integrated with"
 	},
 	"stats_for_nerds": {
 		"message": "Stats for Nerds"
@@ -141,6 +244,12 @@
 	"in_progress": {
 		"message": "Episodes in progress"
 	},
+	"toggle_playlist": {
+		"message": "Show/hide playlist"
+	},
+	"import_opml": {
+		"message": "Import feeds from OPML file"
+	},
 	"review": {
 		"message": "Send love, leave a review"
 	},
@@ -150,8 +259,11 @@
 	"report_bug": {
 		"message": "Report a bug"
 	},
-	"about": {
+	"about_tb": {
 		"message": "About..."
+	},
+	"donate": {
+		"message": "Donate"
 	},
 	// pop up
 	"open": {
@@ -162,5 +274,18 @@
 	},
 	"feed_in_list": {
 		"message": "Hooray! you have this feed already."
+	},
+	// Social
+	"tweet": {
+		"message": "Tweet"
+	},
+	"tweet_this_episode": {
+		"message": "Tweet this episode"
+	},
+	"facebook_share": {
+		"message": "Share"
+	},
+	"facebook_share_this_episode": {
+		"message": "Share this episode on Facebook"
 	}
 }

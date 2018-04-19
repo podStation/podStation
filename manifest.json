@@ -4,7 +4,7 @@
 	"author": "Guilherme Dellagustin",
 
 	"description": "A podcast aggregator for Chrome",
-	"version": "1.10.2",
+	"version": "1.16.0",
 	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
@@ -20,6 +20,7 @@
 		"unlimitedStorage",
 		"alarms",
 		"notifications",
+		"contextMenus",
 		"http://*/",
 		"https://*/"
 	],
@@ -36,19 +37,7 @@
 		}
 	],
 	"background": {
-		"scripts": [
-			"lib/jquery.min.js",
-			"lib/jsmediatags.min.js",
-			"reuse/comparison.js",
-			"reuse/messageServiceDefinition.js",
-			"entities/messageService.js",
-			"entities/notificationManager.js",
-			"entities/optionsManager.js",
-			"entities/podcast.js",
-			"entities/podcastManager.js",
-			"entities/audioPlayer.js",
-			"podstation_bg.js"
-		],
+		"page": "background/background.html",
 		"persistent": false
 	},
 	"manifest_version": 2,
@@ -61,5 +50,6 @@
 			"description": "Play/Pause podcast",
 			"global": true
 		}
-	}
+	},
+	"content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
 }

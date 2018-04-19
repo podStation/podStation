@@ -8,34 +8,16 @@
 		</tbody>
 	</table>
 	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
-		<div class="episodeEntry" ng-repeat="episode in episodes | limitTo:numberEpisodes">
-			<table>
-				<tr>
-					<td ng-if="episode.image">
-						<img ng-src="{{episode.image}}" class="podcastImage" width="100"></img>
-					</td>
-					<td>
-						<div class="itemMenu">
-							<div ng-if="episode.url">
-								<a href="" ng-click="episode.play()"><i class="fa fa-play"></i></a> |
-								<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
-							</div>
-						</div>
-						<div class="textView">
-							<div class="itemHeader" style="width: 900px">
-								<a ng-href="{{episode.link}}" ng-if="episode.link" target="_blank">
-									<span class="itemTitle episodeTitle">{{episode.title}}</span>
-								</a>
-								<span ng-if="!episode.link || episode.link === '' " class="itemTitle episodeTitle">{{episode.title}}</span>
-								<br>
-								<span>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
-							</div>
-							<div class="itemDescription" ng-bind-html="episode.description">
-							</div>
-						</div>
-					</td>
-				</tr>
-			</table>
+		<div id="listMenu" ng-show="episodes.length">
+			<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<option value="by_pubdate_ascending" >&#xf160; {{ 'oldest' | chrome_i18n}}</option>
+				<option value="by_pubdate_descending">&#xf161; {{ 'most_recent' | chrome_i18n}}</option>
+			</select>
+			<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<option value="big_list"  >&#xf00b; Big list</option>
+				<option value="small_list">&#xf03a; Small list</option>
+			</select>
 		</div>
+		<ps-episode-list episodes="episodes" list-type="listType" limit-to="numberEpisodes" reverse-order="isReverseOrder()" />
 	</div>
 </div>

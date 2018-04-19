@@ -3,6 +3,7 @@ $(document).ready(function() {
 		event.preventDefault();
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
+			analyticsService.trackEvent('feed', 'user_update_all');
 			bgPage.podcastManager.updatePodcast('');
 		});
 	});

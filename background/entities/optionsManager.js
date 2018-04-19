@@ -1,15 +1,11 @@
-var OptionsManager;
+'use strict';
 
 (function(){
-	var instance;
+	angular
+		.module('podstationBackgroundApp')
+		.service('optionsManagerService', ['messageService', OptionsManager]);
 
-	OptionsManager = function() {
-		if(instance) {
-			return instance;
-		}
-
-		instance = this;
-
+	function OptionsManager(messageService) {
 		function optionsChanged(options) {
 			messageService.for('optionsManager').sendMessage('optionsChanged', options);
 		}
@@ -21,11 +17,21 @@ var OptionsManager;
 				if(typeof storageObject.syncOptions === "undefined") {
 					syncOptions = {
 						autoUpdate: true,
-						autoUpdateEvery: 60
+						autoUpdateEvery: 60,
+						integrateWithScreenShader: true,
+						analytics: true
 					};
 				}
 				else {
 					syncOptions = storageObject.syncOptions;
+
+					if(typeof syncOptions.integrateWithScreenShader === 'undefined') {
+						syncOptions.integrateWithScreenShader = true;
+					}
+
+					if(typeof syncOptions.analytics === 'undefined') {
+						syncOptions.analytics = true;
+					}
 				}
 
 				sendResponse(syncOptions);
@@ -49,4 +55,3 @@ var OptionsManager;
 	}
 })();
 
-var optionsManager = new OptionsManager();

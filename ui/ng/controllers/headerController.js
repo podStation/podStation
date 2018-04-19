@@ -1,4 +1,4 @@
-myApp.controller('headerController', ['$scope', '$location', function($scope, $location) {
+myApp.controller('headerController', ['$scope', '$location', 'analyticsService', function($scope, $location, analyticsService) {
 	$scope.entry = "";
 
 	$scope.editBoxKeyPress = function(event) {
@@ -11,6 +11,7 @@ myApp.controller('headerController', ['$scope', '$location', function($scope, $l
 		var podcastURL = $scope.entry;
 
 		chrome.runtime.getBackgroundPage(function(bgPage) {
+			analyticsService.trackEvent('feed', 'add_by_feed_url');
 			bgPage.podcastManager.addPodcast(podcastURL);
 		});
 
