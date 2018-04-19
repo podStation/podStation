@@ -1,5 +1,5 @@
-var messageService = new ChromeExtensionMessageService(true);
+// var messageService = new ChromeExtensionMessageService(true);
 
-angular.module('podstationBackgroundApp').factory('messageService', function() {
+/*angular.module('podstationBackgroundApp').factory('messageService', function() {
 	return messageService;
-});
+});*/

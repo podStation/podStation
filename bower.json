@@ -30,5 +30,8 @@
     "podStationNGReuse": "1.*",
     "jsmediatags": "git@github.com:aadsm/jsmediatags.git",
     "ngInfiniteScroll": "git@github.com:sroze/ngInfiniteScroll.git#1.0.0"
+  },
+  "devDependencies": {
+    "angular-mocks": "1.4.7"
   }
 }

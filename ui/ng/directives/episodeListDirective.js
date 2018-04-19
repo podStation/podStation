@@ -1,7 +1,7 @@
 (function() {
-	angular.module('podstationApp').directive('psEpisodeList', ['$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
+	angular.module('podstationApp').directive('psEpisodeList', ['$window', 'podcastManagerService', 'podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
-	function EpisodeListDirective($window, podcastManagerService, episodePlayer, messageService, socialService) {
+	function EpisodeListDirective($window, podcastManagerService, podcastDataService, episodePlayer, messageService, socialService) {
 		return {
 			restrict: 'E',
 			scope: {
@@ -33,44 +33,34 @@
 			return episodeListController;
 
 			function play(episode) {
-				episodePlayer.play({
-					episodeGuid: episode.guid,
-					podcastUrl:  episode.podcastUrl
-				});
+				episodePlayer.play(podcastDataService.episodeId(episode));
 			}
 
 			function addToPlaylist(episode) {
 				messageService.for('playlist').sendMessage('add', {
-					podcastUrl:  episode.podcastUrl,
-					episodeGuid: episode.guid
+					episodeId: podcastDataService.episodeId(episode)
 				});
 			}
 
 			function removeFromPlaylist(episode) {
 				messageService.for('playlist').sendMessage('remove', {
-					podcastUrl:  episode.podcastUrl,
-					episodeGuid: episode.guid
+					episodeId: podcastDataService.episodeId(episode)
 				});
 			}
 
 			function deletePlayTime(episode) {
 				messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-					url: episode.podcastUrl,
-					episodeId: episode.guid,
+					episodeId: podcastDataService.episodeId(episode),
 					currentTime: 0
 				});
 			}
 
 			function tweet(episode) {
-				podcastManagerService.buildEpisodeId(episode).then(function(episodeId) {
-					socialService.tweet(episodeId);
-				});
+				socialService.tweet(podcastDataService.episodeId(episode));
 			}
 
 			function shareWithFacebook(episode) {
-				podcastManagerService.buildEpisodeId(episode).then(function(episodeId) {
-					socialService.shareWithFacebook(episodeId);
-				});
+				socialService.shareWithFacebook(podcastDataService.episodeId(episode));
 			}
 
 			function isReverseOrder() {

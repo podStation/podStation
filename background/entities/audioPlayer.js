@@ -1,17 +1,53 @@
-var AudioPlayerManager;
+'use strict';
+
+/**
+ * 
+ * @typedef {Object} EpisodePlayerInfo
+ * @property {EpisodeId} episodeId
+ * @property {Object} audioTags
+ */
 
 (function(){
-	var instance;
+	angular
+		.module('podstationBackgroundApp')
+		.factory('audioBuilderService', audioBuilderService);
+		
+	function audioBuilderService() {
+		const service = {
+			buildAudio: buildAudio
+		};
 
-	AudioPlayerManager = function() {
-		if(instance) {
-			return instance;
-		}
+		return service;
 
-		instance = this;
+		/**
+		 * @param {string} audioUrl 
+		 * @returns {HTMLAudioElement}
+		 */
+		function buildAudio(audioUrl) {
+			return new Audio(audioUrl);
+		};
+	}
+})();
 
+(function(){
+	angular
+		.module('podstationBackgroundApp')
+		.factory('audioPlayerService', ['$injector', '$interval', 'browser', 'messageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService]);
+
+	function audioPlayerService($injector, $interval, browserService, messageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
+		/**
+		 * @type {HTMLAudioElement}
+		 */ 
 		var audioPlayer;
+		
+		/** 
+		 * @type {EpisodePlayerInfo}
+		 */
 		var episodeInfo;
+		
+		/**
+		 * @type {Promise}
+		 */
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
@@ -33,11 +69,11 @@ var AudioPlayerManager;
 		}
 
 		function loadLocalPlayerOptions(loaded) {
-			loadPlayerOptions(chrome.storage.local, loaded);
+			loadPlayerOptions(browserService.storage.local, loaded);
 		}
 
 		function loadSyncPlayerOptions(loaded) {
-			loadPlayerOptions(chrome.storage.sync, function(playerOptions) {
+			loadPlayerOptions(browserService.storage.sync, function(playerOptions) {
 				// handling of default values
 				
 				if(!playerOptions.order)
@@ -50,19 +86,19 @@ var AudioPlayerManager;
 			});
 		};
 
-		function getPodcastAndEpisode(podcastUrl, episodeGuid) {
-			return window.podcastManager.getPodcastAndEpisode({
-				podcastUrl: podcastUrl,
-				episodeGuid: episodeGuid
-			});
+		function getPodcastAndEpisode(episodeId) {
+			return $injector.get('podcastManager').getPodcastAndEpisode(episodeId);
 		}
 
+		/**
+		 * @returns {string}
+		 */
 		function imageUrl() {
 			if(episodeInfo && episodeInfo.audioTags && episodeInfo.audioTags.imageDataUrl) {
 				return episodeInfo.audioTags.imageDataUrl;
 			}
 			else if(episodeInfo) {
-				var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
+				var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.episodeId);
 
 				return podcastAndEpisode.podcast ? podcastAndEpisode.podcast.image : 'images/rss-alt-8x.png';
 			}
@@ -73,19 +109,19 @@ var AudioPlayerManager;
 		function showBrowserNotification(options) {
 			switch(options.event) {
 				case 'playing':
-					chrome.notifications.clear('paused');
+					browserService.notifications.clear('paused');
 					break;
 				case 'paused':
-					chrome.notifications.clear('playing');
+					browserService.notifications.clear('playing');
 					break;
 			}
 
 			var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
 
-			chrome.notifications.create(options.event, {
+			browserService.notifications.create(options.event, {
 				type: 'progress',
 				iconUrl: imageUrl(),
-				title: chrome.i18n.getMessage(options.event),
+				title: browserService.i18n.getMessage(options.event),
 				message: podcastAndEpisode.episode.title,
 				progress: Math.round(audioPlayer.duration ? ( audioPlayer.currentTime / audioPlayer.duration ) * 100 : 0)
 			});
@@ -116,7 +152,7 @@ var AudioPlayerManager;
 		function buildAudioInfo() {
 			var podcastAndEpisode;
 			
-			podcastAndEpisode = episodeInfo ? getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid) : {};
+			podcastAndEpisode = episodeInfo ? getPodcastAndEpisode(episodeInfo.episodeId) : {};
 
 			return {
 				audio: {
@@ -128,18 +164,12 @@ var AudioPlayerManager;
 					volume: audioPlayer ? audioPlayer.volume : 0,
 					error: audioPlayer ? audioPlayer.error : 0
 				},
-				episode: {
-					podcastUrl: episodeInfo ? episodeInfo.podcastUrl : undefined,
-					episodeGuid: episodeInfo ? episodeInfo.episodeGuid : undefined,
-					episodeId: episodeInfo ? window.podcastManager.buildEpisodeId(podcastAndEpisode.episode, podcastAndEpisode.podcast) : undefined
-				}
+				episodeId: episodeInfo ? episodeInfo.episodeId : null
 			}
 		}
 
-		function setEpisodeInProgress(episodeInfo, currentTime) { 
-			messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-				url: episodeInfo.podcastUrl,
-				episodeId: episodeInfo.episodeGuid,
+		function setEpisodeInProgress(episodeInfo, currentTime) {
+			podcastStorageService.storeEpisodeUserData(episodeInfo.episodeId, {
 				currentTime: currentTime
 			});
 		}
@@ -149,41 +179,39 @@ var AudioPlayerManager;
 				return;
 			}
 
-			messageService.for('podcastManager').sendMessage('getEpisodeProgress', {
-				url: episodeInfo.podcastUrl,
-				episodeId: episodeInfo.episodeGuid,
-			}, function(currentTime) {
-				if(currentTime >= 0 && Math.abs(currentTime - audioPlayer.currentTime) > 20) {
-					audioPlayer.currentTime = currentTime;
+			podcastStorageService.getEpisodeUserData(episodeInfo.episodeId).then(function(episodeUserData) {
+				if(episodeUserData.currentTime >= 0 && Math.abs(episodeUserData.currentTime - audioPlayer.currentTime) > 20) {
+					audioPlayer.currentTime = episodeUserData.currentTime;
 				}
 			});
 		}
 
 		function playingTimeOut() {
-			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
+			playingTimeOutID = $interval(function() {
+				messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
-			timeOutCounter++;
+				timeOutCounter++;
 
-			if(timeOutCounter === 10) {
-				timeOutCounter = 0;
-				setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
-			}
-
-			// recursive timeout to be called 1/second
-			playingTimeOutID = window.setTimeout(playingTimeOut, 1000);
+				if(timeOutCounter === 10) {
+					timeOutCounter = 0;
+					setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
+				}
+			}, 1000);
 		}
 
 		function pauseTimeOut() {
 			if(playingTimeOutID) {
-				window.clearTimeout(playingTimeOutID);
+				$interval.cancel(playingTimeOutID);
 				playingTimeOutID = undefined;
 				timeOutCounter = 0;
 			}
 		}
 
 		function refresh() {
+			// it will be cleared at the stop, so we need to 
+			// save it here
 			var playData = {
-				episode: episodeInfo
+				episodeId: episodeInfo.episodeId
 			}
 
 			stop(true);
@@ -191,12 +219,8 @@ var AudioPlayerManager;
 		}
 
 		function play(playData) {
-			if(playData && playData.episode &&
-				(!audioPlayer || 
-				 ( playData.episode.podcastUrl  !== episodeInfo.podcastUrl ||
-				   playData.episode.episodeGuid !== episodeInfo.episodeGuid
-				 )
-				)
+			if(playData && playData.episodeId &&
+				(!audioPlayer || !podcastDataService.episodeIdEqualsId(playData.episodeId, episodeInfo.episodeId ))
 			) {
 				if(audioPlayer) {
 					audioPlayer.pause( );
@@ -206,12 +230,12 @@ var AudioPlayerManager;
 					}
 				}
 
-				var podcastAndEpisode = getPodcastAndEpisode(playData.episode.podcastUrl, playData.episode.episodeGuid);
+				var podcastAndEpisode = getPodcastAndEpisode(playData.episodeId);
 
-				analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(playData.episode.podcastUrl));
-				audioPlayer = new Audio(podcastAndEpisode.episode.enclosure.url);
-				
-				episodeInfo = playData.episode;
+				_analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(playData.episodeId.values.podcastUrl));
+				audioPlayer = audioBuilderService.buildAudio(podcastAndEpisode.episode.enclosure.url);
+
+				episodeInfo = { episodeId: playData.episodeId };
 
 				loadLocalPlayerOptions(function(playerOptions) {
 					audioPlayer.volume = playerOptions.volume ? playerOptions.volume : 1.0;
@@ -237,7 +261,7 @@ var AudioPlayerManager;
 				setCurrentTimeFromEpisode();
 			}
 
-			analyticsService.trackEvent('audio', 'play');
+			_analyticsService.trackEvent('audio', 'play');
 			audioPlayer.play();
 
 			if(playData && playData.showNotification) {
@@ -249,7 +273,7 @@ var AudioPlayerManager;
 			pauseTimeOut();
 			playingTimeOut();
 
-			chrome.browserAction.setBadgeText({
+			browserService.browserAction.setBadgeText({
 				text: '\u25B6' // play symbol
 			});
 
@@ -258,7 +282,7 @@ var AudioPlayerManager;
 			function onAudioEnded() {
 				const currentEpisodeInfo = episodeInfo;
 
-				analyticsService.trackEvent('audio', 'ended');
+				_analyticsService.trackEvent('audio', 'ended');
 				stop();
 
 				loadSyncPlayerOptions(function(options) {
@@ -276,7 +300,7 @@ var AudioPlayerManager;
 			};
 
 			function onAudioError() {
-				analyticsService.trackEvent('audio', 'error');
+				_analyticsService.trackEvent('audio', 'error');
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}
@@ -284,10 +308,10 @@ var AudioPlayerManager;
 		function playNextOrPrevious(isNext, argEpisodeInfo) {
 
 			if(isNext) {
-				analyticsService.trackEvent('audio', 'play_next');
+				_analyticsService.trackEvent('audio', 'play_next');
 			}
 			else {
-				analyticsService.trackEvent('audio', 'play_prev');
+				_analyticsService.trackEvent('audio', 'play_prev');
 			}
 
 			const refEpisodeInfo = argEpisodeInfo ? argEpisodeInfo : episodeInfo;
@@ -296,16 +320,8 @@ var AudioPlayerManager;
 				return;
 
 			loadSyncPlayerOptions(function(playerOptions) {
-				window.podcastManager.getNextOrPreviousEpisode(isNext, playerOptions.order, {
-					podcastUrl: refEpisodeInfo.podcastUrl,	
-					episodeGuid: refEpisodeInfo.episodeGuid
-				}, function(nextEpisode) {
-					play({
-						episode: {
-							podcastUrl: nextEpisode.podcastUrl,
-							episodeGuid: nextEpisode.episodeGuid
-						}
-					});
+				$injector.get('podcastManager').getNextOrPreviousEpisode(isNext, playerOptions.order, refEpisodeInfo.episodeId, function(nextEpisodeId) {
+					play({episodeId: nextEpisodeId});
 				});
 
 				return false;
@@ -313,7 +329,7 @@ var AudioPlayerManager;
 		}
 
 		function pause(options) {
-			analyticsService.trackEvent('audio', 'pause');
+			_analyticsService.trackEvent('audio', 'pause');
 			pauseTimeOut();
 			audioPlayer.pause();
 
@@ -324,13 +340,13 @@ var AudioPlayerManager;
 			setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
 			messageService.for('audioPlayer').sendMessage('paused');
 
-			chrome.browserAction.setBadgeText({
+			browserService.browserAction.setBadgeText({
 				text: '\u2759\u2759' // pause symbol
 			});
 		}
 
 		function stop(keepProgress) {
-			analyticsService.trackEvent('audio', 'stop');
+			_analyticsService.trackEvent('audio', 'stop');
 
 			pauseTimeOut();
 			audioPlayer.pause();
@@ -344,7 +360,7 @@ var AudioPlayerManager;
 
 			messageService.for('audioPlayer').sendMessage('stopped');
 
-			chrome.browserAction.setBadgeText({
+			browserService.browserAction.setBadgeText({
 				text: ''
 			});
 
@@ -369,8 +385,8 @@ var AudioPlayerManager;
 		messageService.for('audioPlayer')
 		.onMessage('play', function(messageContent) {
 			play(messageContent);
-		}).onMessage('refresh', function(messageContent) {
-			refresh(messageContent);
+		}).onMessage('refresh', function() {
+			refresh();
 		}).onMessage('pause', function() {
 			pause();
 		}).onMessage('togglePlayPause', function() {
@@ -380,11 +396,11 @@ var AudioPlayerManager;
 		}).onMessage('shiftPlaybackRate', function(messageContent) {
 			if(audioPlayer && audioPlayer.playbackRate + messageContent.delta > 0) {
 				audioPlayer.playbackRate += messageContent.delta;
-				analyticsService.trackEvent('audio', 'change_playback_rate', undefined, Math.round(100*audioPlayer.playbackRate));
+				_analyticsService.trackEvent('audio', 'change_playback_rate', undefined, Math.round(100*audioPlayer.playbackRate));
 			}
 		}).onMessage('seek', function(messageContent) {
 			if(audioPlayer && audioPlayer.duration) {
-				analyticsService.trackEvent('audio', 'seek');
+				_analyticsService.trackEvent('audio', 'seek');
 
 				audioPlayer.currentTime = messageContent.position * audioPlayer.duration;
 
@@ -394,7 +410,7 @@ var AudioPlayerManager;
 			}
 		}).onMessage('forward', function() {
 			if(audioPlayer) {
-				analyticsService.trackEvent('audio', 'forward');
+				_analyticsService.trackEvent('audio', 'forward');
 
 				const targetTime = audioPlayer.currentTime + 15;
 				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
@@ -402,7 +418,7 @@ var AudioPlayerManager;
 			}
 		}).onMessage('backward', function() {
 			if(audioPlayer) {
-				analyticsService.trackEvent('audio', 'backward');
+				_analyticsService.trackEvent('audio', 'backward');
 				const targetTime = audioPlayer.currentTime - 15;
 				audioPlayer.currentTime = Math.max(0, targetTime);
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
@@ -413,7 +429,7 @@ var AudioPlayerManager;
 			playNextOrPrevious(false);
 		}).onMessage('setVolume', function(message) {
 			if(audioPlayer) {
-				analyticsService.trackEvent('audio', 'change_volume');
+				_analyticsService.trackEvent('audio', 'change_volume');
 
 				audioPlayer.volume = message.value;
 
@@ -451,25 +467,25 @@ var AudioPlayerManager;
 			setCurrentTimeFromEpisode();
 		});
 
-		chrome.contextMenus.onClicked.addListener(function(info) {
+		browserService.contextMenus.onClicked.addListener(function(info) {
 			if(info.menuItemId === 'browser_action_play_pause') {
-				analyticsService.trackEvent('audio', 'play_pause_browser_action_button');
+				_analyticsService.trackEvent('audio', 'play_pause_browser_action_button');
 				togglePlayPause();
 			}
 		});
 
-		return instance;
+		return {};
 
 		function addButtons() {
-			chrome.contextMenus.create({
+			browserService.contextMenus.create({
 				id: 'browser_action_play_pause',
-				title: chrome.i18n.getMessage('play_pause'),
+				title: browserService.i18n.getMessage('play_pause'),
 				contexts: ['browser_action'],
 			});
 		}
 
 		function removeButtons() {
-			chrome.contextMenus.remove('browser_action_play_pause');
+			browserService.contextMenus.remove('browser_action_play_pause');
 		}
 
 		function stripAuthFromURI(uri) {
@@ -480,5 +496,3 @@ var AudioPlayerManager;
 		}
 	}
 })();
-
-var audioPlayerManager = new AudioPlayerManager();

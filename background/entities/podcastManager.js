@@ -9,71 +9,13 @@ var PodcastManager;
 		}
 
 		this.podcastList = [];
-
-		function loadPodcastsFromSync(loaded) {
-			chrome.storage.sync.get('syncPodcastList', function(storageObject) {
-				var syncPodcastList;
-
-				if(typeof storageObject.syncPodcastList === "undefined") {
-					syncPodcastList = [];
-				}
-				else {
-					syncPodcastList = storageObject.syncPodcastList;
-				}
-
-				if( loaded(syncPodcastList) ) {
-					chrome.storage.sync.set({'syncPodcastList': syncPodcastList});
-				}
-			});
-		};
-
-		function loadPodcastInfoFromSync(url, loaded) {
-			loadPodcastsFromSync(function(syncPodcastList) {
-				var syncPodcast = syncPodcastList.find(function(item) { return item.url === url });
-
-				if(!syncPodcast) {
-					return false;
-				}
-			
-				var key = 'P' + syncPodcast.i;
-
-				chrome.storage.sync.get(key, function(storageObject) {
-					var syncPodcastInfo;
-
-					if(typeof storageObject[key] === "undefined") {
-						syncPodcastInfo = {};
-					}
-					else {
-						syncPodcastInfo = storageObject[key];
-					}
-
-					if( loaded(syncPodcastInfo) ) {
-						var newStorageObject = {};
-						newStorageObject[key] = syncPodcastInfo;
-						chrome.storage.sync.set(newStorageObject);
-					}
-				});
-				
-				return false;
-			});
-		};
-
-		function removePodcastInfoFromSync(id) {
-			var key = 'P' + id;
-			chrome.storage.sync.remove(key);
-		}
-
-		chrome.storage.onChanged.addListener(function(changes, areaName) {
-			if(areaName === "sync") {
-				for(key in changes) {
-					if(key.charAt(0) === 'P') {
-						messageService.for('podcastManager').sendMessage('podcastSyncInfoChanged');
-					}
-				}
-			}
-		});
-
+		
 		var notificationIdLoading = 0;
+
+		this.setEpisodeProgress = setEpisodeProgress;
+		this.getEpisodesInProgress = getEpisodesInProgress;
+		this.getEpisodeIds = getEpisodeIds;
+		this.reset = reset;
 
 		function triggerNotifications() {
 			var loadingEpisodes = 0;
@@ -85,113 +27,48 @@ var PodcastManager;
 			});
 
 			if(loadingEpisodes) {
-				notificationIdLoading = notificationManager.updateNotification(notificationIdLoading, {
+				notificationIdLoading = getNotificationManagerService().updateNotification(notificationIdLoading, {
 					icon: 'fa-refresh fa-spin',
-					text: chrome.i18n.getMessage('updating_podcasts')
+					text: getBrowserService().i18n.getMessage('updating_podcasts')
 				});
 			}
 			else {
 				if(notificationIdLoading) {
-					notificationManager.removeNotification(notificationIdLoading);
+					getNotificationManagerService().removeNotification(notificationIdLoading);
 					notificationIdLoading = 0;
 				}
 			}
 		}
 
-		// to save sync data, we need a criteria to remove episode data
-		function storedEpisodeListCleanUp(storedEpisodeList) {
-			return storedEpisodeList.filter(function(storedEpisode) {
-				return storedEpisode.t > 0;
+		/**
+		 * @returns {Promise<[]>}
+		 */
+		function getEpisodesInProgress() {
+			const podcastDataService = getPodcastDataService();
+			const podcastStorageService = getPodcastStorageService();
+
+			return podcastStorageService.getAllEpisodesUserData().then(function(allEpisodesUserData) {
+				return allEpisodesUserData.map(function(item) {
+					const podcast = instance.getPodcast(item.episodeSelector.podcastUrl); 
+					const episode = podcast.episodes.find(function(episode) { 
+						return item.episodeSelector.matchesId(podcastDataService.episodeId(episode, podcast.url));
+					});
+
+					// return
+					return {
+						podcast: podcast,
+						episode: episode,
+						episodeUserData: item.episodeUserData
+					}
+				});
 			});
 		}
 
-		function setEpisodeInProgress(url, episodeId, currentTime) {
-			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
-				if(!syncPodcastInfo.e) {
-					syncPodcastInfo.e = [];
-				}
-
-				var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
-
-				if(!episodeInfo) {
-					var newLenght = syncPodcastInfo.e.push({i: episodeId});
-					episodeInfo = syncPodcastInfo.e[newLenght - 1];
-				}
-
-				episodeInfo.t = Math.floor(currentTime);
-				// the date object does not seem to be properly serialized
-				episodeInfo.l = JSON.parse(JSON.stringify(new Date()));
-
-				syncPodcastInfo.e = storedEpisodeListCleanUp(syncPodcastInfo.e);
-
-				return true;
+		this.getPodcast = function(url) {
+			return this.podcastList.find(function(podcast) {
+				return podcast.url === url;
 			});
-		}
-
-		function getStoredEpisodeInfo(url, episodeId, callback) {
-			loadPodcastInfoFromSync(url, function(syncPodcastInfo) {
-				if(syncPodcastInfo.e) {
-					var episodeInfo = syncPodcastInfo.e.find(function(item) { return item.i === episodeId });
-
-					callback(episodeInfo);
-				}
-
-				return false;
-			});
-		}
-
-		messageService.for('podcast').onMessage('changed', function() {
-			triggerNotifications();
-		});
-
-		messageService.for('podcastManager')
-		  .onMessage('addPodcasts', function(message) {
-			instance.addPodcasts(message.podcasts);
-		}).onMessage('setEpisodeInProgress', function(message) {
-			setEpisodeInProgress(message.url, message.episodeId, message.currentTime);
-		}).onMessage('getEpisodeProgress', function(message, sendResponse) {
-			getStoredEpisodeInfo(message.url, message.episodeId, function(storedEpisodeInfo) {
-				sendResponse(storedEpisodeInfo ? storedEpisodeInfo.t : -1);
-			});
-			return true;
-		}).onMessage('getSyncPodcastInfo', function(message, sendResponse) {
-			loadPodcastInfoFromSync(message.url, function(syncPodcastInfo) {
-
-				if(!syncPodcastInfo.e) {
-					syncPodcastInfo.e = [];
-				}
-
-				sendResponse(syncPodcastInfo);
-
-				return false;
-			});
-			return true;
-		});
-
-		function findNextFreeId(syncPodcastList) {
-			var idList = [];
-
-			idList = syncPodcastList.map(function(item) { return item.i });
-
-			if(!idList.length) {
-				return 1;
-			}
-
-			idList.sort(function(a, b){return a-b});
-
-			if(idList[0] > 1) {
-				return 1;
-			}
-
-			for(var i = 0; i < (idList.length - 1); i++) {
-				if(idList[i] + 1 !== idList[i+1]) {
-					// gap found, reuse id
-					return idList[i] + 1;
-				}
-			}
-
-			return idList[idList.length-1] + 1;
-		}
+		};
 
 		this.addPodcast = function(url) {
 			if(url !== '') {
@@ -201,47 +78,24 @@ var PodcastManager;
 
 		this.addPodcasts = function(urls) {
 			if(urls && urls.length) {
-				analyticsService.trackEvent('feed', 'add', undefined, urls.length);
+				getAnalyticsService().trackEvent('feed', 'add', undefined, urls.length);
 				var that = this;
-				loadPodcastsFromSync(function(syncPodcastList) {
-					var listChanged = false;
-					
-					urls.forEach(function(url) {
-						var podcastExistInStorage = false;
-						syncPodcastList.forEach(function(podcast) {
-							if(podcast.url && podcast.url === url) {
-								podcastExistInStorage = true;
-							}
-						});
 
-						if(podcastExistInStorage) {
-							return;
-						}
+				podcastStorageService = getPodcastStorageService();
 
-						var podcastForSync = {
-							url: url,
-							i: findNextFreeId(syncPodcastList)
-						};
-
-						syncPodcastList.unshift(podcastForSync);
-
-						var podcast = new Podcast(podcastForSync.url);
+				podcastStorageService.storePodcastsByFeedUrls(urls).then(function(addedUrls) {
+					addedUrls.forEach(function(addedUrl) {
+						var podcast = new Podcast(addedUrl);
 
 						that.podcastList.unshift(podcast);
-
-						listChanged = true;
-
-						// podcast.load();
 					});
 
-					if(listChanged) {
-						that.updatePodcast(urls);
-
-						chrome.runtime.sendMessage({
+					if(addedUrls.length) {
+						that.updatePodcast(addedUrls);
+						
+						getBrowserService().runtime.sendMessage({
 							type: 'podcastListChanged',
 						});
-
-						return true;
 					}
 				});
 			}
@@ -249,28 +103,19 @@ var PodcastManager;
 
 		this.deletePodcast = function(url) {
 			var that = this;
-			this.podcastList.forEach(function(item) {
+
+			this.podcastList.forEach(function(item, index) {
 				if( item.url === url) {
-					analyticsService.trackEvent('feed', 'delete');
+					getAnalyticsService().trackEvent('feed', 'delete');
 					item.deleteFromStorage();
-					that.podcastList.splice(that.podcastList.indexOf(item), 1);
+					that.podcastList.splice(index, 1);
 					return false;
 				}
 			});
 
-			loadPodcastsFromSync(function(syncPodcastList) {
-				syncPodcastList.forEach(function(item) {
-					if( item.url === url) {
-						removePodcastInfoFromSync(item.i);
-						syncPodcastList.splice(syncPodcastList.indexOf(item), 1);
-						return false;
-					}
-				});
+			getPodcastStorageService().deletePodcastsByFeedUrl(url);
 
-				return true;
-			});
-
-			chrome.runtime.sendMessage({
+			getBrowserService().runtime.sendMessage({
 				type: 'podcastListChanged',
 			});
 		}
@@ -351,47 +196,54 @@ var PodcastManager;
 			return podcast;
 		}
 
-		function getEpisodeFromPodcast(currentEpisode, delta, callback) {
-			var podcast = instance.getPodcast(currentEpisode.podcastUrl);
+		/**
+		 * 
+		 * @param {EpisodeId} currentEpisodeId 
+		 * @param {Number} delta 
+		 * @param {Function} callback 
+		 */
+		function getEpisodeFromPodcast(currentEpisodeId, delta, callback) {
+			const podcast = instance.getPodcast(currentEpisodeId.values.podcastUrl);
 
-			for(var i = 0; i < podcast.episodes.length; i++) {
-				if(podcast.episodes[i].guid === currentEpisode.episodeGuid) {
-					var indexWithDelta = i + delta;
+			const indexOfCurrentEpisode = podcast.episodes.findIndex(function(episode) {
+				return getPodcastDataService().episodeMatchesId(episode, podcast.url, currentEpisodeId);
+			});
 
-					if(indexWithDelta >= 0 && indexWithDelta < podcast.episodes.length) {
-						callback({
-							podcastUrl: currentEpisode.podcastUrl,
-							episodeGuid: podcast.episodes[indexWithDelta].guid
-						});
+			const indexWithDelta = indexOfCurrentEpisode + delta;
 
-						return;
-					}
-				}
+			if(indexWithDelta >= 0 && indexWithDelta < podcast.episodes.length) {
+				callback(getPodcastDataService().episodeId(podcast.episodes[indexWithDelta], podcast.url));
 			}
 		}
 
-		function getEpisodeFromLastEpisodes(currentEpisode, delta, callback) {
-			var allEpisodes = instance.getAllEpisodes();
+		/**
+		 * 
+		 * @param {EpisodeId} currentEpisodeId 
+		 * @param {Number} delta 
+		 * @param {Function} callback 
+		 */
+		function getEpisodeFromLastEpisodes(currentEpisodeId, delta, callback) {
+			const allEpisodes = instance.getAllEpisodes();
 
-			for(var i = 0; i < allEpisodes.length; i++) {
-				if(allEpisodes[i].podcast.url  === currentEpisode.podcastUrl &&
-				   allEpisodes[i].episode.guid === currentEpisode.episodeGuid) {
-					var indexWithDelta = i + delta;
+			const indexOfCurrentEpisode = allEpisodes.findIndex(function(entry) {
+				return getPodcastDataService().episodeMatchesId(entry.episode, entry.podcast.url, currentEpisodeId);
+			});
+					
+			const indexWithDelta = indexOfCurrentEpisode + delta;
 
-					if(indexWithDelta >= 0 && indexWithDelta < allEpisodes.length) {
-						callback({
-							podcastUrl: allEpisodes[indexWithDelta].podcast.url,
-							episodeGuid: allEpisodes[indexWithDelta].episode.guid
-						});
-
-						return;
-					}
-				}
+			if(indexWithDelta >= 0 && indexWithDelta < allEpisodes.length) {
+				callback(getPodcastDataService().episodeId(allEpisodes[indexWithDelta].episode, allEpisodes[indexWithDelta].podcast));
 			}
 		}
 
-		function getEpisodeFromPlaylist(currentEpisode, delta, callback) {
-			messageService.for('playlist').sendMessage('get', {}, function(response) {
+		/**
+		 * 
+		 * @param {EpisodeId} currentEpisodeId 
+		 * @param {Number} delta 
+		 * @param {Function} callback 
+		 */
+		function getEpisodeFromPlaylist(currentEpisodeId, delta, callback) {
+			getMessageService().for('playlist').sendMessage('get', {}, function(response) {
 				if(!response) {
 					// TODO: investigate why the messageService is calling the response
 					// callback with empty response before calling it with a proper
@@ -400,32 +252,22 @@ var PodcastManager;
 					return;
 				}
 
-				for(var i = 0; i < response.entries.length; i++) {
-					if(response.entries[i].podcastUrl  === currentEpisode.podcastUrl &&
-					   response.entries[i].episodeGuid === currentEpisode.episodeGuid) {
-						
-						// The playlist goes backwards, because episodes are ordered by
-						// pubdate descending. For the playlist we want the next to go
-						// "down" the list, not up.
-						var indexWithDelta = i - delta;
+				var indexOfCurrentEpisode = response.entries.findIndex(function(playlistEpisodeId) {
+					return getPodcastDataService().episodeIdEqualsId(currentEpisodeId, playlistEpisodeId);
+				});
 
-						if(indexWithDelta >= 0 && indexWithDelta < response.entries.length) {
-							callback({
-								podcastUrl:  response.entries[indexWithDelta].podcastUrl,
-								episodeGuid: response.entries[indexWithDelta].episodeGuid
-							});
+				var newIndex = 0;
+				
+				if(indexOfCurrentEpisode >= 0) {
+					// The playlist goes backwards.
+					// For the playlist we want the next to go
+					// "down" the list, not up.
+					const indexWithDelta = indexOfCurrentEpisode - delta;
 
-							return;
-						}
-					}
+					newIndex = indexWithDelta >= 0 && indexWithDelta < response.entries.length ? indexWithDelta : 0;
 				}
 
-				if(response.entries.length) {
-					callback({
-						podcastUrl:  response.entries[0].podcastUrl,
-						episodeGuid: response.entries[0].episodeGuid
-					});
-				}
+				callback(response.entries[newIndex]);
 			});
 		}
 
@@ -449,13 +291,13 @@ var PodcastManager;
 		};
 
 		this.deleteAllPodcasts = function () {
-			chrome.storage.sync.set({'syncPodcastList': []});
+			getBrowserService().storage.sync.set({'syncPodcastList': []});
 			this.podcastList.forEach(function(item) {
 				item.deleteFromStorage();
 			});
 			this.podcastList = [];
 
-			chrome.runtime.sendMessage({
+			getBrowserService().runtime.sendMessage({
 				type: 'podcastListChanged',
 			});
 		}
@@ -485,10 +327,10 @@ var PodcastManager;
 		}
 
 		this.getPodcastAndEpisode = function(episodeId) {
-			var podcast = window.podcastManager.getPodcast(episodeId.podcastUrl);
+			var podcast = this.getPodcast(episodeId.values.podcastUrl);
 
 			var episode = podcast.episodes.find(function(episode) {
-				return episode.guid === episodeId.episodeGuid;
+				return getPodcastDataService().episodeMatchesId(episode, podcast, episodeId);
 			});
 
 			return {
@@ -497,69 +339,70 @@ var PodcastManager;
 			};
 		};
 
-		this.getPodcastIds = function(podcastUrls, callback) {
-			loadPodcastsFromSync(function(syncPodcastList) {
-				var urlAndIds = syncPodcastList.map(function(syncPodcast) {
-					return {
-						url: syncPodcast.url,
-						id: syncPodcast.i
-					};
-				});
-
-				if(podcastUrls.length) {
-					urlAndIds = urlAndIds.filter(function(urlAndId) { 
-						return podcastUrls.indexOf(urlAndId.url) >= 0;
-					})
-				}
-
-				callback(urlAndIds);
-			});
-		};
-
-		this.buildEpisodeId = function(episode, podcast) {
-			var podcastUrl;
-
-			if(episode.podcastUrl) {
-				podcastUrl = episode.podcastUrl;
-			}
-			else if(typeof podcast === 'string') {
-				podcastUrl = podcast;
-			}
-			else {
-				podcastUrl = podcast.url;
-			}
-
-			const episodeId = {
-				podcastUrl: podcastUrl,
-				episodeGuid: episode.guid
-			};
-
-			return episodeId;
-		};
-
-		instance = this;
-
-		function assignIdsInSyncStorage() {
-			loadPodcastsFromSync(function(syncPodcastList) {
-				if(syncPodcastList.length > 0 && syncPodcastList[0].i) {
-					// ids were already assigned
-					return false;
-				}
-
-				var nextId = 1;
-
-				syncPodcastList.forEach(function(storedPodcast) {
-					storedPodcast.i = nextId;
-					nextId++;
-				});
-
-				return true;
+		/**
+		 * 
+		 * @param {EpisodeId} episodeId 
+		 * @param {number} progress 
+		 */
+		function setEpisodeProgress(episodeId, progress) {
+			getPodcastStorageService().storeEpisodeUserData(episodeId, {
+				currentTime: progress
 			});
 		}
 
+		/**
+		 * Returns an array of episode Ids matching the corresponding
+		 * selectors. Failed matches are ignored.
+		 * @param {EpisodeSelector[]} episodeSelectors 
+		 * @returns {EpisodeId[]}
+		 */
+		function getEpisodeIds(episodeSelectors) {
+			const that = this;
+			const podcastMapByUrl = {};
+
+			return episodeSelectors.map(function(episodeSelector) {
+				if(!episodeSelector.podcastUrl) {
+					throw Error('episodeSelector must have url');
+				}
+
+				var podcast;
+
+				if(!(podcast = podcastMapByUrl[episodeSelector.podcastUrl])) {
+					podcast = that.podcastList.find(function(podcast) {
+						return podcast.url === episodeSelector.podcastUrl;
+					});
+					podcastMapByUrl[episodeSelector.podcastUrl] = podcast;
+				}
+
+				if(!podcast) {
+					return undefined;
+				}
+
+				return podcast.episodes.map(function(episode) {
+					return getPodcastDataService().episodeId(episode, podcast);
+				}).find(function(episodeId) {
+					return episodeSelector.matchesId(episodeId);
+				});
+			}).filter(function(episodeId) {
+				// unmatched selectors are left out of the return
+				return episodeId
+			});
+		}
+
+		/**
+		 * Resets the status of the podcastManager, used only for
+		 * unit testing, as it is at the moment a true singleon an
+		 * the state remains from one test to the other
+		 */
+		function reset() {
+			this.podcastList = [];
+		}
+
+		instance = this;
+
 		loadPodcasts = function() {
-			loadPodcastsFromSync(function(syncPodcastList) {
-				syncPodcastList.forEach(function(storedPodcast) {
+			getPodcastStorageService().getStoredPodcasts().then(function(storedPodcasts) {
+				storedPodcasts.forEach(function(storedPodcast) {
 					var podcast = new Podcast(storedPodcast.url);
 
 					instance.podcastList.push(podcast);
@@ -567,16 +410,41 @@ var PodcastManager;
 					podcast.load();
 				});
 
-				chrome.runtime.sendMessage({
+				getBrowserService().runtime.sendMessage({
 					type: 'podcastListChanged',
 				});
 			});
 		};
 
-		// this should only take effect once, when filling the ids
-		// of old stored data
-		assignIdsInSyncStorage();
+		// do it async as it need to be executed after
+		// angular bootstrap
+		angular.element(document).ready(function() {
+			getMessageService().for('podcast').onMessage('changed', function() {
+				triggerNotifications();
+			});
+	
+			getMessageService().for('podcastManager')
+			  .onMessage('addPodcasts', function(message) {
+				instance.addPodcasts(message.podcasts);
+			}).onMessage('setEpisodeInProgress', function(message) {
+				setEpisodeProgress(message.episodeId, message.currentTime);
+			}).onMessage('getSyncPodcastInfo', function(message, sendResponse) {
+				loadPodcastInfoFromSync(message.url, function(syncPodcastInfo) {
+	
+					if(!syncPodcastInfo.e) {
+						syncPodcastInfo.e = [];
+					}
+	
+					sendResponse(syncPodcastInfo);
+	
+					return false;
+				});
+				return true;
+			});
 
-		loadPodcasts();
+			loadPodcasts();
+		});
 	}
 })();
+
+angular.module('podstationBackgroundApp').service('podcastManager', PodcastManager);

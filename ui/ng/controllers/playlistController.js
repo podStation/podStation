@@ -1,7 +1,7 @@
 (function() {
-	angular.module('podstationApp').controller('playlistController', ['$scope', 'messageService', 'episodePlayer', PlaylistController]);
+	angular.module('podstationApp').controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController]);
 
-	function PlaylistController($scope, messageService, episodePlayer) {
+	function PlaylistController($scope, messageService, episodePlayer, podcastDataService) {
 		var playlist = this;
 
 		playlist.play = play;
@@ -37,7 +37,7 @@
 
 					var episodeContainers = bgPage.podcastManager.getAllEpisodes(function(podcast, episode) {
 						return playlistEntries.find(function(entry) {
-							return podcast.url === entry.podcastUrl && episode.guid === entry.episodeGuid;
+							return podcastDataService.episodeMatchesId(episode, podcast, entry);
 						}) !== undefined;
 					});
 
@@ -45,57 +45,56 @@
 						return {
 							title: episodeContainer.episode.title,
 							image: episodeContainer.podcast.image,
-							episodeGuid: episodeContainer.episode.guid,
-							podcastUrl: episodeContainer.podcast.url
+							episodeId: podcastDataService.episodeId(episodeContainer.episode, episodeContainer.podcast)
 						}; 
 					});
 
-					playlist.visible = response.visible;
+					$scope.$apply(function() {
+						playlist.visible = response.visible;
 					
-					// sort entries according to playlistEntries
-					playlist.entries = [];
+						// sort entries according to playlistEntries
+						playlist.entries = [];
 
-					playlistEntries.forEach(function(entry) {
-						var entryForView = unsortedEntries.find(function(unsortedEntry) {
-							return entry.podcastUrl  === unsortedEntry.podcastUrl && 
-							       entry.episodeGuid === unsortedEntry.episodeGuid;
+						playlistEntries.forEach(function(entry) {
+							var entryForView = unsortedEntries.find(function(unsortedEntry) {
+								return podcastDataService.episodeIdEqualsId(entry, unsortedEntry.episodeId);
+							});
+
+							// episode was removed from the feed ...
+							if(entryForView) {
+								playlist.entries.push(entryForView);
+							}
 						});
-
-						// If guid has changed, or episode was removed from the feed ...
-						if(entryForView) {
-							playlist.entries.push(entryForView);
-						}
 					});
 
 					episodePlayer.getAudioInfo(function(audioInfo) {
-						$scope.$apply(function() {
-							playlist.entries.forEach(function(entry) {
-								entry.isPlaying = entry.podcastUrl  === audioInfo.episode.podcastUrl &&
-								                  entry.episodeGuid === audioInfo.episode.episodeGuid;
+						if(audioInfo.episodeId) {
+							$scope.$apply(function() {
+								playlist.entries.forEach(function(entry) {
+									entry.isPlaying = podcastDataService.episodeIdEqualsId(entry.episodeId, audioInfo.episodeId);
+								});
 							});
-						});
+						}
 					});
 				});
 			});
 		}
 
 		function play(playlistEntry) {
-			episodePlayer.play({
-				episodeGuid: playlistEntry.episodeGuid,
-				podcastUrl: playlistEntry.podcastUrl
-			});
+			episodePlayer.play(playlistEntry.episodeId);
 		}
 
 		function remove(playlistEntry) {
-			messageService.for('playlist').sendMessage('remove', {
-				episodeGuid: playlistEntry.episodeGuid,
-				podcastUrl: playlistEntry.podcastUrl
-			});
+			messageService.for('playlist').sendMessage('remove', {episodeId: playlistEntry.episodeId });
 		}
 
 		function dragEnded() {
 			// playlist.entries should sufice for the moment
-			messageService.for('playlist').sendMessage('set', { entries: playlist.entries });
+			messageService.for('playlist').sendMessage('set', { 
+				entries: playlist.entries.map(function(entry) {
+					return entry.episodeId;
+				})
+			 });
 		}
 
 		function isVisible() {

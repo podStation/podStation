@@ -54,7 +54,7 @@ var ChromeExtensionMessageService;
 				var responseTakenCareOf = false;
 
 				// send the message to other receivers than the background
-				chrome.runtime.sendMessage({
+				getBrowserService().runtime.sendMessage({
 					fromBackground: runningInBackground,
 					relayerName: this.name,
 					name: messageName,
@@ -73,7 +73,7 @@ var ChromeExtensionMessageService;
 				}
 			}
 
-			chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+			getBrowserService().runtime.onMessage.addListener(function(message, sender, sendResponse) {
 				if(runningInBackground && message.fromBackground) {
 					// already taken care of internally
 					return;
@@ -88,6 +88,10 @@ var ChromeExtensionMessageService;
 
 				return dispatchToListeners(message.name, message.content, sendResponse, responseTakenCareOf);
 			});
+
+			function getBrowserService() {
+				return angular.element(document.body).injector() ? angular.element(document.body).injector().get('browser') : chrome;
+			}
 		};
 
 		this.for = function(relayerName) {
@@ -96,6 +100,10 @@ var ChromeExtensionMessageService;
 			}
 			
 			return messageRelayers[relayerName];
+		}
+
+		this.reset = function() {
+			messageRelayers = {};
 		}
 	}
 })();

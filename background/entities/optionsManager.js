@@ -1,15 +1,11 @@
-var OptionsManager;
+'use strict';
 
 (function(){
-	var instance;
+	angular
+		.module('podstationBackgroundApp')
+		.service('optionsManagerService', ['messageService', OptionsManager]);
 
-	OptionsManager = function() {
-		if(instance) {
-			return instance;
-		}
-
-		instance = this;
-
+	function OptionsManager(messageService) {
 		function optionsChanged(options) {
 			messageService.for('optionsManager').sendMessage('optionsChanged', options);
 		}
@@ -59,4 +55,3 @@ var OptionsManager;
 	}
 })();
 
-var optionsManager = new OptionsManager();

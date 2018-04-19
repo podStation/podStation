@@ -8,8 +8,12 @@ rm build_output/output.zip
 -x!bower* \
 -x!.gitignore \
 -x!.git \
+-x!node_modules \
 -x!build_output \
 -x!*.sh \
--x!output.zip.*
+-x!output.zip.* \
+-x!package.json \
+-x!karma.conf.js \
+-x!spec
 
 rm output.zip.*

@@ -1,14 +1,25 @@
 <!DOCTYPE html>
-<html ng-app="podstationBackgroundApp">
+<html>
 	<script type="text/javascript" src="/lib/jquery.min.js"></script>
 	<script type="text/javascript" src="/lib/angular.js"></script>
 	<script type="text/javascript" src="/lib/jsmediatags.min.js"></script>
 	<script type="text/javascript" src="/lib/podStationNGReuse.min.js"></script>
+	
+	<!-- Internal reusables (pages and background)-->
 	<script type="text/javascript" src="/reuse/ng/reuse.js"></script>
+	<script type="text/javascript" src="/reuse/ng/services/podcastManagerService.js"></script>
 	<script type="text/javascript" src="/reuse/ng/services/analyticsService.js"></script>
+	<script type="text/javascript" src="/reuse/ng/services/messageService.js"></script>
+	<script type="text/javascript" src="/reuse/ng/services/podcastDataService.js"></script>
+	<script type="text/javascript" src="/reuse/ng/services/dateService.js"></script>
 	<script type="text/javascript" src="/reuse/comparison.js"></script>
 	<script type="text/javascript" src="/reuse/messageServiceDefinition.js"></script>
+	
 	<script type="text/javascript" src="entities/backgroundApp.js"></script>
+	<script type="text/javascript" src="ng/services/storageService.js"></script>
+	<script type="text/javascript" src="ng/services/podcastStorageService.js"></script>
+	<script type="text/javascript" src="ng/services/playlistStorageService.js"></script>
+	<script type="text/javascript" src="entities/episodeSelector.js"></script>
 	<script type="text/javascript" src="entities/messageService.js"></script>
 	<script type="text/javascript" src="entities/notificationManager.js"></script>
 	<script type="text/javascript" src="entities/optionsManager.js"></script>

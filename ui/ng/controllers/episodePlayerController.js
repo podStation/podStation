@@ -1,7 +1,13 @@
+'use strict';
+
 myApp.controller('episodePlayerController', ['$scope', '$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService',
   function($scope, $document, $window, podcastManagerService, episodePlayer, messageService, socialService) {
 
 	var durationInSeconds;
+	
+	/**
+	 * @type {EpisodeId}
+	 */
 	var episodeId;
 
 	function reset() {
@@ -56,11 +62,11 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 		return date.toISOString().substr(11, 8);
 	}
 
-	playbackRateStepUp = function() {
+	function playbackRateStepUp() {
 		return $scope.playbackRate >= 1.0 ? 0.25 : 0.05;
 	}
 
-	playbackRateStepDown = function() {
+	function playbackRateStepDown() {
 		return -($scope.playbackRate > 1.0 ? 0.25 : 0.05);
 	}
 
@@ -164,12 +170,12 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 	};
 
 	function getAudioInfoCallback(audioInfo) {
-		if(!audioInfo.episode.podcastUrl)
+		if(!audioInfo.episodeId)
 			return;
 
-		episodeId = audioInfo.episode.episodeId;
+		episodeId = audioInfo.episodeId;
 
-		podcastManagerService.getPodcastAndEpisode(episodeId).then(function(result) {
+		podcastManagerService.getPodcastAndEpisode(audioInfo.episodeId).then(function(result) {
 			var podcast = result.podcast;
 			var episode = result.episode;
 
@@ -247,23 +253,28 @@ myApp.controller('episodePlayerController', ['$scope', '$document', '$window', '
 }]);
 
 myApp.factory('episodePlayer', ['messageService', function(messageService) {
-	var episodePlayer = {};
+	var episodePlayer = {
+		play: play
+	};
 
-	episodePlayer.refresh = function(episode) {
+	episodePlayer.refresh = function() {
 		messageService.for('audioPlayer').sendMessage('refresh');
 	};
 
-	episodePlayer.play = function(episode) {
+	/**
+	 * @param {EpisodeId} episodeId 
+	 */
+	function play(episodeId) {
 		messageService.for('audioPlayer').sendMessage('play', {
-			episode: episode
+			episodeId: episodeId
 		});
 	};
 
-	episodePlayer.playNext = function(episode) {
+	episodePlayer.playNext = function() {
 		messageService.for('audioPlayer').sendMessage('playNext');
 	};
 
-	episodePlayer.playPrevious = function(episode) {
+	episodePlayer.playPrevious = function() {
 		messageService.for('audioPlayer').sendMessage('playPrevious');
 	};
 

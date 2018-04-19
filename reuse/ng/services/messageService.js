@@ -4,13 +4,22 @@
 
 	angular
 		.module('podstationInternalReuse')
-		.factory('messageService', _messageService);
-		
-	function _messageService() {
-		var messageService;
-		
-		messageService = new ChromeExtensionMessageService(false);
-		
-		return messageService;
+		.provider('messageService', messageServiceProvider);
+
+	function messageServiceProvider() {
+		var isBackgroudPage = false;
+
+		this.setIsBackgroundPage = setIsBackgroundPage;
+		this.$get = ['browser', messageServiceFactory];
+
+		return;
+
+		function setIsBackgroundPage(value) {
+			isBackgroudPage = value;
+		}
+
+		function messageServiceFactory(browserService) {
+			return new ChromeExtensionMessageService(isBackgroudPage, browserService);
+		}
 	}
 })();

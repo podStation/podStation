@@ -10,7 +10,7 @@ var Podcast = function(url) {
 	var idNotificationNewEpisodes = 0;
 
 	function podcastChanged(podcast, episodeListChanged) {
-		messageService.for('podcast').sendMessage('changed', {
+		getMessageService().for('podcast').sendMessage('changed', {
 			podcast: podcast,
 			episodeListChanged: episodeListChanged ? true : false
 		});
@@ -32,7 +32,7 @@ var Podcast = function(url) {
 		storedPodcast.image = this.image;
 
 		// >>> social namespace
-		storedPodcast.email = this.email;
+		storedPodcast.email = this.email ? this.email : undefined;
 		storedPodcast.socialHandles = this.socialHandles;
 		storedPodcast.crowdfundings = this.crowdfundings;
 		storedPodcast.participants = this.participants;
@@ -42,11 +42,11 @@ var Podcast = function(url) {
 
 		storageObject[this.getKey()] = storedPodcast;
 
-		chrome.storage.local.set(storageObject);
+		getBrowserService().storage.local.set(storageObject);
 	};
 
 	this.deleteFromStorage = function() {
-		chrome.storage.local.remove(this.getKey());
+		getBrowserService().storage.local.remove(this.getKey());
 	};
 
 	this.isUpdating = function() {
@@ -122,7 +122,7 @@ var Podcast = function(url) {
 			that.store();
 
 			if(idNotificationFailed) {
-				notificationManager.removeNotification(idNotificationFailed);
+				getNotificationManagerService().removeNotification(idNotificationFailed);
 			}
 
 			var newEpisodesCount = feedParseResult.episodes.reduce(function(previousValue, currentValue) {
@@ -131,7 +131,7 @@ var Podcast = function(url) {
 			}, 0);
 
 			if(newEpisodesCount) {
-				idNotificationNewEpisodes = notificationManager.updateNotification(idNotificationNewEpisodes, {
+				idNotificationNewEpisodes = getNotificationManagerService().updateNotification(idNotificationNewEpisodes, {
 					icon: 'fa-check',
 					groupName: 'New episodes',
 					text: newEpisodesCount + ' new episode(s) for ' + that.title
@@ -141,7 +141,7 @@ var Podcast = function(url) {
 		}, 'xml').fail(function(jqXHR, textStatus, errorThrown) {
 			that.status = 'failed';
 			podcastChanged(that);
-			idNotificationFailed = notificationManager.updateNotification(idNotificationFailed, {
+			idNotificationFailed = getNotificationManagerService().updateNotification(idNotificationFailed, {
 				icon: 'fa-close',
 				groupName: 'Failed to update podcasts',
 				text: 'Failed to update ' + (that.title ? that.title : that.url)
@@ -158,7 +158,7 @@ var Podcast = function(url) {
 
 		var podcastKey = this.getKey();
 
-		chrome.storage.local.get(podcastKey, function(storageObject) {
+		getBrowserService().storage.local.get(podcastKey, function(storageObject) {
 			if(storageObject && storageObject[podcastKey]) {
 				var storedPodcast = storageObject[podcastKey];
 

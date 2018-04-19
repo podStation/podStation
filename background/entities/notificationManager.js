@@ -1,14 +1,11 @@
-var NotificationManager;
+'use strict';
 
-(function(){
-	var instance;
+(function() {
 
-	NotificationManager = function() {
-		if(instance) {
-			return instance;
-		}
+	angular.module('podstationBackgroundApp')
+	  .service('notificationManager', ['messageService', notificationManager]);
 
-		instance = this;
+	function notificationManager(messageService) {
 
 		var nextNotificationId = 1;
 		var notifications = {};
@@ -16,18 +13,6 @@ var NotificationManager;
 		function notificationChanged(notificationId) {
 			messageService.for('notificationManager').sendMessage('notificationChanged', notifications[notificationId]);
 		}
-
-		messageService.for('notificationManager')
-		.onMessage('getNotifications', function(messageContent, sendResponse) {
-			sendResponse(notifications);
-			return true;
-		})
-		.onMessage('removeNotification', function(messageContent) {
-			instance.removeNotification(messageContent.notificationId);
-		})
-		.onMessage('removeAllNotifications', function() {
-			instance.removeNotification();
-		});
 
 		this.addNotification = function(notification) {
 			notifications[nextNotificationId] = notification;
@@ -57,7 +42,21 @@ var NotificationManager;
 				notificationChanged();
 			}
 		}
+
+		// do it async as it need to be executed after
+		// angular bootstrap
+		angular.element(document).ready(function() {	
+			messageService.for('notificationManager')
+			.onMessage('getNotifications', function(messageContent, sendResponse) {
+				sendResponse(notifications);
+				return true;
+			})
+			.onMessage('removeNotification', function(messageContent) {
+				instance.removeNotification(messageContent.notificationId);
+			})
+			.onMessage('removeAllNotifications', function() {
+				instance.removeNotification();
+			});
+		});
 	}
 })();
-
-var notificationManager = new NotificationManager();

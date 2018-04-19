@@ -1,4 +1,5 @@
-angular.module('podstationBackgroundApp').factory('playlist', ['messageService', '$log', 'browser', function(messageService, $log, browserService) {
+angular.module('podstationBackgroundApp').factory('playlist', ['$log', '$q', '$injector', 'messageService', 'podcastDataService', 'playlistStorageService', 'browser', 
+	function($log, $q, $injector, messageService, podcastDataService, playlistStorageService, browserService) {
 	var playlist = {};
 
 	playlist.visible = false;
@@ -10,14 +11,17 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 	messageService.for('playlist')
 	  .onMessage('add', function(message) {
-		playlist.add(message.podcastUrl, message.episodeGuid);
+		playlist.add(message.episodeId);
 	}).onMessage('remove', function(message) {
-		playlist.remove(message.podcastUrl, message.episodeGuid);
+		playlist.remove(message.episodeId);
 	}).onMessage('set', function(message) {
-		playlist.set(message);
+		playlist.set(message.entries);
 	}).onMessage('get', function(message, sendResponse) {
-		playlist.get(function(playlistData) {
-			sendResponse(playlistData);
+		playlist.get().then(function(episodeIds) {
+			sendResponse({
+				visible: playlist.visible,
+				entries: episodeIds
+			});
 		});
 		return true;
 	}).onMessage('toggleVisibility', function() {
@@ -29,118 +33,47 @@ angular.module('podstationBackgroundApp').factory('playlist', ['messageService',
 
 	return playlist;
 
-	function add(podcastUrl, episodeGuid) {
-		window.podcastManager.getPodcastIds([podcastUrl], function(podcastIds) {
-			if(!podcastIds.length)
-				return;
-			
-			loadPlaylistFromSync('default', function(syncPlaylist) {
-				if(syncPlaylist.e.find(function(entry) {
-					return entry.p === podcastIds[0].id &&
-					       entry.e === episodeGuid;
-				})) {
-					return false;
-				}
-				
-				syncPlaylist.e.push({
-					p: podcastIds[0].id,
-					e: episodeGuid
-				});
+	/**
+	 * Adds an episode to the bottom of the playlist
+	 * @param {EpisodeId} episodeId 
+	 */
+	function add(episodeId) {
+		playlistStorageService.add(episodeId).then(function() {
+			// force visible when something is added
+			playlist.visible = true;
+			messageService.for('playlist').sendMessage('changed');
+		})
+	}
 
-				// force visible when something is added
-				playlist.visible = true;
-
-				messageService.for('playlist').sendMessage('changed');
-				
-				return true;
-			});
+	/**
+	 * Deletes the episode represented by episodeId from the playlist
+	 * @param {EpisodeId} episodeId 
+	 */
+	function remove(episodeId) {
+		playlistStorageService.remove(episodeId).then(function() {
+			messageService.for('playlist').sendMessage('changed');
 		});
 	}
 
-	function remove(podcastUrl, episodeGuid) {
-		window.podcastManager.getPodcastIds([podcastUrl], function(podcastIds) {
-			if(!podcastIds.length)
-				return;
-			
-			loadPlaylistFromSync('default', function(syncPlaylist) {
-				syncPlaylist.e = syncPlaylist.e.filter(function(entry) {
-					return !(entry.p === podcastIds[0].id && entry.e === episodeGuid);
-				});
-
-				messageService.for('playlist').sendMessage('changed');
-				
-				return true;
-			});
+	/**
+	 * Sets the whole playlist based on a list of episodes represented by
+	 * their respective episode ids
+	 * @param {EpisodeId[]} episodeIds 
+	 */
+	function set(episodeIds) {
+		return playlistStorageService.set(episodeIds).then(function() {
+			messageService.for('playlist').sendMessage('changed');
 		});
 	}
 
-	function set(playlistData) {	
-		window.podcastManager.getPodcastIds([], function(podcastIds) {
-			loadPlaylistFromSync('default', function(syncPlaylist) {
-				
-				syncPlaylist.e = playlistData.entries.map(function(entry) {
-					podcastUrlAndId = podcastIds.find(function(item) { return item.url === entry.podcastUrl });
-					
-					return {
-						p: podcastUrlAndId.id,
-						e: entry.episodeGuid
-					};
-				});
-
-				// we have to wait until it is saved
-				setTimeout(function() {
-					messageService.for('playlist').sendMessage('changed');
-				}, 1);
-
-				return true;
-			});
-		});
-	}
-
-	function get(callback) {
-		loadPlaylistFromSync('default', function(syncPlaylist) {
-			window.podcastManager.getPodcastIds([], function(podcastIds) {
-				var playlistData = {};
-
-				playlistData.visible = playlist.visible;
-
-				playlistData.entries = syncPlaylist.e.map(function(syncEntry) {
-					podcastUrlAndId = podcastIds.find(function(item) { return item.id === syncEntry.p });
-					
-					// undefined podcastUrlAndId can mean the podcast was removed
-					return podcastUrlAndId ? {
-						podcastUrl: podcastUrlAndId.url,
-						episodeGuid: syncEntry.e
-					} : {};
-				}).filter(function(entry) {
-					return entry.podcastUrl !== undefined;
-				});
-
-				callback(playlistData);
-			});
-		});
-	}
-
-	function loadPlaylistFromSync(playlistId, loaded) {
-		var playlistStorageObjectName = 'pl_' + playlistId;
-		
-		browserService.storage.sync.get(playlistStorageObjectName, function(storageObject) {
-			var syncPlaylist;
-
-			if(typeof storageObject[playlistStorageObjectName] === "undefined") {
-				syncPlaylist = {
-					e: [] // list of playlist entries
-				};
-			}
-			else {
-				syncPlaylist = storageObject[playlistStorageObjectName];
-			}
-
-			if( loaded(syncPlaylist) ) {
-				var newStorageObject = {};
-				newStorageObject[playlistStorageObjectName] = syncPlaylist;
-				browserService.storage.sync.set(newStorageObject);
-			}
+	/** 
+	 * Gets the entire playlist
+	 * @return {Promise<EpisodeId[]>}
+	 */
+	function get() {
+		return playlistStorageService.get().then(function(episodeSelectors) {
+			// Delay the dependency with the podcastManager
+			return $injector.get('podcastManager').getEpisodeIds(episodeSelectors);
 		});
 	}
 }]);
