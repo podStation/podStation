@@ -3,6 +3,8 @@
 const FEEDS = {
 	WITH_GUID: {
 		URL: 'https://feed-with-guid.podstation.com',
+		FILE: 'feed-with-guid.xml',
+		FILE_WITHOUT_1ST_EP: 'feed-with-guid-without-1st-episode.xml',
 		EP1: {
 			podcastUrl: 'https://feed-with-guid.podstation.com',
 			title: "Title 1",
