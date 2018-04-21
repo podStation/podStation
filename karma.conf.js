@@ -1,6 +1,8 @@
 // Karma configuration
 // Generated on Sat Mar 03 2018 16:34:31 GMT+0100 (Hora Padrão da Europa Ocidental)
 
+const jasmineSeedReporter = require('./spec/support/jasmine-seed-reporter.js')
+
 module.exports = function(config) {
   config.set({
 
@@ -11,7 +13,6 @@ module.exports = function(config) {
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: ['jasmine'],
-
 
     // list of files / patterns to load in the browser
     files: [
@@ -30,9 +31,10 @@ module.exports = function(config) {
       'background/entities/playlist.js',
       'background/entities/podcast.js',
       'background/ng/**/*.js',
-      'spec/**/*.js',
-      {pattern: 'spec/**/*.xml', included: false},
-      {pattern: 'spec/**/*.json', included: false}
+      'spec/background/**/*.js',
+      'spec/reuse/**/*.js',
+      {pattern: 'spec/background/**/*.xml', included: false},
+      {pattern: 'spec/background/**/*.json', included: false}
     ],
 
 
@@ -46,12 +48,22 @@ module.exports = function(config) {
     preprocessors: {
     },
 
+    plugins: [
+      'karma-*',
+      jasmineSeedReporter
+    ],
 
     // test results reporter to use
     // possible values: 'dots', 'progress'
     // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress'],
+    reporters: ['progress', 'jasmine-seed'],
 
+    client: {
+      jasmine: {
+        random: true,
+        // seed: 19141 // Specify if you need to re-run the same seed
+      }
+    },
 
     // web server port
     port: 9876,
