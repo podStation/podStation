@@ -166,7 +166,7 @@ describe('podcastManager',  function() {
 			messageService = $injector.get('messageService');
 		}));
 
-		it('should respond with all episodes in progress when all podcasts have one ep in progress', function() {
+		it('should respond with all episodes in progress when one podcast have one ep in progress', function() {
 			var now = new Date();
 			spyOn(dateService, 'now').and.returnValue(now);
 
@@ -188,7 +188,6 @@ describe('podcastManager',  function() {
 
 			$rootScope.$apply();
 			
-
 			// I'm not sure yet on the contract I want to fullfil besides the
 			// currentTime
 			expect(episodesInProgress.map(function(item) { return item.episodeUserData.currentTime })).toEqual([
@@ -229,6 +228,48 @@ describe('podcastManager',  function() {
 			// currentTime
 			expect(episodesInProgress.map(function(item) { return item.episodeUserData.currentTime })).toEqual([
 				60,
+				120
+			]);
+		});
+
+		it('should ignore episodes that do not exist anymore', function() {
+			var now = new Date();
+
+			spyOn(dateService, 'now').and.returnValue(now);
+
+			ajaxSpy.and.callFake(ajaxGetFeedFromFile(FEEDS.WITH_GUID.FILE));
+			
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+			const episodeId1 = podcastDataService.episodeId(FEEDS.WITH_GUID.EP1);
+			const episodeId2 = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
+
+			podcastManager.setEpisodeProgress(episodeId1, 60);
+			podcastManager.setEpisodeProgress(episodeId2, 120);
+
+			$rootScope.$apply();
+
+			ajaxSpy.and.callFake(ajaxGetFeedFromFile(FEEDS.WITH_GUID.FILE_WITHOUT_1ST_EP));
+
+			podcastManager.updatePodcast();
+
+			var episodesInProgress;
+			
+			podcastManager.getEpisodesInProgress().then(function(result) {
+				episodesInProgress = result;
+			});
+
+			$rootScope.$apply();
+			
+			// I don't care about the order, so I'm sorting
+			// before checking the result
+			episodesInProgress.sort(function(a, b) {
+				return a.episodeUserData.currentTime - b.episodeUserData.currentTime;
+			});
+
+			// I'm not sure yet on the contract I want to fullfil besides the
+			// currentTime
+			expect(episodesInProgress.map(function(item) { return item.episodeUserData.currentTime })).toEqual([
 				120
 			]);
 		});

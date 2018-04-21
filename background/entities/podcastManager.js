@@ -60,7 +60,7 @@ var PodcastManager;
 						episode: episode,
 						episodeUserData: item.episodeUserData
 					}
-				});
+				}).filter(function(episodeInProgress) {return episodeInProgress.episode});
 			});
 		}
 
