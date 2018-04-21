@@ -74,21 +74,18 @@ describe('audioPlayerService', function() {
 		it("should play a podcast with guid", function() {
 			spyOn(audioBuilderService.audio, 'play');
 
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
 			$rootScope.$apply();
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			});
+			var episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
 
 			messageService.for('audioPlayer').sendMessage('play', {episodeId : episodeId});
 
 			$rootScope.$apply();
 
 			expect(audioBuilderService.audio.play).toHaveBeenCalled();
-			expect(audioBuilderService.audio.src).toBe('http://feed1.podstation.com/2.mp3');
+			expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP2.enclosure.url);
 		});
 
 		it("should play a podcast WITHOUT guid", function() {
@@ -111,41 +108,32 @@ describe('audioPlayerService', function() {
 		it("should play another podcast", function() {
 			spyOn(audioBuilderService.audio, 'play');
 
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
 			$rootScope.$apply();
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
+			messageService.for('audioPlayer').sendMessage('play', {
+				episodeId: podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)
 			});
 
-			messageService.for('audioPlayer').sendMessage('play', {episodeId : episodeId});
-
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=1'
+			messageService.for('audioPlayer').sendMessage('play', {
+				episodeId: podcastDataService.episodeId(FEEDS.WITH_GUID.EP1)
 			});
-
-			messageService.for('audioPlayer').sendMessage('play', {episodeId : episodeId});
 
 			$rootScope.$apply();
 
 			expect(audioBuilderService.audio.play).toHaveBeenCalled();
-			expect(audioBuilderService.audio.src).toBe('http://feed1.podstation.com/1.mp3');
+			expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP1.enclosure.url);
 		});
 
 		it("should start playing where it paused the last time", function() {
 			spyOn(audioBuilderService.audio, 'play');
 
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
 			$rootScope.$apply();
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			});
+			var episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
 
 			podcastStorageService.storeEpisodeUserData(episodeId, {
 				currentTime: 10000
@@ -160,7 +148,7 @@ describe('audioPlayerService', function() {
 	});
 
 	describe('refresh', function() {
-		it('', function() {
+		it('should call play again', function() {
 			spyOn(audioBuilderService.audio, 'play');
 
 			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
@@ -178,7 +166,7 @@ describe('audioPlayerService', function() {
 			$rootScope.$apply();
 
 			expect(audioBuilderService.audio.play).toHaveBeenCalledTimes(2);
-			expect(audioBuilderService.audio.src).toBe('http://feed1.podstation.com/2.mp3');
+			expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP2.enclosure.url);
 		});
 	});
 
@@ -193,16 +181,13 @@ describe('audioPlayerService', function() {
 		}));
 
 		beforeEach(function() {
-			podcastManager.addPodcast('https://feed-without-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
 
 			$rootScope.$apply();
 
-			episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-without-guid.podstation.com',
-				title: 'Title 2'
-			});
+			episodeId = podcastDataService.episodeId(FEEDS.WITHOUT_GUID.EP2)
 
-			messageService.for('audioPlayer').sendMessage('play', {episodeId : episodeId});
+			messageService.for('audioPlayer').sendMessage('play', {episodeId: episodeId});
 
 			$rootScope.$apply();
 
@@ -245,7 +230,7 @@ describe('audioPlayerService', function() {
 			expect(messageCount).toBe(10);
 		});
 
-		it('should save playing time ever 10 seconds', function() {
+		it('should save playing time every 10 seconds', function() {
 			var currentTime;
 
 			$interval.flush(25000);
@@ -290,7 +275,7 @@ describe('audioPlayerService', function() {
 
 				$rootScope.$apply();
 
-				expect(audioBuilderService.audio.src).toBe('http://feed1.podstation.com/3.mp3');
+				expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP3.enclosure.url);
 			});
 		});
 
@@ -312,7 +297,7 @@ describe('audioPlayerService', function() {
 
 				$rootScope.$apply();
 
-				expect(audioBuilderService.audio.src).toBe('http://feed1.podstation.com/3.mp3');
+				expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP3.enclosure.url);
 			});
 		});
 
@@ -335,7 +320,7 @@ describe('audioPlayerService', function() {
 
 				$rootScope.$apply();
 
-				expect(audioBuilderService.audio.src).toBe('http://feed2.podstation.com/3.mp3');
+				expect(audioBuilderService.audio.src).toBe(FEEDS.WITHOUT_GUID.EP3.enclosure.url);
 			});
 		});
 	});

@@ -34,12 +34,9 @@ describe('playlist', function() {
 
 	describe('Add episode to list', function() {
 		it("shoud add episode with guid to list", function() {
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			});
+			var episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
 
 			playlistService.add(episodeId);
 
@@ -49,19 +46,16 @@ describe('playlist', function() {
 				'e': [
 					{
 						'p': 1, 
-						'e': 'http://feed1.podstation.com/?p=2',
+						'e': FEEDS.WITH_GUID.EP2.guid,
 					}
 				]
 			});
 		});
 
 		it("should add episode without guid to list", function() {
-			podcastManager.addPodcast('https://feed-without-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-without-guid.podstation.com',
-				title: 'Title 2'
-			});;
+			var episodeId = podcastDataService.episodeId(FEEDS.WITHOUT_GUID.EP2);
 
 			playlistService.add(episodeId);
 
@@ -71,7 +65,7 @@ describe('playlist', function() {
 				'e': [
 					{
 						'p': 1, 
-						'e': 'Title 2',
+						'e': FEEDS.WITHOUT_GUID.EP2.title,
 						't': 't'
 					}
 				]
@@ -79,12 +73,9 @@ describe('playlist', function() {
 		});
 
 		it("shoud not add the same episode twice to list", function() {
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
-			var episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			});;
+			var episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
 
 			playlistService.add(episodeId);
 			playlistService.add(episodeId);
@@ -95,28 +86,28 @@ describe('playlist', function() {
 				'e': [
 					{
 						'p': 1, 
-						'e': 'http://feed1.podstation.com/?p=2',
+						'e': FEEDS.WITH_GUID.EP2.guid,
 					}
 				]
 			});
 		});
 
 		it("Should add episodes from different podcasts with same guid", function() {
-			ajaxSpy.and.callFake(ajaxGetFeedFromFile('feed-with-guid.xml'))
+			ajaxSpy.and.callFake(ajaxGetFeedFromFile(FEEDS.WITH_GUID.FILE))
 
 			podcastManager.addPodcast('https://feedurl1.com');
 			podcastManager.addPodcast('https://feedurl2.com');
 
 			var episodeId = podcastDataService.episodeId({
 				podcastUrl: 'https://feedurl1.com',
-				guid: 'http://feed1.podstation.com/?p=2'
+				guid: FEEDS.WITH_GUID.EP2.guid
 			});;
 
 			playlistService.add(episodeId);
 
 			var episodeId = podcastDataService.episodeId({
 				podcastUrl: 'https://feedurl2.com',
-				guid: 'http://feed1.podstation.com/?p=2'
+				guid: FEEDS.WITH_GUID.EP2.guid
 			});;
 
 			playlistService.add(episodeId);
@@ -126,11 +117,11 @@ describe('playlist', function() {
 			expect(browserService.storage.sync._getFullStorage().pl_default).toEqual({
 				'e': [{
 					'p': 1, 
-					'e': 'http://feed1.podstation.com/?p=2',
+					'e': FEEDS.WITH_GUID.EP2.guid,
 				},
 				{
 					'p': 2, 
-					'e': 'http://feed1.podstation.com/?p=2',
+					'e': FEEDS.WITH_GUID.EP2.guid,
 				}]
 			});
 		});
@@ -138,29 +129,20 @@ describe('playlist', function() {
 
 	describe('Remove episode', function() {
 		it('should remove an added episode', function() {
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
-			playlistService.add(podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			}));
+			playlistService.add(podcastDataService.episodeId(FEEDS.WITH_GUID.EP2));
 
-			playlistService.add(podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=3'
-			}));
+			playlistService.add(podcastDataService.episodeId(FEEDS.WITH_GUID.EP3));
 
-			playlistService.remove(podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			}));
+			playlistService.remove(podcastDataService.episodeId(FEEDS.WITH_GUID.EP2));
 
 			$rootScope.$apply();
 
 			expect(browserService.storage.sync._getFullStorage().pl_default).toEqual({
 				'e': [{
 					'p': 1, 
-					'e': 'http://feed1.podstation.com/?p=3',
+					'e': FEEDS.WITH_GUID.EP3.guid,
 				}]
 			});
 		});
@@ -168,27 +150,23 @@ describe('playlist', function() {
 
 	describe('Set episodes', function() {
 		it('should set episodes', function() {
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
-			podcastManager.addPodcast('https://feed-without-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
 
 			playlistService.set([
-				podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			}), podcastDataService.episodeId({
-				podcastUrl: 'https://feed-without-guid.podstation.com',
-				title: 'Title 2'
-			})]);
+				podcastDataService.episodeId(FEEDS.WITH_GUID.EP2), 
+				podcastDataService.episodeId(FEEDS.WITHOUT_GUID.EP2)
+			]);
 
 			$rootScope.$apply();
 
 			expect(browserService.storage.sync._getFullStorage().pl_default).toEqual({
 				'e': [{
 					'p': 1, 
-					'e': 'http://feed1.podstation.com/?p=2',
+					'e': FEEDS.WITH_GUID.EP2.guid,
 				}, {
 					'p': 2, 
-					'e': 'Title 2',
+					'e': FEEDS.WITH_GUID.EP2.title,
 					't': 't'
 				}]
 			});
@@ -232,7 +210,7 @@ describe('playlist', function() {
 
 			$rootScope.$apply();
 
-			podcastManager.deletePodcast('https://feed-without-guid.podstation.com');
+			podcastManager.deletePodcast(FEEDS.WITHOUT_GUID.URL);
 
 			$rootScope.$apply();
 
