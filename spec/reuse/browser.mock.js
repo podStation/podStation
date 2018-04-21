@@ -58,7 +58,9 @@ var browserStorageMockFn = function($timeout) {
 		var result = {};
 
 		if(this.storedObject && this.storedObject[items]) {
-			result[items] = this.storedObject[items];
+			// we don't want to return the reference, as this could 
+			// mean the value will changed before a promise is fulfilled
+			result[items] = JSON.parse(JSON.stringify(this.storedObject[items]));
 		}
 
 		callback(result);
