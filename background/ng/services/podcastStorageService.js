@@ -11,12 +11,9 @@
 	function podcastStorageService($q, messageService, storageService, browserService, dateService) {
 		const service = {
 			getPodcastStorageKey: getPodcastStorageKey,
-			// getPodcastStorageKeys: getPodcastStorageKeys,
-			// getEpisodeStorageKey: getEpisodeStorageKey,
 			storePodcastsByFeedUrls: storePodcastsByFeedUrls,
 			deletePodcastsByFeedUrl: deletePodcastsByFeedUrl,
 			getStoredPodcasts: getStoredPodcasts,
-			// getPodcastUserData: getPodcastUserData,
 			storeEpisodeUserData: storeEpisodeUserData,
 			getEpisodeUserData: getEpisodeUserData,
 			getAllEpisodesUserData: getAllEpisodesUserData,
@@ -294,38 +291,6 @@
 				return new EpisodeSelector(item.s, item.i).matchesId(episodeId);
 			});
 		}
-
-		/**
-		 * Gets a storage key for an episode based on episode id
-		 * @param {Episode|EpisodeIds} episodeOrId 
-		 * @returns {EpisodeStorageKey}
-		 */
-		/*function getEpisodeStorageKey(episodeOrId) {
-			var episode;
-			
-			if(episodeOrId.value) {
-				episode = episodeOrId.value;
-			}
-			else {
-				episode = episodeOrId;
-			}
-
-			var result = null;
-			
-			['guid','title','url'].every(function(item) {
-				if(episode[item]) {
-					result = {
-						idType: item,
-						idValue: episode[item]
-					}
-					return false;
-				}
-
-				return true;
-			})
-
-			return result;
-		}*/
 
 		/**
 		 * Find next available storage key for a podcast

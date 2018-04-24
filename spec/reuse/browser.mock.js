@@ -21,8 +21,19 @@ var browserStorageMockFn = function($timeout) {
 			create: function() {},
 			remove: function() {}
 		},
+		commands: {
+			onCommand: {
+				addListener: function(fn) {this._listeners.push(fn)},
+				_listeners: []
+			},
+			_triggerCommand: function(cmd) {this.onCommand._listeners.forEach((l) => l(cmd))}
+		},
+		notifications: {
+			create: function() {},
+			clear: function() {},
+		},
 		i18n: {
-			getMessage: function() {}
+			getMessage: function(msg) {return msg}
 		},
 		storage: {
 			onChanged: {
@@ -58,7 +69,9 @@ var browserStorageMockFn = function($timeout) {
 		var result = {};
 
 		if(this.storedObject && this.storedObject[items]) {
-			result[items] = this.storedObject[items];
+			// we don't want to return the reference, as this could 
+			// mean the value will changed before a promise is fulfilled
+			result[items] = JSON.parse(JSON.stringify(this.storedObject[items]));
 		}
 
 		callback(result);

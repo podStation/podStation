@@ -36,13 +36,13 @@ describe('podcastManager',  function() {
 
 	describe('addPodcast', function() {
 		it('should store the added podcast', function() {
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
 			$rootScope.$apply();
 
 			expect(browserService.storage.sync._getFullStorage()).toEqual({
 				'syncPodcastList': [{
-					url: 'https://feed-with-guid.podstation.com',
+					url: FEEDS.WITH_GUID.URL,
 					i: 1
 				}]
 			});
@@ -56,12 +56,9 @@ describe('podcastManager',  function() {
 			var now = new Date();
 			spyOn(dateService, 'now').and.returnValue(now);
 
-			podcastManager.addPodcast('https://feed-with-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
-			const episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-with-guid.podstation.com',
-				guid: 'http://feed1.podstation.com/?p=2'
-			});
+			const episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP2);
 
 			podcastManager.setEpisodeProgress(episodeId, 120);
 
@@ -69,7 +66,7 @@ describe('podcastManager',  function() {
 
 			expect(browserService.storage.sync._getFullStorage()['P1']).toEqual({
 				'e': [{
-					'i': 'http://feed1.podstation.com/?p=2',
+					'i': FEEDS.WITH_GUID.EP2.guid,
 					't': 120,
 					'l': JSON.parse(JSON.stringify(now))
 				}]
@@ -96,7 +93,7 @@ describe('podcastManager',  function() {
 
 			expect(browserService.storage.sync._getFullStorage()['P1']).toEqual({
 				'e': [{
-					'i': 'http://feed1.podstation.com/?p=2',
+					'i': FEEDS.WITH_GUID.EP2.guid,
 					't': 120,
 					'l': JSON.parse(JSON.stringify(now))
 				}]
@@ -107,12 +104,9 @@ describe('podcastManager',  function() {
 			var now = new Date();
 			spyOn(dateService, 'now').and.returnValue(now);
 
-			podcastManager.addPodcast('https://feed-without-guid.podstation.com');
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
 
-			const episodeId = podcastDataService.episodeId({
-				podcastUrl: 'https://feed-without-guid.podstation.com',
-				title: 'Title 2'
-			});
+			const episodeId = podcastDataService.episodeId(FEEDS.WITHOUT_GUID.EP2);
 
 			podcastManager.setEpisodeProgress(episodeId, 120);
 
@@ -120,7 +114,7 @@ describe('podcastManager',  function() {
 
 			expect(browserService.storage.sync._getFullStorage()['P1']).toEqual({
 				'e': [{
-					'i': 'Title 2',
+					'i': FEEDS.WITHOUT_GUID.EP2.title,
 					's': 't',
 					't': 120,
 					'l': JSON.parse(JSON.stringify(now))
