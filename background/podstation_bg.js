@@ -39,15 +39,6 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 
 window.podcastManager = new PodcastManager();
 
-chrome.commands.onCommand.addListener(function(command) {
-	switch(command) {
-		case 'play_pause':
-			analyticsService.trackEvent('audio', 'play_pause_hotkey');
-			messageService.for('audioPlayer').sendMessage('togglePlayPause');
-			break;
-	}
-});
-
 if(chrome.i18n.getUILanguage() === 'pt-BR') {
 	chrome.runtime.setUninstallURL('https://goo.gl/forms/fjOsh46l7IyZ1XIg1');
 }

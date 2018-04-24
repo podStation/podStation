@@ -116,7 +116,7 @@
 					break;
 			}
 
-			var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.podcastUrl, episodeInfo.episodeGuid);
+			var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.episodeId);
 
 			browserService.notifications.create(options.event, {
 				type: 'progress',
@@ -471,6 +471,15 @@
 			if(info.menuItemId === 'browser_action_play_pause') {
 				_analyticsService.trackEvent('audio', 'play_pause_browser_action_button');
 				togglePlayPause();
+			}
+		});
+
+		browserService.commands.onCommand.addListener(function(command) {
+			switch(command) {
+				case 'play_pause':
+					_analyticsService.trackEvent('audio', 'play_pause_hotkey');
+					togglePlayPause();
+					break;
 			}
 		});
 

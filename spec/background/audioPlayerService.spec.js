@@ -324,4 +324,36 @@ describe('audioPlayerService', function() {
 			});
 		});
 	});
+
+	describe('command listener', function() {
+		it('should toggle play pause on play_pause command', function() {
+			spyOn(audioBuilderService.audio, 'pause');
+			spyOn(browserService.notifications, 'clear');
+			spyOn(browserService.notifications, 'create');
+
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+			$rootScope.$apply();
+
+			messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+
+			$rootScope.$apply();
+
+			browserService.commands._triggerCommand('play_pause');
+
+			expect(audioBuilderService.audio.pause).toHaveBeenCalled();
+
+			expect(browserService.notifications.clear).toHaveBeenCalledWith('playing');
+
+			expect(browserService.notifications.create).toHaveBeenCalledWith(
+				'paused', {
+					type: 'progress',
+					iconUrl: FEEDS.WITH_GUID.IMAGE,
+					title: 'paused',
+					message: FEEDS.WITH_GUID.EP2.title,
+					progress: 0
+				}
+			);
+		});
+	});
 });

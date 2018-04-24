@@ -21,8 +21,19 @@ var browserStorageMockFn = function($timeout) {
 			create: function() {},
 			remove: function() {}
 		},
+		commands: {
+			onCommand: {
+				addListener: function(fn) {this._listeners.push(fn)},
+				_listeners: []
+			},
+			_triggerCommand: function(cmd) {this.onCommand._listeners.forEach((l) => l(cmd))}
+		},
+		notifications: {
+			create: function() {},
+			clear: function() {},
+		},
 		i18n: {
-			getMessage: function() {}
+			getMessage: function(msg) {return msg}
 		},
 		storage: {
 			onChanged: {

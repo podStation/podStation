@@ -5,6 +5,7 @@ const FEEDS = {
 		URL: 'https://feed-with-guid.podstation.com',
 		FILE: 'feed-with-guid.xml',
 		FILE_WITHOUT_1ST_EP: 'feed-with-guid-without-1st-episode.xml',
+		IMAGE: 'images/rss-alt-8x.png',
 		EP1: {
 			podcastUrl: 'https://feed-with-guid.podstation.com',
 			title: "Title 1",
