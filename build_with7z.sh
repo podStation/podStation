@@ -14,6 +14,7 @@ rm build_output/output.zip
 -x!output.zip.* \
 -x!package.json \
 -x!karma.conf.js \
--x!spec
+-x!spec \
+-x!*.log
 
 rm output.zip.*
