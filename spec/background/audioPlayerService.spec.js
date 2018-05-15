@@ -19,6 +19,7 @@ describe('audioPlayerService', function() {
 					pause: function() {},
 					currentTime: 0
 				},
+				_end: _end
 			};
 
 			return service;
@@ -32,6 +33,10 @@ describe('audioPlayerService', function() {
 				this.audio.currentTime = 0;
 				return this.audio;
 			}
+
+			function _end() {
+				this.audio.onended();
+			}
 		});
 	}));
 
@@ -43,6 +48,7 @@ describe('audioPlayerService', function() {
 	var podcastDataService;
 	var podcastStorageService;
 	var audioBuilderService;
+	var playlistService;
 
 	var audioPlayerService;
 	
@@ -63,6 +69,7 @@ describe('audioPlayerService', function() {
 		browserService = $injector.get('browser');
 		podcastDataService = $injector.get('podcastDataService');
 		podcastStorageService = $injector.get('podcastStorageService');
+		playlistService = $injector.get('playlist');
 		
 		audioBuilderService = $injector.get('audioBuilderService');
 
@@ -249,12 +256,6 @@ describe('audioPlayerService', function() {
 
 	describe('next and previous', function() {
 		describe('from playlist', function() {
-			var playlistService;
-
-			beforeEach(inject(function($injector) {
-				playlistService = $injector.get('playlist');
-			}));
-
 			beforeEach(function() {
 				messageService.for('audioPlayer').sendMessage('setOptions', {order: 'from_playlist'});
 			});
@@ -317,6 +318,32 @@ describe('audioPlayerService', function() {
 				$rootScope.$apply();
 
 				messageService.for('audioPlayer').sendMessage('playNext');
+
+				$rootScope.$apply();
+
+				expect(audioBuilderService.audio.src).toBe(FEEDS.WITHOUT_GUID.EP3.enclosure.url);
+			});
+		});
+
+		describe('continuous play', function() {
+			beforeEach(function() {
+				messageService.for('audioPlayer').sendMessage('setOptions', {
+					continuous: true,
+					order: 'from_last_episodes'
+				});
+			});
+
+			it('should play next track when ended', function() {
+				podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+				podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
+
+				$rootScope.$apply();
+
+				messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+
+				$rootScope.$apply();
+
+				audioBuilderService._end();
 
 				$rootScope.$apply();
 
