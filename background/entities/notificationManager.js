@@ -43,6 +43,8 @@
 			}
 		}
 
+		const that = this;
+
 		// do it async as it need to be executed after
 		// angular bootstrap
 		angular.element(document).ready(function() {	
@@ -52,10 +54,10 @@
 				return true;
 			})
 			.onMessage('removeNotification', function(messageContent) {
-				instance.removeNotification(messageContent.notificationId);
+				that.removeNotification(messageContent.notificationId);
 			})
 			.onMessage('removeAllNotifications', function() {
-				instance.removeNotification();
+				that.removeNotification();
 			});
 		});
 	}
