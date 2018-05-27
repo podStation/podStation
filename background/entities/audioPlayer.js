@@ -288,14 +288,12 @@
 				loadSyncPlayerOptions(function(options) {
 					if(options.removeWhenFinished) {
 						messageService.for('playlist').sendMessage('remove', {
-							podcastUrl: currentEpisodeInfo.podcastUrl,
-							episodeGuid: currentEpisodeInfo.episodeGuid
+							episodeId: currentEpisodeInfo.episodeId
 						});
 					}
 
 					if(options.continuous)
 						playNextOrPrevious(true, currentEpisodeInfo);
-
 				});
 			};
 
