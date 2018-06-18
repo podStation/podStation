@@ -12,13 +12,11 @@ describe('podcastManager',  function() {
 		// $provide.service('messageService', messageServiceMockFn);
 	}));
 
-	var playlistService;
 	var browserService;
 	var podcastManager;
 	var podcastDataService;
 	var dateService;
 	var $rootScope;
-	var $httpBackend;
 	var ajaxSpy;
 
 	beforeEach(inject(function($injector) {
