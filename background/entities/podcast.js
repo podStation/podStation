@@ -45,6 +45,37 @@ var Podcast = function(url) {
 		getBrowserService().storage.local.set(storageObject);
 	};
 
+	this.load = function() {
+		var that = this;
+
+		var podcastKey = this.getKey();
+
+		getBrowserService().storage.local.get(podcastKey, function(storageObject) {
+			if(storageObject && storageObject[podcastKey]) {
+				var storedPodcast = storageObject[podcastKey];
+
+				that.title = storedPodcast.title;
+				that.description = storedPodcast.description;
+				that.link = storedPodcast.link;
+				that.pubDate = storedPodcast.pubDate;
+				that.image = storedPodcast.image;
+				
+				// >>> social namespace
+				that.email = storedPodcast.email;
+				that.socialHandles = storedPodcast.socialHandles;
+				that.crowdfundings = storedPodcast.crowdfundings;
+				that.participants = storedPodcast.participants;
+				// <<< social namespace
+				
+				that.episodes = storedPodcast.episodes;
+				that.status = 'loaded';
+			}
+			else {
+				that.update();
+			}
+		});
+	};
+
 	this.deleteFromStorage = function() {
 		getBrowserService().storage.local.remove(this.getKey());
 	};
@@ -151,36 +182,5 @@ var Podcast = function(url) {
 		podcastChanged(this);
 
 		return jqxhr;
-	};
-
-	this.load = function() {
-		var that = this;
-
-		var podcastKey = this.getKey();
-
-		getBrowserService().storage.local.get(podcastKey, function(storageObject) {
-			if(storageObject && storageObject[podcastKey]) {
-				var storedPodcast = storageObject[podcastKey];
-
-				that.title = storedPodcast.title;
-				that.description = storedPodcast.description;
-				that.link = storedPodcast.link;
-				that.pubDate = storedPodcast.pubDate;
-				that.image = storedPodcast.image;
-				
-				// >>> social namespace
-				that.email = storedPodcast.email;
-				that.socialHandles = storedPodcast.socialHandles;
-				that.crowdfundings = storedPodcast.crowdfundings;
-				that.participants = storedPodcast.participants;
-				// <<< social namespace
-				
-				that.episodes = storedPodcast.episodes;
-				that.status = 'loaded';
-			}
-			else {
-				that.update();
-			}
-		});
 	};
 }
