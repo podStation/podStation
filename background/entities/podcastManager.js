@@ -400,7 +400,7 @@ var PodcastManager;
 
 		instance = this;
 
-		loadPodcasts = function() {
+		function loadPodcasts() {
 			getPodcastStorageService().getStoredPodcasts().then(function(storedPodcasts) {
 				storedPodcasts.forEach(function(storedPodcast) {
 					var podcast = new Podcast(storedPodcast.url);
