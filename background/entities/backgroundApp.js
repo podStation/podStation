@@ -8,8 +8,9 @@ angular.module('podstationBackgroundApp').config(['messageServiceProvider', func
 	messageServiceProvider.setIsBackgroundPage(true);
 }]);
 
-angular.module('podstationBackgroundAppRun').run(['$window', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService',
-function($window, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService) {
+angular.module('podstationBackgroundAppRun').run([
+'$window', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService',
+function($window, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService) {
 	
 	// playlist, analyticsService and audioPlayerService, are here only to ensure the services are created as soon as possible
 	
@@ -22,6 +23,13 @@ function($window, playlist, browser, analyticsService, audioPlayerService, messa
 					$window.open('https://podstation.blogspot.de/2017/09/v1147-important-update-on-collection-of.html')
 					break;
 			}
+		}
+		else if(details.reason === 'install') {
+			podcastStorageService.getStoredPodcasts().then(function(storedPodcasts) {
+				if(!storedPodcasts.length) {
+					$window.openPodStation('Welcome');
+				}
+			});
 		}
 	});
 

@@ -232,6 +232,13 @@
 	"stats_for_nerds": {
 		"message": "Stats for Nerds"
 	},
+	// welcome
+	"welcome": {
+		"message": "Welcome!"
+	},
+	"welcome_long_text" : {
+		"message": "<p>Welcome to podStation!</p><p>Use the search bar above to search for your favorite podcasts.</p>"
+	},
 	// toolbar
 	"update_all": {
 		"message": "Update All",
