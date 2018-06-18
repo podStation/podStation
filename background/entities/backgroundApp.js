@@ -8,8 +8,8 @@ angular.module('podstationBackgroundApp').config(['messageServiceProvider', func
 	messageServiceProvider.setIsBackgroundPage(true);
 }]);
 
-angular.module('podstationBackgroundAppRun').run(['$window', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService',
-function($window, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService) {
+angular.module('podstationBackgroundAppRun').run(['$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService',
+function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService) {
 	
 	// playlist, analyticsService and audioPlayerService, are here only to ensure the services are created as soon as possible
 	
@@ -29,10 +29,13 @@ function($window, playlist, browser, analyticsService, audioPlayerService, messa
 		setupAutoUpdate(options, false);
 	});
 
-	//var optionsManager = new OptionsManager();
-
 	optionsManagerService.getOptions(function(options) {
-		setupAutoUpdate(options, true);
+		// Give the podcastManager some time to warm up (load podcasts 
+		// from local storage)
+		// TODO: hook this to some event triggered after podcasts are loaded from 
+		$timeout(function() {
+			setupAutoUpdate(options, true);
+		}, 1000);		
 	
 		if(options.analytics) {
 			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
@@ -51,6 +54,8 @@ function($window, playlist, browser, analyticsService, audioPlayerService, messa
 		if(!options.autoUpdate) {
 			return;
 		}
+
+		$log.info('Setting up auto update');
 	
 		browser.alarms.create('updatePodcasts', {
 			periodInMinutes: parseInt(options.autoUpdateEvery)
@@ -60,11 +65,13 @@ function($window, playlist, browser, analyticsService, audioPlayerService, messa
 			if(alarm.name !== 'updatePodcasts') {
 				return;
 			}
-	
+			
+			$log.info('Periodic podcast update started');
 			$window.podcastManager.updatePodcast();
 		});
 	
 		if(updateNow) {
+			$log.info('Initial podcast update started');
 			$window.podcastManager.updatePodcast();
 		}
 	}
