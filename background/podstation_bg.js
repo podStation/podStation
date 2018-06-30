@@ -1,8 +1,3 @@
-window.jslogger = new JSLogger({
-	apiKey: "bd1263cc76f1df5ad5fa122a1058ecd2",
-	proto: "https"
-});
-
 window.openPodStation = function(hash) {
 	chrome.tabs.query({url: 'chrome-extension://*/podstation.html'}, function(tabs) {
 		if(tabs.length) {
