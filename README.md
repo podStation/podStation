@@ -1,18 +1,19 @@
 # podStation Chrome Extension
 
+[![Build Status](https://travis-ci.org/podStation/podStation.svg?branch=master)](https://travis-ci.org/podStation/podStation)
+
 This is a podcast aggregator for chrome.
 
 You can install the extension at the [chrome web store](https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn).
 
 ## Installing the dependencies
 
-You will need to install [Node.js](https://nodejs.org/en/)
-and then install [bower](http://bower.io/) (with the command line
-`npm install -g bower`.
+You will need to install [Node.js](https://nodejs.org/en/).
 
-After installing bower, install the dependencies with the command
-`bower install` and copy them to the right places using the shell
-script `copy_depependencies.sh`.
+After that, install the dependencies in the following order:
+* `npm install`
+* `npm run bower-install`
+* `./copy_dependencies.sh`
 
 ## Running locally
 
@@ -25,6 +26,13 @@ script `copy_depependencies.sh`.
 Voilà!  
 You should see podStation's icon on chrome's toolbar.  
 You are now running a local copy of podStation, have fun!
+
+## Automated tests
+
+We use Karma for automated tests.
+
+You can run the tests with the command line `npm test` if you want to debug the
+tests or `npm run test_chrome` if you just want to run them.
 
 ## Documentation
 
