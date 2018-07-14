@@ -19,7 +19,7 @@ module.exports = function(config) {
       'lib/jquery.min.js',
       'lib/angular.js',
       'lib/podStationNGReuse.min.js',
-      'lib/jsmediatags.min.js',
+      'lib/jsmediatags.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'reuse/**/*.js',
       'background/entities/backgroundApp.js',
@@ -85,12 +85,16 @@ module.exports = function(config) {
       ChromeDebugging: {
         base: 'Chrome',
         flags: [ '--remote-debugging-port=9333' ]
+      },
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
+        flags: ['--no-sandbox']
       }
     },
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'ChromeDebugging'],
+    browsers: ['Chrome', 'ChromeDebugging', 'ChromeHeadlessNoSandbox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
