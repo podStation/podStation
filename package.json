@@ -19,7 +19,7 @@
     "bower-install": "bower install",
     "bower-install-prod": "bower install",
     "test": "karma start --browsers ChromeDebugging",
-    "test_chrome": "karma start --single-run --browsers Chrome"
+    "test_chrome": "karma start --single-run --browsers ChromeHeadlessNoSandbox"
   },
   "repository": {
     "type": "git",

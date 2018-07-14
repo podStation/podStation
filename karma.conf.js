@@ -86,15 +86,15 @@ module.exports = function(config) {
         base: 'Chrome',
         flags: [ '--remote-debugging-port=9333' ]
       },
-      Chrome_travis_ci: {
-        base: 'Chrome',
+      ChromeHeadlessNoSandbox: {
+        base: 'ChromeHeadless',
         flags: ['--no-sandbox']
       }
     },
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'ChromeDebugging', 'Chrome_travis_ci'],
+    browsers: ['Chrome', 'ChromeDebugging', 'ChromeHeadlessNoSandbox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
