@@ -8,13 +8,17 @@
   },
   "dependencies": {},
   "devDependencies": {
+    "bower": "^1.8.4",
     "jasmine-core": "^3.1.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.1"
   },
   "scripts": {
-    "test": "karma start --browsers ChromeDebugging"
+    "bower-install": "bower install",
+    "bower-install-prod": "bower install",
+    "test": "karma start --browsers ChromeDebugging",
+    "test_chrome": "karma start --single-run --browsers Chrome"
   },
   "repository": {
     "type": "git",
