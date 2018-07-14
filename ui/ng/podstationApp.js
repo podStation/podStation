@@ -5,7 +5,10 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 	$compileProvider.aHrefSanitizationWhitelist(whiteList);
 	$compileProvider.imgSrcSanitizationWhitelist(whiteList);
 
-	$routeProvider.when('/Podcasts', {
+	$routeProvider.when('/Welcome', {
+		templateUrl: '/ui/ng/partials/welcome.html',
+		// controller: 'podcastsController'
+	}).when('/Podcasts', {
 		templateUrl: '/ui/ng/partials/podcasts.html',
 		controller: 'podcastsController'
 	}).when('/LastEpisodes', {
