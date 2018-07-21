@@ -7,4 +7,4 @@ before_script:
   - npm run bower-install
   - ./copy_dependencies.sh
 script:
-  - npm run test_chrome_single_run_no_sandbox
+  - npm run test-chrome-single-run-no-sandbox

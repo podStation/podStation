@@ -21,7 +21,7 @@ After that, install the dependencies in the following order:
 2. Go to chrome's extensions page [chrome://extensions/](chrome://extensions/)
 3. Enable the _Developer Mode_
 4. Click the button _Load unpacked extension_.
-5. Choose the root folder of this project
+5. Choose the `extension` folder
 
 Voilà!  
 You should see podStation's icon on chrome's toolbar.  
@@ -31,8 +31,8 @@ You are now running a local copy of podStation, have fun!
 
 We use Karma for automated tests.
 
-You can run the tests with the command line `npm test` if you want to debug the
-tests or `npm run test_chrome` if you just want to run them.
+You can run the tests with the command line `npm test`. 
+If you want to debug the tests run `npm run test_chrome` if you just want to run them.
 
 ## Documentation
 
