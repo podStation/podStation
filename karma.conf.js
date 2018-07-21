@@ -16,21 +16,21 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'lib/jquery.min.js',
-      'lib/angular.js',
-      'lib/podStationNGReuse.min.js',
-      'lib/jsmediatags.js',
+      'extension/lib/jquery.min.js',
+      'extension/lib/angular.js',
+      'extension/lib/podStationNGReuse.min.js',
+      'extension/lib/jsmediatags.js',
       'bower_components/angular-mocks/angular-mocks.js',
-      'reuse/**/*.js',
-      'background/entities/backgroundApp.js',
-      'background/entities/messageService.js',
-      'background/entities/audioPlayer.js',
-      'background/entities/episodeSelector.js',
-      'background/entities/podcastManager.js',
-      'background/entities/notificationManager.js',
-      'background/entities/playlist.js',
-      'background/entities/podcast.js',
-      'background/ng/**/*.js',
+      'extension/reuse/**/*.js',
+      'extension/background/entities/backgroundApp.js',
+      'extension/background/entities/messageService.js',
+      'extension/background/entities/audioPlayer.js',
+      'extension/background/entities/episodeSelector.js',
+      'extension/background/entities/podcastManager.js',
+      'extension/background/entities/notificationManager.js',
+      'extension/background/entities/playlist.js',
+      'extension/background/entities/podcast.js',
+      'extension/background/ng/**/*.js',
       'spec/background/**/*.js',
       'spec/reuse/**/*.js',
       {pattern: 'spec/background/**/*.xml', included: false},
@@ -94,7 +94,7 @@ module.exports = function(config) {
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome', 'ChromeDebugging', 'ChromeHeadlessNoSandbox'],
+    browsers: ['Chrome', 'ChromeDebugging', 'ChromeHeadless', 'ChromeHeadlessNoSandbox'],
 
     // Continuous Integration mode
     // if true, Karma captures browsers, runs the tests and exits
