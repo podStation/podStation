@@ -22,7 +22,6 @@
     "test": "karma start --browsers ChromeHeadless",
     "test-chrome-debuggig": "karma start --browsers ChromeDebugging",
     "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
-    "release-beta": "webstore upload --source=build_output/output.zip --extension-id $EXTENSION_ID_BETA --auto-publish",
     "release": "webstore upload --source=build_output/output.zip --auto-publish"
   },
   "repository": {
