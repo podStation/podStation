@@ -12,15 +12,18 @@
     "jasmine-core": "^3.1.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.1"
+    "karma-jasmine": "^1.1.1",
+    "chrome-webstore-upload-cli": "^1.1.1"
   },
   "scripts": {
     "bower": "bower",
     "bower-install": "bower install",
     "bower-install-prod": "bower install",
     "test": "karma start --browsers ChromeHeadless",
-    "test_chrome_debuggig": "karma start --browsers ChromeDebugging",
-    "test_chrome_single_run_no_sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox"
+    "test-chrome-debuggig": "karma start --browsers ChromeDebugging",
+    "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
+    "release-beta": "webstore upload --source=build_output/output.zip --extension-id $EXTENSION_ID_BETA --auto-publish",
+    "release": "webstore upload --source=build_output/output.zip --auto-publish"
   },
   "repository": {
     "type": "git",
