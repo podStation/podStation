@@ -10,9 +10,7 @@ before_script:
 script:
 - npm run test-chrome-single-run-no-sandbox
 after_success:
-- source ./check_should_deploy.sh
-before_deploy:
-- git tag $NEW_VERSION
+- source ./check_should_deploy_and_create_new_tag.sh
 deploy:
 - provider: releases
   skip_cleanup: true
