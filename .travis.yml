@@ -14,17 +14,17 @@ after_success:
 before_deploy:
 - git tag $NEW_VERSION
 deploy:
-  - provider: releases
-    skip_cleanup: true
-    api_key:
-      secure: $GITHUB_API_KEY
-    file: "./build_output/output.zip"
-    on:
-      branch: master
-      condition: $NEW_VERSION
-  - provider: script
-    skip_cleanup: true
-    script: npm run release
-    on:
-      branch: master
-      condition: $NEW_VERSION
+- provider: releases
+  skip_cleanup: true
+  api_key:
+    secure: EVKjRJjzKdsQakFn8J10RB3Mx8RJfebtYN6plZLx93TOncAeFaIw0LXMwMLbBshfl3hs6K+2JTaprI0RjYdWrpkeliXMb38TEispcRQDFuA/+qkU9TEpimI35nxQ3tELzXXnALwdhQ8PcGi4vpk2lk7z1er+IGNR7Ka+q1//AGx5htn/sAOHEP0rMEBdy9ZhMDpYxn68HNu6uoou7zGAC0Cftd5SGMN86He54fwBh6LBjOjCCrQm11x+P5OP3K119n/jCsJsZQGesJd34Z4M9KXeFUBxW0uiA4u5pXZPpfLuBeAWAxfMijLV8eB0Le338zaRBo5HRcQuwFNMDlbbCd15MLPeDVxXW17uSpGVC+1P4D2UrAdoxGa9dNpKaxr70OrwMbdYwr/RERAdIC8IKSqUE1fH5S+G6wM9fyFXFDZz5W/jTLp9+nKSPpaXqZzD4w8BFrGn1OdL+y+QIXkT2ZeviSNPOVjBzhTxBVxWikS9fTLT3JMzQeC+xuQGMFPySepIOT1jURW1FpxfQJEsOIKayUTePBRMVWs7EYMXH2stvShJHfFYpk3ZW2s0KfM6S/Pl92+auhbE/1fT67Lr8Nw4iiBiQ9qgkMm1Y/2hr1yTTtzD/r+71adNYiYIBH/lnnG5P3Sxf0F4vjJJAq89ABuoiLYZbvl45ZCoaQcdu7A=
+  file: "./build_output/output.zip"
+  on:
+    branch: master
+    condition: "$NEW_VERSION"
+- provider: script
+  skip_cleanup: true
+  script: npm run release
+  on:
+    branch: master
+    condition: "$NEW_VERSION"
