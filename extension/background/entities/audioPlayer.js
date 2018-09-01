@@ -188,6 +188,8 @@
 		}
 
 		function playingTimeOut() {
+			messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
+			
 			playingTimeOutID = $interval(function() {
 				messageService.for('audioPlayer').sendMessage('playing', { episodePlayerInfo: buildAudioInfo() });
 
