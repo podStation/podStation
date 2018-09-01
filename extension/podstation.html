@@ -22,9 +22,10 @@
 		<script type="text/javascript" src="reuse/ng/services/podcastManagerService.js"></script>
 		<script type="text/javascript" src="ui/ng/services/storageService.js"></script>
 		<script type="text/javascript" src="ui/ng/services/socialService.js"></script>
+		<script type="text/javascript" src="ui/ng/services/episodePlayerService.js"></script>
 		<script type="text/javascript" src="ui/ng/directives/episodeListDirective.js"></script>
 		<script type="text/javascript" src="ui/ng/directives/participantListDirective.js"></script>
-		<script type="text/javascript" src="ui/ng/controllers/episodePlayerController.js"></script>
+		<script type="text/javascript" src="ui/ng/directives/episodePlayerDirective.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/playlistController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/headerController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/menuController.js"></script>
@@ -70,7 +71,7 @@
 				</div>
 			</div>
 		</div>
-		<div ng-include="'ui/ng/partials/episodePlayer.html'"></div>
+		<ps-episode-player></ps-episode-player>
 		<div ng-include="'ui/ng/partials/playlist.html'"></div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu" ng-controller="menuController">

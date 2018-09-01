@@ -116,76 +116,76 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	border-radius: 5px;
 }
 </style>
-<div ng-controller="episodePlayerController">
-	<div id="audioPlayer" ng-if="visible">
+<div>
+	<div id="audioPlayer" ng-if="episodePlayer.visible">
 		<table>
 			<tbody>
 				<tr>
 					<td>
-						<i class="fa fa-refresh fa-spin" ng-if="loading" title="Loading"></i>
-						<a href="" ng-click="play()" ng-if="!playing && !loading"><i class="fa fa-play" title="{{'play' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="pause()" ng-if="playing && !loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="backward()" ng-class="{playerButtonDisabled: loading}" title="{{'backward' | chrome_i18n }}"><i class="fa fa-backward"></i></a>
-						<a href="" ng-click="forward()" ng-class="{playerButtonDisabled: loading}" title="{{'forward' | chrome_i18n }}"><i class="fa fa-forward"></i></a>
-						<a href="" ng-click="previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
-						<a href="" ng-click="refresh()" ng-if="!loading"><i class="fa fa-refresh" title="{{'refresh_player' | chrome_i18n }}"></i></a>
+						<i class="fa fa-refresh fa-spin" ng-if="episodePlayer.loading" title="Loading"></i>
+						<a href="" ng-click="episodePlayer.play()" ng-if="!episodePlayer.playing && !episodePlayer.loading"><i class="fa fa-play" title="{{'play' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.pause()" ng-if="episodePlayer.playing && !episodePlayer.loading"><i class="fa fa-pause" title="{{'pause' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.stop()"><i class="fa fa-stop" title="{{'stop' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.backward()" ng-class="{playerButtonDisabled: episodePlayer.loading}" title="{{'backward' | chrome_i18n }}"><i class="fa fa-backward"></i></a>
+						<a href="" ng-click="episodePlayer.forward()" ng-class="{playerButtonDisabled: episodePlayer.loading}" title="{{'forward' | chrome_i18n }}"><i class="fa fa-forward"></i></a>
+						<a href="" ng-click="episodePlayer.previousEpisode()" ng-if="true"><i class="fa fa-step-backward" title="{{'previous_episode' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.nextEpisode()" ng-if="true"><i class="fa fa-step-forward" title="{{'next_episode' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
+						<a href="" ng-click="episodePlayer.refresh()" ng-if="!episodePlayer.loading"><i class="fa fa-refresh" title="{{'refresh_player' | chrome_i18n }}"></i></a>
 						
 						<span>
-							<span ng-if="timeMouseOver"><i>{{timeMouseOver}}</i></span>
-							<span ng-if="!timeMouseOver">{{time}}</span>
-							<span> / {{duration}}</span>
+							<span ng-if="episodePlayer.timeMouseOver"><i>{{episodePlayer.timeMouseOver}}</i></span>
+							<span ng-if="!episodePlayer.timeMouseOver">{{episodePlayer.time}}</span>
+							<span> / {{episodePlayer.duration}}</span>
 						</span>
 						<br>
 						<div id="volumeControl">
 							<i id="volumeIcon" class="fa fa-volume-up"></i>
-							<input id="volumeSlider" type="range" name="range" ng-model="volume.value" ng-change="volumeChanged()"></input>
+							<input id="volumeSlider" type="range" name="range" ng-model="episodePlayer.volume.value" ng-change="episodePlayer.volumeChanged()"></input>
 						</div>
 						<div id="speedControl" style="padding-top: 10px">
 							<span>{{'speed' | chrome_i18n}}</span>
-							<button class="psTransparent" ng-click="speedUp()" title="{{'speed_up' | chrome_i18n }}: {{nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
-							<button class="psTransparent" ng-click="speedDown()" title="{{'speed_down' | chrome_i18n }}: {{nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
-							<span>{{currentPlaybackRate()}}x</span>
+							<button class="psTransparent" ng-click="episodePlayer.speedUp()" title="{{'speed_up' | chrome_i18n }}: {{episodePlayer.nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
+							<button class="psTransparent" ng-click="episodePlayer.speedDown()" title="{{'speed_down' | chrome_i18n }}: {{episodePlayer.nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
+							<span>{{episodePlayer.currentPlaybackRate()}}x</span>
 						</div>
 					</td>
 					<td ng-if="imageUrl">
-						<img ng-src="{{imageUrl}}" id="playerImage"></img>
+						<img ng-src="{{episodePlayer.imageUrl}}" id="playerImage"></img>
 					</td>
 					<td>
 						<div id="playingTitle">
 							<span><b>{{'playing' | chrome_i18n }}:</b> </span>
-							<a ng-if="mediaLink" ng-href="{{mediaLink}}" target="_blank">{{mediaTitle}}</a>
-							<span ng-if="!mediaLink">{{mediaTitle}}</span>
+							<a ng-if="mediaLink" ng-href="{{episodePlayer.mediaLink}}" target="_blank">{{episodePlayer.mediaTitle}}</a>
+							<span ng-if="!episodePlayer.mediaLink">{{episodePlayer.mediaTitle}}</span>
 						</div>
-						<div id="progressOut" ng-click="seek($event)" ng-mousemove="progressMouseOver($event)" 
-						ng-mouseleave="progressMouseLeave()" title="{{timeMouseOver}}">
-							<div id="progressIn" style="width: {{timePercent}}%"></div>
+						<div id="progressOut" ng-click="episodePlayer.seek($event)" ng-mousemove="episodePlayer.progressMouseOver($event)" 
+						ng-mouseleave="episodePlayer.progressMouseLeave()" title="{{episodePlayer.timeMouseOver}}">
+							<div id="progressIn" style="width: {{episodePlayer.timePercent}}%"></div>
 						</div>
 						<div style="padding-bottom: 4px;">
-							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="tweet()"><i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}</span>
+							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="episodePlayer.tweet()"><i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}</span>
 							<!--<span style="color: gray;"> | </span>
 							<span class="psPlayerBtnSecondary icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="shareWithFacebook()"><i class="fa fa-share"></i> {{'facebook_share' | chrome_i18n}}</span>-->
 						</div>
 						<div style="padding-bottom: 5px;">
-							<button class="psPlayerBtnSecondary psTransparent" href="" ng-click="toggleShowOptions()" ng-if="!showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
-							<button class="psTransparent" ng-click="toggleShowOptions()" ng-if="showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
+							<button class="psPlayerBtnSecondary psTransparent" href="" ng-click="episodePlayer.toggleShowOptions()" ng-if="!episodePlayer.showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
+							<button class="psTransparent" ng-click="episodePlayer.toggleShowOptions()" ng-if="episodePlayer.showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
 						</div>
-						<div id="playerOptions" ng-if="showOptions">
+						<div id="playerOptions" ng-if="episodePlayer.showOptions">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
-							<select name="audio_list" ng-model="options.order" ng-change="orderChanged()">
+							<select name="audio_list" ng-model="episodePlayer.options.order" ng-change="episodePlayer.orderChanged()">
 								<option value="from_podcast"      >{{'order_from_podcast'       | chrome_i18n}}</option>
 								<option value="from_last_episodes">{{'order_from_last_episodes' | chrome_i18n}}</option>
 								<option value="from_playlist"     >{{'order_from_playlist'      | chrome_i18n}}</option>
 							</select>
 							<br>
 							<div title="{{'continue_playing_description' | chrome_i18n}}">
-								<input type="checkbox" name="continuous_play" ng-model="options.continuous" ng-change="continuousChanged()" />
+								<input type="checkbox" name="continuous_play" ng-model="episodePlayer.options.continuous" ng-change="episodePlayer.continuousChanged()" />
 								<span> {{'continue_playing' | chrome_i18n}}</span>
 							</div>
 							<div>
-								<input type="checkbox" name="remove_when_finished" ng-model="options.removeWhenFinished" ng-change="onChangeRemoveWhenFinished()" />
+								<input type="checkbox" name="remove_when_finished" ng-model="episodePlayer.options.removeWhenFinished" ng-change="episodePlayer.onChangeRemoveWhenFinished()" />
 								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>
 						</div>
