@@ -162,7 +162,8 @@
 					duration: audioPlayer ? audioPlayer.duration : 0,
 					playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0,
 					volume: audioPlayer ? audioPlayer.volume : 0,
-					error: audioPlayer ? audioPlayer.error : 0
+					error: audioPlayer ? audioPlayer.error : 0,
+					paused: audioPlayer.paused
 				},
 				episodeId: episodeInfo ? episodeInfo.episodeId : null
 			}

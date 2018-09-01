@@ -54,7 +54,6 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		episodePlayer.playing(function(audioInfo) {
 			$scope.$apply(function(){
-				controller.playing = true;
 				getAudioInfoCallback(audioInfo);
 			});
 		});
@@ -263,6 +262,8 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 				return;
 
 			episodeId = audioInfo.episodeId;
+
+			controller.playing = !audioInfo.audio.paused;
 
 			podcastManagerService.getPodcastAndEpisode(audioInfo.episodeId).then(function(result) {
 				var episode = result.episode;
