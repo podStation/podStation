@@ -6,6 +6,8 @@ angular.module('podstationApp').factory('episodePlayer', ['messageService', func
 		play: play
 	};
 
+	episodePlayer.removeListeners = removeListeners;
+
 	episodePlayer.refresh = function() {
 		messageService.for('audioPlayer').sendMessage('refresh');
 	};
@@ -81,49 +83,27 @@ angular.module('podstationApp').factory('episodePlayer', ['messageService', func
 		});
 	};
 
-	episodePlayer.playing = function(playingCallback) {
-		episodePlayer.playingCallback = playingCallback;
-	};
-
-	episodePlayer.paused = function(pausedCallback) {
-		episodePlayer.pausedCallback = pausedCallback;
-	};
-
-	episodePlayer.stopped = function(stoppedCallback) {
-		episodePlayer.stoppedCallback = stoppedCallback;
-	};
-
-	episodePlayer.changed = function(changedCallback) {
-		episodePlayer.changedCallback = changedCallback;
-	};
-
-	episodePlayer.optionsChanged = function(optionsChangedCallback) {
-		episodePlayer.optionsChangedCallback = optionsChangedCallback;
-	};
+	episodePlayer.onPlaying = new PodStationEvent();
+	episodePlayer.onPaused = new PodStationEvent();
+	episodePlayer.onStopped = new PodStationEvent();
+	episodePlayer.onChanged = new PodStationEvent();
+	episodePlayer.onOptionsChanged = new PodStationEvent();
 
 	messageService.for('audioPlayer')
-	  .onMessage('playing', function(messageContent) {
-		if(episodePlayer.playingCallback) {
-			episodePlayer.playingCallback(messageContent.episodePlayerInfo)
-		}
-	}).onMessage('paused', function() {
-		if(episodePlayer.pausedCallback) {
-			episodePlayer.pausedCallback()
-		}
-	}).onMessage('stopped', function() {
-		if(episodePlayer.stoppedCallback) {
-			episodePlayer.stoppedCallback()
-		}
-	}).onMessage('changed', function(message) {
-		if(episodePlayer.changedCallback) {
-			episodePlayer.changedCallback(message.episodePlayerInfo)
-		}
-	}).onMessage('optionsChanged', function(message) {
-		if(episodePlayer.optionsChangedCallback) {
-			episodePlayer.optionsChangedCallback(message)
-		}
-	});
+	  .onMessage('playing', (message)        => episodePlayer.onPlaying.notify(message.episodePlayerInfo))
+	  .onMessage('paused',  ()               => episodePlayer.onPaused.notify())
+	  .onMessage('stopped', ()               => episodePlayer.onStopped.notify())
+	  .onMessage('changed', (message)        => episodePlayer.onChanged.notify(message.episodePlayerInfo))
+	  .onMessage('optionsChanged', (message) => episodePlayer.onOptionsChanged.notify(message));
 
 	return episodePlayer;
+
+	function removeListeners(group) {
+		episodePlayer.onPlaying.removeListeners(group);
+		episodePlayer.onPaused.removeListeners(group);
+		episodePlayer.onStopped.removeListeners(group);
+		episodePlayer.onChanged.removeListeners(group);
+		episodePlayer.onOptionsChanged.removeListeners(group);
+	}
 }]);
 })();

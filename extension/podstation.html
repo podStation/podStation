@@ -14,6 +14,7 @@
 		
 		<script type="text/javascript" src="ui/common.js"></script>
 		<script type="text/javascript" src="ui/ng/podstationApp.js"></script>
+		<script type="text/javascript" src="reuse/event.js"></script>
 		<script type="text/javascript" src="reuse/ng/reuse.js"></script>
 		<script type="text/javascript" src="reuse/ng/services/podcastManagerService.js"></script>
 		<script type="text/javascript" src="reuse/ng/services/analyticsService.js"></script>
@@ -71,7 +72,8 @@
 				</div>
 			</div>
 		</div>
-		<ps-episode-player></ps-episode-player>
+		<ps-episode-player id="audioPlayer"></ps-episode-player>
+		<ps-episode-player mini-player="true"></ps-episode-player>
 		<div ng-include="'ui/ng/partials/playlist.html'"></div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu" ng-controller="menuController">

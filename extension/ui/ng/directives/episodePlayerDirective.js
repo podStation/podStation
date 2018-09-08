@@ -51,32 +51,15 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		controller.tooglePlaylistVisibility = tooglePlaylistVisibility;
 		controller.tweet = tweet;
 		controller.shareWithFacebook = shareWithFacebook;
+		controller.isVisible = isVisible;
 
-		episodePlayer.playing(function(audioInfo) {
-			$scope.$apply(function(){
-				getAudioInfoCallback(audioInfo);
-			});
-		});
+		episodePlayer.onPlaying.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
+		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
+		episodePlayer.onStopped.addListener(() => $scope.$apply(() => reset()). controller);
+		episodePlayer.onChanged.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
+		episodePlayer.onOptionsChanged.addListener(() => setScopeOptions(options), controller);
 
-		episodePlayer.paused(function() {
-			$scope.$apply(function(){
-				controller.playing = false;
-			});
-		});
-
-		episodePlayer.stopped(function() {
-			$scope.$apply(function(){
-				reset();
-			});
-		});
-
-		episodePlayer.changed(function(audioInfo) {
-			getAudioInfoCallback(audioInfo);
-		});
-
-		episodePlayer.optionsChanged(function(options) {
-			setScopeOptions(options);
-		});
+		$scope.$on('$destroy', () => episodePlayer.removeListeners(controller));
 
 		$document[0].body.onkeyup = function(e) {
 			if(e.key === ' ' && controller.visible && e.target.localName !== 'input') {
@@ -92,6 +75,20 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 				return false;
 			}
 		};
+
+		if(controller.miniPlayer) {
+			$window.addEventListener('scroll', function() {
+				const mainPlayerBottom = $document[0].getElementById('audioPlayer').getBoundingClientRect().bottom;
+				controller.miniPlayerVisible = mainPlayerBottom < 0;
+
+				if((!(typeof controller.previousMiniPlayerVisible === 'undefined')) && 
+				   controller.miniPlayerVisible !== controller.previousMiniPlayerVisible) {
+					$scope.$apply(function() {});
+				}
+				
+				controller.previousMiniPlayerVisible = controller.miniPlayerVisible;
+			});
+		}
 
 		reset();
 
@@ -256,6 +253,10 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		function shareWithFacebook() {
 			socialService.shareWithFacebook(episodeId);
 		};
+
+		function isVisible() {
+			return controller.visible && (controller.miniPlayer ? controller.miniPlayerVisible : true)
+		}
 
 		function getAudioInfoCallback(audioInfo) {
 			if(!audioInfo.episodeId)

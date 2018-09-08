@@ -1,5 +1,5 @@
 <style>
-#audioPlayer {
+.audioPlayer {
 	margin-top: -10;
 }
 
@@ -8,23 +8,23 @@
 	height: 80px;
 }
 
-#audioPlayer table {
+.audioPlayer table {
 	width: 100%;
 	border-collapse: collapse;
 }
 
-#audioPlayer td {
+.audioPlayer td {
 	background-color: black;
 	color: white;
 	padding: 10px;
 	white-space: nowrap;
 }
 
-#audioPlayer td a {
+.audioPlayer td a {
 	color: white;
 }
 
-#audioPlayer td:last-child{
+.audioPlayer td:last-child{
 	width:100%;
 }
 
@@ -115,9 +115,19 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	padding: 5px;
 	border-radius: 5px;
 }
+
+.miniPlayer {
+	position: fixed;
+	/* it does not inherit the parent width when using position fixed */
+	width: 1000px;
+	top: 0;
+	z-index: 1;
+	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
+}
+
 </style>
-<div>
-	<div id="audioPlayer" ng-if="episodePlayer.visible">
+<div class="audioPlayer">
+	<div ng-if="episodePlayer.isVisible()" ng-class="{miniPlayer: episodePlayer.miniPlayer}">
 		<table>
 			<tbody>
 				<tr>
@@ -139,11 +149,11 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 							<span> / {{episodePlayer.duration}}</span>
 						</span>
 						<br>
-						<div id="volumeControl">
+						<div id="volumeControl" ng-if="!episodePlayer.miniPlayer">
 							<i id="volumeIcon" class="fa fa-volume-up"></i>
 							<input id="volumeSlider" type="range" name="range" ng-model="episodePlayer.volume.value" ng-change="episodePlayer.volumeChanged()"></input>
 						</div>
-						<div id="speedControl" style="padding-top: 10px">
+						<div id="speedControl" ng-if="!episodePlayer.miniPlayer" style="padding-top: 10px">
 							<span>{{'speed' | chrome_i18n}}</span>
 							<button class="psTransparent" ng-click="episodePlayer.speedUp()" title="{{'speed_up' | chrome_i18n }}: {{episodePlayer.nextPlaybackRateUp()}}x"><i class="fa fa-chevron-up"></i></button>
 							<button class="psTransparent" ng-click="episodePlayer.speedDown()" title="{{'speed_down' | chrome_i18n }}: {{episodePlayer.nextPlaybackRateDown()}}x"><i class="fa fa-chevron-down"></i></button>
@@ -156,23 +166,23 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 					<td>
 						<div id="playingTitle">
 							<span><b>{{'playing' | chrome_i18n }}:</b> </span>
-							<a ng-if="mediaLink" ng-href="{{episodePlayer.mediaLink}}" target="_blank">{{episodePlayer.mediaTitle}}</a>
+							<a ng-if="episodePlayer.mediaLink" ng-href="{{episodePlayer.mediaLink}}" target="_blank">{{episodePlayer.mediaTitle}}</a>
 							<span ng-if="!episodePlayer.mediaLink">{{episodePlayer.mediaTitle}}</span>
 						</div>
 						<div id="progressOut" ng-click="episodePlayer.seek($event)" ng-mousemove="episodePlayer.progressMouseOver($event)" 
 						ng-mouseleave="episodePlayer.progressMouseLeave()" title="{{episodePlayer.timeMouseOver}}">
 							<div id="progressIn" style="width: {{episodePlayer.timePercent}}%"></div>
 						</div>
-						<div style="padding-bottom: 4px;">
+						<div style="padding-bottom: 4px;" ng-if="!episodePlayer.miniPlayer">
 							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="episodePlayer.tweet()"><i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}</span>
 							<!--<span style="color: gray;"> | </span>
 							<span class="psPlayerBtnSecondary icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="shareWithFacebook()"><i class="fa fa-share"></i> {{'facebook_share' | chrome_i18n}}</span>-->
 						</div>
-						<div style="padding-bottom: 5px;">
+						<div style="padding-bottom: 5px;" ng-if="!episodePlayer.miniPlayer">
 							<button class="psPlayerBtnSecondary psTransparent" href="" ng-click="episodePlayer.toggleShowOptions()" ng-if="!episodePlayer.showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
 							<button class="psTransparent" ng-click="episodePlayer.toggleShowOptions()" ng-if="episodePlayer.showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
 						</div>
-						<div id="playerOptions" ng-if="episodePlayer.showOptions">
+						<div id="playerOptions" ng-if="episodePlayer.showOptions" ng-if="!episodePlayer.miniPlayer">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
 							<select name="audio_list" ng-model="episodePlayer.options.order" ng-change="episodePlayer.orderChanged()">
 								<option value="from_podcast"      >{{'order_from_podcast'       | chrome_i18n}}</option>
