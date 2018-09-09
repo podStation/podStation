@@ -4,6 +4,7 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 	};
 
 	$scope.togglePlaylistVisibility = togglePlaylistVisibility;
+	$scope.exportOpml = exportOpml;
 
 	// ng-change is not supported for input type='file'
 	$document[0].getElementById('opmlUploader').addEventListener('change', fileNameChanged);
@@ -44,4 +45,22 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 	function togglePlaylistVisibility() {
 		messageService.for('playlist').sendMessage('toggleVisibility');
 	}
+
+	function exportOpml() {
+		messageService.for('podcastManager').sendMessage('getOpml', null, response => {
+			download(response);
+		});
+	}
+
+	function download(text) {
+
+		var element = $document[0].createElement('a');
+		element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+		element.setAttribute('download', 'podStation.opml');
+
+		element.style.display = 'none';
+		$document[0].body.appendChild(element);
+		element.click();
+		$document[0].body.removeChild(element);
+	  }
 }]);

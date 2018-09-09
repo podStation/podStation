@@ -16,6 +16,7 @@ var PodcastManager;
 		this.getEpisodesInProgress = getEpisodesInProgress;
 		this.getEpisodeIds = getEpisodeIds;
 		this.reset = reset;
+		this.getOpml = getOpml;
 
 		function triggerNotifications() {
 			var loadingEpisodes = 0;
@@ -416,6 +417,24 @@ var PodcastManager;
 			});
 		};
 
+		function getOpml() {
+			const subscriptions = instance.podcastList.reduce((previous, current) => {
+				return previous + `<outline title="${current.title}" type="rss" xmlUrl="${current.url}"/>\n`
+			}, '');
+
+			return `<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.1">
+	<head>
+		<title>podStation OPML export</title>
+	</head>
+	<body>
+		<outline text="Subscriptions">
+			${subscriptions}
+		</outline>
+	</body>
+</opml>`;
+		}
+
 		// do it async as it need to be executed after
 		// angular bootstrap
 		angular.element(document).ready(function() {
@@ -439,6 +458,9 @@ var PodcastManager;
 	
 					return false;
 				});
+				return true;
+			}).onMessage('getOpml', (message, sendResponse) => {
+				sendResponse(getOpml());
 				return true;
 			});
 

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.1">
+	<head>
+		<title>podStation OPML export</title>
+	</head>
+	<body>
+		<outline text="Subscriptions">
+			<outline title="Feed1" type="rss" xmlUrl="https://feed-with-guid.podstation.com"/>
+			<outline title="Feed Without GUID" type="rss" xmlUrl="https://feed-without-guid.podstation.com"/>
+		</outline>
+	</body>
+</opml>

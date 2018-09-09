@@ -152,12 +152,6 @@ describe('podcastManager',  function() {
 	});
 
 	describe('getEpisodesInProgress', function() {
-		var messageService;
-
-		beforeEach(inject(function($injector){
-			messageService = $injector.get('messageService');
-		}));
-
 		it('should respond with all episodes in progress when one podcast have one ep in progress', function() {
 			var now = new Date();
 			spyOn(dateService, 'now').and.returnValue(now);
@@ -264,6 +258,23 @@ describe('podcastManager',  function() {
 			expect(episodesInProgress.map(function(item) { return item.episodeUserData.currentTime })).toEqual([
 				120
 			]);
+		});
+	});
+	
+	describe('getOpml', () => {
+		it('should return a opml with feeds', () => {
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+			$rootScope.$apply();
+
+			const opml = podcastManager.getOpml();
+			const expectedOpml = syncGetFeedContent('feeds.opml').response;
+
+			expect(xmlCleanUp(opml)).toBe(xmlCleanUp(expectedOpml));
+
+			function xmlCleanUp(str) {
+				return str.replace(new RegExp('(\t|\r|\n)', 'g'), '');
+			}
 		});
 	});
 });
