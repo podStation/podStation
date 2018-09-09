@@ -257,6 +257,9 @@
 	"import_opml": {
 		"message": "Importar feeds de um arquivo OPML"
 	},
+	"export_opml": {
+		"message": "Exportar feeds para um arquivo OPML"
+	},
 	"review": {
 		"message": "Mande amor, deixe um review"
 	},
