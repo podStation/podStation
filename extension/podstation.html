@@ -43,6 +43,18 @@
 		<link rel="stylesheet" href="lib/font-awesome.min.css">
 	</head>
 	<body>
+		<div style="
+		padding: 10px;
+		background-color: mediumseagreen;
+		color: white;
+	">
+			<div style="float: right;">
+				<button>Not Interested</button>
+				<button class="psTransparent"><i class="fa fa-close"></i></button>
+			</div>
+			<span>podStation was updated to v1.18.1 - See what's new</span>
+			
+		</div>
 		<div id="header" ng-controller="headerController">
 			<div id="headerRight">
 				<input type="text" id="entryBox" placeholder="{{'search_placeholder' | chrome_i18n }}" ng-model="entry" ng-keypress="editBoxKeyPress($event)"/>
