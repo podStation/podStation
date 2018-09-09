@@ -34,6 +34,7 @@ module.exports = function(config) {
       'spec/background/**/*.js',
       'spec/reuse/**/*.js',
       {pattern: 'spec/background/**/*.xml', included: false},
+      {pattern: 'spec/background/**/*.opml', included: false},
       {pattern: 'spec/background/**/*.json', included: false}
     ],
 
