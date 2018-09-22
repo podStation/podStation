@@ -52,8 +52,32 @@
 			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation</h1>
 		</div>
 		<div ng-controller="notificationController" id="notificationDrawer">
+			<style>
+				a {
+					color: inherit
+				}
+
+				button {
+					border: none;
+					background: inherit;
+					color: lightgray;
+					border-radius: 5px;
+					font: inherit;
+					cursor: pointer;
+				}
+
+				button:hover {
+					color: white;
+					border-color: white 
+				}
+			</style>
 			<div id="closeAllNotifications" ng-if="notifications.length" ng-click="dismissAll()" title="{{'dismiss_all' | chrome_i18n }}">
 				<i class="fa fa-close"></i>
+			</div>
+			<div class="notification">
+				
+				<i class="fa fa-exclamation"></i> podStation was updated to version 1.18.2, <a>see what's new</a>
+				<button>Don't show this again</button>
 			</div>
 			<div ng-repeat="notification in notifications track by notification.id">
 				<div ng-if="!notification.isGroup" class="notification" title="click to dismiss..." ng-click="notification.dismiss()">
