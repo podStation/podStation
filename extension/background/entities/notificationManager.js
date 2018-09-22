@@ -3,10 +3,9 @@
 (function() {
 
 	angular.module('podstationBackgroundApp')
-	  .service('notificationManager', ['messageService', notificationManager]);
+	  .service('notificationManager', ['messageService', 'browser', 'storageService', notificationManager]);
 
-	function notificationManager(messageService) {
-
+	function notificationManager(messageService, browserService, storageService) {
 		var nextNotificationId = 1;
 		var notifications = {};
 
@@ -59,6 +58,19 @@
 			.onMessage('removeAllNotifications', function() {
 				that.removeNotification();
 			});
+		});
+
+		// last viewd update news version
+		storageService.loadFromStorage('lvn', null, 'sync').then((lastViewedUpdateNewsVersion) => {
+			const updateNews = {
+				'1.18.2':'https://github.com/podStation'
+			};
+
+			const version = browserService.app.getDetails().version;
+
+			if(version !== lastViewedUpdateNewsVersion && updateNews[version]) {
+				console.log('should show news');
+			}
 		});
 	}
 })();
