@@ -32,9 +32,9 @@
 (function(){
 	angular
 		.module('podstationBackgroundApp')
-		.factory('audioPlayerService', ['$injector', '$interval', 'browser', 'messageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService]);
+		.factory('audioPlayerService', ['$injector', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService]);
 
-	function audioPlayerService($injector, $interval, browserService, messageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
+	function audioPlayerService($injector, $interval, $q, browserService, messageService, storageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
 		/**
 		 * @type {HTMLAudioElement}
 		 */ 
@@ -51,29 +51,46 @@
 		var playingTimeOutID;
 		var timeOutCounter = 0;
 
-		function loadPlayerOptions(storage, loaded) {
-			storage.get('playerOptions', function(storageObject) {
-				var playerOptions;
+		const SYNC_OPTIONS = {
+			'order':true,
+			'continuous':true,
+			'removeWhenFinished':true
+		};
 
-				if(typeof storageObject.playerOptions === "undefined") {
-					playerOptions = {};
-				}
-				else {
-					playerOptions = storageObject.playerOptions;
-				}
+		function splitOptions(options) {
+			const result = {
+				local: {},
+				sync: {}
+			}
 
-				if( loaded(playerOptions) ) {
-					storage.set({'playerOptions': playerOptions});
-				}
+			for(var key in options) {
+				result[SYNC_OPTIONS[key]?'sync':'local'][key] = options[key];
+			}
+			
+			return result;
+		}
+
+		/**
+		 * 
+		 * @param {Array<Object>} allOptions 
+		 */
+		function mergeOptions(allOptions) {
+			const result = {};
+
+			allOptions.forEach((option) => {
+				for(var key in option) {result[key] = option[key]}
 			});
+
+			return result;
 		}
 
 		function loadLocalPlayerOptions(loaded) {
-			loadPlayerOptions(browserService.storage.local, loaded);
+			// loadPlayerOptions(browserService.storage.local, loaded);
+			return storageService.loadFromStorage('playerOptions', loaded, 'local', () => {return {};});
 		}
 
 		function loadSyncPlayerOptions(loaded) {
-			loadPlayerOptions(browserService.storage.sync, function(playerOptions) {
+			return storageService.loadFromStorage('playerOptions', (playerOptions) => {
 				// handling of default values
 				
 				if(!playerOptions.order)
@@ -82,8 +99,8 @@
 				if(typeof playerOptions.removeWhenFinished === 'undefined')
 					playerOptions.removeWhenFinished = true;
 
-				return loaded(playerOptions);
-			});
+				return loaded && loaded(playerOptions);
+			}, 'sync', () => {return {};});
 		};
 
 		function getPodcastAndEpisode(episodeId) {
@@ -436,31 +453,41 @@
 
 				loadLocalPlayerOptions(function(playerOptions) {
 					playerOptions.volume = message.value;
-					return true;
+					return playerOptions;
 				});
 			}
 		}).onMessage('getAudioInfo', function(messageContent, sendResponse) {
 			sendResponse(buildAudioInfo());
 			return true;
 		}).onMessage('getOptions', function(messageContent, sendResponse) {
-			loadSyncPlayerOptions(function(options) {
-				sendResponse(options);
+			$q.all([loadSyncPlayerOptions(), loadLocalPlayerOptions()]).then((allOptions) => {
+				sendResponse(mergeOptions(allOptions));
 			});
 			return true;
 		}).onMessage('setOptions', function(messageContent) {
-			loadSyncPlayerOptions(function(options) {
-				if(messageContent.order)
-					options.order = messageContent.order;
+			const result = splitOptions(messageContent);
 
-				if(messageContent.continuous !== undefined)
-					options.continuous = messageContent.continuous;
-
-				if(messageContent.removeWhenFinished !== undefined)
-					options.removeWhenFinished = messageContent.removeWhenFinished;
-
-				messageService.for('audioPlayer').sendMessage('optionsChanged', options);
-
-				return true;
+			$q.all([
+				loadSyncPlayerOptions(function(options) {
+					if(result.sync.order)
+						options.order = result.sync.order;
+	
+					if(result.sync.continuous !== undefined)
+						options.continuous = result.sync.continuous;
+	
+					if(result.sync.removeWhenFinished !== undefined)
+						options.removeWhenFinished = result.sync.removeWhenFinished;
+	
+					return options;
+				}),
+				loadLocalPlayerOptions(function(options) {
+					if(result.local.pauseOnLock)
+						options.pauseOnLock = result.local.pauseOnLock;
+	
+					return options;
+				})
+			]).then((allOptions) => {
+				messageService.for('audioPlayer').sendMessage('optionsChanged', mergeOptions(allOptions));
 			});
 		});
 
@@ -482,6 +509,10 @@
 					togglePlayPause();
 					break;
 			}
+		});
+
+		browserService.idle.onStateChanged.addListener((newState) => {
+			
 		});
 
 		return {};

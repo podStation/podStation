@@ -366,7 +366,7 @@ describe('audioPlayerService', function() {
 
 			$rootScope.$apply();
 
-			browserService.commands._triggerCommand('play_pause');
+			browserService.commands.onCommand._trigger('play_pause');
 
 			expect(audioBuilderService.audio.pause).toHaveBeenCalled();
 
@@ -381,6 +381,73 @@ describe('audioPlayerService', function() {
 					progress: 0
 				}
 			);
+		});
+	});
+
+	// describe('state listener', function() {
+	// 	it('should pause on lock when user opts so', function() {
+	// 		spyOn(audioBuilderService.audio, 'pause');
+	// 		spyOn(browserService.notifications, 'clear');
+	// 		spyOn(browserService.notifications, 'create');
+
+	// 		messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: true});
+
+	// 		podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+	// 		$rootScope.$apply();
+
+	// 		messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+
+	// 		$rootScope.$apply();
+
+	// 		browserService.idle.onStateChanged._trigger('locked');
+
+	// 		expect(audioBuilderService.audio.pause).toHaveBeenCalled();
+
+	// 		expect(browserService.notifications.clear).toHaveBeenCalledWith('playing');
+
+	// 		expect(browserService.notifications.create).toHaveBeenCalledWith(
+	// 			'paused', {
+	// 				type: 'progress',
+	// 				iconUrl: FEEDS.WITH_GUID.IMAGE,
+	// 				title: 'paused',
+	// 				message: FEEDS.WITH_GUID.EP2.title,
+	// 				progress: 0
+	// 			}
+	// 		);
+	// 	});
+	// });
+	
+	describe('options storage', () => {
+		it('should split between sync and local', () => {
+			const optionsToSet = {
+				order: 'from_playlist',
+				continuous: true,
+				removeWhenFinished: true,
+				pauseOnLock: true
+			};
+
+			var optionsChangedPayload;
+			var optionsGotten;
+
+			messageService.for('audioPlayer').onMessage('optionsChanged', (options) => {optionsChangedPayload = options});
+			messageService.for('audioPlayer').sendMessage('setOptions', optionsToSet);
+			messageService.for('audioPlayer').sendMessage('getOptions', null, (options) => {optionsGotten = options});
+
+			$rootScope.$apply();
+
+			expect(optionsChangedPayload).toEqual(optionsToSet);
+			expect(optionsGotten).toEqual(optionsToSet);
+
+			expect(browserService.storage.sync._getFullStorage()['playerOptions']).toEqual({
+				order: 'from_playlist',
+				continuous: true,
+				removeWhenFinished: true
+			});
+
+			expect(browserService.storage.local._getFullStorage()['playerOptions']).toEqual({
+				pauseOnLock: true
+			});
 		});
 	});
 });

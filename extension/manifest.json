@@ -21,6 +21,7 @@
 		"alarms",
 		"notifications",
 		"contextMenus",
+		"idle",
 		"http://*/",
 		"https://*/"
 	],
