@@ -87,7 +87,7 @@
 		"message": "Remover da playlist ao finalizar"
 	},
 	"pause_when_locked": {
-		"message": "Pausr quando o computador for bloqueado"
+		"message": "Pausar quando o computador for bloqueado"
 	},
 	"player_error" : {
 		"message": "Erro carregando seu episódio, clique no play para tentar novamente"
