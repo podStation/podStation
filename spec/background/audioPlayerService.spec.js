@@ -384,39 +384,51 @@ describe('audioPlayerService', function() {
 		});
 	});
 
-	// describe('state listener', function() {
-	// 	it('should pause on lock when user opts so', function() {
-	// 		spyOn(audioBuilderService.audio, 'pause');
-	// 		spyOn(browserService.notifications, 'clear');
-	// 		spyOn(browserService.notifications, 'create');
+	describe('state listener', function() {
+		it('should pause on lock when user opts so', function() {
+			spyOn(audioBuilderService.audio, 'pause');
+			spyOn(browserService.notifications, 'clear');
+			spyOn(browserService.notifications, 'create');
 
-	// 		messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: true});
+			messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: true});
 
-	// 		podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
-	// 		$rootScope.$apply();
+			$rootScope.$apply();
 
-	// 		messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+			messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
 
-	// 		$rootScope.$apply();
+			$rootScope.$apply();
 
-	// 		browserService.idle.onStateChanged._trigger('locked');
+			browserService.idle.onStateChanged._trigger('locked');
 
-	// 		expect(audioBuilderService.audio.pause).toHaveBeenCalled();
+			$rootScope.$apply();
 
-	// 		expect(browserService.notifications.clear).toHaveBeenCalledWith('playing');
+			expect(audioBuilderService.audio.pause).toHaveBeenCalled();
+		});
 
-	// 		expect(browserService.notifications.create).toHaveBeenCalledWith(
-	// 			'paused', {
-	// 				type: 'progress',
-	// 				iconUrl: FEEDS.WITH_GUID.IMAGE,
-	// 				title: 'paused',
-	// 				message: FEEDS.WITH_GUID.EP2.title,
-	// 				progress: 0
-	// 			}
-	// 		);
-	// 	});
-	// });
+		it('should not pause on lock when user opts so', function() {
+			spyOn(audioBuilderService.audio, 'pause');
+			spyOn(browserService.notifications, 'clear');
+			spyOn(browserService.notifications, 'create');
+
+			messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: false});
+
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+			$rootScope.$apply();
+
+			messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+
+			$rootScope.$apply();
+
+			browserService.idle.onStateChanged._trigger('locked');
+
+			$rootScope.$apply();
+
+			expect(audioBuilderService.audio.pause).not.toHaveBeenCalled();
+		});
+	});
 	
 	describe('options storage', () => {
 		it('should split between sync and local', () => {

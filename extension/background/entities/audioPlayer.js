@@ -512,7 +512,9 @@
 		});
 
 		browserService.idle.onStateChanged.addListener((newState) => {
-			
+			loadLocalPlayerOptions().then((options) => {
+				options.pauseOnLock && pause();
+			});
 		});
 
 		return {};
