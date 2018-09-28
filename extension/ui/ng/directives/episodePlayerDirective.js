@@ -47,6 +47,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		controller.orderChanged = orderChanged;
 		controller.continuousChanged = continuousChanged;
 		controller.onChangeRemoveWhenFinished = onChangeRemoveWhenFinished;
+		controller.onChangePauseWhenLocked = onChangePauseWhenLocked;
 		controller.toggleShowOptions = toggleShowOptions;
 		controller.tooglePlaylistVisibility = tooglePlaylistVisibility;
 		controller.tweet = tweet;
@@ -136,6 +137,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 				controller.options.order = options.order;
 				controller.options.continuous = options.continuous;
 				controller.options.removeWhenFinished = options.removeWhenFinished;
+				controller.options.pauseOnLocked = options.pauseOnLocked;
 			});
 		}
 
@@ -236,6 +238,10 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function onChangeRemoveWhenFinished() {
 			episodePlayer.setOptions({removeWhenFinished: controller.options.removeWhenFinished});
+		};
+
+		function onChangePauseWhenLocked() {
+			episodePlayer.setOptions({pauseWhenLocked: controller.options.pauseWhenLocked});
 		};
 
 		function toggleShowOptions() {
