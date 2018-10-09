@@ -3,4 +3,5 @@ extension/fonts
 build_output
 bower_components
 node_modules
+package-lock.json
 *.log

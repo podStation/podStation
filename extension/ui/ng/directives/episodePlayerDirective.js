@@ -47,6 +47,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		controller.orderChanged = orderChanged;
 		controller.continuousChanged = continuousChanged;
 		controller.onChangeRemoveWhenFinished = onChangeRemoveWhenFinished;
+		controller.onChangePauseWhenLocked = onChangePauseWhenLocked;
 		controller.toggleShowOptions = toggleShowOptions;
 		controller.tooglePlaylistVisibility = tooglePlaylistVisibility;
 		controller.tweet = tweet;
@@ -57,7 +58,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
 		episodePlayer.onStopped.addListener(() => $scope.$apply(() => reset()). controller);
 		episodePlayer.onChanged.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
-		episodePlayer.onOptionsChanged.addListener(() => setScopeOptions(options), controller);
+		episodePlayer.onOptionsChanged.addListener((options) => setScopeOptions(options), controller);
 
 		$scope.$on('$destroy', () => episodePlayer.removeListeners(controller));
 
@@ -136,6 +137,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 				controller.options.order = options.order;
 				controller.options.continuous = options.continuous;
 				controller.options.removeWhenFinished = options.removeWhenFinished;
+				controller.options.pauseWhenLocked = options.pauseWhenLocked;
 			});
 		}
 
@@ -236,6 +238,10 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function onChangeRemoveWhenFinished() {
 			episodePlayer.setOptions({removeWhenFinished: controller.options.removeWhenFinished});
+		};
+
+		function onChangePauseWhenLocked() {
+			episodePlayer.setOptions({pauseWhenLocked: controller.options.pauseWhenLocked});
 		};
 
 		function toggleShowOptions() {

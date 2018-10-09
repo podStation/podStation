@@ -22,11 +22,7 @@ var browserStorageMockFn = function($timeout) {
 			remove: function() {}
 		},
 		commands: {
-			onCommand: {
-				addListener: function(fn) {this._listeners.push(fn)},
-				_listeners: []
-			},
-			_triggerCommand: function(cmd) {this.onCommand._listeners.forEach((l) => l(cmd))}
+			onCommand: new BrowserEventHandler()
 		},
 		notifications: {
 			create: function() {},
@@ -53,6 +49,9 @@ var browserStorageMockFn = function($timeout) {
 				_setFullStorage: _setFullStorage,
 				_getFullStorage: _getFullStorage
 			}
+		},
+		idle: {
+			onStateChanged: new BrowserEventHandler()
 		}
 	}
 
@@ -107,5 +106,15 @@ var browserStorageMockFn = function($timeout) {
 
 	function _getFullStorage() {
 		return this.storedObject;
+	}
+
+	function BrowserEventHandler() {
+		return {
+			addListener: function(fn) {this._listeners.push(fn)},
+			_listeners: [],
+			_trigger: function() {
+				this._listeners.forEach((l) => l.apply(null, arguments))
+			}
+		}
 	}
 }
