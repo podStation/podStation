@@ -58,7 +58,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
 		episodePlayer.onStopped.addListener(() => $scope.$apply(() => reset()). controller);
 		episodePlayer.onChanged.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
-		episodePlayer.onOptionsChanged.addListener(() => setScopeOptions(options), controller);
+		episodePlayer.onOptionsChanged.addListener((options) => setScopeOptions(options), controller);
 
 		$scope.$on('$destroy', () => episodePlayer.removeListeners(controller));
 
@@ -137,7 +137,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 				controller.options.order = options.order;
 				controller.options.continuous = options.continuous;
 				controller.options.removeWhenFinished = options.removeWhenFinished;
-				controller.options.pauseOnLocked = options.pauseOnLocked;
+				controller.options.pauseWhenLocked = options.pauseWhenLocked;
 			});
 		}
 

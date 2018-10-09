@@ -481,8 +481,8 @@
 					return options;
 				}),
 				loadLocalPlayerOptions(function(options) {
-					if(result.local.pauseOnLock)
-						options.pauseOnLock = result.local.pauseOnLock;
+					if(result.local.pauseWhenLocked !== undefined)
+						options.pauseWhenLocked = result.local.pauseWhenLocked;
 	
 					return options;
 				})
@@ -512,8 +512,8 @@
 		});
 
 		browserService.idle.onStateChanged.addListener((newState) => {
-			loadLocalPlayerOptions().then((options) => {
-				options.pauseOnLock && pause();
+			newState === 'locked' && loadLocalPlayerOptions().then((options) => {
+				options.pauseWhenLocked && pause();
 			});
 		});
 

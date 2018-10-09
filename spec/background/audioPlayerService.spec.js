@@ -385,12 +385,12 @@ describe('audioPlayerService', function() {
 	});
 
 	describe('state listener', function() {
-		it('should pause on lock when user opts so', function() {
+		function parameterizedTestPauseWhenStateChange(pauseWhenLocked, changeStateTo, expectPause) {
 			spyOn(audioBuilderService.audio, 'pause');
 			spyOn(browserService.notifications, 'clear');
 			spyOn(browserService.notifications, 'create');
 
-			messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: true});
+			messageService.for('audioPlayer').sendMessage('setOptions', {pauseWhenLocked: pauseWhenLocked});
 
 			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
 
@@ -400,66 +400,89 @@ describe('audioPlayerService', function() {
 
 			$rootScope.$apply();
 
-			browserService.idle.onStateChanged._trigger('locked');
+			browserService.idle.onStateChanged._trigger(changeStateTo);
 
 			$rootScope.$apply();
 
-			expect(audioBuilderService.audio.pause).toHaveBeenCalled();
+			const expectPauseResult = expect(audioBuilderService.audio.pause);
+
+			(expectPause ? expectPauseResult : expectPauseResult.not).toHaveBeenCalled();
+		}
+
+		it('should pause on lock when user opts so', function() {
+			parameterizedTestPauseWhenStateChange(true, 'locked', true);
 		});
 
 		it('should not pause on lock when user opts so', function() {
-			spyOn(audioBuilderService.audio, 'pause');
-			spyOn(browserService.notifications, 'clear');
-			spyOn(browserService.notifications, 'create');
+			parameterizedTestPauseWhenStateChange(false, 'locked', false);
+		});
 
-			messageService.for('audioPlayer').sendMessage('setOptions', {pauseOnLock: false});
-
-			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
-
-			$rootScope.$apply();
-
-			messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
-
-			$rootScope.$apply();
-
-			browserService.idle.onStateChanged._trigger('locked');
-
-			$rootScope.$apply();
-
-			expect(audioBuilderService.audio.pause).not.toHaveBeenCalled();
+		it('should not pause on idle when user opted to pause on lock only', function() {
+			parameterizedTestPauseWhenStateChange(true, 'idle', false);
 		});
 	});
 	
 	describe('options storage', () => {
-		it('should split between sync and local', () => {
-			const optionsToSet = {
-				order: 'from_playlist',
-				continuous: true,
-				removeWhenFinished: true,
-				pauseOnLock: true
-			};
-
+		function parameterizedTestSetOptions(optionsToSet, expectedOptions, expectedStorage) {
+			var optionsBeforeSet;
 			var optionsChangedPayload;
 			var optionsGotten;
 
+			messageService.for('audioPlayer').sendMessage('getOptions', null, (options) => {optionsBeforeSet = options});
+			$rootScope.$apply();
+
+			// We want to be tolerant to any previously set options, and, mainly, default values			
+			const expectedOptionsWithDefaults = [optionsBeforeSet, expectedOptions].reduce((previous, current) => {
+				for(var key in current) previous[key] = current[key];
+				return previous;
+			});
+
+			// To test if the event was fired with correct parameters
 			messageService.for('audioPlayer').onMessage('optionsChanged', (options) => {optionsChangedPayload = options});
+			
+			// Code Under Test
 			messageService.for('audioPlayer').sendMessage('setOptions', optionsToSet);
+			
 			messageService.for('audioPlayer').sendMessage('getOptions', null, (options) => {optionsGotten = options});
 
 			$rootScope.$apply();
 
-			expect(optionsChangedPayload).toEqual(optionsToSet);
-			expect(optionsGotten).toEqual(optionsToSet);
+			expect(optionsChangedPayload).toEqual(expectedOptionsWithDefaults);
+			expect(optionsGotten).toEqual(expectedOptionsWithDefaults);
 
-			expect(browserService.storage.sync._getFullStorage()['playerOptions']).toEqual({
+			if(expectedStorage) {
+				expect(browserService.storage.sync._getFullStorage()['playerOptions']).toEqual(expectedStorage.sync);
+				expect(browserService.storage.local._getFullStorage()['playerOptions']).toEqual(expectedStorage.local);
+			}
+		}
+
+		it('should split between sync and local', () => {
+			const options = {
 				order: 'from_playlist',
 				continuous: true,
-				removeWhenFinished: true
-			});
+				removeWhenFinished: true,
+				pauseWhenLocked: true
+			};
 
-			expect(browserService.storage.local._getFullStorage()['playerOptions']).toEqual({
-				pauseOnLock: true
-			});
+			const expectedStorage = {
+				sync: {
+					order: 'from_playlist',
+					continuous: true,
+					removeWhenFinished: true
+				},
+				local: {
+					pauseWhenLocked: true
+				}
+			}
+			
+			parameterizedTestSetOptions(options, options, expectedStorage);
+		});
+
+		it('should store pauseWhenLocked = false, when it is currently true', () => {
+			messageService.for('audioPlayer').sendMessage('setOptions', {pauseWhenLocked: true});
+
+			const options = {pauseWhenLocked: false};
+			parameterizedTestSetOptions(options, options);
 		});
 	});
 });
