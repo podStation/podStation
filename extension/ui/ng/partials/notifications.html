@@ -1,0 +1,51 @@
+<div ng-controller="notificationController" id="notificationDrawer">
+    <style>
+        a {
+            color: inherit
+        }
+
+        button.ps-notificantion {
+            border: none;
+            background: inherit;
+            color: lightgray;
+            border-radius: 5px;
+            font: inherit;
+            cursor: pointer;
+        }
+
+        button.ps-notificantion:hover {
+            color: white; 
+        }
+
+        div.ps-important-notifications {
+            background-color: darkred;
+            width: fit-content;
+            border-radius: 0px 0px 10px;
+        }
+    </style>
+    <div id="closeAllNotifications" ng-if="notifications.length" ng-click="dismissAll()" title="{{'dismiss_all' | chrome_i18n }}">
+        <i class="fa fa-close"></i>
+    </div>
+    <div class="ps-important-notifications">
+        <div class="notification">			
+            <i class="fa fa-exclamation"></i> podStation was updated to version 1.18.2, <a>see what's new</a>
+            <button class="ps-notificantion">Don't show this again</button>
+        </div>
+    </div>
+    <div ng-repeat="notification in notifications track by notification.id">
+        <div ng-if="!notification.isGroup" class="notification" title="click to dismiss..." ng-click="notification.dismiss()">
+            <i ng-if="notification.icon" class="fa {{notification.icon}}"></i> {{notification.text}}
+        </div>
+        <div ng-if="notification.isGroup" class="notification" ng-click="notification.toggleCollapsed()">
+            <i ng-if="notification.collapsed" class="fa fa-caret-right"></i>
+            <i ng-if="!notification.collapsed" class="fa fa-caret-down"></i>
+            <span>{{notification.text}}</span>
+        </div>
+        <div ng-if="notification.isGroup && !notification.collapsed">
+            <div class="notification" ng-repeat="notificationInGroup in notification.notifications track by notificationInGroup.id"
+                title="{{'click_dismiss' | chrome_i18n }}" ng-click="notificationInGroup.dismiss()">
+                <span>&nbsp;</span><i ng-if="notificationInGroup.icon" class="fa {{notificationInGroup.icon}}"></i> {{notificationInGroup.text}}
+            </div>
+        </div>
+    </div>
+</div>

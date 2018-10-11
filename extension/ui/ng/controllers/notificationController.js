@@ -18,6 +18,15 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 	function processNotificationsFromBackground(notificationsFromBackground) {
 		$scope.$apply(function() {
 			var notificationGroups = {};
+
+			const notificationsAfteSplit = notificationsFromBackground.reduce((previous, current) => {
+				(current.important ?
+					(previous.important = previous.important || []) :
+					(previous.normal = previous.important || [])
+				).push(current);
+				
+				return previous;
+			})
 			
 			// Save existing groups
 			$scope.notifications.forEach(function(notification) {
@@ -29,9 +38,9 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 			
 			$scope.notifications = [];
 
-			for(key in notificationsFromBackground) {
-				if(notificationsFromBackground[key]) {
-					var notification = notificationsFromBackground[key];
+			for(key in notificationsAfteSplit.normal) {
+				if(notificationsAfteSplit.normal[key]) {
+					var notification = notificationsAfteSplit.normal[key];
 					notification.id = key;
 					notification.dismiss = dismissNotification;
 					$scope.notifications.push(notification);
