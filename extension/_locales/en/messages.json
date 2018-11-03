@@ -86,6 +86,9 @@
 	"remove_when_finished": {
 		"message": "Remove from playlist when finished"
 	},
+	"pause_when_locked": {
+		"message": "Pause when computer is locked"
+	},
 	"player_error" : {
 		"message": "Error loading your episode, click play to retry"
 	},

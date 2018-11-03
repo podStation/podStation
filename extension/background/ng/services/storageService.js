@@ -43,10 +43,10 @@
 
 						newStorageObject[key] = newValue;
 
-						browserService.storage.sync.set(newStorageObject, function() {deferred.resolve()});
+						browserService.storage[storageType].set(newStorageObject, function() {deferred.resolve(newValue)});
 					}
 					else {
-						deferred.resolve();
+						deferred.resolve(stored);
 					}
 				}
 				else {

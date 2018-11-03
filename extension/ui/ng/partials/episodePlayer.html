@@ -198,6 +198,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 								<input type="checkbox" name="remove_when_finished" ng-model="episodePlayer.options.removeWhenFinished" ng-change="episodePlayer.onChangeRemoveWhenFinished()" />
 								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>
+							<div>
+								<input type="checkbox" name="pause_when_locked" ng-model="episodePlayer.options.pauseWhenLocked" ng-change="episodePlayer.onChangePauseWhenLocked()" />
+								<span> {{'pause_when_locked' | chrome_i18n}}</span>
+							</div>
 						</div>
 						<div ng-show="error" id="playerErrorInfo"> 
 							<i class="fa fa-exclamation"></i> {{'player_error' | chrome_i18n}}

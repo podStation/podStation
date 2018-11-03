@@ -36,12 +36,19 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 
 myApp.filter('chrome_i18n', function() {
 	return function(input) {
+		var messageId;
+		var messageArguments = null;
+		
 		if(typeof input === 'object') {
-			return chrome.i18n.getMessage(input.message, input.arguments);
+			messageId = input.message;
+			messageArguments = input.arguments;
 		}
 		else if (typeof input === 'string') {
-			return chrome.i18n.getMessage(input);
+			messageId = input;
 		}
+		
+		const message = chrome.i18n.getMessage(messageId, messageArguments);
+		return message ? message : messageId;
 	};
 });
 
