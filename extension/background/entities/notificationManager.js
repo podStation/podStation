@@ -69,7 +69,12 @@
 			const version = browserService.app.getDetails().version;
 
 			if(version !== lastViewedUpdateNewsVersion && updateNews[version]) {
-				console.log('should show news');
+				addNotification({
+					type: 'VersionNews',
+					important: true,
+					version: version,
+					link: updateNews[version]
+				});
 			}
 		});
 	}
