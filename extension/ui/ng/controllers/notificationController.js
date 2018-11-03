@@ -19,7 +19,7 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 		$scope.$apply(function() {
 			var notificationGroups = {};
 
-			const notificationsAfteSplit = notificationsFromBackground.reduce((previous, current) => {
+			const notificationsAfterSplit = notificationsFromBackground.reduce((previous, current) => {
 				(current.important ?
 					(previous.important = previous.important || []) :
 					(previous.normal = previous.important || [])
@@ -38,9 +38,9 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 			
 			$scope.notifications = [];
 
-			for(key in notificationsAfteSplit.normal) {
-				if(notificationsAfteSplit.normal[key]) {
-					var notification = notificationsAfteSplit.normal[key];
+			for(key in notificationsAfterSplit.normal) {
+				if(notificationsAfterSplit.normal[key]) {
+					var notification = notificationsAfterSplit.normal[key];
 					notification.id = key;
 					notification.dismiss = dismissNotification;
 					$scope.notifications.push(notification);
