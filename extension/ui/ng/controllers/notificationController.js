@@ -1,5 +1,8 @@
 myApp.controller('notificationController', ['$scope', 'messageService', function($scope, messageService, episodePlayer) {
 	$scope.notifications = [];
+	$scope.importantNotifications = [];
+
+	$scope.dontShowAnymore = dontShowAnymore;
 	
 	function dismissNotification() {
 		messageService.for('notificationManager').sendMessage('removeNotification', {
@@ -19,14 +22,16 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 		$scope.$apply(function() {
 			var notificationGroups = {};
 
-			const notificationsAfterSplit = notificationsFromBackground.reduce((previous, current) => {
-				(current.important ?
-					(previous.important = previous.important || []) :
-					(previous.normal = previous.important || [])
-				).push(current);
-				
-				return previous;
-			})
+			const notificationsAfterSplit = {}; 
+			
+			for(let key in notificationsFromBackground) {
+				const notification = notificationsFromBackground[key];
+
+				(notification.important ?
+					(notificationsAfterSplit.important = notificationsAfterSplit.important || {}) :
+					(notificationsAfterSplit.normal    = notificationsAfterSplit.normal    || {})
+				)[key] = key;
+			}
 			
 			// Save existing groups
 			$scope.notifications.forEach(function(notification) {
@@ -37,6 +42,7 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 			});
 			
 			$scope.notifications = [];
+			$scope.importantNotifications = [];
 
 			for(key in notificationsAfterSplit.normal) {
 				if(notificationsAfterSplit.normal[key]) {
@@ -44,6 +50,15 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 					notification.id = key;
 					notification.dismiss = dismissNotification;
 					$scope.notifications.push(notification);
+				}
+			}
+
+			for(key in notificationsAfterSplit.important) {
+				if(notificationsAfterSplit.important[key]) {
+					var notification = notificationsAfterSplit.important[key];
+					notification.id = key;
+					notification.dismiss = dismissNotification;
+					$scope.importantNotifications.push(notification);
 				}
 			}
 			
@@ -96,11 +111,17 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 
 	$scope.dismissAll = function() {
 		messageService.for('notificationManager').sendMessage('removeAllNotifications');
-	}
+	}	
 
 	messageService.for('notificationManager').onMessage('notificationChanged', function() {
 		getNotifications();
 	});
 
 	getNotifications();
+
+	return;
+
+	function dontShowAnymore() {
+
+	}
 }]);

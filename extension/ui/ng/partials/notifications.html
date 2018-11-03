@@ -27,9 +27,11 @@
         <i class="fa fa-close"></i>
     </div>
     <div class="ps-important-notifications">
-        <div class="notification">			
-            <i class="fa fa-exclamation"></i> podStation was updated to version 1.18.2, <a>see what's new</a>
-            <button class="ps-notificantion">Don't show this again</button>
+        <div ng-repeat="notification in importantNotifications track by notification.id">
+            <div class="notification">			
+                <i class="fa fa-exclamation"></i> podStation was updated to version {{notification.version}}, <a>see what's new</a>
+                <button class="ps-notificantion">{{'click_dismiss' | chrome_i18n }}</button>
+            </div>
         </div>
     </div>
     <div ng-repeat="notification in notifications track by notification.id">
