@@ -10,6 +10,23 @@
 		"message": "Add Feed"
 	},
 	// notifications
+	"podstation_was_updated": {
+		"message": "podStation was updated to version $version$, <a href=\"$link$\" target=\"_blank\">see what's new</a>",
+		"description": "Notification informing user that the version was updated",
+		"placeholders": {
+			"version": {
+				"content": "$1",
+				"example": "1.18.2"
+			},
+			"link": {
+				"content": "$2",
+				"example": "https://github.com/podStation"
+			}
+		}
+	},
+	"dont_show_this_again": {
+		"message": "Don't show this again"
+	},
 	"dismiss_all": {
 		"message": "Dismiss all..."
 	},
@@ -212,6 +229,12 @@
 	},
 	"minutes": {
 		"message": "minutes"
+	},
+	"notifications": {
+		"message": "Notifications"
+	},
+	"show_version_news": {
+		"message": "Show version news"
 	},
 	"integrate_screen_shader": {
 		"message": "Integration with <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"

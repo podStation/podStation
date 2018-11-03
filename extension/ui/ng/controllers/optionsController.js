@@ -5,6 +5,7 @@ myApp.controller('optionsController', ['$scope', 'messageService', function($sco
 	$scope.options.autoUpdateEvery = 60;
 	$scope.options.integrateWithScreenShader = true;
 	$scope.options.analytics = true;
+	$scope.options.s = true;
 
 	$scope.save = function() {
 		messageService.for('optionsManager').sendMessage('saveOptions', $scope.options);

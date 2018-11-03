@@ -3,9 +3,9 @@
 (function() {
 
 	angular.module('podstationBackgroundApp')
-	  .service('notificationManager', ['messageService', 'browser', 'storageService', notificationManager]);
+	  .service('notificationManager', ['messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager]);
 
-	function notificationManager(messageService, browserService, storageService) {
+	function notificationManager(messageService, browserService, storageService, optionsManagerService) {
 		var nextNotificationId = 1;
 		var notifications = {};
 
@@ -50,6 +50,8 @@
 			messageService.for('notificationManager')
 			.onMessage('getNotifications', function(messageContent, sendResponse) {
 				sendResponse(notifications);
+
+				// TODO: save current version to lvn
 				return true;
 			})
 			.onMessage('removeNotification', function(messageContent) {
@@ -60,22 +62,26 @@
 			});
 		});
 
-		// last viewd update news version
+		// last viewed update news version
 		storageService.loadFromStorage('lvn', null, 'sync').then((lastViewedUpdateNewsVersion) => {
 			const updateNews = {
 				'1.18.2':'https://github.com/podStation'
 			};
 
-			const version = browserService.app.getDetails().version;
+			optionsManagerService.getOptions((options) => {
+				if(options.s) {
+					const version = browserService.app.getDetails().version;
 
-			if(version !== lastViewedUpdateNewsVersion && updateNews[version]) {
-				addNotification({
-					type: 'VersionNews',
-					important: true,
-					version: version,
-					link: updateNews[version]
-				});
-			}
+					if(version !== lastViewedUpdateNewsVersion && updateNews[version]) {
+						that.addNotification({
+							type: 'VersionNews',
+							important: true,
+							version: version,
+							link: updateNews[version]
+						});
+					}
+				}
+			});
 		});
 	}
 })();

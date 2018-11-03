@@ -19,7 +19,8 @@
 						autoUpdate: true,
 						autoUpdateEvery: 60,
 						integrateWithScreenShader: true,
-						analytics: true
+						analytics: true,
+						s: true // show version news
 					};
 				}
 				else {
@@ -31,6 +32,10 @@
 
 					if(typeof syncOptions.analytics === 'undefined') {
 						syncOptions.analytics = true;
+					}
+
+					if(typeof syncOptions.s === 'undefined') {
+						syncOptions.s = true;
 					}
 				}
 

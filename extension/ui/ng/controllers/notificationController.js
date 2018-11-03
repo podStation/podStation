@@ -30,7 +30,7 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 				(notification.important ?
 					(notificationsAfterSplit.important = notificationsAfterSplit.important || {}) :
 					(notificationsAfterSplit.normal    = notificationsAfterSplit.normal    || {})
-				)[key] = key;
+				)[key] = notification;
 			}
 			
 			// Save existing groups

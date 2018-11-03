@@ -17,6 +17,9 @@
 		<input id="updatePeriod" ng-model="options.autoUpdateEvery" ng-disabled="!options.autoUpdate">
 		<span> {{ 'minutes' | chrome_i18n }}</span>
 		<br>
+		<h2>{{ 'notifications' | chrome_i18n }}</h2>
+		<input type="checkbox" ng-model="options.s"><span>{{ 'show_version_news' | chrome_i18n }}</span>
+		<br>
 		<h2>Integration with other extensions</h2>
 		<input type="checkbox" ng-model="options.integrateWithScreenShader"><span ng-bind-html="'integrate_screen_shader' | chrome_i18n"></span>
 		<br>
