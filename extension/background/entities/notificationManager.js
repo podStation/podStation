@@ -59,6 +59,9 @@
 			})
 			.onMessage('removeAllNotifications', function() {
 				that.removeNotification();
+			})
+			.onMessage('dontShowAnymore', function() {
+				
 			});
 		});
 

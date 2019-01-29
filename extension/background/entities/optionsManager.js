@@ -3,15 +3,15 @@
 (function(){
 	angular
 		.module('podstationBackgroundApp')
-		.service('optionsManagerService', ['messageService', OptionsManager]);
+		.service('optionsManagerService', ['browser', 'messageService', OptionsManager]);
 
-	function OptionsManager(messageService) {
+	function OptionsManager(browserService, messageService) {
 		function optionsChanged(options) {
 			messageService.for('optionsManager').sendMessage('optionsChanged', options);
 		}
 
 		this.getOptions = function(sendResponse) {
-			chrome.storage.sync.get('syncOptions', function(storageObject) {
+			browserService.storage.sync.get('syncOptions', function(storageObject) {
 				var syncOptions;
 
 				if(typeof storageObject.syncOptions === "undefined") {
@@ -44,7 +44,7 @@
 		}
 
 		function saveOptions(options) {
-			chrome.storage.sync.set({'syncOptions': options});
+			browserService.storage.sync.set({'syncOptions': options});
 			optionsChanged(options);
 		}
 

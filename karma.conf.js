@@ -28,6 +28,7 @@ module.exports = function(config) {
       'extension/background/entities/episodeSelector.js',
       'extension/background/entities/podcastManager.js',
       'extension/background/entities/notificationManager.js',
+      'extension/background/entities/optionsManager.js',
       'extension/background/entities/playlist.js',
       'extension/background/entities/podcast.js',
       'extension/background/ng/**/*.js',

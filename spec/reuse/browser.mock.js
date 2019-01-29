@@ -3,7 +3,8 @@
 var browserStorageMockFn = function($timeout) {
 	return {
 		app: {
-			getDetails: () => { return {"version":''}}
+			_details: {"version":''},
+			getDetails: function () { return this._details}
 		},
 		runtime: {
 			onInstalled: {

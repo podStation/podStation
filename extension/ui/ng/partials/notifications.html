@@ -35,7 +35,7 @@
             <div class="notification">			
                 <!--<i class="fa fa-exclamation"></i> podStation was updated to version {{notification.version}}, <a>see what's new</a>-->
                 <i class="fa fa-exclamation"></i>&nbsp;<span ng-bind-html="{ message: 'podstation_was_updated', arguments: [notification.version, notification.link]} | chrome_i18n"></span>
-                <button class="ps-notificantion">{{'dont_show_this_again' | chrome_i18n }}</button>
+                <button class="ps-notificantion" ng-click="dontShowAnymore(notification.key)">{{'dont_show_this_again' | chrome_i18n }}</button>
             </div>
         </div>
     </div>

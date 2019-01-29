@@ -121,7 +121,7 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 
 	return;
 
-	function dontShowAnymore() {
-
+	function dontShowAnymore(id) {
+		messageService.for('notificationManager').sendMessage('dontShowAnymore', {id: id});
 	}
 }]);
