@@ -2,10 +2,14 @@
 
 (function() {
 
-	angular.module('podstationBackgroundApp')
-	  .service('notificationManager', ['messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager]);
+	angular.module('podstationBackgroundApp').constant('versionNews', {
+		'1.18.2': {url: 'https://github.com/podStation'}
+	});
 
-	function notificationManager(messageService, browserService, storageService, optionsManagerService) {
+	angular.module('podstationBackgroundApp')
+	  .service('notificationManager', ['versionNews', 'messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager]);
+
+	function notificationManager(versionNews, messageService, browserService, storageService, optionsManagerService) {
 		var nextNotificationId = 1;
 		var notifications = {};
 
@@ -50,9 +54,10 @@
 			messageService.for('notificationManager')
 			.onMessage('getNotifications', function(messageContent, sendResponse) {
 				sendResponse(notifications);
-
-				// TODO: save current version to lvn
 				return true;
+			})
+			.onMessage('setCurrentVersionAsViewed', () => {
+				// TODO
 			})
 			.onMessage('removeNotification', function(messageContent) {
 				that.removeNotification(messageContent.notificationId);
@@ -60,27 +65,23 @@
 			.onMessage('removeAllNotifications', function() {
 				that.removeNotification();
 			})
-			.onMessage('dontShowAnymore', function() {
-				
+			.onMessage('dontShowAnymore', (type) => {
+				// TODO
 			});
 		});
 
 		// last viewed update news version
-		storageService.loadFromStorage('lvn', null, 'sync').then((lastViewedUpdateNewsVersion) => {
-			const updateNews = {
-				'1.18.2':'https://github.com/podStation'
-			};
-
+		storageService.loadFromStorage('nm', null, 'sync', () => {return {};}).then((notificationManagerStorage) => {
 			optionsManagerService.getOptions((options) => {
 				if(options.s) {
 					const version = browserService.app.getDetails().version;
 
-					if(version !== lastViewedUpdateNewsVersion && updateNews[version]) {
+					if(version !== notificationManagerStorage.l && versionNews[version]) {
 						that.addNotification({
 							type: 'VersionNews',
 							important: true,
 							version: version,
-							link: updateNews[version]
+							url: versionNews[version].url
 						});
 					}
 				}
