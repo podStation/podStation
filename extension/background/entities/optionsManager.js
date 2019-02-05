@@ -6,11 +6,22 @@
 		.service('optionsManagerService', ['browser', 'messageService', OptionsManager]);
 
 	function OptionsManager(browserService, messageService) {
-		function optionsChanged(options) {
-			messageService.for('optionsManager').sendMessage('optionsChanged', options);
-		}
+		var service = {
+			getOptions: getOptions,
+			setShowVersionNews: setShowVersionNews
+		};
 
-		this.getOptions = function(sendResponse) {
+		messageService.for('optionsManager')
+		  .onMessage('saveOptions', function(messageContent) {
+			saveOptions(messageContent);
+		}).onMessage('getOptions',  function(messageContent, sendResponse) {
+			service.getOptions(sendResponse);
+			return true;
+		});
+
+		return service;
+
+		function getOptions(sendResponse) {
 			browserService.storage.sync.get('syncOptions', function(storageObject) {
 				var syncOptions;
 
@@ -48,15 +59,16 @@
 			optionsChanged(options);
 		}
 
-		var that = this;
+		function setShowVersionNews(showVersionNews) {
+			getOptions((options) => {
+				options.s = showVersionNews;
+				saveOptions(options);
+			});
+		}
 
-		messageService.for('optionsManager')
-		  .onMessage('saveOptions', function(messageContent) {
-			saveOptions(messageContent);
-		}).onMessage('getOptions',  function(messageContent, sendResponse) {
-			that.getOptions(sendResponse);
-			return true;
-		});
+		function optionsChanged(options) {
+			messageService.for('optionsManager').sendMessage('optionsChanged', options);
+		}
 	}
 })();
 

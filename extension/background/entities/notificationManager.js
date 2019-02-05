@@ -57,7 +57,10 @@
 				return true;
 			})
 			.onMessage('setCurrentVersionAsViewed', () => {
-				// TODO
+				storageService.loadFromStorage('nm', (stored) => {
+					stored.l = browserService.app.getDetails().version;
+					return stored;
+				}, 'sync', () => {return {};});
 			})
 			.onMessage('removeNotification', function(messageContent) {
 				that.removeNotification(messageContent.notificationId);
@@ -66,7 +69,10 @@
 				that.removeNotification();
 			})
 			.onMessage('dontShowAnymore', (type) => {
-				// TODO
+				switch(type) {
+					case 'VersionNews':
+						optionsManagerService.setShowVersionNews(false);
+				}
 			});
 		});
 

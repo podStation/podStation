@@ -90,6 +90,34 @@ describe('notificationManager',  function() {
 
 				expect(notifications[id]).toBeUndefined();
 			});
+
+			it('should store last viewed version', () => {
+				browserService.storage.sync.set({
+					'nm': {
+						'l': '1.18.1'
+					}
+				});
+
+				browserService.app._details.version = '1.18.2';
+
+				messageService.for('notificationManager').sendMessage('setCurrentVersionAsViewed');
+
+				expect(browserService.storage.sync._getFullStorage().nm.l).toBe('1.18.2');
+			});
+
+			it('should turn off version news on dontShowAnymore', () => {
+				messageService.for('optionsManager').sendMessage('saveOptions', {s: true});
+
+				messageService.for('notificationManager').sendMessage('dontShowAnymore', 'VersionNews');
+
+				var storedOptions;
+				
+				messageService.for('optionsManager').sendMessage('getOptions', null, (options) => {
+					storedOptions = options;
+				});
+
+				expect(storedOptions.s).toBeFalsy();
+			});
 		});
 	});
 
@@ -97,10 +125,16 @@ describe('notificationManager',  function() {
 		var _$injector;
 
 		beforeEach(inject(function($injector) {
+			// save for deferred instantiation of notificationManager
 			_$injector = $injector;
+
+			// normally instantiated as a dependency of notificationManager
+			// here we force its instantiation explicitly before notificationManager 
+			// so that we can do test setup
+			$injector.get('optionsManagerService');
 		}));
 
-		describe('Version news', () => {
+		describe('get version news', () => {
 			// this group will need a separate provider because we need some setup before the service is instantiated
 			it('should return version news when version not seen yet, and option is on', () => {
 				parameterizedTest(true, '1.18.1', '1.18.2', 'https://podstation.com/1.18.2');
@@ -108,6 +142,10 @@ describe('notificationManager',  function() {
 
 			it('should NOT return version news when version already seen, and option is on', () => {
 				parameterizedTest(true, '1.18.2', '1.18.2', null);
+			});
+
+			it('should NOT return version news when version not seen yet, but option is off', () => {
+				parameterizedTest(false, '1.18.1', '1.18.2', null);
 			});
 
 			function parameterizedTest(showNews, lastViewedVersionNews, currentVersion, url) {
@@ -143,5 +181,5 @@ describe('notificationManager',  function() {
 				} : {});
 			}
 		});
-	})	
+	});
 });
