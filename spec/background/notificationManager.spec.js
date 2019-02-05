@@ -104,20 +104,6 @@ describe('notificationManager',  function() {
 
 				expect(browserService.storage.sync._getFullStorage().nm.l).toBe('1.18.2');
 			});
-
-			it('should turn off version news on dontShowAnymore', () => {
-				messageService.for('optionsManager').sendMessage('saveOptions', {s: true});
-
-				messageService.for('notificationManager').sendMessage('dontShowAnymore', 'VersionNews');
-
-				var storedOptions;
-				
-				messageService.for('optionsManager').sendMessage('getOptions', null, (options) => {
-					storedOptions = options;
-				});
-
-				expect(storedOptions.s).toBeFalsy();
-			});
 		});
 	});
 
@@ -146,6 +132,26 @@ describe('notificationManager',  function() {
 
 			it('should NOT return version news when version not seen yet, but option is off', () => {
 				parameterizedTest(false, '1.18.1', '1.18.2', null);
+			});
+
+			it('should turn off version news on dontShowAnymore and delete notification', () => {
+				parameterizedTest(true, '1.18.1', '1.18.2', 'https://podstation.com/1.18.2');
+
+				messageService.for('notificationManager').sendMessage('dontShowAnymore', {notificationId: 1});
+
+				var notifications;
+				var storedOptions;
+
+				messageService.for('notificationManager').sendMessage('getNotifications', null, function(response) {
+					notifications = response;
+				});
+
+				messageService.for('optionsManager').sendMessage('getOptions', null, (options) => {
+					storedOptions = options;
+				});
+
+				expect(notifications).toEqual({});
+				expect(storedOptions.s).toBeFalsy();
 			});
 
 			function parameterizedTest(showNews, lastViewedVersionNews, currentVersion, url) {

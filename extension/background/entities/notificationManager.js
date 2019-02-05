@@ -37,7 +37,7 @@
 
 		this.removeNotification = function(notificationId) {
 			if(notificationId) {
-				notifications[notificationId] = undefined;
+				delete notifications[notificationId];
 				notificationChanged(notificationId);
 			}
 			else {
@@ -68,11 +68,17 @@
 			.onMessage('removeAllNotifications', function() {
 				that.removeNotification();
 			})
-			.onMessage('dontShowAnymore', (type) => {
-				switch(type) {
+			.onMessage('dontShowAnymore', (messageContent) => {
+				if(!notifications[messageContent.notificationId])
+					return;
+				
+				switch(notifications[messageContent.notificationId].type) {
 					case 'VersionNews':
 						optionsManagerService.setShowVersionNews(false);
+						break;
 				}
+
+				that.removeNotification(messageContent.notificationId);
 			});
 		});
 
