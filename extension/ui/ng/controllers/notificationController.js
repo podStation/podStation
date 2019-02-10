@@ -119,9 +119,11 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 
 	getNotifications();
 
+	messageService.for('notificationManager').sendMessage('setCurrentVersionAsViewed');
+
 	return;
 
-	function dontShowAnymore(id) {
-		messageService.for('notificationManager').sendMessage('dontShowAnymore', {id: id});
+	function dontShowAnymore(notificationId) {
+		messageService.for('notificationManager').sendMessage('dontShowAnymore', {notificationId: notificationId});
 	}
 }]);

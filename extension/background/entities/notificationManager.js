@@ -3,7 +3,7 @@
 (function() {
 
 	angular.module('podstationBackgroundApp').constant('versionNews', {
-		'1.18.2': {url: 'https://github.com/podStation'}
+		'1.19.0': {url: 'https://podstation.blogspot.com/2019/02/version-news-v1190.html'}
 	});
 
 	angular.module('podstationBackgroundApp')
