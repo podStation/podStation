@@ -7,7 +7,8 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 
 	$routeProvider.when('/Welcome', {
 		templateUrl: '/ui/ng/partials/welcome.html',
-		// controller: 'podcastsController'
+		controller: 'welcomeController',
+		controllerAs: 'welcome'
 	}).when('/Podcasts', {
 		templateUrl: '/ui/ng/partials/podcasts.html',
 		controller: 'podcastsController'

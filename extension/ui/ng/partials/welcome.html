@@ -1,7 +1,45 @@
 <div id="about" class="mainContentBox">
 	<h1 class="sectionTitle">{{'welcome' | chrome_i18n }}</h1>
-	<div id="aboutContent">
+	<div>
 		<div ng-bind-html="{ message: 'welcome_long_text'} | chrome_i18n">
+		</div>
+
+		<div ng-if="welcome.recommendations.length">
+			<h2>Recomendações do podStation</h2>
+			<p>Não sabe o que escutar? Veja abaixo as recomendações do desenvolvedor do podStation.</p>
+
+			<div class="listEntry" ng-repeat="recommendation in welcome.recommendations">
+				<div class="itemMenu">
+					<a href="" title="{{ 'subscribe' | chrome_i18n }}" ng-click="addPodcast(recommendation)"><i class="fa fa-plus"></i></a>
+					<i ng-if="recommendation.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
+				</div>
+				<div>
+					<table>
+						<tbody>
+							<tr>
+								<td>
+									<img ng-src="{{recommendation.image}}" class="podcastImage" width="100"></img>
+								</td>
+								<td>
+									<div class="textView">
+										<a ng-href="{{recommendation.link}}" ng-if="recommendation.link" target="_blank">
+											<span class="itemTitle">{{recommendation.title}}</span>
+										</a>
+										<span class="itemTitle" ng-if="!recommendation.link">{{recommendation.title}}</span>
+										<br>
+										<a href="" ng-if="!recommendation.subscribed" ng-click="addPodcast(recommendation)"><b>{{ 'subscribe' | chrome_i18n }}</b></a>
+										<span ng-if="recommendation.subscribed"><b>{{'feed_in_list' | chrome_i18n}}</b></span>
+										<br>
+										<div class="itemDescription">
+											{{recommendation.description}}
+										</div>
+									</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
