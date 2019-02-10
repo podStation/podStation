@@ -4,6 +4,7 @@
 		<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
 		<div id="podcastList" ng-show="podcasts.length">
 			<div id="listMenu">
+				<input ng-model="searchText" placeholder="Filter">
 				<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 					<option value="by_alpha_ascending" >&#xf15d; A-Z</option>
 					<option value="by_alpha_descending">&#xf15e; Z-A</option>
@@ -17,7 +18,7 @@
 					<option value="small_list">&#xf03a; Small list</option>
 				</select>
 			</div>
-			<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder()" id="podcast_{{podcast.url}}" class="podcastEntry">
+			<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder() | filter:searchText" id="podcast_{{podcast.url}}" class="podcastEntry">
 				<div class="itemMenu">
 					<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
 					<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
