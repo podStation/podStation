@@ -1,9 +1,9 @@
 'use strict';
 
 (() => {
-    angular.module('podstationApp').controller('welcomeController', ['$scope', '$http', 'messageService', WelcomeController]);
+    angular.module('podstationApp').controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController]);
 
-    function WelcomeController($scope, $http, messageService) {
+    function WelcomeController($scope, $http, messageService, analyticsService) {
         var controller = this;
 
         controller.addPodcast = addPodcast;
@@ -38,6 +38,7 @@
         }
 
         function addPodcast(recommendation) {
+            analyticsService.trackEvent('feed', 'add_by_recommendations', recommendation.feedUrl);
             messageService.for('podcastManager').sendMessage('addPodcasts', {podcasts:[recommendation.feedUrl]});
         }
     }

@@ -6,6 +6,20 @@
             "image": "http://fliperamadeboteco.com/wp-content/uploads/2017/02/cropped-cabeçalho-131x131.png",
             "feedUrl": "http://fliperamadeboteco.com/feed/podcast",
             "description": "Um podcast de raiz sobre games retrô e outros assuntos relacionados a video games, feito com amor, bom humor e tiração de sarro!"
+        },
+        {
+            "title": "Dragões de Garagem",
+            "link": "http://dragoesdegaragem.com",
+            "image": "http://dragoesdegaragem.com/wp-content/uploads/2016/06/itunes.jpg",
+            "feedUrl": "http://feeds.feedburner.com/dragoesdegaragem",
+            "description": "Um podcast de ciência com muito conteúdo de qualidade e bom humor."
+        },
+        {
+            "title": "Mamilos Podcast",
+            "link": "https://www.b9.com.br/podcasts/mamilos/",
+            "image": "http://i1.sndcdn.com/avatars-000569626512-ccwaqs-original.jpg",
+            "feedUrl": "http://feeds.feedburner.com/mamilos",
+            "description": "Um podcast que tem de tudo um pouco sobre a sociedade e política, ouça se você gosta de ver as coisas de mais de um ponto de vista."
         }
     ]
 }
