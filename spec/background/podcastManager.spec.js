@@ -9,10 +9,11 @@ describe('podcastManager',  function() {
 
 		// Dummies
 		$provide.factory('analyticsService', analyticsServiceMockFn);
-		// $provide.service('messageService', messageServiceMockFn);
+		//$provide.service('messageService', messageServiceMockFn);
 	}));
 
 	var browserService;
+	var messageService;
 	var podcastManager;
 	var podcastDataService;
 	var dateService;
@@ -26,6 +27,8 @@ describe('podcastManager',  function() {
 
 		$rootScope = $injector.get('$rootScope');
 		browserService = $injector.get('browser');
+		messageService = $injector.get('messageService');
+		messageService.reset();
 		podcastDataService = $injector.get('podcastDataService');
 		dateService = $injector.get('dateService');
 		podcastManager = $injector.get('podcastManager');
@@ -260,6 +263,32 @@ describe('podcastManager',  function() {
 			]);
 		});
 	});
+
+	describe('checkIsSubscribed', () => {
+		it('should return true for the feeds that are subscribed', () => {
+			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
+			$rootScope.$apply();
+
+			const message = {
+				feeds: [
+					FEEDS.WITHOUT_GUID.URL,
+					'https://some.other.feed',
+				]
+			}
+
+			var actualResponse;
+
+			messageService.for('podcastManager').sendMessage('checkIsSubscribed', message, (response) => {
+				actualResponse = response;
+			});
+
+			const expectedResponse = {};
+			expectedResponse[FEEDS.WITHOUT_GUID.URL] = true;
+			expectedResponse['https://some.other.feed'] = false;
+
+			expect(actualResponse).toEqual(expectedResponse);
+		});
+	})
 	
 	describe('getOpml', () => {
 		it('should return a opml with feeds', () => {

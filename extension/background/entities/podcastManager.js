@@ -94,9 +94,7 @@ var PodcastManager;
 					if(addedUrls.length) {
 						that.updatePodcast(addedUrls);
 						
-						getBrowserService().runtime.sendMessage({
-							type: 'podcastListChanged',
-						});
+						sendPodcastListChangedMessage()
 					}
 				});
 			}
@@ -116,9 +114,7 @@ var PodcastManager;
 
 			getPodcastStorageService().deletePodcastsByFeedUrl(url);
 
-			getBrowserService().runtime.sendMessage({
-				type: 'podcastListChanged',
-			});
+			sendPodcastListChangedMessage();
 		}
 
 		this.updatePodcast = function(url) {
@@ -298,9 +294,7 @@ var PodcastManager;
 			});
 			this.podcastList = [];
 
-			getBrowserService().runtime.sendMessage({
-				type: 'podcastListChanged',
-			});
+			sendPodcastListChangedMessage();
 		}
 
 		this.getAllEpisodes = function(episodesFilter) {
@@ -397,6 +391,7 @@ var PodcastManager;
 		 */
 		function reset() {
 			this.podcastList = [];
+			registerMessageListeners();
 		}
 
 		instance = this;
@@ -411,11 +406,17 @@ var PodcastManager;
 					podcast.load();
 				});
 
-				getBrowserService().runtime.sendMessage({
-					type: 'podcastListChanged',
-				});
+				sendPodcastListChangedMessage();
 			});
 		};
+
+		function sendPodcastListChangedMessage() {
+			getBrowserService().runtime.sendMessage({
+				type: 'podcastListChanged',
+			});
+
+			getMessageService().for('podcastManager').sendMessage('podcastListChanged');
+		}
 
 		function getOpml() {
 			const subscriptions = instance.podcastList.reduce((previous, current) => {
@@ -438,6 +439,12 @@ var PodcastManager;
 		// do it async as it need to be executed after
 		// angular bootstrap
 		angular.element(document).ready(function() {
+			registerMessageListeners();
+
+			loadPodcasts();
+		});
+
+		function registerMessageListeners() {
 			getMessageService().for('podcast').onMessage('changed', function() {
 				triggerNotifications();
 			});
@@ -462,10 +469,22 @@ var PodcastManager;
 			}).onMessage('getOpml', (message, sendResponse) => {
 				sendResponse(getOpml());
 				return true;
-			});
+			}).onMessage('checkIsSubscribed', (message, sendResponse) => {
+				const response = {};
+				
+				message.feeds.forEach((feedUrl) => {
+					const podcast = instance.podcastList.find((podcast) => {
+						return podcast.url === feedUrl;
+					});
 
-			loadPodcasts();
-		});
+					response[feedUrl] = podcast ? true : false;
+				});
+				
+				sendResponse(response);
+				
+				return true;
+			});
+		}
 	}
 })();
 
