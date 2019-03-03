@@ -13,5 +13,15 @@
 			"/": "${workspaceRoot}",
 			"/base/": "${workspaceRoot}/"
 		}
+	}, {
+		"type": "chrome",
+		"request": "attach",
+		"name": "Attach Karma ChromeHeadless",
+		"address": "localhost",
+		"port": 9222,
+		"pathMapping": {
+			"/": "${workspaceRoot}",
+			"/base/": "${workspaceRoot}/"
+		}
 	}]
 }
