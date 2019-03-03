@@ -3,7 +3,8 @@
 (function() {
 
 	angular.module('podstationBackgroundApp').constant('versionNews', {
-		'1.19.1': {url: 'https://podstation.blogspot.com/2019/02/version-news-v1190.html'}
+		'1.19.1': {url: 'https://podstation.blogspot.com/2019/02/version-news-v1190.html'},
+		'1.20.0': {url: 'https://podstation.blogspot.com/2019/03/version-news-v1200-persistent-playback.html'}
 	});
 
 	angular.module('podstationBackgroundApp')
