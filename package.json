@@ -20,7 +20,7 @@
     "bower-install": "bower install",
     "bower-install-prod": "bower install",
     "test": "karma start --browsers ChromeHeadless",
-    "test-chrome-debuggig": "karma start --browsers ChromeDebugging",
+    "test-chrome-debugging": "karma start --browsers ChromeDebugging",
     "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
     "release": "webstore upload --source=build_output/output.zip --auto-publish"
   },
