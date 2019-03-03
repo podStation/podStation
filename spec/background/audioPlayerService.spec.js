@@ -17,7 +17,8 @@ describe('audioPlayerService', function() {
 				audio: {
 					play: function() {},
 					pause: function() {},
-					currentTime: 0
+					currentTime: 0,
+					playbackRate: 1.0
 				},
 				_end: _end
 			};
@@ -31,6 +32,7 @@ describe('audioPlayerService', function() {
 			function buildAudio(audioUrl) {
 				this.audio.src = audioUrl;
 				this.audio.currentTime = 0;
+				this.audio.playbackRate = 1.0;
 				return this.audio;
 			}
 
@@ -151,6 +153,27 @@ describe('audioPlayerService', function() {
 			$rootScope.$apply();
 
 			expect(audioBuilderService.audio.currentTime).toBe(10000);
+		});
+
+		it('should persist playback rate and use it on next play', () => {
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+			$rootScope.$apply();
+
+			messageService.for('audioPlayer').sendMessage('play', {
+				episodeId: podcastDataService.episodeId(FEEDS.WITH_GUID.EP1)
+			});
+
+			messageService.for('audioPlayer').sendMessage('shiftPlaybackRate', {
+				delta: 0.5
+			});
+
+			messageService.for('audioPlayer').sendMessage('play', {
+				episodeId: podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)
+			});
+
+			expect(audioBuilderService.audio.playbackRate).toBe(1.5);
+			expect(browserService.storage.sync._getFullStorage().plp).toEqual({pbr: 1.5});
 		});
 	});
 
