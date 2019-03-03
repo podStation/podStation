@@ -103,6 +103,27 @@
 			}, 'sync', () => {return {};});
 		};
 
+		function loadSyncPlayerProperties(loaded) {
+			return storageService.loadFromStorage('plp', (properties) => {
+				// playback rate
+				if(typeof properties.pbr === 'undefined') {
+					properties.pbr = 1.0;
+				}
+
+				const modifiedProperties = loaded && loaded(properties);
+
+				if(modifiedProperties) {
+					// Clean up
+
+					if(modifiedProperties.pbr === 1.0) {
+						delete modifiedProperties.pbr;
+					}
+				}
+
+				return modifiedProperties;
+			}, 'sync', () => {return {};});
+		};
+
 		function getPodcastAndEpisode(episodeId) {
 			return $injector.get('podcastManager').getPodcastAndEpisode(episodeId);
 		}
@@ -262,6 +283,11 @@
 					messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 				});
 
+				loadSyncPlayerProperties((playerOptions) => {
+					audioPlayer.playbackRate = playerOptions.pbr;
+					messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+				});
+
 				audioPlayer.onended = onAudioEnded;
 				audioPlayer.onerror = onAudioError;
 
@@ -414,6 +440,10 @@
 		}).onMessage('shiftPlaybackRate', function(messageContent) {
 			if(audioPlayer && audioPlayer.playbackRate + messageContent.delta > 0) {
 				audioPlayer.playbackRate += messageContent.delta;
+				loadSyncPlayerProperties((properties) => {
+					properties.pbr = audioPlayer.playbackRate;
+					return properties;
+				})
 				_analyticsService.trackEvent('audio', 'change_playback_rate', undefined, Math.round(100*audioPlayer.playbackRate));
 			}
 		}).onMessage('seek', function(messageContent) {
