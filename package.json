@@ -8,7 +8,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "bower": "^1.8.4",
+    "bower": "^1.8.8",
     "jasmine-core": "^3.1.0",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
