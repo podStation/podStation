@@ -5,6 +5,7 @@
  * @typedef {Object} EpisodePlayerInfo
  * @property {EpisodeId} episodeId
  * @property {Object} audioTags
+ * @property {Object} mediaSessionMetadata
  */
 
 (function(){
@@ -32,9 +33,9 @@
 (function(){
 	angular
 		.module('podstationBackgroundApp')
-		.factory('audioPlayerService', ['$injector', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService]);
+		.factory('audioPlayerService', ['$injector', '$window', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService]);
 
-	function audioPlayerService($injector, $interval, $q, browserService, messageService, storageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
+	function audioPlayerService($injector, $window, $interval, $q, browserService, messageService, storageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
 		/**
 		 * @type {HTMLAudioElement}
 		 */ 
@@ -276,7 +277,13 @@
 				_analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(playData.episodeId.values.podcastUrl));
 				audioPlayer = audioBuilderService.buildAudio(podcastAndEpisode.episode.enclosure.url);
 
-				episodeInfo = { episodeId: playData.episodeId };
+				episodeInfo = { 
+					episodeId: playData.episodeId,
+					mediaSessionMetadata: {
+						artist: podcastAndEpisode.podcast.title,
+						title: podcastAndEpisode.episode.title
+					}
+				};
 
 				loadLocalPlayerOptions(function(playerOptions) {
 					audioPlayer.volume = playerOptions.volume ? playerOptions.volume : 1.0;
@@ -295,11 +302,14 @@
 
 				getAudioTags(function(tags) {
 					episodeInfo.audioTags = tags;
+
+					setMediaSessionMetadata(episodeInfo.mediaSessionMetadata, buildAudioInfo().audio.imageUrl);
 				});
 
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 
 				addButtons();
+				setMediaSessionMetadata(episodeInfo.mediaSessionMetadata, buildAudioInfo().audio.imageUrl);
 			}
 
 			if(audioPlayer.error) {
@@ -559,6 +569,20 @@
 
 		function removeButtons() {
 			browserService.contextMenus.remove('browser_action_play_pause');
+		}
+
+		function setMediaSessionMetadata(metadata, artworkUrl) {
+			const episodeInfo = buildAudioInfo();
+
+			if('mediaSession' in $window.navigator) {
+				$window.navigator.mediaSession.metadata = new MediaMetadata({
+					title: metadata.title,
+					artist: metadata.artist,
+					artwork: [
+						{ src: artworkUrl, sizes: '512x512'},
+					  ]
+				});
+			}
 		}
 
 		function stripAuthFromURI(uri) {
