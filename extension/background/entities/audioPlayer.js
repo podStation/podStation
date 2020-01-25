@@ -409,6 +409,7 @@
 				setEpisodeInProgress(episodeInfo, 0);
 			}
 
+			audioPlayer.src = '';
 			audioPlayer = undefined;
 			episodeInfo = undefined;
 
