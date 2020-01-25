@@ -17,6 +17,6 @@ cp bower_components/podStationNGReuse/dist/podStationNGReuse.min.js $LIB_PATH/po
 cp bower_components/font-awesome/css/font-awesome.min.css $LIB_PATH/font-awesome.min.css
 cp bower_components/font-awesome/fonts/* $FONTS_PATH
 
-cp bower_components/jsmediatags/dist/jsmediatags.js $LIB_PATH/jsmediatags.js
+cp bower_components/jsmediatags/dist/jsmediatags.min.js $LIB_PATH/jsmediatags.min.js
 
 cp bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min.js $LIB_PATH/ng-infinite-scroll.min.js
