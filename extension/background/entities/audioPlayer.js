@@ -436,6 +436,25 @@
 			}
 		}
 
+		function seekForward() {
+			if(audioPlayer) {
+				_analyticsService.trackEvent('audio', 'forward');
+	
+				const targetTime = audioPlayer.currentTime + 15;
+				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
+		}
+
+		function seekBackward() {
+			if(audioPlayer) {
+				_analyticsService.trackEvent('audio', 'backward');
+				const targetTime = audioPlayer.currentTime - 15;
+				audioPlayer.currentTime = Math.max(0, targetTime);
+				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
+			}
+		}
+
 		messageService.for('audioPlayer')
 		.onMessage('play', function(messageContent) {
 			play(messageContent);
@@ -467,20 +486,9 @@
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}).onMessage('forward', function() {
-			if(audioPlayer) {
-				_analyticsService.trackEvent('audio', 'forward');
-
-				const targetTime = audioPlayer.currentTime + 15;
-				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
-				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
-			}
+			seekForward();
 		}).onMessage('backward', function() {
-			if(audioPlayer) {
-				_analyticsService.trackEvent('audio', 'backward');
-				const targetTime = audioPlayer.currentTime - 15;
-				audioPlayer.currentTime = Math.max(0, targetTime);
-				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
-			}
+			seekBackward();
 		}).onMessage('playNext', function() {
 			playNextOrPrevious(true);
 		}).onMessage('playPrevious', function() {
@@ -534,6 +542,11 @@
 		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
 			setCurrentTimeFromEpisode();
 		});
+
+		navigator.mediaSession.setActionHandler('seekbackward', () => seekBackward());
+		navigator.mediaSession.setActionHandler('seekforward', () => seekForward());
+		navigator.mediaSession.setActionHandler('previoustrack', () => playNextOrPrevious(false));
+		navigator.mediaSession.setActionHandler('nexttrack', () => playNextOrPrevious(true));
 
 		browserService.contextMenus.onClicked.addListener(function(info) {
 			if(info.menuItemId === 'browser_action_play_pause') {
