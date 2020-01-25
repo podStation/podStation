@@ -1,6 +1,6 @@
 {
   "name": "podstation_chrome_ext",
-  "version": "1.20.0",
+  "version": "1.21.0",
   "description": "podStation Podcast Player - Browser Extension",
   "main": "podstation.js",
   "directories": {
@@ -9,11 +9,11 @@
   "dependencies": {},
   "devDependencies": {
     "bower": "^1.8.8",
+    "chrome-webstore-upload-cli": "^1.1.1",
     "jasmine-core": "^3.1.0",
-    "karma": "^2.0.0",
+    "karma": "^4.4.1",
     "karma-chrome-launcher": "^2.2.0",
-    "karma-jasmine": "^1.1.1",
-    "chrome-webstore-upload-cli": "^1.1.1"
+    "karma-jasmine": "^1.1.1"
   },
   "scripts": {
     "bower": "bower",
