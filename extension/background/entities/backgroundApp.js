@@ -21,6 +21,9 @@ function($window, $timeout, $log, playlist, browser, analyticsService, audioPlay
 				case '1.14.7':
 					$window.open('https://podstation.blogspot.de/2017/09/v1147-important-update-on-collection-of.html')
 					break;
+				case '1.21.0':
+					$window.open('https://github.com/podStation/podStation/tree/v1.21.0/docs/release_notes/v1.21.0.md')
+					break;
 			}
 		}
 		else if(details.reason === 'install') {
