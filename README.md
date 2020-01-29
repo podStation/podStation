@@ -8,6 +8,20 @@
 
 You can install the extension at the [chrome web store](https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn).
 
+### Vision
+
+podStation has reached a mature state where increments are more tipically on the direction of optimizatinons.
+
+If you would like to see all the proposed enhancements, check the open issues in the project (link will be added later for both github and bitbucket issues).
+
+Some features I consider more important (I will add links to existing issues later):
+- Become **podStation Browser Extension**: podStation is currently only available for chrome. Althouth this most likely address the majority of possible users, I don't like the idea of contributing to _vendor lock-in_. Having a port that works on other browsers would make it easier for our users to choose other browsers, and contribute to the competitiveness of this market
+- Reduce the necessary _permissions_ required by podStation
+
+There are also some features that I would like to implement, but they are unlikely to become a reality, as it would be a lot of effort:
+- Support _marking episodes as listened_ (history) - not enough Snyc Storage space
+- Integration with [mygpo](https://github.com/gpodder/mygpo) (http://gpodder.net/)
+
 ## Development
 
 ### Installing the dependencies
