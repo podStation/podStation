@@ -10,7 +10,7 @@ You can install the extension at the [chrome web store](https://chrome.google.co
 
 ### Vision
 
-podStation has reached a mature state where increments are more tipically on the direction of optimizatinons.
+podStation has reached a mature state where increments are more tipically on the direction of bug fixes and optimizatinons.
 
 If you would like to see all the proposed enhancements, check the open issues in the project (link will be added later for both github and bitbucket issues).
 
