@@ -1,17 +1,27 @@
 window.openPodStation = function(hash) {
-	chrome.tabs.query({url: `chrome-extension://${chrome.runtime.id}/podstation.html`}, function(tabs) {
-		if(tabs.length) {
-			chrome.tabs.update(tabs[0].id, {active: true});
-			chrome.windows.update(tabs[0].windowId, {focused: true});
+	const APP_PATH = '/podstation.html';
 
-			if(hash) {
-				chrome.tabs.update(tabs[0].id, {url: '/podstation.html' + '#' + hash });
-			}
+	const views = chrome.extension.getViews({type:"tab"});
+	
+	if(views.length) {
+		const firstView = views[0];
+
+		if(hash) {
+			firstView.location.pathname = APP_PATH
+			firstView.location.hash = hash;
 		}
-		else {
-			window.open('/podstation.html' + ( hash ? '#' + hash : ''));
-		}
-	});
+		
+		firstView.chrome.windows.getCurrent({}, (currentWindow) => {
+			chrome.windows.update(currentWindow.id, {focused: true});
+		});
+
+		firstView.chrome.tabs.getCurrent((currentTab) => {
+			chrome.tabs.update(currentTab.id, {active: true});
+		});
+	}
+	else {
+		window.open(APP_PATH + ( hash ? '#' + hash : ''));
+	}
 }
 
 chrome.browserAction.onClicked.addListener(function(tab) {
