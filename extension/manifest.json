@@ -15,7 +15,6 @@
 		"64": "images/rss-alt-8x.png"
 	},
 	"permissions": [
-		"tabs",
 		"storage",
 		"unlimitedStorage",
 		"alarms",
