@@ -6,6 +6,7 @@
 		'1.19.1': {url: 'https://podstation.blogspot.com/2019/02/version-news-v1190.html'},
 		'1.20.0': {url: 'https://podstation.blogspot.com/2019/03/version-news-v1200-persistent-playback.html'},
 		'1.22.0': {url: 'https://github.com/podStation/podStation/tree/v1.22.0/docs/release_notes/v1.22.0.md'}
+		'1.22.1': {url: 'https://github.com/podStation/podStation/tree/v1.22.1/docs/release_notes/v1.22.1.md'}
 	});
 
 	angular.module('podstationBackgroundApp')
