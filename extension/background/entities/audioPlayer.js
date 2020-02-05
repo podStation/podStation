@@ -544,10 +544,12 @@
 			setCurrentTimeFromEpisode();
 		});
 
-		navigator.mediaSession.setActionHandler('seekbackward', () => seekBackward());
-		navigator.mediaSession.setActionHandler('seekforward', () => seekForward());
-		navigator.mediaSession.setActionHandler('previoustrack', () => playNextOrPrevious(false));
-		navigator.mediaSession.setActionHandler('nexttrack', () => playNextOrPrevious(true));
+		if('mediaSession' in $window.navigator) {
+			navigator.mediaSession.setActionHandler('seekbackward', () => seekBackward());
+			navigator.mediaSession.setActionHandler('seekforward', () => seekForward());
+			navigator.mediaSession.setActionHandler('previoustrack', () => playNextOrPrevious(false));
+			navigator.mediaSession.setActionHandler('nexttrack', () => playNextOrPrevious(true));
+		}
 
 		browserService.contextMenus.onClicked.addListener(function(info) {
 			if(info.menuItemId === 'browser_action_play_pause') {
