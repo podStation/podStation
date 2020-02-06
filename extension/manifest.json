@@ -51,5 +51,11 @@
 			"global": true
 		}
 	},
-	"content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
+	"content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+	"browser_specific_settings": {
+		"gecko": {
+			"id": "{d71ef9d3-281d-45cb-bf3a-319a94ad1b2b}",
+			"strict_min_version": "42.0"
+		}
+	}
 }
