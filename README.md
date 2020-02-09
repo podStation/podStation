@@ -7,9 +7,11 @@
 **podStation** is a podcast aggregator for chrome.
 It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Browser_extension), but it behaves essentially like a standalone app that uses Chrome as a platform. 
 
+## How to install
+
 You can install it at the [chrome web store][at-chrome-web-store].
 
-Although not officially supported (no tests in place), it also works on:
+Although not officially supported yet (no tests in place), it also works on:
 - Opera (https://www.opera.com/)
 - Chromium (I think, https://www.chromium.org/getting-involved/download-chromium)
 - Kiwi (mobile, it works, but the experience is not nice, https://kiwibrowser.com/)
