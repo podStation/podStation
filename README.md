@@ -16,7 +16,20 @@ Although not officially supported yet (no tests in place), it also works on:
 - Chromium (I think, https://www.chromium.org/getting-involved/download-chromium)
 - Kiwi (mobile, it works, but the experience is not nice, https://kiwibrowser.com/)
 
-### Vision
+## History
+
+Back in the days before I had a good Bluetooth headset, that I now use with all my devices, switching between audio from PCs (at work and at home) to mobile was not the most comfortable thing.
+
+As such, I was searching for a cost effective solution to listen to podcasts on desktop operational systems, and also synchronize the list of podcasts between my home and work PC.
+
+There were solutions on the market, but I was thinking that I could build somthing myself.
+Due to the projects I was working on at the time, I was learning font end development and also how to create chrome extensions.
+
+After some research, I decided a very cost effective way of keeping my list of podcasts in sync would be to use chrome's sync storage (in the order of Kilobytes) for extensions and chrome apps.
+
+That was how the development of podStation started.
+
+## Vision
 
 podStation has reached a mature state where increments are more tipically on the direction of bug fixes, optimizations and reduction of technical debt (see https://en.wikipedia.org/wiki/Technical_debt).
 
