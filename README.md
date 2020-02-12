@@ -12,9 +12,17 @@ It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Brow
 You can install it at the [chrome web store][at-chrome-web-store].
 
 Although not officially supported yet (no tests in place), it also works on:
-- Opera (https://www.opera.com/)
-- Chromium (I think, https://www.chromium.org/getting-involved/download-chromium)
-- Kiwi (mobile, it works, but the experience is not nice, https://kiwibrowser.com/)
+- PC
+  - Opera (https://www.opera.com/)
+  - Chromium (I think, https://www.chromium.org/getting-involved/download-chromium)
+  - Edge (the new one based on chromium, https://www.microsoft.com/en-us/edge)
+  - Brave (https://brave.com/)
+- Mobile (it works, but the experience is not nice)
+  - Kiwi (Android, https://kiwibrowser.com/)
+  - Yandex (Android, https://browser.yandex.com/mobile/)
+    - I tried to install on iOS, but I don't think extensions are supported
+  
+Yandex 
 
 ## History
 
