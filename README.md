@@ -21,6 +21,9 @@ Although not officially supported yet (no tests in place), it also works on:
   - Kiwi (Android, https://kiwibrowser.com/)
   - Yandex (Android, https://browser.yandex.com/mobile/)
     - I tried to install on iOS, but I don't think extensions are supported
+    
+A port for Firefox is on the way. If there is any browser not listed above where you use podStation, please let me know.
+If you want to request a port for a browser, create an issue here, or send us a mail (see the session _Support and Contact_)
 
 ## History
 
@@ -91,9 +94,11 @@ You can find the documentation on the [docs](/docs) folder.
 
 If you are interesting in contributing to podStation, take a look at our [contribution documentation](https://github.com/podStation/.github/blob/master/CONTRIBUTING.md).
 
-## Support
+## Support and Contact
 
 If you would like to report bugs, request new features or ask questions or contact the owners of this project for any general topic, please [create an issue](https://github.com/podStation/podStation/issues/new) here at github.
+
+If you are not sure how to use github, but still want to contact us, reach us by email at podstationapp@gmail.com.
 
 [at-chrome-web-store]: https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn
 [open-issues-at-github]: https://github.com/podStation/podStation/issues
