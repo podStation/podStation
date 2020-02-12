@@ -21,8 +21,6 @@ Although not officially supported yet (no tests in place), it also works on:
   - Kiwi (Android, https://kiwibrowser.com/)
   - Yandex (Android, https://browser.yandex.com/mobile/)
     - I tried to install on iOS, but I don't think extensions are supported
-  
-Yandex 
 
 ## History
 
