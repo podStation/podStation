@@ -104,3 +104,11 @@ If you are not sure how to use github, but still want to contact us, reach us by
 [open-issues-at-github]: https://github.com/podStation/podStation/issues
 [open-issues-at-bitbucket]: https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open
 [planning-project]: https://github.com/orgs/podStation/projects/1
+
+## References
+- Browser Extensions Documentation
+  - https://browserext.github.io/
+  - Chrome
+    - [What are extensions](https://developer.chrome.com/extensions)
+    - [Extension APIs](https://developer.chrome.com/extensions/api_index)
+    - [Chromium Extensions - Google Group](https://groups.google.com/a/chromium.org/forum/#!forum/chromium-extensions) - Forum
