@@ -292,14 +292,20 @@
 	"options": {
 		"message": "Options"
 	},
-	"report_bug": {
-		"message": "Report a bug"
+	"follow_on_twitter": {
+		"message": "Follow us on twitter"
+	},
+	"fork_it": {
+		"message": "Get the source code and fork it"
+	},
+	"contact_and_support": {
+		"message": "Contact us and get support"
 	},
 	"about_tb": {
 		"message": "About..."
 	},
-	"donate": {
-		"message": "Donate"
+	"fund_it": {
+		"message": "Fund it"
 	},
 	// pop up
 	"open": {
