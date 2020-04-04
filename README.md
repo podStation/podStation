@@ -96,14 +96,11 @@ If you are interesting in contributing to podStation, take a look at our [contri
 
 ## Support and Contact
 
-If you would like to report bugs, request new features or ask questions or contact the owners of this project for any general topic, please [create an issue](https://github.com/podStation/podStation/issues/new) here at github.
+If you would like to report bugs, request new features, ask questions or contact the owners of this project for any general topic, create an issue in any of the platforms below:
+* [GitHub](https://github.com/podStation/podStation/issues/new)
+* [BitBucket](https://bitbucket.org/dellagustin/podstation_chrome_ext/issues/new)
 
-If you are not sure how to use github, but still want to contact us, reach us by email at podstationapp@gmail.com.
-
-[at-chrome-web-store]: https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn
-[open-issues-at-github]: https://github.com/podStation/podStation/issues
-[open-issues-at-bitbucket]: https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open
-[planning-project]: https://github.com/orgs/podStation/projects/1
+If you are not sure how to use any of these platforms, or you do not want to communicate in public for any reason, reach us by email at podstationapp@gmail.com.
 
 ## References
 - Browser Extensions Documentation
@@ -112,3 +109,9 @@ If you are not sure how to use github, but still want to contact us, reach us by
     - [What are extensions](https://developer.chrome.com/extensions)
     - [Extension APIs](https://developer.chrome.com/extensions/api_index)
     - [Chromium Extensions - Google Group](https://groups.google.com/a/chromium.org/forum/#!forum/chromium-extensions) - Forum
+
+<!-- links -->
+[at-chrome-web-store]: https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn
+[open-issues-at-github]: https://github.com/podStation/podStation/issues
+[open-issues-at-bitbucket]: https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open
+[planning-project]: https://github.com/orgs/podStation/projects/1
