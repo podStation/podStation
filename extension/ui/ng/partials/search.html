@@ -1,6 +1,11 @@
 <div id="podcasts" class="mainContentBox">
 	<h1 class="sectionTitle" ng-bind-html="{ message: 'search_results_for', arguments: [searchTerms] } | chrome_i18n"></h1>
-	<h2 ng-bind-html="'results_from' | chrome_i18n"></h2>
+	<p>{{'results_from' | chrome_i18n}}</p>
+	<ul>
+		<li><a href="http://www.digitalpodcast.com/" target="_blank">Digital Podcast</a></li>
+		<li><a href="http://www.apple.com/itunes/" target="_blank">iTunes</a></li>
+		<li><a href="https://podcastindex.org/" target="_blank">Podcastindex.org</a></li>
+	</ul>
 	<p>{{ 'itunes_trademark' | chrome_i18n }}</p>
 	<div class="listEntry" ng-repeat="searchResult in searchResults">
 		<div class="itemMenu">
@@ -12,7 +17,7 @@
 				<tbody>
 					<tr>
 						<td>
-							<img ng-src="{{searchResult.image}}" class="podcastImage" width="100"></img>
+							<img ng-src="{{searchResult.image || searchResult.imageOriginal}}" class="podcastImage" width="100"></img>
 						</td>
 						<td>
 							<div class="textView">

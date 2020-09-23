@@ -136,7 +136,7 @@
 		}
 	},
 	"results_from" : {
-		"message": "Results from <a href=\"http://www.podcastsearchservice.com/\">www.podcastsearchservice.com</a> and <a href=\"http://www.apple.com/itunes/\">iTunes</a>"
+		"message": "Results from:"
 	},
 	"itunes_trademark" : {
 		"message": "iTunes is a trademark of Apple Inc., registered in the U.S. and other countries."
