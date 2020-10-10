@@ -9,7 +9,8 @@
 				listType: '=listType',
 				limitTo: '=limitTo',
 				reverseOrder: '=reverseOrder',
-				orderByField: '=orderBy'
+				orderByField: '=orderBy',
+				searchText: '=searchText'
 			},
 			controller: EpisodeListController,
 			controllerAs: 'episodeList',

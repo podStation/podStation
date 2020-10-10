@@ -1,4 +1,4 @@
-<div ng-if="episodeList.listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodeList.episodes | orderBy:episodeList.orderBy():episodeList.isReverseOrder() | limitTo:episodeList.limitTo">
+<div ng-if="episodeList.listType==='big_list'" class="episodeEntry" ng-repeat="episode in episodeList.episodes | filter:episodeList.searchText | orderBy:episodeList.orderBy():episodeList.isReverseOrder() | limitTo:episodeList.limitTo">
 	<table>
 		<tr>
 			<td ng-if="episode.image">
@@ -54,7 +54,7 @@
 </div>
 <div ng-if="episodeList.listType!=='big_list'" style="padding-top: 5px">
 	<ul class="contentList">
-		<li ng-repeat="episode in episodeList.episodes | orderBy:episodeList.orderBy():episodeList.isReverseOrder() | limitTo:episodeList.limitTo" class="listItemSmall">
+		<li ng-repeat="episode in episodeList.episodes | filter:episodeList.searchText | orderBy:episodeList.orderBy():episodeList.isReverseOrder() | limitTo:episodeList.limitTo" class="listItemSmall">
 			<div ng-if="episode.image" class="listItemImageSmall">
 				<img ng-src="{{episode.image}}" class="listItemImageSmall"></img>
 			</div>
