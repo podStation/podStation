@@ -564,6 +564,22 @@
 					_analyticsService.trackEvent('audio', 'play_pause_hotkey');
 					togglePlayPause();
 					break;
+				case 'seek_forward':
+					_analyticsService.trackEvent('audio', 'seek_forward_command');
+					seekForward();
+					break;
+				case 'seek_backward':
+					_analyticsService.trackEvent('audio', 'seek_backward_command');
+					seekBackward();
+					break;
+				case 'next_episode':
+					_analyticsService.trackEvent('audio', 'next_episode_command');
+					playNextOrPrevious(true);
+					break;
+				case 'previous_episode':
+					_analyticsService.trackEvent('audio', 'previous_episode_command');
+					playNextOrPrevious(false);
+					break;
 			}
 		});
 

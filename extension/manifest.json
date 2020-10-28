@@ -4,7 +4,7 @@
 	"author": "Guilherme Dellagustin",
 
 	"description": "A podcast aggregator for Chrome",
-	"version": "1.24.0",
+	"version": "1.25.0",
 	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
@@ -44,11 +44,19 @@
 	"options_page": "podstation.html#/Options",
 	"commands": {
 		"play_pause": {
-			"suggested_key": {
-				"default": "MediaPlayPause"
-			},
-			"description": "Play/Pause podcast",
-			"global": true
+			"description": "Play/Pause podcast"
+		},
+		"seek_backward": {
+			"description": "Seek backward"
+		},
+		"seek_forward": {
+			"description": "Seek forward"
+		},
+		"next_episode": {
+			"description": "Next episode"
+		},
+		"previous_episode": {
+			"description": "Previous episode"
 		}
 	},
 	"content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'"
