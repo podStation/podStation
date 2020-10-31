@@ -1,7 +1,7 @@
 {
   "name": "podStation",
   "authors": [
-    "Guilherme Dellagustin <dellagustin.developer@gmail.com>"
+    "Guilherme Dellagustin <podstationapp@gmail.com>"
   ],
   "description": "A podcast aggregator for Google Chrome",
   "main": "podstation.html",
