@@ -246,3 +246,68 @@ img.listItemImageSmall {
 #aboutContent {
 	font-size: medium;
 }
+
+.dark-scheme{
+	--dark_text: #d1d2d3;
+	--dark_bg : #333333; /* 1e1e1e*/
+	--dark_item_bg :#1e1e1e;
+	--dark_head : #3d3d3d;
+	--dark_border : #565856;
+	--dark_entrybox: #2e2e2e; /* #454545; */
+}
+
+body.dark-scheme{
+	background-color: #1e1e1e;
+	color:var(--dark_text)
+}
+
+.dark-scheme #playlist{
+	background-color: var(--dark_head);
+}
+
+.dark-scheme .playlistEntry{
+	border-bottom-color:var(--dark_border);
+}
+
+.dark-scheme .itemHeader, .dark-scheme .miniPlayer{
+	background: var(--dark_head);
+}
+
+.dark-scheme .miniPlayer{
+	box-shadow: 0px 0px 5px var(--dark_text);
+}
+
+.dark-scheme .episodeEntry, .dark-scheme .listEntry, .dark-scheme .podcastEntry{
+	border:none;
+	box-shadow: 0 -2px 10px rgba(0, 0, 0, 1);
+	background:var(--dark_entrybox);
+}
+.dark-scheme .episodeEntry:hover, .dark-scheme .listEntry:hover,.dark-scheme .podcastEntry:hover{
+	box-shadow: 0px 0px 20px var(--dark_text);
+}
+.dark-scheme #entryBox{
+	background-color:var(--dark_entrybox); 
+	
+	color:var(--dark_text);
+}
+.dark-scheme #entryBox::placeholder{
+	color:var(--dark_text);
+}
+.dark-scheme .audioPlayer td{
+	background: var(--dark_entrybox);
+}
+.dark-scheme .itemMenu{
+	background-color: var(--dark_item_bg);
+}
+.dark-scheme a, .dark-scheme .psPlayerBtnSecondary{
+	color:var(--dark_text);
+}
+.dark-scheme a:visited{
+	color:var(--dark_text)
+}
+.dark-scheme #header{
+	background-color: var(--dark_head)
+}
+.dark-scheme #mainTitle{
+	color: white;
+}
