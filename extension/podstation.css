@@ -4,6 +4,7 @@ body {
 	margin-left: auto;
 	margin-right: auto;
 	overflow-y: scroll;
+	transition-duration: 0.5s;
 }
 
 a {
@@ -247,18 +248,20 @@ img.listItemImageSmall {
 	font-size: medium;
 }
 
+/** Dark Color Scheme **/
 .dark-scheme{
 	--dark_text: #d1d2d3;
-	--dark_bg : #333333; /* 1e1e1e*/
+	--dark_bg : #1e1e1e; 
 	--dark_item_bg :#1e1e1e;
 	--dark_head : #3d3d3d;
 	--dark_border : #565856;
-	--dark_entrybox: #2e2e2e; /* #454545; */
+	--dark_entrybox: #2e2e2e; 
 }
 
 body.dark-scheme{
-	background-color: #1e1e1e;
-	color:var(--dark_text)
+	background-color: var(--dark_bg);
+	color:var(--dark_text);
+	transition-duration: 0.5s;
 }
 
 .dark-scheme #playlist{
@@ -281,6 +284,7 @@ body.dark-scheme{
 	border:none;
 	box-shadow: 0 -2px 10px rgba(0, 0, 0, 1);
 	background:var(--dark_entrybox);
+	transition-duration: 0.5s;
 }
 .dark-scheme .episodeEntry:hover, .dark-scheme .listEntry:hover,.dark-scheme .podcastEntry:hover{
 	box-shadow: 0px 0px 20px var(--dark_text);
@@ -297,7 +301,7 @@ body.dark-scheme{
 	background: var(--dark_entrybox);
 }
 .dark-scheme .itemMenu{
-	background-color: var(--dark_item_bg);
+	background-color: var(--dark_entrybox);
 }
 .dark-scheme a, .dark-scheme .psPlayerBtnSecondary{
 	color:var(--dark_text);
