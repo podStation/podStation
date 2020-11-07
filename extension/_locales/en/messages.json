@@ -9,6 +9,10 @@
 	"add_feed": {
 		"message": "Add Feed"
 	},
+	// Color Scheme
+	"color_scheme": {
+		"message": "Switch to light/dark mode"
+	},
 	// notifications
 	"podstation_was_updated": {
 		"message": "podStation was updated to version $version$, <a href=\"$link$\" target=\"_blank\">see what's new</a>",

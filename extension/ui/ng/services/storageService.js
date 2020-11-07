@@ -40,6 +40,10 @@
 				if(typeof uiOptions.ilt === 'undefined')
 					uiOptions.ilt = 'big_list';
 
+				// light and dark color scheme
+				if( typeof uiOptions.cs === 'undefined')
+					uiOptions.cs = 'light';
+				
 				if(loaded(uiOptions)) {
 					chrome.storage.sync.set({ui: uiOptions});
 				}
