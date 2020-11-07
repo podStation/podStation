@@ -49,7 +49,7 @@
 				<input type="text" id="entryBox" placeholder="{{'search_placeholder' | chrome_i18n }}" ng-model="entry" ng-keypress="editBoxKeyPress($event)"/>
 				<input type="button" ng-click="searchPodcast()" value="{{'search_button' | chrome_i18n }}"/>
 				<input type="button" id="addRSS" ng-click="addPodcast()" value="{{'add_feed' | chrome_i18n }}"/>
-				<a href="javascript:void(0)" id="colorScheme"><i class="fa fa-adjust fa-lg"></i></a>
+				<a href="javascript:void(0)" id="colorScheme" ng-click="toggleColorScheme()" title="{{'color_scheme' | chrome_i18n }}"><i class="fa fa-adjust fa-lg"></i></a>
 			</div>
 			<h1 id="mainTitle"><i class="fa fa-rss" aria-hidden="true"></i> podStation</h1>
 		</div>

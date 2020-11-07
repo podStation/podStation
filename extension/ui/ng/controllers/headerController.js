@@ -1,11 +1,11 @@
-myApp.controller('headerController', ['$scope', '$location', 'analyticsService', function($scope, $location, analyticsService) {
+myApp.controller('headerController', ['$scope', '$location', 'analyticsService','storageService', function($scope, $location, analyticsService, storageService) {
 	$scope.entry = "";
 
 	$scope.editBoxKeyPress = function(event) {
 		if(event.which === 13) {
 			$scope.searchPodcast();
 		}
-	}
+	};
 
 	$scope.addPodcast = function() {
 		var podcastURL = $scope.entry;
@@ -22,5 +22,28 @@ myApp.controller('headerController', ['$scope', '$location', 'analyticsService',
 
 	$scope.searchPodcast = function() {
 		$location.path('/Search/' + $scope.entry);
+	};
+
+	$scope.toggleColorScheme = function() {
+		
+		storageService.loadSyncUIOptions(function(uiOptions){
+			
+			if( uiOptions.cs === 'dark'){
+				if($('body').hasClass('dark-scheme')){
+					
+					$('body').removeClass('dark-scheme');
+					uiOptions.cs = 'light';
+
+				}
+			}else if(uiOptions.cs === 'light') {
+				
+				$('body').addClass('dark-scheme');
+				uiOptions.cs = 'dark';
+			
+			}
+			return true;
+		});
+
+		return true;
 	};
 }]);
