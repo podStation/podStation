@@ -7,15 +7,4 @@ $(document).ready(function() {
 			bgPage.podcastManager.updatePodcast('');
 		});
 	});
-
-	// Apply theme during extension load
-	chrome.storage.sync.get('ui',function(storageObject){
-		
-		var uiOptions = storageObject.ui ? storageObject.ui : {};
-		
-		if( uiOptions !== 'undefined' && uiOptions.cs === 'dark'){
-			$('body').addClass('dark-scheme');
-		}
-
-	});
 });
