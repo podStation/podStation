@@ -102,6 +102,14 @@ If you would like to report bugs, request new features, ask questions or contact
 
 If you are not sure how to use any of these platforms, or you do not want to communicate in public for any reason, reach us by email at podstationapp@gmail.com.
 
+### Get Social
+
+Wanna chat? Here is podStation's accounts on social media (in order of coolness):
+
+- [Mastodon @podstation@fostodon.org](https://fosstodon.org/@podstation)
+- [Twitter @podStation_app](https://twitter.com/podStation_app)
+- [Facebook](https://www.facebook.com/podStation)
+
 ## References
 - Browser Extensions Documentation
   - https://browserext.github.io/
