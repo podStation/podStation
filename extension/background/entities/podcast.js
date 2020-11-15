@@ -212,6 +212,7 @@ var Podcast = function(url) {
 		xml.find('rss > channel > itunes\\:image').attr('href');
 
 		processSocial(xml.find('rss > channel'), result.podcast);
+		processPodcastNamespace(xml.find('rss > channel'), result.podcast);
 
 		xml.find('rss > channel > item').each(function() {
 			var feedItem = $(this);
@@ -234,6 +235,7 @@ var Podcast = function(url) {
 			};
 
 			processSocial(feedItem, episode);
+			processPodcastNamespace(feedItem, episode);
 
 			result.episodes.push(episode);
 		});
@@ -279,6 +281,11 @@ var Podcast = function(url) {
 			return text;
 		}
 
+		/**
+		 * Process the Social RSS namespace (see https://github.com/socialrss/socialrss)
+		 * @param {JQuery<HTMLElement>} xmlItem
+		 * @param {*} result 
+		 */
 		function processSocial(xmlItem, result) {
 			result.email = xmlItem.children('social\\:email').text();
 			result.email = result.email || xmlItem.children('itunes\\:email').text();
@@ -339,6 +346,24 @@ var Podcast = function(url) {
 
 				result.participantReferences.push(participantReference);
 			});
+		}
+
+		/**
+		 * Process the podcast namespace (see https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md)
+		 * @param {JQuery<HTMLElement>} xmlItem
+		 * @param {*} result 
+		 */
+		function processPodcastNamespace(xmlItem, result) {
+			xmlItem.children('podcast\\:funding').each(function () {
+				const feedFunding = $(this);
+				const funding = {};
+
+				result.crowdfundings = result.crowdfundings || [];
+
+				funding.url = feedFunding.attr('url');
+				funding.text = feedFunding.text();
+				result.crowdfundings.push(funding);
+			})
 		}
 	}
 }
