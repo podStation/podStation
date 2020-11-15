@@ -161,6 +161,9 @@
 	"publication_date": {
 		"message": "Data de publicação"
 	},
+	"fund_this_podcast": {
+		"message": "Financie esse podcast"
+	},
 	"updating_podcasts": {
 		"message": "Atualizando podcasts..."
 	},

@@ -162,6 +162,9 @@
 	"publication_date": {
 		"message": "Publication date"
 	},
+	"fund_this_podcast": {
+		"message": "Fund this podcast"
+	},
 	"updating_podcasts": {
 		"message": "Updating podcasts..."
 	},
