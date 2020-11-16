@@ -209,6 +209,9 @@
 	"last_time_played": {
 		"message": "Last time played"
 	},
+	"duration": {
+		"message": "Duration"
+	},
 	"paused_at": {
 		"message": "Paused at"
 	},

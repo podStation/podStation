@@ -45,6 +45,7 @@
 						return {
 							title: episodeContainer.episode.title,
 							image: episodeContainer.podcast.image,
+							duration: episodeContainer.episode.duration,
 							episodeId: podcastDataService.episodeId(episodeContainer.episode, episodeContainer.podcast)
 						}; 
 					});

@@ -144,9 +144,9 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 						<a href="" ng-click="episodePlayer.refresh()" ng-if="!episodePlayer.loading"><i class="fa fa-refresh" title="{{'refresh_player' | chrome_i18n }}"></i></a>
 						
 						<span>
-							<span ng-if="episodePlayer.timeMouseOver"><i>{{episodePlayer.timeMouseOver}}</i></span>
-							<span ng-if="!episodePlayer.timeMouseOver">{{episodePlayer.time}}</span>
-							<span> / {{episodePlayer.duration}}</span>
+							<span ng-if="episodePlayer.timeMouseOver"><i>{{episodePlayer.timeMouseOver | format_seconds}}</i></span>
+							<span ng-if="!episodePlayer.timeMouseOver">{{episodePlayer.time | format_seconds}}</span>
+							<span> / {{episodePlayer.duration  | format_seconds}}</span>
 						</span>
 						<br>
 						<div id="volumeControl" ng-if="!episodePlayer.miniPlayer">
