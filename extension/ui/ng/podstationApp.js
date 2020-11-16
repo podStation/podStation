@@ -53,6 +53,23 @@ myApp.filter('chrome_i18n', function() {
 	};
 });
 
+myApp.filter('format_seconds', function() {
+	return formatSeconds;
+	
+	/**
+	 * seconds to hh:mm:ss
+	 * @param {number} seconds
+	 * @return {String}
+	 */
+	function formatSeconds(seconds) {
+		var date = new Date(null);
+		date.setSeconds(seconds);
+
+		// this will work fine as long as less than 24hs, which is reasonable
+		return date.toISOString().substr(11, 8);
+	};
+});
+
 // Shade your extension's page using Screen Shader. Code snippet courtesy of Marc Guiselin 2015
 function updSS(){
 	chrome.runtime.sendMessage("fmlboobidmkelggdainpknloccojpppi", {}, function(response) {

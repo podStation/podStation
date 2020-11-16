@@ -75,6 +75,7 @@ span.isPlaying {
 					<span class="playlist_button" ng-click="playlist.remove(entry)"><i class="fa fa-remove"></i></span>
 					<img ng-src="{{entry.image}}" class="playlistImage"></img>
 					<span ng-class="{isPlaying: entry.isPlaying}">{{entry.title}}</span>
+					<span ng-if="entry.duration"> - {{entry.duration | format_seconds}}</span>
 				</dnd-nodrag>
 			</li>
 			<li class="dndPlaceholder playlistEntry">

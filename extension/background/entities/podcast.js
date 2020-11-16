@@ -1,3 +1,5 @@
+'use strict';
+
 var Podcast = function(url) {
 	var defaultImage = 'images/rss-alt-8x.png';
 
@@ -233,6 +235,7 @@ var Podcast = function(url) {
 				length: enclosure.attr('length'),
 				type: enclosure.attr('type')
 			};
+			episode.duration = parseItunesDuration(feedItem.find('itunes\\:duration').text());
 
 			processSocial(feedItem, episode);
 			processPodcastNamespace(feedItem, episode);
@@ -279,6 +282,27 @@ var Podcast = function(url) {
 			});
 
 			return text;
+		}
+
+		/**
+		 * Parse the content of <itunes:duration>
+		 * The official documentation is not clear about the format, but I have seen examples
+		 * that are seconds and examples that are hh:mm:ss
+		 * @param {String} tagContent
+		 * @returns {number | undefined} duration in seconds, or undefined
+		 */
+		function parseItunesDuration(tagContent) {
+			let durationInSeconds;
+			
+			if(tagContent) {
+				let splits = tagContent.split(':').reverse().map((s) => parseInt(s)).filter((s) => !isNaN(s));
+				durationInSeconds = 
+					(splits[0] ? splits[0] : 0) + 
+					(splits[1] ? splits[1] * 60 : 0) +
+					(splits[2] ? splits[2] * 3600 : 0);
+			}
+
+			return durationInSeconds;
 		}
 
 		/**

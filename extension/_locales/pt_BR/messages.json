@@ -208,6 +208,9 @@
 	"last_time_played": {
 		"message": "Última vez tocado"
 	},
+	"duration": {
+		"message": "Duração"
+	},
 	"paused_at": {
 		"message": "Pausado em"
 	},

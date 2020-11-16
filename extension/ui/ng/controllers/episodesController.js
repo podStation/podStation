@@ -32,6 +32,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 					episode.guid = storedEpisodeContainer.episode.guid;
 					episode.isInPlaylist = false;
 					episode.participants = storedEpisodeContainer.episode.participants && storedEpisodeContainer.episode.participants.map(socialService.participantMapping);
+					episode.duration = storedEpisodeContainer.episode.duration;
 
 					return episode;
 				});
@@ -125,6 +126,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 						episode.pubDate = formatDate(episode.pubDateUnformatted);
 						episode.guid = storedEpisode.guid;
 						episode.participants = storedEpisode.participants && storedEpisode.participants.map(socialService.participantMapping);
+						episode.duration = storedEpisode.duration;
 
 						return episode;
 					});
@@ -194,16 +196,6 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	var episodesLoaded = false;
 	var optionsLoaded = false;
 
-	// copied from episodePlayerController
-	// TODO: put in a service to be reused
-	function formatSeconds(seconds) {
-		var date = new Date(null);
-		date.setSeconds(seconds);
-
-		// this will work fine as long as less than 24hs, which is reasonable
-		return date.toISOString().substr(11, 8);
-	}
-
 	$scope.updateEpisodes = function() {
 		var that = this;
 
@@ -226,8 +218,9 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 							this.guid = episode.guid;
 							this.lastTimePlayed = episodeInProgress.episodeUserData.lastTimePlayed;
 							this.lastTimePlayedFormatted = formatDate(this.lastTimePlayed);
-							this.pausedAt = formatSeconds(episodeInProgress.episodeUserData.currentTime);
+							this.pausedAt = episodeInProgress.episodeUserData.currentTime;
 							this.participants = episode.participants && episode.participants.map(socialService.participantMapping);
+							this.duration = episode.duration;
 						}
 					};
 

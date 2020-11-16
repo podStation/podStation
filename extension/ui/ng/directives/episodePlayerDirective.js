@@ -141,14 +141,6 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 			});
 		}
 
-		function formatSeconds(seconds) {
-			var date = new Date(null);
-			date.setSeconds(seconds);
-
-			// this will work fine as long as less than 24hs, which is reasonable
-			return date.toISOString().substr(11, 8);
-		}
-
 		function playbackRateStepUp() {
 			return controller.playbackRate >= 1.0 ? 0.25 : 0.05;
 		}
@@ -217,7 +209,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		}
 
 		function progressMouseOver(event) {
-			controller.timeMouseOver = formatSeconds(event.offsetX / event.currentTarget.clientWidth * durationInSeconds);
+			controller.timeMouseOver = event.offsetX / event.currentTarget.clientWidth * durationInSeconds;
 		}
 		
 		function progressMouseLeave() {
@@ -277,8 +269,8 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 				controller.mediaTitle = episode.title;
 				controller.mediaLink = episode.link;
-				controller.time = formatSeconds(audioInfo.audio.currentTime);
-				controller.duration = formatSeconds(audioInfo.audio.duration);
+				controller.time = audioInfo.audio.currentTime;
+				controller.duration = audioInfo.audio.duration;
 				controller.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
 				controller.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
 				controller.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
