@@ -312,7 +312,7 @@ var Podcast = function(url) {
 		 */
 		function processSocial(xmlItem, result) {
 			result.email = xmlItem.children('social\\:email').text();
-			result.email = result.email || xmlItem.children('itunes\\:email').text();
+			result.email = result.email || xmlItem.find('itunes\\:owner > itunes\\:email').text();
 			result.email = result.email || xmlItem.children('googleplay\\:email').text();
 
 			if(!result.email) {
