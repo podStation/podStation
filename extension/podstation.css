@@ -315,3 +315,20 @@ body.dark-scheme{
 .dark-scheme #mainTitle{
 	color: white;
 }
+
+body.dark-scheme::-webkit-scrollbar-track-piece {
+	background-color: rgba(0, 0, 0, 0)
+}
+body.dark-scheme::-webkit-scrollbar {
+	width: 10px;
+	height: 5px
+}
+body.dark-scheme::-webkit-scrollbar-thumb {
+	height: 50px;
+	background-color:  var(--dark_head) ;
+	--outline: 1px solid rgba(0, 0, 0, 0);
+	--outline-offset: -1px
+}
+body.dark-scheme::-webkit-scrollbar-thumb:hover {
+	background-color: var(--dark_border);
+}
