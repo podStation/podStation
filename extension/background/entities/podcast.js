@@ -213,6 +213,8 @@ var Podcast = function(url) {
 		xml.find('rss > channel > image').attr('href') ||
 		xml.find('rss > channel > itunes\\:image').attr('href');
 
+		result.podcast.email = parseEmailTag(xml.find('rss > channel > managingEditor').text());
+
 		processSocial(xml.find('rss > channel'), result.podcast);
 		processPodcastNamespace(xml.find('rss > channel'), result.podcast);
 
@@ -311,7 +313,7 @@ var Podcast = function(url) {
 		 * @param {*} result 
 		 */
 		function processSocial(xmlItem, result) {
-			result.email = xmlItem.children('social\\:email').text();
+			result.email = result.email || xmlItem.children('social\\:email').text();
 			result.email = result.email || xmlItem.find('itunes\\:owner > itunes\\:email').text();
 			result.email = result.email || xmlItem.children('googleplay\\:email').text();
 
@@ -390,4 +392,25 @@ var Podcast = function(url) {
 			})
 		}
 	}
+}
+
+/**
+ * A very cheap email tag parser, does not support mailto links
+ * e-mail tags do not have a well defined format :(
+ * see 
+ * @param {string} tagContent
+ * @returns {string} returns a string containing an e-mail
+ */
+function parseEmailTag(tagContent) {
+	let email = undefined;
+	
+	if(tagContent) {
+		let e = tagContent.split(' ');
+
+		if(e[0] !== 'noreply@blogger.com') {
+			email = e[0];
+		}
+	}
+	
+	return email;
 }
