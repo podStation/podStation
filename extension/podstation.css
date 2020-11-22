@@ -190,6 +190,7 @@ h1 {
 
 .itemDescription {
 	padding-top: 10px;
+	word-break: break-word;
 }
 
 .itemDescription a, #aboutContent a {
