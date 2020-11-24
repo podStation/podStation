@@ -174,6 +174,10 @@ h1 {
 	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
 }
 
+.episodeEntry > table{
+	width: 100%;
+}
+
 .textView {
 	padding: 10px;
 	padding-top: 0px;
