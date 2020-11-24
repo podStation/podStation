@@ -171,7 +171,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 							<span ng-if="!episodePlayer.mediaLink">{{episodePlayer.mediaTitle}}</span>
 						</div>
 						<div id="progressOut" ng-click="episodePlayer.seek($event)" ng-mousemove="episodePlayer.progressMouseOver($event)" 
-						ng-mouseleave="episodePlayer.progressMouseLeave()" title="{{episodePlayer.timeMouseOver}}">
+						ng-mouseleave="episodePlayer.progressMouseLeave()" title="{{episodePlayer.timeMouseOver | format_seconds}}">
 							<div id="progressIn" style="width: {{episodePlayer.timePercent}}%"></div>
 						</div>
 						<div style="padding-bottom: 4px;" ng-if="!episodePlayer.miniPlayer">
