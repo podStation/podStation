@@ -190,6 +190,12 @@ h1 {
 .itemTitle {
 	font-size: 20px;
 	font-weight: bold;
+	display: block;
+	max-width: 94%;
+}
+
+.listEntry .itemTitle{
+	max-width: 98%;
 }
 
 .itemDescription {
