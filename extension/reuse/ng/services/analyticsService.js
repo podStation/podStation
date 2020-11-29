@@ -31,6 +31,13 @@ var analyticsService;
 			});
 		}
 
+		/**
+		 * Tracks an event
+		 * @param {String} category feed or audio
+		 * @param {*} action any action label
+		 * @param {*} label 
+		 * @param {*} value 
+		 */
 		function trackEvent(category, action, label, value) {
 			_ga('send', 'event', {
 				eventCategory: category,
