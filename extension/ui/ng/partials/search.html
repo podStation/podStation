@@ -8,10 +8,6 @@
 	</ul>
 	<p>{{ 'itunes_trademark' | chrome_i18n }}</p>
 	<div class="listEntry" ng-repeat="searchResult in searchResults">
-		<div class="itemMenu">
-			<a href="" ng-if="!searchResult.subscribed" title="{{ 'subscribe' | chrome_i18n }}" ng-click="addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
-			<i ng-if="searchResult.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
-		</div>
 		<div>
 			<table>
 				<tbody>
@@ -20,6 +16,10 @@
 							<img ng-src="{{searchResult.image || searchResult.imageOriginal}}" class="podcastImage" width="100"></img>
 						</td>
 						<td>
+							<div class="itemMenu">
+								<a href="" ng-if="!searchResult.subscribed" title="{{ 'subscribe' | chrome_i18n }}" ng-click="addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
+								<i ng-if="searchResult.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
+							</div>
 							<div class="textView">
 								<a ng-href="{{searchResult.link}}" ng-if="searchResult.link" target="_blank">
 									<span class="itemTitle">{{searchResult.title}}</span>
