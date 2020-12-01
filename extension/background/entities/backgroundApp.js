@@ -9,8 +9,8 @@ angular.module('podstationBackgroundApp').config(['messageServiceProvider', func
 }]);
 
 angular.module('podstationBackgroundAppRun').run([
-'$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService',
-function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService) {
+'$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService', 'podcastManager',
+function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService, podcastManager) {
 	// playlist, analyticsService and audioPlayerService, are here only to ensure the services are created as soon as possible
 	
 	browser.runtime.onInstalled.addListener(function(details) {
@@ -55,6 +55,20 @@ function($window, $timeout, $log, playlist, browser, analyticsService, audioPlay
 	
 			ga('create', 'UA-67249070-2', 'auto');
 			ga('set', 'checkProtocolTask', function(){});
+		}
+	});
+
+	chrome.runtime.onMessageExternal.addListener((message, sender, sendResponse) => {
+		console.info('External message received from: %s', sender.id || sender.url);
+
+		switch(message.type) {
+			case 'isInstalled':
+				sendResponse({installed: true});
+				break;
+			case 'subscribeToPodcast':
+				analyticsService.trackEvent('feed', 'add_by_external_message', sender.id || sender.url);
+				podcastManager.addPodcast(message.feedUrl);
+				break;
 		}
 	});
 
