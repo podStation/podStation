@@ -18,10 +18,6 @@
 				</select>
 			</div>
 			<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder()" id="podcast_{{podcast.url}}" class="podcastEntry">
-				<div class="itemMenu">
-					<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
-					<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
-				</div>
 				<div>
 				<table>
 					<tr>
@@ -29,6 +25,10 @@
 							<img ng-src="{{podcast.image}}" class="podcastImage" width="100"></img>
 						</td>
 						<td>
+							<div class="itemMenu">
+								<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
+								<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+							</div>
 							<div class="textView">
 								<div class="itemHeader">
 									<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>

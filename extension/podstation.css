@@ -148,8 +148,8 @@ h1 {
 	font-size: 12px;
 	float: right;
 	padding: 10px;
-	position: absolute;
-	right: 0px;
+	position: relative;
+	right: -2px;
 	background-color: white;
 	border-radius: 0px 0px 0px 5px;
 }
@@ -172,6 +172,10 @@ h1 {
 	padding: 5px;
 	position: relative;
 	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
+}
+
+.episodeEntry > table{
+	width: 100%;
 }
 
 .textView {
