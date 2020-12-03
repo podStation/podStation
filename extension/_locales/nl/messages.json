@@ -1,0 +1,343 @@
+{
+	// header
+	"search_placeholder": {
+		"message": "Podcastfeed of zoektermen..."
+	},
+	"search_button": {
+		"message": "Zoeken naar podcast"
+	},
+	"add_feed": {
+		"message": "Feed toevoegen"
+	},
+	// Color Scheme
+	"color_scheme": {
+		"message": "Schakelen tussen licht en donker thema"
+	},
+	// notifications
+	"podstation_was_updated": {
+		"message": "podStation is geüpdatet naar versie $version$ - <a href=\"$link$\" target=\"_blank\">bekijk het wijzigingslog</a>",
+		"description": "Notification informing user that the version was updated",
+		"placeholders": {
+			"version": {
+				"content": "$1",
+				"example": "1.18.2"
+			},
+			"link": {
+				"content": "$2",
+				"example": "https://github.com/podStation"
+			}
+		}
+	},
+	"dont_show_this_again": {
+		"message": "Niet meer tonen"
+	},
+	"dismiss_all": {
+		"message": "Alles verwerpen..."
+	},
+	"click_dismiss": {
+		"message": "Klik om te verwerpen..."
+	},
+	// player
+	"play": {
+		"message": "Afspelen"
+	},
+	"pause": {
+		"message": "Pauzeren"
+	},
+	"play_pause": {
+		"message": "Afspelen/Pauzeren"
+	},
+	"stop": {
+		"message": "Stoppen"
+	},
+	"forward": {
+		"message": "15 seconds vooruitspoelen"
+	},
+	"backward": {
+		"message": "15 seconds terugspoelen"
+	},
+	"refresh_player": {
+		"message": "Speler verversen"
+	},
+	"speed": {
+		"message": "Snelheid"
+	},
+	"speed_down": {
+		"message": "Snelheid verlagen"
+	},
+	"speed_up": {
+		"message": "Snelheid verhogen"
+	},
+	"playing": {
+		"message": "Je luistert naar"
+	},
+	"paused": {
+		"message": "Gepauzeerd"
+	},
+	"previous_episode": {
+		"message": "Vorige aflevering"
+	},
+	"next_episode": {
+		"message": "Volgende aflevering"
+	},
+	"show_player_options": {
+		"message": "Speleropties tonen"
+	},
+	"hide_player_options": {
+		"message": "Speleropties verbergen"
+	},
+	"order_next_previous": {
+		"message": "Doorgaan met"
+	},
+	"order_from_podcast": {
+		"message": "vorige/volgende podcast"
+	},
+	"order_from_last_episodes": {
+		"message": "vorige/volgende afleveringen"
+	},
+	"order_from_playlist": {
+		"message": "vorige/volgende afspeellijst"
+	},
+	"continue_playing": {
+		"message": "Doorgaan met afspelen"
+	},
+	"continue_playing_description": {
+		"message": "Volgende aflevering afspelen als huidige is afgelopen"
+	},
+	"remove_when_finished": {
+		"message": "Verwijderen van afspeellijst als huidige is afgelopen"
+	},
+	"pause_when_locked": {
+		"message": "Pauzeren bij vergrendelen van computer"
+	},
+	"player_error" : {
+		"message": "Fout tijdens laden - klik op 'Afspelen' om opnieuw te proberen"
+	},
+	// playlist
+	"remove_from_playlist": {
+		"message": "Verwijderen van afspeellijst"
+	},
+	"add_to_playlist": {
+		"message": "Toevoegen aan afspeellijst"
+	},
+	"empty_playlist": {
+		"message": "Je afspeellijst is leeg"
+	},
+	// search
+	"subscribe": {
+		"message": "Abonneren op podcast met podStation"
+	},
+	"open_in_itunes": {
+		"message": "Openen in iTunes"
+	},
+	"search_results_for": {
+		"message": "Zoekresultaten voor <i>$search_term$</i>",
+		"placeholders": {
+			"search_term": {
+				"content": "$1",
+				"example": "some podcast"
+			}
+		}
+	},
+	"results_from" : {
+		"message": "Resultaten van:"
+	},
+	"itunes_trademark" : {
+		"message": "iTunes is een handelsmerk van Apple Inc., geregistreerd in de VS en andere landen."
+	},
+	"no_results" : {
+		"message": "Geen podcast gevonden..."
+	},
+	// podcasts
+	"number_episodes": {
+		"message": "$number$ aflevering(en)",
+		"description": "Number of episodes to be shown in the podcasts list",
+		"placeholders": {
+			"number": {
+				"content": "$1",
+				"example": "20"
+			}
+		}
+	},
+	"publication_date": {
+		"message": "Publicatiedatum"
+	},
+	"fund_this_podcast": {
+		"message": "Doneren aan podcastmaker(s)"
+	},
+	"updating_podcasts": {
+		"message": "Bezig met bijwerken van podcasts..."
+	},
+	"show_episodes": {
+		"message": "Afleveringen tonen"
+	},
+	"open_podcast_website": {
+		"message": "Ga naar podcastwebsite"
+	},
+	"first_added": {
+		"message": "Oudst toegevoegd"
+	},
+	"last_added": {
+		"message": "Recentst toegevoegd"
+	},
+	// episodes
+	"all_eps_from": {
+		"message": "Alle afleveringen van <i>$podcast$</i>",
+		"placeholders": {
+			"podcast": {
+				"content": "$1"
+			}
+		}
+	},
+	"eps_from": {
+		"message": "Afleveringen van $podcast$",
+		"placeholders": {
+			"podcast": {
+				"content": "$1"
+			}
+		}
+	},
+	"no_podcasts": {
+		"message": "Je hebt nog geen podcasts. Zoek een podcast middels het zoekvak of voeg een feed toe."
+	},
+	"no_episodes": {
+		"message": "Er zijn nog geen afleveringen. Zoek een podcast middels het zoekvak of voeg een feed toe."
+	},
+	"no_podcast_in_progress": {
+		"message": "Je hebt momenteel geen gepauzeerde afleveringen"
+	},
+	"last_time_played": {
+		"message": "Laatst afgespeeld"
+	},
+	"duration": {
+		"message": "Duur"
+	},
+	"paused_at": {
+		"message": "Gepauzeerd op"
+	},
+	"play_episode": {
+		"message": "Aflevering afspelen"
+	},
+	"open_episode_website": {
+		"message": "Ga naar afleveringswebsite"
+	},
+	"oldest": {
+		"message": "Oudste"
+	},
+	"most_recent": {
+		"message": "Recentste"
+	},
+	"remove_progress": {
+		"message": "Voortgang wissen"
+	},
+	// options
+	"auto_update": {
+		"message": "Podcasts automatisch bijwerken"
+	},
+	"update_frequency": {
+		"message": "Bijwerktussenpoos"
+	},
+	"minutes": {
+		"message": "minuten"
+	},
+	"notifications": {
+		"message": "Meldingen"
+	},
+	"show_version_news": {
+		"message": "Versie-informatie tonen"
+	},
+	"integrate_screen_shader": {
+		"message": "Integratie met <a href=\"https://chrome.google.com/webstore/detail/screen-shader/fmlboobidmkelggdainpknloccojpppi\" target=\"_blank\">Screen Shader</a>"
+	},
+	"analytics": {
+		"message": "Anonieme gebruiksgegevens versturen (statistieken) - meer informatie op <a href=\"https://podstation.blogspot.de/2017/09/anonymous-usage-data-and-analytics.html\" target=\"_blank\">onze website</a>)"
+	},
+	"save": {
+		"message": "Opslaan"
+	},
+	// about
+	"about" : {
+		"message": "Over"
+	},
+	"about_long_text" : {
+		"message": "<p>Podstation is een eenvoudige podcastverzamel-app.</p><p>De app is nog lang niet af, maar in de tussentijd kun je de plannen bekijken of ideeën delen op onze <a href=\"https://bitbucket.org/dellagustin/podstation_chrome_ext/issues?status=new&status=open\" target=\"_blank\">bugpagina</a>.</p><p>Podstation wordt ontwikkeld door <a href=\"https://de.linkedin.com/pub/guilherme-dellagustin/28/957/154\" target=\"_blank\">Guilherme Dellagustin</a> en is volledig open source. Maak een eigen afsplitsing op <a href=\"https://github.com/podStation/podStation\" target=\"_blank\">GitHub</a>.</p>"
+	},
+	"integrated_with": {
+		"message": "Geïntegreerd met"
+	},
+	"stats_for_nerds": {
+		"message": "Nerdstatistieken"
+	},
+	// welcome
+	"welcome": {
+		"message": "Welkom!"
+	},
+	"welcome_long_text" : {
+		"message": "<p>Welkom bij podStation!</p><p>Zoek je favoriete podcasts middels de zoekfunctie hierboven.</p>"
+	},
+	// toolbar
+	"update_all": {
+		"message": "Alles bijwerken",
+		"description": "Update all podcasts"
+	},
+	"last_episodes": {
+		"message": "Recentste afleveringen",
+		"description": "Link to the last episodes of all podcasts"
+	},
+	"in_progress": {
+		"message": "Gepauzeerde afleveringen"
+	},
+	"toggle_playlist": {
+		"message": "Afspeellijst tonen/verbergen"
+	},
+	"import_opml": {
+		"message": "Feeds importeren uit opml-bestand"
+	},
+	"export_opml": {
+		"message": "Feeds exporteren naar opml-bestand"
+	},
+	"review": {
+		"message": "Laat een mooie beoordeling achter"
+	},
+	"options": {
+		"message": "Instellingen"
+	},
+	"follow_on_twitter": {
+		"message": "Volg ons op Twitter"
+	},
+	"fork_it": {
+		"message": "Bekijk de broncode"
+	},
+	"contact_and_support": {
+		"message": "Contact en ondersteuning"
+	},
+	"about_tb": {
+		"message": "Over..."
+	},
+	"fund_it": {
+		"message": "Doneren"
+	},
+	// pop up
+	"open": {
+		"message": "openen"
+	},
+	"feeds_in_page": {
+		"message": "Feeds op deze pagina"
+	},
+	"feed_in_list": {
+		"message": "Hoera! Je hebt deze feed al toegevoegd."
+	},
+	// Social
+	"tweet": {
+		"message": "Tweeten"
+	},
+	"tweet_this_episode": {
+		"message": "Tweet deze aflevering"
+	},
+	"facebook_share": {
+		"message": "Delen"
+	},
+	"facebook_share_this_episode": {
+		"message": "Deel deze aflevering op Facebook"
+	}
+}
