@@ -337,3 +337,15 @@ body.dark-scheme::-webkit-scrollbar-thumb {
 body.dark-scheme::-webkit-scrollbar-thumb:hover {
 	background-color: var(--dark_border);
 }
+
+a.funditBtn {
+	background-color: #ffb811;
+	border-radius: 10px;
+	padding: 0px 6px 2px 5px;
+	color: black;
+}
+
+a.funditBtn:hover {
+	text-decoration: none;
+	background-color: #da9800;
+}
