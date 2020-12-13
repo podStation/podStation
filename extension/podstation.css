@@ -345,6 +345,10 @@ a.funditBtn {
 	color: black;
 }
 
+a.funditBtn:visited {
+	color: black;
+}
+
 a.funditBtn:hover {
 	text-decoration: none;
 	background-color: #da9800;
