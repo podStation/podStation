@@ -2,6 +2,8 @@
 
 Hello **podStation community**!
 
+Apologies if this page jumped in your screen out of nowhere, this page is open automatically when podStation updates to version 1.32.2.
+
 There is one important feature of podStation that is at risk.
 
 I'll explain below what is happening and what you can do about it.
