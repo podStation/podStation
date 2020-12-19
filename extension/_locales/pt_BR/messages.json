@@ -181,7 +181,7 @@
 	},
 	// episodes
 	"all_eps_from": {
-		"message": "Todos os episódios de <i>$podcast$</i>",
+		"message": "Todos os episódios de<br><i>$podcast$</i>",
 		"placeholders": {
 			"podcast": {
 				"content": "$1"

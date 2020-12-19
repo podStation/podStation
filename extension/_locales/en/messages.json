@@ -182,7 +182,7 @@
 	},
 	// episodes
 	"all_eps_from": {
-		"message": "All episodes from <i>$podcast$</i>",
+		"message": "All episodes from<br><i>$podcast$</i>",
 		"placeholders": {
 			"podcast": {
 				"content": "$1"

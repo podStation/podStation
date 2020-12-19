@@ -24,6 +24,10 @@ a:visited {
 	color: black;
 }
 
+#contentBoxIn {
+	padding-top: 10px;
+}
+
 .icon {
 	transition: 0.5s;
 }

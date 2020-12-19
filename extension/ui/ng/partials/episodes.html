@@ -1,12 +1,8 @@
 <div id="episodes" class="mainContentBox">
-	<table>
-		<tbody>
-			<tr>
-				<td><img height="50" ng-src="{{podcastImage}}"></img></td>
-				<td><h1 class="sectionTitle episodesSectionTitle" ng-bind-html="{ message: 'all_eps_from', arguments: [podcastTitle]} | chrome_i18n"></h1></td>
-			</tr>
-		</tbody>
-	</table>
+	<div style="float: left; padding-top: 8px; padding-left: 0px; padding-right: 12px; padding-bottom: 0px;">
+		<img style="max-width: 64px;" height="64" max-width="64" ng-src="{{podcastImage}}"></img>
+	</div>
+	<h1 class="sectionTitle episodesSectionTitle" ng-bind-html="{ message: 'all_eps_from', arguments: [podcastTitle]} | chrome_i18n"></h1>
 	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
 		<div id="listMenu" ng-show="episodes.length">
 			<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
