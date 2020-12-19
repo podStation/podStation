@@ -25,7 +25,7 @@ a:visited {
 }
 
 #contentBoxIn {
-	padding-top: 10px;
+	padding-top: 3px;
 }
 
 .icon {
@@ -122,7 +122,7 @@ h1 {
 
 #contentBoxMenu {
 	float: right;
-	padding: 15px;
+	padding: 5px;
 	padding-right: 0px;
 	padding-bottom: 0px;
 	font-size: 14px;
