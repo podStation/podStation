@@ -182,7 +182,7 @@
 	},
 	// episodes
 	"all_eps_from": {
-		"message": "Alle afleveringen van <i>$podcast$</i>",
+		"message": "Alle afleveringen van<br><i>$podcast$</i>",
 		"placeholders": {
 			"podcast": {
 				"content": "$1"
