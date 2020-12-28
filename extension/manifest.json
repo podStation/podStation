@@ -4,7 +4,7 @@
 	"author": "Guilherme Dellagustin",
 
 	"description": "A podcast aggregator for Chrome",
-	"version": "1.32.2",
+	"version": "1.32.3",
 	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
