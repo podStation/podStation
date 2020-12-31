@@ -389,7 +389,35 @@ var Podcast = function(url) {
 				funding.url = feedFunding.attr('url');
 				funding.text = feedFunding.text();
 				result.crowdfundings.push(funding);
-			})
+			});
+
+			xmlItem.children('podcast\\:value').each(function () {
+				const feedValue = $(this);
+				const value = {};
+
+				// currently a single entry is supported, but I believe that
+				// many entries will be supported in the future.
+				result.values = result.values || [];
+
+				value.type = feedValue.attr('type');
+				value.method = feedValue.attr('method');
+				value.suggested = parseFloat(feedValue.attr('suggested'));
+
+				feedValue.children('podcast\\:valueRecipient').each(function() {
+					const feedRecipient = $(this);
+					const recipient = {};
+
+					recipient.name = feedRecipient.attr('name');
+					recipient.type = feedRecipient.attr('type');
+					recipient.address = feedRecipient.attr('address');
+					recipient.split = parseInt(feedRecipient.attr('split'));
+					
+					value.recipients = value.recipients || [];
+					value.recipients.push(recipient);
+				});
+
+				result.values.push(value);
+			});
 		}
 	}
 }

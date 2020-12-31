@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:podcast="https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md">
+	<channel>
+		<title>Feed1</title> 
+		<link>http://feed1.podstation.com/</link>  
+		<description>Description Feed 1</description> 
+		<language>pt-br</language>
+		<!-- 50 Sats per minute, aprox 0.01318 USD -->
+		<podcast:value type="lightning" method="keysend" suggested="0.0000005">
+			<!--<podcast:valueRecipient name="Recipient 1" type="node" address="[public key of bitcoin/lightning node(string)]" split="70" />
+			<podcast:valueRecipient name="Recipient 2" type="node" address="[public key of bitcoin/lightning node(string)]" split="30" />-->
+			<podcast:valueRecipient name="Recipient 1" type="node" address="03fe2e54f031e406a02a97c17d1583f642af70974456da74289c564c35636a5763" split="70" />
+			<podcast:valueRecipient name="Recipient 2" type="node" address="0317f079e7fb68717abe9a57858fb1e5ec7623ceff197270c2403a229997a4d284" split="30" />
+		</podcast:value>
+		<item>
+			<title>Title 3</title>
+			<link>http://feed1.podstation.com/?p=3</link>
+			<description>Description 3</description>
+			<enclosure url="http://feed1.podstation.com/3.mp3" type="audio/mpeg" />
+			<guid isPermaLink="true">https://media.blubrry.com/fdboteco/fliperamadeboteco.com/podcast/FDB218_cagadassega.mp3</guid>
+			<pubDate>Wed, 28 Feb 2018 00:01:01 -0300</pubDate>
+		</item>
+		<item>
+			<title>Title 2</title>
+			<link>http://feed1.podstation.com/?p=2</link>
+			<description>Description 2</description>
+			<enclosure url="http://feed1.podstation.com/2.mp3" type="audio/mpeg" />
+			<guid isPermaLink="true">https://media.blubrry.com/fdboteco/fliperamadeboteco.com/podcast/FDB218_cagadassega.mp3</guid>
+			<pubDate>Mon, 19 Feb 2018 12:01:01 -0300</pubDate>
+		</item>
+		<item>
+			<title>Title 1</title>
+			<link>http://feed1.podstation.com/?p=1</link>
+			<description>Description 1</description>
+			<enclosure url="http://feed1.podstation.com/1.mp3" type="audio/mpeg" />
+			<guid isPermaLink="true">https://media.blubrry.com/fdboteco/fliperamadeboteco.com/podcast/FDB218_cagadassega.mp3</guid>
+			<pubDate>Mon, 04 Feb 2018 19:01:01 -0300</pubDate>
+		</item>
+	</channel>
+</rss>
