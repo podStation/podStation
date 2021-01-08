@@ -129,6 +129,10 @@ var Podcast = function(url) {
 			that.participants = feedParseResult.podcast.participants;
 			// <<< social namespace
 
+			// >>> podcast namespace
+			that.values = feedParseResult.podcast.values;
+			// <<< podcast namespace
+
 			that.episodes = feedParseResult.episodes;
 
 			// post process episodes >>>

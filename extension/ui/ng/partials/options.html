@@ -26,6 +26,20 @@
 		<h2>Others</h2>
 		<input type="checkbox" ng-model="options.analytics"><span ng-bind-html="'analytics' | chrome_i18n"></span>
 		<br>
+		<h2>Experimental</h2>
+		<h3>Lightning payments</h2>
+		<span>Lightning node REST API base url:</span>
+		<input ng-model="lightningOptions.restBaseUrl">
+		<br>
+		<span>Macaroon (authentication), HEX encoded:</span>
+		<input ng-model="lightningOptions.macaroon">
+		<br>
+		<span>Value (in millisats/hour):</span>
+		<input ng-model="lightningOptions.value">
+		<br>
+		<span>Maximum fee (in %):</span>
+		<input ng-model="lightningOptions.maxFeePercent">
+		<br>
 		<button ng-click="save()">{{ 'save' | chrome_i18n }}</button>
 	</div>
 </div>

@@ -7,8 +7,12 @@ myApp.controller('optionsController', ['$scope', 'messageService', function($sco
 	$scope.options.analytics = true;
 	$scope.options.s = true;
 
+	$scope.lightningOptions = {};
+
+
 	$scope.save = function() {
 		messageService.for('optionsManager').sendMessage('saveOptions', $scope.options);
+		messageService.for('lightningService').sendMessage('saveOptions', $scope.lightningOptions);
 	};
 
 	function readOptions() {
@@ -16,6 +20,10 @@ myApp.controller('optionsController', ['$scope', 'messageService', function($sco
 			$scope.$apply(function() {
 				$scope.options = options;
 			});
+		});
+
+		messageService.for('lightningService').sendMessage('getOptions', {}, (lightningOptions) => {
+			$scope.$apply(() => $scope.lightningOptions = lightningOptions);
 		});
 	}
 

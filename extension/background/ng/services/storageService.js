@@ -7,7 +7,9 @@
 
 	function storageService($q, browserService) {
 		var service = {
-			loadFromStorage: loadFromStorage
+			loadFromStorage: loadFromStorage,
+			load: loadFromStorage,
+			save: save
 		};
 
 		return service;
@@ -25,10 +27,9 @@
 		function loadFromStorage(key, loadedCallback, storageType, defaultBuilder) {
 			const deferred = $q.defer();
 
-			if(!storageType || !typeof storageType === 'string')
-				throw Error('invalid parameter');
+			const storage = getStorage(storageType);
 
-			browserService.storage[storageType].get(key, function(storageObject) {
+			storage.get(key, function(storageObject) {
 				var stored = storageObject[key];
 
 				if(!stored && defaultBuilder) {
@@ -43,7 +44,7 @@
 
 						newStorageObject[key] = newValue;
 
-						browserService.storage[storageType].set(newStorageObject, function() {deferred.resolve(newValue)});
+						storage.set(newStorageObject, function() {deferred.resolve(newValue)});
 					}
 					else {
 						deferred.resolve(stored);
@@ -55,6 +56,27 @@
 			});
 
 			return deferred.promise;
+		}
+
+		function save(key, storageType, content) {
+			const deferred = $q.defer();
+
+			const storage = getStorage(storageType);
+
+			const newStorageObject = {};
+
+			newStorageObject[key] = content;
+
+			storage.set(newStorageObject, () => {deferred.resolve()});
+
+			return deferred.promise;
+		}
+
+		function getStorage(storageType) {
+			if(!storageType || !typeof storageType === 'string')
+				throw Error('invalid parameter');
+
+			return browserService.storage[storageType];
 		}
 	}
 })();
