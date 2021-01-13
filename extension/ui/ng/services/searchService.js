@@ -3,9 +3,9 @@
 
 	angular
 		.module('podstationApp')
-		.factory('searchService', ['$http', '$q', '$window', searchService]);
+		.factory('searchService', ['$http', 'podcastIndexOrgService', searchService]);
 
-	function searchService($http, $q, $window) {
+	function searchService($http, podcastIndexOrgService) {
 		var service = {
 			search: search
 		};
@@ -141,23 +141,7 @@
 		}
 
 		function searchPodcastIndexOrg(searchTerms) {
-			const AUTH_KEY = 'NUKSUA3RXTJ8AEQPHCNP';
-			const AUTH_SECRET = 'BufqJNuREeuP2ThUMUq55z2A3peQt#bsw$Zdsvc3';
-			const authDate = Math.floor((new Date()).valueOf() / 1000);
-
-			return $window.crypto.subtle.digest('SHA-1', (new $window.TextEncoder()).encode(AUTH_KEY + AUTH_SECRET + authDate)).then((authArrayBuffer) => {
-				return $http.get('https://api.podcastindex.org/api/1.0/search/byterm', {
-					headers: {
-						'X-Auth-Date': authDate,
-						'X-Auth-Key': AUTH_KEY,
-						'User-Agent': 'podStation',
-						'Authorization': buf2hex(authArrayBuffer)
-					},
-					params: {
-						"q": searchTerms
-					}
-				});
-			}).then(function(response) {
+			return podcastIndexOrgService.search(searchTerms).then(function(response) {
 				const searchResults = [];
 
 				response.data.feeds.forEach(function(result) {
