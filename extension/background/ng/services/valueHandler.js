@@ -5,7 +5,7 @@
 
 	function valueHandlerService($injector, $interval, messageService, _analyticsService, lightningService) {
 
-		const PODSTATION_LIGHTNING_NODE_ID = '024abec6b29d02bce2eaef77826d6c6c63038fa049ad6f568b59594be0db5765d3';
+		const PODSTATION_LIGHTNING_NODE_ID = '';
 		const unsettledValues = [];
 		var lightningOptions = {};
 
@@ -50,7 +50,7 @@
 
 		function prorateSegmentValue(segmentValue, valueConfiguration) {
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
-			const appRate = 0.01;
+			const appRate = 0.0; // for the future...
 			const normalizerMultiple = (1 - appRate) / splitSum;
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
 				return {
