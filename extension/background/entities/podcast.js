@@ -113,7 +113,7 @@ var Podcast = function(url) {
 			}
 		});
 
-		var promise = (new Promise((resolve, reject) => $.get(this.url, null, 'xml').then((data) => {
+		var promise = (new Promise((resolve, reject) => $.get(this.url, null, null, 'xml').then((data) => {
 			var feedParseResult = parsePodcastFeed(data);
 
 			if(!feedParseResult) {

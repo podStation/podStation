@@ -28,7 +28,7 @@ function ajaxGetFeedFromFile(feedFileName) {
 	return function(settings) {
 		const request = syncGetFeedContent(feedFileName);
 
-		settings.success(request.response);
+		typeof settings.success === 'function' && (request.response);
 
 		var deferred = $.Deferred().resolve(request.response);
 		return deferred.promise();
@@ -43,7 +43,7 @@ function ajaxGetFeed(settings) {
 	
 	const request = syncGetFeedContent(feedFileName);
 
-	settings.success(request.response);
+	typeof settings.success === 'function' && settings.success(request.response);
 
 	var deferred = $.Deferred().resolve(request.response);
 	return deferred.promise();
