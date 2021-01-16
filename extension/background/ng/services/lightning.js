@@ -32,26 +32,39 @@
 		 * @param {number} feeLimit fee limit in millisatoshis
 		 */
 		function sendPaymentWithKeySend(nodeId, amount, feeLimit) {
-			return buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
-				const body = {
-					dest: hexToBase64(nodeId),
-					amt_msat: Math.floor(amount),
-					timeout_seconds: 60,
-					payment_hash: preimageAndPaymentHash.paymentHash,
-					fee_limit_msat: Math.floor(feeLimit),
-					dest_custom_records: {
-						// KeySend custom record
-						'5482373484': preimageAndPaymentHash.preimage
-					},
-					no_inflight_updates: true
-				}
-
-				return $http.post(options.restBaseUrl + '/v2/router/send', body, {
-					headers: {
-						'Grpc-Metadata-macaroon': options.macaroon
+			if(options.testMode) {
+				console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, feeLimit);
+				return Promise.resolve({
+					status: 200,
+					data: {
+						result: {
+							status: 'SUCCEEDED'
+						}
 					}
 				});
-			});
+			}
+			else {
+				return buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
+					const body = {
+						dest: hexToBase64(nodeId),
+						amt_msat: Math.floor(amount),
+						timeout_seconds: 60,
+						payment_hash: preimageAndPaymentHash.paymentHash,
+						fee_limit_msat: Math.floor(feeLimit),
+						dest_custom_records: {
+							// KeySend custom record
+							'5482373484': preimageAndPaymentHash.preimage
+						},
+						no_inflight_updates: true
+					}
+	
+					return $http.post(options.restBaseUrl + '/v2/router/send', body, {
+						headers: {
+							'Grpc-Metadata-macaroon': options.macaroon
+						}
+					});
+				});
+			}
 		}
 
 		function buildPreimageAndPaymentHash() {
@@ -98,7 +111,8 @@
 				return {
 					// Default is 50 sats per minute, value is msats/hour
 					value: 60 * 50000,
-					maxFeePercent: 1
+					maxFeePercent: 1,
+					testMode: false
 				};
 			});
 		}

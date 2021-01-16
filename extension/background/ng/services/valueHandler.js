@@ -23,6 +23,8 @@
 		 * @param {EpisodePlayedSegment} playedSegment 
 		 */
 		function handlePlayedSegment(playedSegment) {
+			console.debug('valueHandlerService - handling played segment', playedSegment);
+
 			const podcastAndEpisode = getPodcastAndEpisode(playedSegment.episodeId);
 
 			const valueConfiguration = getLightningEpisodeValue(podcastAndEpisode);
@@ -35,10 +37,9 @@
 			const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
 			
 			const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration);
-			console.log(proratedValues);
+			console.debug('valueHandlerService - prorated values for segment', proratedValues);
 
 			cumulateAddressValues(proratedValues);
-			console.log(unsettledValues);
 		}
 
 		function getLightningEpisodeValue(podcastAndEpisode) {
@@ -79,6 +80,8 @@
 					unsettledValues.push(valuePerAddress);
 				}	
 			});
+
+			console.debug('valueHandlerService - cumulated values', valuePerAddresses);
 		}
 
 		function getPodcastAndEpisode(episodeId) {
