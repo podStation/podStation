@@ -1,4 +1,4 @@
-myApp.controller('optionsController', ['$scope', 'messageService', function($scope, messageService) {
+myApp.controller('optionsController', ['$scope', '$window', 'messageService', function($scope, $window, messageService) {
 	$scope.loaded = false;
 	$scope.options = {};
 	$scope.options.autoUpdate = true;
@@ -14,6 +14,17 @@ myApp.controller('optionsController', ['$scope', 'messageService', function($sco
 		messageService.for('optionsManager').sendMessage('saveOptions', $scope.options);
 		messageService.for('lightningService').sendMessage('saveOptions', $scope.lightningOptions);
 	};
+
+	$scope.testLNDConnection = function() {
+		messageService.for('lightningService').sendMessage('getBalance', null, (response) => {
+			let textMessage = 
+			  response.status === 200 ? 
+			  'Connection to your LND node successful, your channels balance is ' + response.data.balance + ' satoshis': 
+			  'Error trying to connect to your LND node' + (response.data && response.data.error ? ': ' + response.data.error : '');
+			
+			$window.alert(textMessage);
+		});
+	}
 
 	function readOptions() {
 		messageService.for('optionsManager').sendMessage('getOptions', {}, function(options) {

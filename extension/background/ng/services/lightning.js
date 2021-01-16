@@ -9,21 +9,40 @@
 		 */
 		var options;
 
-		messageService.for('lightningService').onMessage('getOptions', (message, sendResponse) => {
+		onMessage('getOptions', (message, sendResponse) => {
 			getOptions().then((options) => sendResponse(options))
 			return true;
 		});
 
-		messageService.for('lightningService').onMessage('saveOptions', (message) => {
+		onMessage('saveOptions', (message) => {
 			saveOptions(message);
+		});
+
+		onMessage('getBalance', (message, sendResponse) => {
+			getBalance()
+			.then((result) => {sendResponse(result)})
+			.catch((error) => {sendResponse(error)});
+			return true;
 		});
 
 		getOptions().then((storedOption) => {options = storedOption});
 
 		return {
 			sendPaymentWithKeySend: sendPaymentWithKeySend,
-			getOptions: getOptions
+			getOptions: getOptions,
+			getBalance: getBalance
 		};
+		
+		/**
+		 * Get channels balance
+		 */
+		function getBalance() {
+			return $http.get(options.restBaseUrl + '/v1/balance/channels', {
+				headers: {
+					'Grpc-Metadata-macaroon': options.macaroon
+				}
+			});
+		}
 
 		/**
 		 * Send a Payment using lightning with keysend
@@ -84,6 +103,10 @@
 					})
 				});
 			});
+		}
+
+		function onMessage(message, callback) {
+			messageService.for('lightningService').onMessage(message, callback);
 		}
 
 		function hexToBase64(hexstring) {
