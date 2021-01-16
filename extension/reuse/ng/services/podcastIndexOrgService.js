@@ -10,7 +10,8 @@
 		const AUTH_SECRET = 'BufqJNuREeuP2ThUMUq55z2A3peQt#bsw$Zdsvc3';
 		
 		var service = {
-			search: search
+			search: search,
+			getPodcast: getPodcast
 		};
 
 		return service;
@@ -34,6 +35,17 @@
 					headers: headers,
 					params: {
 						"q": searchTerms
+					}
+				});
+			});
+		}
+
+		function getPodcast(feedUrl) {
+			return getAuthHeaders().then((headers) => {
+				return $http.get('https://api.podcastindex.org/api/1.0/podcasts/byfeedurl', {
+					headers: headers,
+					params: {
+						url: feedUrl
 					}
 				});
 			});

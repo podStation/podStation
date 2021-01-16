@@ -143,14 +143,14 @@ var PodcastManager;
 					if(podcastIndex >= that.podcastList.length)
 						return;
 
-					var jqxhr;
+					var promise;
 
 					if(!podcastsToUpdate || podcastsToUpdate.indexOf(that.podcastList[podcastIndex].url) >= 0) {
-						jqxhr = that.podcastList[podcastIndex].update();
+						promise = that.podcastList[podcastIndex].update();
 					}
 
-					if(jqxhr) {
-						jqxhr.always(function() {
+					if(promise) {
+						promise.finally(function() {
 							podcastIndex++;
 							podcastUpdate();
 						});
