@@ -36,7 +36,6 @@
 			const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
 			
 			const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration);
-			console.debug('valueHandlerService - prorated values for segment', proratedValues);
 
 			cumulateAddressValues(proratedValues);
 		}
@@ -69,6 +68,8 @@
 		}
 
 		function cumulateAddressValues(valuePerAddresses) {
+			console.debug('valueHandlerService - values to cumulate', JSON.stringify(valuePerAddresses, null, 2))
+
 			valuePerAddresses.forEach(valuePerAddress => {
 				var unsettledValueForAddress = unsettledValues.find((unsettledValue) => unsettledValue.address === valuePerAddress.address);
 				
@@ -80,7 +81,7 @@
 				}	
 			});
 
-			console.debug('valueHandlerService - cumulated values', valuePerAddresses);
+			console.debug('valueHandlerService - cumulated values', JSON.stringify(unsettledValues, null, 2));
 		}
 
 		function getPodcastAndEpisode(episodeId) {
@@ -90,23 +91,14 @@
 		function settleValues() {
 			const valuesToSettle = unsettledValues.splice(0, unsettledValues.length);
 
+			console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
+
 			valuesToSettle.forEach((valueToSettle) => {
 				const maxFeeInMsats = valueToSettle.value * lightningOptions.maxFeePercent / 100;
-				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, maxFeeInMsats).then(
-				(response) => {
-					if(response.status === 200 && response.data.result.status === 'SUCCEEDED') {
-						console.info('sendpayment successful', valueToSettle);
-					}
-					else {
-						console.error('sendpayment failed', valueToSettle, response);
-						cumulateAddressValues([valueToSettle]);
-					}
-				},
-				(error) => {
-					console.error('sendpayment failed', valueToSettle, error);
+				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, maxFeeInMsats)
+				.catch((error) => {
 					cumulateAddressValues([valueToSettle]);
-				}
-				);
+				});
 			});
 		}
 	}

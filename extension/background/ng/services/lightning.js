@@ -1,9 +1,9 @@
 (function(){
 	angular
 		.module('podstationBackgroundApp')
-		.factory('lightningService', ['$http', '$window', '$q', 'messageService', 'storageService', lightningService]);
+		.factory('lightningService', ['$http', '$window', '$q', 'messageService', 'storageService', 'analyticsService', lightningService]);
 
-	function lightningService($http, $window, $q, messageService, storageService) {
+	function lightningService($http, $window, $q, messageService, storageService, _analyticsService) {
 		/**
 		 * cached options
 		 */
@@ -53,6 +53,7 @@
 		function sendPaymentWithKeySend(nodeId, amount, feeLimit) {
 			if(options.testMode) {
 				console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, feeLimit);
+				_analyticsService.trackEvent('lightning_lnd', 'send_payment_test_mode', null, amount);
 				return Promise.resolve({
 					status: 200,
 					data: {
@@ -81,6 +82,21 @@
 						headers: {
 							'Grpc-Metadata-macaroon': options.macaroon
 						}
+					}).catch((error) => {
+						console.error('sendpayment failed', amount, feeLimit, error);
+						_analyticsService.trackEvent('lightning_lnd', 'send_payment_failed', 'connection_to_daemon_error', amount);
+						throw error;
+					}).then((response) => {
+						if(response.status === 200 && response.data.result.status === 'SUCCEEDED') {
+							console.info('sendpayment successful', amount);
+							_analyticsService.trackEvent('lightning_lnd', 'send_payment_succeeded', null, amount);
+						}
+						else {
+							console.error('sendpayment failed', amount, feeLimit, response);
+							_analyticsService.trackEvent('lightning_lnd', 'send_payment_failed', response.data.result.status, amount);
+							throw response;
+						}
+						return response;
 					});
 				});
 			}
