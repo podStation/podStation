@@ -32,7 +32,6 @@
 			if(!valueConfiguration)
 				return;
 
-			// const satsPerMinute = 100000000 * valueConfiguration.suggested;
 			const msatsPerSecond = lightningOptions.value / 3600.0;
 			const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
 			
