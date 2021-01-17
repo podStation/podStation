@@ -9,8 +9,8 @@ angular.module('podstationBackgroundApp').config(['messageServiceProvider', func
 }]);
 
 angular.module('podstationBackgroundAppRun').run([
-'$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService', 'podcastManager',
-function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService, podcastManager) {
+'$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService', 'podcastManager', 'valueHandlerService',
+function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService, podcastManager, valueHandlerService) {
 	// playlist, analyticsService and audioPlayerService, are here only to ensure the services are created as soon as possible
 	
 	browser.runtime.onInstalled.addListener(function(details) {

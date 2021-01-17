@@ -40,6 +40,10 @@ var Podcast = function(url) {
 		storedPodcast.participants = this.participants;
 		// <<< social namespace
 
+		// >>> podcast namespace
+		storedPodcast.values = this.values;
+		// <<< podcast namespace
+
 		storedPodcast.episodes = this.episodes;
 
 		storageObject[this.getKey()] = storedPodcast;
@@ -68,6 +72,10 @@ var Podcast = function(url) {
 				that.crowdfundings = storedPodcast.crowdfundings;
 				that.participants = storedPodcast.participants;
 				// <<< social namespace
+
+				// >>> podcast namespace
+				that.values = storedPodcast.values;
+				// <<< podcast namespace
 				
 				that.episodes = storedPodcast.episodes;
 				that.status = 'loaded';
@@ -105,7 +113,7 @@ var Podcast = function(url) {
 			}
 		});
 
-		var jqxhr = $.get(this.url, function(data) {
+		var promise = (new Promise((resolve, reject) => $.get(this.url, null, null, 'xml').then((data) => {
 			var feedParseResult = parsePodcastFeed(data);
 
 			if(!feedParseResult) {
@@ -128,6 +136,10 @@ var Podcast = function(url) {
 			that.crowdfundings = feedParseResult.podcast.crowdfundings;
 			that.participants = feedParseResult.podcast.participants;
 			// <<< social namespace
+
+			// >>> podcast namespace
+			that.values = feedParseResult.podcast.values;
+			// <<< podcast namespace
 
 			that.episodes = feedParseResult.episodes;
 
@@ -171,7 +183,10 @@ var Podcast = function(url) {
 				});
 			}
 
-		}, 'xml').fail(function(jqXHR, textStatus, errorThrown) {
+			resolve();
+		}, 
+		// failed
+		() => {
 			that.status = 'failed';
 			podcastChanged(that);
 			idNotificationFailed = getNotificationManagerService().updateNotification(idNotificationFailed, {
@@ -179,12 +194,51 @@ var Podcast = function(url) {
 				groupName: 'Failed to update podcasts',
 				text: 'Failed to update ' + (that.title ? that.title : that.url)
 			});
+
+			reject();
+		}))).then(() => {
+			if(that.values)
+				return; // value block from feed takes precedence
+
+			// fetch value block from podcastindex.org
+			const podcastIndexOrgService = angular.element(document.body).injector().get('podcastIndexOrgService');
+		
+			// TODO: Test what to do if it is not found
+			return podcastIndexOrgService.getPodcast(that.url).then((response) => {
+				const value = response.data.feed.value;
+
+				if(value) {
+					that.values = processValueFromPodcastIndexOrg(value);
+					podcastChanged(that, true);
+					that.store();
+				}
+			});
 		});
 
 		podcastChanged(this);
 
-		return jqxhr;
+		return promise;
 	};
+
+	/**
+	 * Convert a value block returned from podcastindex.org API into the
+	 * value block storage format. 
+	 */
+	function processValueFromPodcastIndexOrg(value) {
+		return [{
+			type: value.model.type,
+			method: value.model.method,
+			suggested: value.model.suggested,
+			recipients: value.destinations.map((destination) => {
+				return {
+					name: destination.name,
+					type: destination.type,
+					address: destination.address,
+					split: destination.split
+				}
+			})
+		}];
+	}
 
 	function parsePodcastFeed(feedContent) {
 
@@ -389,7 +443,35 @@ var Podcast = function(url) {
 				funding.url = feedFunding.attr('url');
 				funding.text = feedFunding.text();
 				result.crowdfundings.push(funding);
-			})
+			});
+
+			xmlItem.children('podcast\\:value').each(function () {
+				const feedValue = $(this);
+				const value = {};
+
+				// currently a single entry is supported, but I believe that
+				// many entries will be supported in the future.
+				result.values = result.values || [];
+
+				value.type = feedValue.attr('type');
+				value.method = feedValue.attr('method');
+				value.suggested = parseFloat(feedValue.attr('suggested'));
+
+				feedValue.children('podcast\\:valueRecipient').each(function() {
+					const feedRecipient = $(this);
+					const recipient = {};
+
+					recipient.name = feedRecipient.attr('name');
+					recipient.type = feedRecipient.attr('type');
+					recipient.address = feedRecipient.attr('address');
+					recipient.split = parseInt(feedRecipient.attr('split'));
+					
+					value.recipients = value.recipients || [];
+					value.recipients.push(recipient);
+				});
+
+				result.values.push(value);
+			});
 		}
 	}
 }

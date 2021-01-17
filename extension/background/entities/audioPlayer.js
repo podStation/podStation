@@ -8,6 +8,13 @@
  * @property {Object} mediaSessionMetadata
  */
 
+ /**
+  * @typedef {Object} EpisodePlayedSegment
+  * @property {EpisodeId} episodeId
+  * @property {number} startPosition
+  * @property {number} endPosition
+  */
+
 (function(){
 	angular
 		.module('podstationBackgroundApp')
@@ -30,6 +37,31 @@
 	}
 })();
 
+class PlayedSegmentAnnouncer {
+	constructor(episodeId, messageService) {
+		this._startPosition = 0;
+		this._episodeId = episodeId;
+		this._messageService = messageService;
+	}
+
+	/**
+	 * 
+	 * @param {number} currentPosition Current position in seconds
+	 * @param {number} newStartPosition New start position in seconds, to be set after announcement, optional
+	 */
+	announce(currentPosition, newStartPosition) {
+		if(currentPosition !== this._startPosition) {
+			this._messageService.for('audioPlayer').sendMessage('segmentPlayed', {
+				episodeId: this._episodeId,
+				startPosition: this._startPosition,
+				endPosition: currentPosition
+			});
+		}
+
+		this._startPosition = typeof newStartPosition !== 'undefined' ? newStartPosition : currentPosition;
+	}
+}
+
 (function(){
 	angular
 		.module('podstationBackgroundApp')
@@ -51,6 +83,11 @@
 		 */
 		var playingTimeOutID;
 		var timeOutCounter = 0;
+
+		/**
+		 * @type {PlayedSegmentAnnouncer}
+		 */
+		var playedSegmentAnnouncer;
 
 		const SYNC_OPTIONS = {
 			'order':true,
@@ -221,6 +258,7 @@
 
 			podcastStorageService.getEpisodeUserData(episodeInfo.episodeId).then(function(episodeUserData) {
 				if(episodeUserData.currentTime >= 0 && Math.abs(episodeUserData.currentTime - audioPlayer.currentTime) > 20) {
+					announcePlayedSegment(episodeUserData.currentTime);
 					audioPlayer.currentTime = episodeUserData.currentTime;
 				}
 			});
@@ -237,6 +275,7 @@
 				if(timeOutCounter === 10) {
 					timeOutCounter = 0;
 					setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
+					announcePlayedSegment();
 				}
 			}, 1000);
 		}
@@ -270,6 +309,8 @@
 					if(audioPlayer.currentTime	!= audioPlayer.duration) {
 						setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
 					}
+
+					announcePlayedSegment();
 				}
 
 				var podcastAndEpisode = getPodcastAndEpisode(playData.episodeId);
@@ -310,6 +351,8 @@
 
 				addButtons();
 				setMediaSessionMetadata(episodeInfo.mediaSessionMetadata, buildAudioInfo().audio.imageUrl);
+
+				playedSegmentAnnouncer = new PlayedSegmentAnnouncer(playData.episodeId, messageService);
 			}
 
 			if(audioPlayer.error) {
@@ -339,6 +382,7 @@
 				const currentEpisodeInfo = episodeInfo;
 
 				_analyticsService.trackEvent('audio', 'ended');
+				announcePlayedSegment();
 				stop();
 
 				loadSyncPlayerOptions(function(options) {
@@ -386,6 +430,7 @@
 			_analyticsService.trackEvent('audio', 'pause');
 			pauseTimeOut();
 			audioPlayer.pause();
+			announcePlayedSegment();
 
 			if(options && options.showNotification) {
 				showBrowserNotification({event: 'paused'});
@@ -404,6 +449,7 @@
 
 			pauseTimeOut();
 			audioPlayer.pause();
+			announcePlayedSegment();
 
 			if(!keepProgress) {
 				setEpisodeInProgress(episodeInfo, 0);
@@ -441,8 +487,10 @@
 			if(audioPlayer) {
 				_analyticsService.trackEvent('audio', 'forward');
 	
-				const targetTime = audioPlayer.currentTime + 15;
-				audioPlayer.currentTime = Math.min(audioPlayer.duration, targetTime);
+				var targetTime = audioPlayer.currentTime + 15;
+				targetTime = Math.min(audioPlayer.duration, targetTime);
+				announcePlayedSegment(targetTime);
+				audioPlayer.currentTime = targetTime;
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}
@@ -450,8 +498,10 @@
 		function seekBackward() {
 			if(audioPlayer) {
 				_analyticsService.trackEvent('audio', 'backward');
-				const targetTime = audioPlayer.currentTime - 15;
-				audioPlayer.currentTime = Math.max(0, targetTime);
+				var targetTime = audioPlayer.currentTime - 15;
+				targetTime = Math.max(0, targetTime);
+				announcePlayedSegment(targetTime);
+				audioPlayer.currentTime = targetTime;
 				messageService.for('audioPlayer').sendMessage('changed', { episodePlayerInfo: buildAudioInfo() });
 			}
 		}
@@ -480,7 +530,9 @@
 			if(audioPlayer && audioPlayer.duration) {
 				_analyticsService.trackEvent('audio', 'seek');
 
-				audioPlayer.currentTime = messageContent.position * audioPlayer.duration;
+				const targetTime = messageContent.position * audioPlayer.duration
+				announcePlayedSegment(targetTime);
+				audioPlayer.currentTime = targetTime;
 
 				setEpisodeInProgress(episodeInfo, audioPlayer.currentTime);
 
@@ -622,6 +674,10 @@
 			parser.href = uri;
 
 			return parser.protocol + '//' + parser.host + parser.pathname + parser.search + parser.hash;
+		}
+
+		function announcePlayedSegment(newStartPosition) {
+			playedSegmentAnnouncer.announce(audioPlayer.currentTime, newStartPosition);
 		}
 	}
 })();
