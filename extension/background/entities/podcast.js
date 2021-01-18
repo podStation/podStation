@@ -200,6 +200,7 @@ var Podcast = function(url) {
 			if(that.values)
 				return; // value block from feed takes precedence
 
+			/*
 			// fetch value block from podcastindex.org
 			const podcastIndexOrgService = angular.element(document.body).injector().get('podcastIndexOrgService');
 		
@@ -213,6 +214,8 @@ var Podcast = function(url) {
 					that.store();
 				}
 			});
+			*/
+			analyticsService.trackEvent('feed', 'update_would_call_podcastindexorg');
 		});
 
 		podcastChanged(this);
