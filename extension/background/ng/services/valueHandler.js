@@ -30,6 +30,9 @@
 		function handlePlayedSegment(playedSegment) {
 			console.debug('valueHandlerService - handling played segment', playedSegment);
 
+			if(!lightningService.isActive())
+				return;
+
 			getLightningEpisodeValue(playedSegment.episodeId).then((valueConfiguration) => {
 				if(valueConfiguration) {
 					const msatsPerSecond = lightningOptions.value / 3600.0;
