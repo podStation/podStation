@@ -11,7 +11,7 @@
 		
 		var service = {
 			search: search,
-			getPodcast: getPodcast
+			getPodcastValue: getPodcastValue
 		};
 
 		return service;
@@ -40,9 +40,9 @@
 			});
 		}
 
-		function getPodcast(feedUrl) {
+		function getPodcastValue(feedUrl) {
 			return getAuthHeaders().then((headers) => {
-				return $http.get('https://api.podcastindex.org/api/1.0/podcasts/byfeedurl', {
+				return $http.get('https://api.podcastindex.org/api/1.0/value/byfeedurl', {
 					headers: headers,
 					params: {
 						url: feedUrl

@@ -196,52 +196,12 @@ var Podcast = function(url) {
 			});
 
 			reject();
-		}))).then(() => {
-			if(that.values)
-				return; // value block from feed takes precedence
-
-			/*
-			// fetch value block from podcastindex.org
-			const podcastIndexOrgService = angular.element(document.body).injector().get('podcastIndexOrgService');
-		
-			// TODO: Test what to do if it is not found
-			return podcastIndexOrgService.getPodcast(that.url).then((response) => {
-				const value = response.data.feed.value;
-
-				if(value) {
-					that.values = processValueFromPodcastIndexOrg(value);
-					podcastChanged(that, true);
-					that.store();
-				}
-			});
-			*/
-			analyticsService.trackEvent('feed', 'update_would_call_podcastindexorg');
-		});
+		})));
 
 		podcastChanged(this);
 
 		return promise;
 	};
-
-	/**
-	 * Convert a value block returned from podcastindex.org API into the
-	 * value block storage format. 
-	 */
-	function processValueFromPodcastIndexOrg(value) {
-		return [{
-			type: value.model.type,
-			method: value.model.method,
-			suggested: value.model.suggested,
-			recipients: value.destinations.map((destination) => {
-				return {
-					name: destination.name,
-					type: destination.type,
-					address: destination.address,
-					split: destination.split
-				}
-			})
-		}];
-	}
 
 	function parsePodcastFeed(feedContent) {
 

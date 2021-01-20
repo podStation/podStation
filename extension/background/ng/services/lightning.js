@@ -28,10 +28,18 @@
 		getOptions().then((storedOption) => {options = storedOption});
 
 		return {
+			isActive: isActive,
 			sendPaymentWithKeySend: sendPaymentWithKeySend,
 			getOptions: getOptions,
 			getBalance: getBalance
 		};
+
+		/**
+		 * @returns {boolean}
+		 */
+		function isActive() {
+			return options.testMode || options.restBaseUrl;
+		}
 		
 		/**
 		 * Get channels balance
