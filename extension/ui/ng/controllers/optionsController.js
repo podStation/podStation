@@ -18,9 +18,20 @@ myApp.controller('optionsController', ['$scope', '$window', 'messageService', fu
 	$scope.testLNDConnection = function() {
 		messageService.for('lightningService').sendMessage('getBalance', null, (response) => {
 			let textMessage = 
-			  response.status === 200 ? 
-			  'Connection to your LND node successful, your channels balance is ' + response.data.balance + ' satoshis': 
+			  response.result ? 
+			  'Connection to your LND node successful, your channels balance is ' + response.result.balanceInSats + ' satoshis': 
 			  'Error trying to connect to your LND node' + (response.data && response.data.error ? ': ' + response.data.error : '');
+			
+			$window.alert(textMessage);
+		});
+	}
+
+	$scope.testLNPayConnection = function() {
+		messageService.for('lightningService').sendMessage('getBalance', {options: $scope.lightningOptions}, (response) => {
+			let textMessage = 
+			  response.result ? 
+			  'Connection to your LNPay wallet successful, your balance is ' + response.result.balanceInSats + ' satoshis': 
+			  'Error trying to connect to your LNPay wallet: ' + response.error.message;
 			
 			$window.alert(textMessage);
 		});
