@@ -149,8 +149,7 @@
 			console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
 
 			valuesToSettle.forEach((valueToSettle) => {
-				const maxFeeInMsats = valueToSettle.value * lightningOptions.maxFeePercent / 100;
-				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, maxFeeInMsats)
+				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value)
 				.catch((error) => {
 					cumulateAddressValues([valueToSettle]);
 				});

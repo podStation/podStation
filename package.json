@@ -1,6 +1,6 @@
 {
   "name": "podstation_chrome_ext",
-  "version": "1.33.2",
+  "version": "1.34.0",
   "description": "podStation Podcast Player - Browser Extension",
   "main": "podstation.js",
   "directories": {
