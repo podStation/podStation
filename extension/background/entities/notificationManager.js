@@ -14,7 +14,7 @@
 		'1.28.0': {url: 'https://github.com/podStation/podStation/tree/v1.28.0/docs/release_notes/v1.28.0.md'},
 		'1.29.0': {url: 'https://github.com/podStation/podStation/tree/v1.29.0/docs/release_notes/v1.29.0.md'},
 		'1.31.0': {url: 'https://github.com/podStation/podStation/tree/v1.31.0/docs/release_notes/v1.31.0.md'},
-		'1.31.0': {url: 'https://github.com/podStation/podStation/tree/v1.34.0/docs/release_notes/v1.34.0.md'}
+		'1.34.0': {url: 'https://github.com/podStation/podStation/tree/v1.34.0/docs/release_notes/v1.34.0.md'}
 	});
 
 	angular.module('podstationBackgroundApp')
