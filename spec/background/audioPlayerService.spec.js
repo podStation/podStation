@@ -97,6 +97,23 @@ describe('audioPlayerService', function() {
 			expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP2.enclosure.url);
 		});
 
+		it("should play the correct episode, even when another episode with the same title exists", function() {
+			spyOn(audioBuilderService.audio, 'play');
+
+			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+			$rootScope.$apply();
+
+			var episodeId = podcastDataService.episodeId(FEEDS.WITH_GUID.EP3);
+
+			messageService.for('audioPlayer').sendMessage('play', {episodeId : episodeId});
+
+			$rootScope.$apply();
+
+			expect(audioBuilderService.audio.play).toHaveBeenCalled();
+			expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP3.enclosure.url);
+		});
+
 		it("should play a podcast WITHOUT guid", function() {
 			spyOn(audioBuilderService.audio, 'play');
 

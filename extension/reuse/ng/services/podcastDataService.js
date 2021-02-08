@@ -69,8 +69,14 @@
 			if(podcastUrl && podcastUrl !== episodeId.values.podcastUrl)
 				return false;
 
-			if(episode.guid && episode.guid === episodeId.values.guid)
-				return true;
+			if(episodeId.values.guid) {
+				if(episode.guid && episode.guid === episodeId.values.guid) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			}
 
 			if(episode.title && episode.title === episodeId.values.title)
 				return true;
