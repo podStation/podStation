@@ -4,8 +4,8 @@
 
 ## About 
 
-**podStation** is a podcast aggregator for chrome.
-It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Browser_extension), but it behaves essentially like a standalone app that uses Chrome as a platform. 
+**podStation** is a podcast aggregator and player for Chrome and other compatible browsers.
+It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Browser_extension), but it behaves essentially like a standalone app that uses the browser as a platform. 
 
 ## How to install
 
@@ -17,7 +17,7 @@ Although not officially supported yet (no tests in place), it also works on:
   - Chromium (I think, https://www.chromium.org/getting-involved/download-chromium)
   - Edge (the new one based on chromium, https://www.microsoft.com/en-us/edge)
   - Brave (https://brave.com/)
-- Mobile (it works, but the experience is not nice)
+- ~Mobile (it works, but the experience is not nice)~ - used to work, but there is a critical open issue, [#202](https://github.com/podStation/podStation/issues/202)
   - Kiwi (Android, https://kiwibrowser.com/)
   - Yandex (Android, https://browser.yandex.com/mobile/)
     - I tried to install on iOS, but I don't think extensions are supported

@@ -83,8 +83,8 @@ function updSS(){
 	});
 }
 
-angular.module('podstationApp').run(['$route', '$rootScope', 'messageService', 'analyticsService', 'storageService',
-function($route, $rootScope, messageService, analyticsService, storageService) {
+angular.module('podstationApp').run(['$route', '$rootScope', 'messageService', 'analyticsService', 'storageServiceUI',
+function($route, $rootScope, messageService, analyticsService, storageServiceUI) {
 	messageService.for('optionsManager').sendMessage('getOptions', {}, function(options) {
 		if(options.integrateWithScreenShader) {
 			updSS();	
@@ -107,7 +107,7 @@ function($route, $rootScope, messageService, analyticsService, storageService) {
 			});
 		}
 
-		storageService.loadSyncUIOptions((uiOptions) => {
+		storageServiceUI.loadSyncUIOptions((uiOptions) => {
 			if(uiOptions.cs === 'dark') {
 				$('body').addClass('dark-scheme');
 			}

@@ -2,7 +2,7 @@
 	'use strict';
 
 	angular
-		.module('podstationBackgroundApp')
+		.module('podstationInternalReuse')
 		.factory('storageService', ['$q', 'browser', storageService]);
 
 	function storageService($q, browserService) {

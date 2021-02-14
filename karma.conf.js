@@ -18,12 +18,10 @@ module.exports = function(config) {
     files: [
       'extension/lib/jquery.min.js',
       'extension/lib/angular.js',
-      'extension/lib/podStationNGReuse.min.js',
       'extension/lib/jsmediatags.min.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'extension/reuse/**/*.js',
       'extension/background/entities/backgroundApp.js',
-      'extension/background/entities/messageService.js',
       'extension/background/entities/audioPlayer.js',
       'extension/background/entities/episodeSelector.js',
       'extension/background/entities/podcastManager.js',
