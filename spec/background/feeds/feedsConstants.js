@@ -32,7 +32,7 @@ const FEEDS = {
 			enclosure: {
 				url: "http://feed1.podstation.com/3.mp3",
 			}
-		}
+		},
 	},
 	WITHOUT_GUID: {
 		URL: 'https://feed-without-guid.podstation.com',
