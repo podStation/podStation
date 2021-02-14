@@ -37,6 +37,13 @@
 	"click_dismiss": {
 		"message": "click to dismiss..."
 	},
+	// Ad Banner
+	"learn_more": {
+		"message": "Ad curated by the author - learn more here"
+	},
+	"dismiss": {
+		"message": "Dismiss"
+	},
 	// player
 	"play": {
 		"message": "Play"

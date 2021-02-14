@@ -62,8 +62,8 @@
 		<div ng-include="'ui/ng/partials/playlist.html'"></div>
 		<div ng-controller="adController as ad">
 			<div ng-if="ad.showBanner" id="adBanner">
-				<div class="adTitle"><a href="" target="_blank">Ad curated by the author - learn more here</a></div>
-				<div class="adButton"><a href="" ng-click="ad.dismiss()">Dismiss</a></div>
+				<div class="adTitle"><a href="" target="_blank">{{'learn_more' | chrome_i18n}}</a></div>
+				<div class="adButton"><a href="" ng-click="ad.dismiss()">{{'dismiss' | chrome_i18n}}</a></div>
 				<a href="https://jointoucan.com/partners/podstation" target="_blank"><img src="images/Toucan-banner-1000w.png"></a>
 			</div>
 		</div>
