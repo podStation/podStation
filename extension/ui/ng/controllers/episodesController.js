@@ -1,5 +1,5 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService', 'socialService', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageService, socialService, podcastDataService) {
+myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService',
+	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, socialService, podcastDataService) {
 
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
@@ -52,7 +52,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	$scope.listTypeChanged = listTypeChanged;
 	$scope.ready = ready;
 
-	storageService.loadSyncUIOptions(function(uiOptions) {
+	storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.llt;
 		optionsLoaded = true;
 	});
@@ -72,7 +72,7 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	return;
 
 	function listTypeChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.llt = $scope.listType;
 
 			return true;
@@ -85,8 +85,8 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 
 }]);
 
-myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageService, podcastDataService) {
+myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService',
+	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
 
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_pubdate_descending';
@@ -146,7 +146,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	$scope.sortingChanged = sortingChanged;
 	$scope.isReverseOrder = isReverseOrder;
 
-	storageService.loadSyncUIOptions(function(uiOptions) {
+	storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.elt;
 		$scope.sorting = uiOptions.es;
 	});
@@ -166,7 +166,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	return;
 
 	function listTypeChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.elt = $scope.listType;
 
 			return true;
@@ -174,7 +174,7 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	}
 
 	function sortingChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.es = $scope.sorting;
 
 			return true;
@@ -186,8 +186,8 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	}
 }]);
 
-myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageService', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageService, podcastDataService) {
+myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService',
+	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
 
 	$scope.listType = 'big_list';
 	$scope.orderByField = 'lastTimePlayed';
@@ -244,7 +244,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	$scope.listTypeChanged = listTypeChanged;
 	$scope.ready = ready;
 
-	storageService.loadSyncUIOptions(function(uiOptions) {
+	storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.ilt;
 		optionsLoaded = true;
 	});
@@ -270,7 +270,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	return;
 
 	function listTypeChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.ilt = $scope.listType;
 
 			return true;

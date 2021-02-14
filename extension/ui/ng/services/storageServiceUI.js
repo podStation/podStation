@@ -3,9 +3,9 @@
 
 	angular
 		.module('podstationApp')
-		.factory('storageService', [storageService]);
+		.factory('storageServiceUI', [storageServiceUI]);
 
-	function storageService() {
+	function storageServiceUI() {
 		var service = {
 			loadSyncUIOptions: loadSyncUIOptions
 		};

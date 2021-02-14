@@ -1,4 +1,4 @@
-myApp.controller('podcastsController', ['$scope', 'messageService', 'storageService', 'socialService', function($scope, messageService, storageService, socialService) {
+myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', function($scope, messageService, storageServiceUI, socialService) {
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
@@ -110,7 +110,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 
 	$scope.updatePodcastList();
 
-	storageService.loadSyncUIOptions(function(uiOptions) {
+	storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 		$scope.listType = uiOptions.plt;
 		$scope.sorting = uiOptions.ps;
 		optionsLoaded = true;
@@ -135,7 +135,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	return;
 
 	function listTypeChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.plt = $scope.listType;
 
 			return true;
@@ -143,7 +143,7 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	}
 
 	function sortingChanged() {
-		storageService.loadSyncUIOptions(function(uiOptions) {
+		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
 			uiOptions.ps = $scope.sorting;
 
 			return true;

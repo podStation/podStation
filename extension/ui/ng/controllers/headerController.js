@@ -1,4 +1,4 @@
-myApp.controller('headerController', ['$scope', '$location', 'analyticsService','storageService', function($scope, $location, analyticsService, storageService) {
+myApp.controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', function($scope, $location, analyticsService, storageServiceUI) {
 	$scope.entry = "";
 
 	$scope.editBoxKeyPress = function(event) {
@@ -26,7 +26,7 @@ myApp.controller('headerController', ['$scope', '$location', 'analyticsService',
 
 	$scope.toggleColorScheme = function() {
 		
-		storageService.loadSyncUIOptions(function(uiOptions){
+		storageServiceUI.loadSyncUIOptions(function(uiOptions){
 			
 			if( uiOptions.cs === 'dark'){
 				if($('body').hasClass('dark-scheme')){
