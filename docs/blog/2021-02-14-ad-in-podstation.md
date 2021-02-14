@@ -10,7 +10,7 @@ It is actually something I did not pursue myself, but I was contacted by Toucan,
 Toucan is a product that aims to help people to learn a new language by replacing words in pages you visit.  
 I have tried it and checked its [Privacy Policy](https://jointoucan.com/privacy), and considered it was a suitable product to offer to podStation users.
 
-**One importante note**, you can permanently dismiss the banner, and continue to use podStation without ads as you always did. 
+**One important note**, you can permanently dismiss the banner, and continue to use podStation without ads as you always did. 
 
 ## About your privacy
 
