@@ -370,3 +370,22 @@ a.funditBtn:hover {
 	text-decoration: none;
 	background-color: #da9800;
 }
+
+#adBanner {
+	position: relative;
+}
+
+#adBanner .adTitle {
+	position: absolute;
+	left: 5px;
+	bottom: 5px;
+}
+
+#adBanner .adButton {
+	position: absolute;
+	right: 5px;
+}
+
+#adBanner a {
+	color: white;
+}

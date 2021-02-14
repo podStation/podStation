@@ -39,6 +39,7 @@
 		<script type="text/javascript" src="ui/ng/controllers/notificationController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/optionsController.js"></script>
 		<script type="text/javascript" src="ui/ng/controllers/aboutController.js"></script>
+		<script type="text/javascript" src="ui/ng/controllers/adController.js"></script>
 		
 		<script type="text/javascript" src="podstation.js"></script>
 		
@@ -59,6 +60,13 @@
 		<ps-episode-player id="audioPlayer"></ps-episode-player>
 		<ps-episode-player mini-player="true"></ps-episode-player>
 		<div ng-include="'ui/ng/partials/playlist.html'"></div>
+		<div ng-controller="adController as ad">
+			<div ng-if="ad.showBanner" id="adBanner">
+				<div class="adTitle"><a href="https://github.com/podStation/podStation/blob/master/docs/blog/2021-02-14-ad-in-podstation.md" target="_blank">{{'learn_more' | chrome_i18n}}</a></div>
+				<div class="adButton"><a href="" ng-click="ad.dismiss()">{{'dismiss' | chrome_i18n}}</a></div>
+				<a href="https://jointoucan.com/partners/podstation" target="_blank"><img src="images/Toucan-banner-1000w.png"></a>
+			</div>
+		</div>
 		<div id="contentBoxOut">
 			<div id="contentBoxMenu" ng-controller="menuController">
 				<a href="#/Podcasts">Podcasts</a> |

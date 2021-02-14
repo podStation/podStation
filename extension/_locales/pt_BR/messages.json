@@ -36,6 +36,13 @@
 	"click_dismiss": {
 		"message": "clique para dispensar..."
 	},
+	// Ad Banner
+	"learn_more": {
+		"message": "Propaganda curada pelo autor - saiba mais aqui"
+	},
+	"dismiss": {
+		"message": "Dispensar"
+	},
 	// player
 	"play": {
 		"message": "Tocar"
