@@ -27,6 +27,11 @@ var Podcast = function(url) {
 
 		var storedPodcast = {};
 
+		// >>> http headers
+		storedPodcast.httpETag = this.httpETag;
+		storedPodcast.httpLastModified = this.httpLastModified;
+		// <<< http headers
+
 		storedPodcast.title = this.title;
 		storedPodcast.description = this.description;
 		storedPodcast.link = this.link;
@@ -59,6 +64,11 @@ var Podcast = function(url) {
 		getBrowserService().storage.local.get(podcastKey, function(storageObject) {
 			if(storageObject && storageObject[podcastKey]) {
 				var storedPodcast = storageObject[podcastKey];
+
+				// >>> http headers
+				that.httpETag = storedPodcast.httpETag;
+				that.httpLastModified = storedPodcast.httpLastModified;
+				// <<< http headers
 
 				that.title = storedPodcast.title;
 				that.description = storedPodcast.description;
@@ -106,19 +116,50 @@ var Podcast = function(url) {
 		console.log('Updating: ' + this.url);
 
 		$.ajaxSetup({
-			cache: false,
-
 			accepts: {
 				xml: 'application/rss+xml, application/xml, text/xml'
 			}
 		});
 
-		var promise = (new Promise((resolve, reject) => $.get(this.url, null, null, 'xml').then((data) => {
+		let headers = {
+			'Cache-Control': 'no-cache',
+		}
+
+		if(that.httpETag) {
+			headers['If-None-Match'] = that.httpETag;
+		}
+
+		if(that.httpLastModified) {
+			headers['If-Modified-Since'] = that.httpLastModified;
+		}
+
+		var promise = (new Promise((resolve, reject) => $.ajax({
+			url: this.url, 
+			dataType: 'xml',
+			headers: headers
+		}).then((data, textStatus, jqXHR) => {
+			if(jqXHR.status === 304) {
+				console.debug('Podcast not modified, HTTP response code 304', that.url);
+				that.status = 'loaded';
+				podcastChanged(that);
+				resolve();
+				return;
+			}
+
+			if(jqXHR.getResponseHeader('ETag')) {
+				that.httpETag = jqXHR.getResponseHeader('ETag');
+			}
+
+			if(jqXHR.getResponseHeader('Last-Modified')) {
+				that.httpLastModified = jqXHR.getResponseHeader('Last-Modified');
+			}
+			
 			var feedParseResult = parsePodcastFeed(data);
 
 			if(!feedParseResult) {
 				that.status = 'failed';
 				podcastChanged(that);
+				reject();
 				return;
 			}
 
