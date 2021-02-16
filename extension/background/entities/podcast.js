@@ -146,9 +146,14 @@ var Podcast = function(url) {
 				return;
 			}
 
-			that.httpETag = jqXHR.getResponseHeader('ETag');
-			that.httpLastModified = jqXHR.getResponseHeader('Last-Modified');
+			if(jqXHR.getResponseHeader('ETag')) {
+				that.httpETag = jqXHR.getResponseHeader('ETag');
+			}
 
+			if(jqXHR.getResponseHeader('Last-Modified')) {
+				that.httpLastModified = jqXHR.getResponseHeader('Last-Modified');
+			}
+			
 			var feedParseResult = parsePodcastFeed(data);
 
 			if(!feedParseResult) {
