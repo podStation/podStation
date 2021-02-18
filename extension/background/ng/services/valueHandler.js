@@ -107,7 +107,6 @@
 		function prorateSegmentValue(segmentValue, valueConfiguration) {
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
 			const appRate = 0.01;
-			// const appRate = 0.01;
 			const normalizerMultiple = (1 - appRate) / splitSum;
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
 				return {
