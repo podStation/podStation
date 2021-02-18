@@ -5,7 +5,10 @@
 
 	function valueHandlerService($injector, $interval, $q, messageService, _analyticsService, lightningService, podcastIndexOrgService) {
 
-		const PODSTATION_LIGHTNING_NODE_ID = '';
+		const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
+		const LNPAY_WALLET_IT_CUSTOM_RECORD_KEY = 696969;
+		const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
+
 		const unsettledValues = [];
 		var lightningOptions = {};
 		
@@ -103,7 +106,8 @@
 
 		function prorateSegmentValue(segmentValue, valueConfiguration) {
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
-			const appRate = 0.0; // for the future...
+			const appRate = 0.01;
+			// const appRate = 0.01;
 			const normalizerMultiple = (1 - appRate) / splitSum;
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
 				return {
@@ -115,6 +119,8 @@
 			if(appRate) {
 				proratedSegmentValues.push({
 					address: PODSTATION_LIGHTNING_NODE_ID,
+					customRecordKey: LNPAY_WALLET_IT_CUSTOM_RECORD_KEY,
+					customRecordValue: PODSTATION_LNPAY_WALLET_ID,
 					value: segmentValue * appRate
 				});
 			}
@@ -126,8 +132,8 @@
 			console.debug('valueHandlerService - values to cumulate', JSON.stringify(valuePerAddresses, null, 2))
 
 			valuePerAddresses.forEach(valuePerAddress => {
-				var unsettledValueForAddress = unsettledValues.find((unsettledValue) => unsettledValue.address === valuePerAddress.address);
-				
+				var unsettledValueForAddress = unsettledValues.find((unsettledValue) => isSameRecipient(unsettledValue, valuePerAddress));
+
 				if(unsettledValueForAddress) {
 					unsettledValueForAddress.value += valuePerAddress.value;
 				}
@@ -149,11 +155,17 @@
 			console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
 
 			valuesToSettle.forEach((valueToSettle) => {
-				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value)
+				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue)
 				.catch((error) => {
 					cumulateAddressValues([valueToSettle]);
 				});
 			});
+		}
+
+		function isSameRecipient(valuePerAddress1, valuePerAddress2) {
+			return valuePerAddress1.address === valuePerAddress2.address &&
+				   valuePerAddress1.customRecordKey === valuePerAddress2.customRecordKey &&
+				   valuePerAddress1.customRecordValue === valuePerAddress2.customRecordValue;
 		}
 	}
 })();
