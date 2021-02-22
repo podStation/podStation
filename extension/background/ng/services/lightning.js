@@ -149,10 +149,16 @@
 			this.maxFeeInPercent = maxFeeInPercent;
 		}
 
-		sendPaymentWithKeySend(nodeId, amount) {
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
 			const that = this;
 			const feeLimit = this.calculateMaxFeeIn_mSats(amount);
 			return this.buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
+				const additionalCustomRecords = {};
+
+				if(customRecordKey) {
+					additionalCustomRecords[customRecordKey] = btoa(customRecordValue);
+				}
+
 				const body = {
 					dest: that.hexToBase64(nodeId),
 					amt_msat: Math.round(amount),
@@ -161,7 +167,8 @@
 					fee_limit_msat: feeLimit,
 					dest_custom_records: {
 						// KeySend custom record
-						'5482373484': preimageAndPaymentHash.preimage
+						'5482373484': preimageAndPaymentHash.preimage,
+						...additionalCustomRecords
 					},
 					no_inflight_updates: true
 				}
