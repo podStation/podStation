@@ -6,7 +6,7 @@
 	function valueHandlerService($injector, $interval, $q, messageService, _analyticsService, lightningService, podcastIndexOrgService) {
 
 		const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
-		const LNPAY_WALLET_IT_CUSTOM_RECORD_KEY = 696969;
+		const LNPAY_WALLET_ID_CUSTOM_RECORD_KEY = 696969;
 		const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
 
 		const unsettledValues = [];
@@ -118,7 +118,7 @@
 			if(appRate) {
 				proratedSegmentValues.push({
 					address: PODSTATION_LIGHTNING_NODE_ID,
-					customRecordKey: LNPAY_WALLET_IT_CUSTOM_RECORD_KEY,
+					customRecordKey: LNPAY_WALLET_ID_CUSTOM_RECORD_KEY,
 					customRecordValue: PODSTATION_LNPAY_WALLET_ID,
 					value: segmentValue * appRate
 				});
