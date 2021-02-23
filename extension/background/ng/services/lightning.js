@@ -67,8 +67,8 @@
 		 * @param {number} amount amount in millisatoshis
 		 * @param {number} feeLimit fee limit in millisatoshis
 		 */
-		function sendPaymentWithKeySend(nodeId, amount, feeLimit) {
-			return lightningClient.sendPaymentWithKeySend(nodeId, amount, feeLimit);
+		function sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
+			return lightningClient.sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue);
 		}
 
 		function onMessage(message, callback) {
@@ -132,8 +132,8 @@
 			this._analyticsService = _analyticsService;
 		}
 
-		sendPaymentWithKeySend(nodeId, amount) {
-			console.info('Test mode - sendPaymentWithKeySend', nodeId, amount);
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
+			console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, customRecordKey, customRecordValue);
 			this._analyticsService.trackEvent('lightning', 'send_payment_test_mode', null, amount);
 			return Promise.resolve(); 
 		}
@@ -149,10 +149,16 @@
 			this.maxFeeInPercent = maxFeeInPercent;
 		}
 
-		sendPaymentWithKeySend(nodeId, amount) {
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
 			const that = this;
 			const feeLimit = this.calculateMaxFeeIn_mSats(amount);
 			return this.buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
+				const additionalCustomRecords = {};
+
+				if(customRecordKey) {
+					additionalCustomRecords[customRecordKey] = btoa(customRecordValue);
+				}
+
 				const body = {
 					dest: that.hexToBase64(nodeId),
 					amt_msat: Math.round(amount),
@@ -161,7 +167,8 @@
 					fee_limit_msat: feeLimit,
 					dest_custom_records: {
 						// KeySend custom record
-						'5482373484': preimageAndPaymentHash.preimage
+						'5482373484': preimageAndPaymentHash.preimage,
+						...additionalCustomRecords
 					},
 					no_inflight_updates: true
 				}
@@ -261,13 +268,15 @@
 		 * @param {String} nodeId 
 		 * @param {number} amount 
 		 */
-		sendPaymentWithKeySend(nodeId, amount) {
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
 			return new Promise((resolve, reject) => {
 				console.debug('LNPay: queueing payment for sending', nodeId, amount);
 
 				this._paymentQueue.push({
 					nodeId: nodeId,
 					amount: amount,
+					customRecordKey: customRecordKey, 
+					customRecordValue: customRecordValue,
 					resolve: resolve,
 					reject: reject
 				});
@@ -286,7 +295,7 @@
 				
 				this._isSendingPayment = true;
 
-				this._sendPaymentWithKeySend(nextPayment.nodeId, nextPayment.amount)
+				this._sendPaymentWithKeySend(nextPayment.nodeId, nextPayment.amount, nextPayment.customRecordKey, nextPayment.customRecordValue)
 				.then((result) => nextPayment.resolve(result))
 				.catch((error) => nextPayment.reject(error))
 				.finally(() => {
@@ -296,17 +305,24 @@
 			}
 		}
 
-		_sendPaymentWithKeySend(nodeId, amount) {
+		_sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
 			if(amount < 1000) {
 				// TODO: Sort out how to handle the rounding, LNPay does not handle millisatoshis
 				console.debug('LNPay: skipping payment, amount is too small', amount);
 				return Promise.reject();
 			}
 
-			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, {
+			let body = {
 				dest_pubkey: nodeId,
 				num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount)
-			}, {
+			}
+
+			if(customRecordKey) {
+				body.custom_records = {};
+				body.custom_records[customRecordKey] = customRecordValue;
+			}
+
+			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
 				headers: {
 					'X-Api-Key': this._apiKey
 				}
