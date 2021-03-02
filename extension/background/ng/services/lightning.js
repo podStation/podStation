@@ -320,7 +320,7 @@
 
 			if(customRecordKey) {
 				body.custom_records = {};
-				// TODO: Hex to string
+				// TODO: Hex to string conversion
 				body.custom_records[customRecordKey] = customRecordValue;
 			}
 
