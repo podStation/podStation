@@ -7,6 +7,7 @@
 
 		const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
 		const LNPAY_WALLET_ID_CUSTOM_RECORD_KEY = 696969;
+		// TODO: Hex encode the wallet id
 		const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
 
 		const unsettledValues = [];
@@ -108,10 +109,14 @@
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
 			const appRate = 0.01;
 			const normalizerMultiple = (1 - appRate) / splitSum;
+			
+			// TODO: Do a consistency check 
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
 				return {
 					address: recipient.address,
-					value: segmentValue * recipient.split * normalizerMultiple
+					value: segmentValue * recipient.split * normalizerMultiple,
+					customRecordKey: parseInt(recipient.customKey),
+					customRecordValue: recipient.customValue
 				}
 			});
 

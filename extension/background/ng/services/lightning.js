@@ -156,6 +156,7 @@
 				const additionalCustomRecords = {};
 
 				if(customRecordKey) {
+					// TODO: Hex to B64 conversion
 					additionalCustomRecords[customRecordKey] = btoa(customRecordValue);
 				}
 
@@ -319,6 +320,7 @@
 
 			if(customRecordKey) {
 				body.custom_records = {};
+				// TODO: Hex to string
 				body.custom_records[customRecordKey] = customRecordValue;
 			}
 
