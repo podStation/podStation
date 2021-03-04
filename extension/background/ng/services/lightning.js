@@ -156,8 +156,7 @@
 				const additionalCustomRecords = {};
 
 				if(customRecordKey) {
-					// TODO: Hex to B64 conversion
-					additionalCustomRecords[customRecordKey] = btoa(customRecordValue);
+					additionalCustomRecords[customRecordKey] = this.hexToBase64(customRecordValue);
 				}
 
 				const body = {
@@ -233,9 +232,7 @@
 
 		hexToBase64(hexstring) {
 			// https://stackoverflow.com/questions/23190056/hex-to-base64-converter-for-javascript
-			return this.$window.btoa(hexstring.match(/\w{2}/g).map(function(a) {
-				return String.fromCharCode(parseInt(a, 16));
-			}).join(""));
+			return this.$window.btoa(hexToString(hexstring));
 		}
 
 		bufToBase64(buffer) {
@@ -320,8 +317,7 @@
 
 			if(customRecordKey) {
 				body.custom_records = {};
-				// TODO: Hex to string conversion
-				body.custom_records[customRecordKey] = customRecordValue;
+				body.custom_records[customRecordKey] = hexToString(customRecordValue);
 			}
 
 			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
@@ -358,5 +354,12 @@
 		static convertFrom_mSatsToSats(amountIn_mSats) {
 			return Math.round(amountIn_mSats / 1000)
 		}
+	}
+
+	function hexToString(hexstring) {
+		// https://stackoverflow.com/questions/23190056/hex-to-base64-converter-for-javascript
+		return hexstring.match(/\w{2}/g).map(function(a) {
+			return String.fromCharCode(parseInt(a, 16));
+		}).join("");
 	}
 })();
