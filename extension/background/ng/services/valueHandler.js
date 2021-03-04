@@ -7,7 +7,7 @@
 
 		const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
 		const LNPAY_WALLET_ID_CUSTOM_RECORD_KEY = 696969;
-		const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
+		const PODSTATION_LNPAY_WALLET_ID = '77616c5f574d68334d6d794e76556f414e';
 
 		const unsettledValues = [];
 		var lightningOptions = {};
@@ -94,12 +94,19 @@
 				method: value.model.method,
 				suggested: value.model.suggested,
 				recipients: value.destinations.map((destination) => {
-					return {
+					const recipient = {
 						name: destination.name,
 						type: destination.type,
 						address: destination.address,
-						split: destination.split
+						split: parseInt(destination.split)
 					}
+
+					if(destination.customKey) {
+						recipient.customKey = destination.customKey;
+						recipient.customValue = destination.customValue;
+					}
+
+					return recipient;
 				})
 			};
 		}
@@ -108,11 +115,20 @@
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
 			const appRate = 0.01;
 			const normalizerMultiple = (1 - appRate) / splitSum;
+			
+			// TODO: Do a consistency check 
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
-				return {
+				const proratedSegmentValue = {
 					address: recipient.address,
 					value: segmentValue * recipient.split * normalizerMultiple
+				};
+
+				if(recipient.customKey && recipient.customValue) {
+					proratedSegmentValue.customRecordKey = parseInt(recipient.customKey);
+					proratedSegmentValue.customRecordValue = recipient.customValue;
 				}
+
+				return proratedSegmentValue;
 			});
 
 			if(appRate) {

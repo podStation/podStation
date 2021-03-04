@@ -468,6 +468,8 @@ var Podcast = function(url) {
 					recipient.name = feedRecipient.attr('name');
 					recipient.type = feedRecipient.attr('type');
 					recipient.address = feedRecipient.attr('address');
+					recipient.customKey = feedRecipient.attr('customKey');
+					recipient.customValue = feedRecipient.attr('customValue');
 					recipient.split = parseInt(feedRecipient.attr('split'));
 					
 					value.recipients = value.recipients || [];
