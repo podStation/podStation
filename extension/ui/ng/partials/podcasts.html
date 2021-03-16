@@ -60,10 +60,10 @@
 									<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
 									<span ng-if="podcast.crowdfundings">
 										<br>
-										{{'fund_this_podcast' | chrome_i18n }}: <i class="fa fa-dollar"></i> 
+										{{'fund_this_podcast' | chrome_i18n }}: 
 										<span ng-repeat="crowdfunding in podcast.crowdfundings">
-											<a ng-href="{{crowdfunding.url}}" target="_blank" title="{{crowdfunding.text}}">
-												<i ng-if="crowdfunding.faIcon" class="fa fa-{{crowdfunding.faIcon}}"></i>{{crowdfunding.text}}</a><!--
+											<a class="funditBtn" ng-href="{{crowdfunding.url}}" target="_blank" title="{{crowdfunding.text}}">
+												<i class="fa fa-dollar"></i> {{crowdfunding.text}}</a><!--
 											--><span ng-if="!$last">, </span>
 										</span>
 									</span>
