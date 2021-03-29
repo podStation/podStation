@@ -196,6 +196,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 								<span> {{'continue_playing' | chrome_i18n}}</span>
 							</div>
 							<div>
+								<input type="checkbox" name="reverse_play_order" ng-model="episodePlayer.options.reverseOrder" ng-change="episodePlayer.onChangeReverseOrder()" />
+								<span> {{'reverse_play_order' | chrome_i18n}}</span>
+							</div>
+							<div>
 								<input type="checkbox" name="remove_when_finished" ng-model="episodePlayer.options.removeWhenFinished" ng-change="episodePlayer.onChangeRemoveWhenFinished()" />
 								<span> {{'remove_when_finished' | chrome_i18n}}</span>
 							</div>

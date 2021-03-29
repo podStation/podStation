@@ -92,6 +92,7 @@ class PlayedSegmentAnnouncer {
 		const SYNC_OPTIONS = {
 			'order':true,
 			'continuous':true,
+			'reverseOrder':true,
 			'removeWhenFinished':true
 		};
 
@@ -418,7 +419,8 @@ class PlayedSegmentAnnouncer {
 				return;
 
 			loadSyncPlayerOptions(function(playerOptions) {
-				$injector.get('podcastManager').getNextOrPreviousEpisode(isNext, playerOptions.order, refEpisodeInfo.episodeId, function(nextEpisodeId) {
+				const calculatedIsNext = playerOptions.reverseOrder ? !isNext : isNext;
+				$injector.get('podcastManager').getNextOrPreviousEpisode(calculatedIsNext, playerOptions.order, refEpisodeInfo.episodeId, function(nextEpisodeId) {
 					play({episodeId: nextEpisodeId});
 				});
 
@@ -578,6 +580,9 @@ class PlayedSegmentAnnouncer {
 	
 					if(result.sync.removeWhenFinished !== undefined)
 						options.removeWhenFinished = result.sync.removeWhenFinished;
+
+					if(result.sync.reverseOrder !== undefined)
+						options.reverseOrder = result.sync.reverseOrder;
 	
 					return options;
 				}),
