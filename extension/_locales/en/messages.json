@@ -111,6 +111,9 @@
 	"continue_playing_description": {
 		"message": "play next episode when current episode ends"
 	},
+	"reverse_play_order": {
+		"message": "Play in reverse order"
+	},
 	"remove_when_finished": {
 		"message": "Remove from playlist when finished"
 	},

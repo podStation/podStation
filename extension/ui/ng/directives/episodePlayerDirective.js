@@ -46,6 +46,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		controller.volumeChanged = volumeChanged;
 		controller.orderChanged = orderChanged;
 		controller.continuousChanged = continuousChanged;
+		controller.onChangeReverseOrder = onChangeReverseOrder;
 		controller.onChangeRemoveWhenFinished = onChangeRemoveWhenFinished;
 		controller.onChangePauseWhenLocked = onChangePauseWhenLocked;
 		controller.toggleShowOptions = toggleShowOptions;
@@ -136,6 +137,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 			$scope.$apply(function() {
 				controller.options.order = options.order;
 				controller.options.continuous = options.continuous;
+				controller.options.reverseOrder = options.reverseOrder;
 				controller.options.removeWhenFinished = options.removeWhenFinished;
 				controller.options.pauseWhenLocked = options.pauseWhenLocked;
 			});
@@ -227,6 +229,10 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		function continuousChanged() {
 			episodePlayer.setOptions({continuous: controller.options.continuous});
 		};
+
+		function onChangeReverseOrder() {
+			episodePlayer.setOptions({reverseOrder: controller.options.reverseOrder});
+		}
 
 		function onChangeRemoveWhenFinished() {
 			episodePlayer.setOptions({removeWhenFinished: controller.options.removeWhenFinished});

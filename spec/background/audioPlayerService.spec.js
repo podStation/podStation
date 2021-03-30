@@ -342,6 +342,31 @@ describe('audioPlayerService', function() {
 			});
 		});
 
+		describe('from podcast', function() {
+			beforeEach(function() {
+				messageService.for('audioPlayer').sendMessage('setOptions', {
+					reverseOrder: true,
+					order: 'from_podcast'
+				});
+			});
+
+			it('should play next in reverse order', function() {
+				podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+
+				$rootScope.$apply();
+
+				messageService.for('audioPlayer').sendMessage('play', {episodeId : podcastDataService.episodeId(FEEDS.WITH_GUID.EP2)});
+
+				$rootScope.$apply();
+
+				messageService.for('audioPlayer').sendMessage('playNext');
+
+				$rootScope.$apply();
+
+				expect(audioBuilderService.audio.src).toBe(FEEDS.WITH_GUID.EP1.enclosure.url);
+			});
+		});
+
 		describe('from last episodes', function() {
 			beforeEach(function() {
 				messageService.for('audioPlayer').sendMessage('setOptions', {order: 'from_last_episodes'});

@@ -104,6 +104,9 @@
 	"continue_playing_description": {
 		"message": "Volgende aflevering afspelen als huidige is afgelopen"
 	},
+	"reverse_play_order": {
+		"message": "Speel in omgekeerde volgorde"
+	},
 	"remove_when_finished": {
 		"message": "Verwijderen van afspeellijst als huidige is afgelopen"
 	},
