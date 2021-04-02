@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Missing Portuguese translation for "Play "
+- Missing Portuguese translation for "Play in reverse order"
 
 ## [1.40.0] - 2021-03-30
 
