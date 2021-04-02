@@ -11,6 +11,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Use font-family `sans-serif` for player time, it avoids the player from "jumping" ([Issue #212](https://github.com/podStation/podStation/issues/212))
 
+### Fixed
+
+- Missing Portuguese translation for "Play "
+
 ## [1.40.0] - 2021-03-30
 
 ### Added

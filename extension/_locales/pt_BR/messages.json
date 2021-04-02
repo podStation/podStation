@@ -110,6 +110,9 @@
 	"continue_playing_description": {
 		"message": "reproduzir próximo episódio quando o atual acabar"
 	},
+	"reverse_play_order": {
+		"message": "Reproduzir na order inversa"
+	},
 	"remove_when_finished": {
 		"message": "Remover da playlist ao finalizar"
 	},
