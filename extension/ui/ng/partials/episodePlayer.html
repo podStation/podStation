@@ -92,6 +92,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	background: #ccc;
 }
 
+.psPlayerTimeText {
+	font-family: sans-serif;
+}
+
 .playerButtonDisabled {
 	color: gray !important;
 	cursor: default;
@@ -144,7 +148,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 						<a href="" ng-click="episodePlayer.tooglePlaylistVisibility()"><i class="fa fa-list" title="{{'toggle_playlist' | chrome_i18n }}"></i></a>
 						<a href="" ng-click="episodePlayer.refresh()" ng-if="!episodePlayer.loading"><i class="fa fa-refresh" title="{{'refresh_player' | chrome_i18n }}"></i></a>
 						
-						<span>
+						<span class="psPlayerTimeText">
 							<span ng-if="episodePlayer.timeMouseOver"><i>{{episodePlayer.timeMouseOver | format_seconds}}</i></span>
 							<span ng-if="!episodePlayer.timeMouseOver">{{episodePlayer.time | format_seconds}}</span>
 							<span> / {{episodePlayer.duration  | format_seconds}}</span>
