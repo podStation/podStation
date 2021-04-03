@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Missing Portuguese translation for "Play in reverse order"
-- Fixed side effect of [Pull Request #193](https://github.com/podStation/podStation/pull/193), removing an unecessary new line in the "All episodes from" button shown in the "Last episodes" view.
+- Fixed side effect of [Pull Request #193](https://github.com/podStation/podStation/pull/193), removing an unnecessary new line in the "All episodes from" button shown in the "Last episodes" view.
 
 ## [1.40.0] - 2021-03-30
 
