@@ -60,5 +60,8 @@ const FEEDS = {
 				url: "http://feed2.podstation.com/3.mp3",
 			}
 		}
+	},
+	WITH_ESCAPED_CHARS: {
+		URL: 'https://feed-with-escaped-chars.podstation.com?a=1&b=1'
 	}
 };

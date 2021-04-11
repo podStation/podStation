@@ -5,6 +5,7 @@
 	</head>
 	<body>
 		<outline text="Subscriptions">
+			<outline title="Feed with escaped chars - &lt; &gt; &amp; &apos; &quot;" type="rss" xmlUrl="https://feed-with-escaped-chars.podstation.com?a=1&amp;b=1"/>
 			<outline title="Feed1" type="rss" xmlUrl="https://feed-with-guid.podstation.com"/>
 			<outline title="Feed Without GUID" type="rss" xmlUrl="https://feed-without-guid.podstation.com"/>
 		</outline>
