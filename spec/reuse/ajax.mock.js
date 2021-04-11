@@ -41,7 +41,8 @@ function ajaxGetFeedFromFile(feedFileName) {
 function ajaxGetFeed(settings) {
 	const feedFileName = {
 		'https://feed-with-guid.podstation.com': 'feed-with-guid.xml',
-		'https://feed-without-guid.podstation.com': 'feed-without-guid.xml'
+		'https://feed-without-guid.podstation.com': 'feed-without-guid.xml',
+		'https://feed-with-escaped-chars.podstation.com?a=1&b=1': 'feed-with-escaped-chars.xml'
 	}[settings.url];
 	
 	const request = syncGetFeedContent(feedFileName);

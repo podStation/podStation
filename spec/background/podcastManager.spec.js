@@ -294,6 +294,7 @@ describe('podcastManager',  function() {
 		it('should return a opml with feeds', () => {
 			podcastManager.addPodcast(FEEDS.WITHOUT_GUID.URL);
 			podcastManager.addPodcast(FEEDS.WITH_GUID.URL);
+			podcastManager.addPodcast(FEEDS.WITH_ESCAPED_CHARS.URL);
 			$rootScope.$apply();
 
 			const opml = podcastManager.getOpml();

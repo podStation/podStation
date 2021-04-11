@@ -420,7 +420,7 @@ var PodcastManager;
 
 		function getOpml() {
 			const subscriptions = instance.podcastList.reduce((previous, current) => {
-				return previous + `<outline title="${current.title}" type="rss" xmlUrl="${current.url}"/>\n`
+				return previous + `<outline title="${escapeXml(current.title)}" type="rss" xmlUrl="${escapeXml(current.url)}"/>\n`
 			}, '');
 
 			return `<?xml version="1.0" encoding="utf-8"?>
@@ -434,6 +434,17 @@ var PodcastManager;
 		</outline>
 	</body>
 </opml>`;
+			function escapeXml(unsafe) {
+				return unsafe.replace(/[<>&'"]/g, function (c) {
+					switch (c) {
+						case '<': return '&lt;';
+						case '>': return '&gt;';
+						case '&': return '&amp;';
+						case '\'': return '&apos;';
+						case '"': return '&quot;';
+					}
+				});
+			}
 		}
 
 		// do it async as it need to be executed after

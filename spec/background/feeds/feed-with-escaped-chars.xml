@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Feed with escaped chars - &lt; &gt; &amp; &apos; &quot;</title> 
+		<link>http://feed-with-escaped-chars.podstation.com/</link>  
+		<description>Description Feed 1</description> 
+		<language>pt-br</language>
+	</channel>
+</rss>
