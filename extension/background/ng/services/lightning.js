@@ -127,13 +127,20 @@
 		}
 	}
 
+	/**
+	 * Podcast Payment Metadata Custom Record Key
+	 * 
+	 * Defined at https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md#field-7629169
+	 */
+	const PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY = 7629169;
+
 	class TestModeClient {
 		constructor(_analyticsService) {
 			this._analyticsService = _analyticsService;
 		}
 
-		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
-			console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, customRecordKey, customRecordValue);
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
+			console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata);
 			this._analyticsService.trackEvent('lightning', 'send_payment_test_mode', null, amount);
 			return Promise.resolve(); 
 		}
@@ -149,7 +156,7 @@
 			this.maxFeeInPercent = maxFeeInPercent;
 		}
 
-		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 			const that = this;
 			const feeLimit = this.calculateMaxFeeIn_mSats(amount);
 			return this.buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
@@ -157,6 +164,10 @@
 
 				if(customRecordKey) {
 					additionalCustomRecords[customRecordKey] = this.hexToBase64(customRecordValue);
+				}
+
+				if(podcastPaymentMetadata) {
+					additionalCustomRecords[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = btoa(JSON.stringify(podcastPaymentMetadata))
 				}
 
 				const body = {
@@ -266,7 +277,7 @@
 		 * @param {String} nodeId 
 		 * @param {number} amount 
 		 */
-		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
+		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 			return new Promise((resolve, reject) => {
 				console.debug('LNPay: queueing payment for sending', nodeId, amount);
 
@@ -275,6 +286,7 @@
 					amount: amount,
 					customRecordKey: customRecordKey, 
 					customRecordValue: customRecordValue,
+					podcastPaymentMetadata: podcastPaymentMetadata,
 					resolve: resolve,
 					reject: reject
 				});
@@ -293,7 +305,7 @@
 				
 				this._isSendingPayment = true;
 
-				this._sendPaymentWithKeySend(nextPayment.nodeId, nextPayment.amount, nextPayment.customRecordKey, nextPayment.customRecordValue)
+				this._sendPaymentWithKeySend(nextPayment.nodeId, nextPayment.amount, nextPayment.customRecordKey, nextPayment.customRecordValue, nextPayment.podcastPaymentMetadata)
 				.then((result) => nextPayment.resolve(result))
 				.catch((error) => nextPayment.reject(error))
 				.finally(() => {
@@ -303,7 +315,7 @@
 			}
 		}
 
-		_sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
+		_sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 			if(amount < 1000) {
 				// TODO: Sort out how to handle the rounding, LNPay does not handle millisatoshis
 				console.debug('LNPay: skipping payment, amount is too small', amount);
@@ -318,6 +330,11 @@
 			if(customRecordKey) {
 				body.custom_records = {};
 				body.custom_records[customRecordKey] = hexToString(customRecordValue);
+			}
+
+			if(podcastPaymentMetadata) {
+				body.custom_records = body.custom_records || {};
+				body.custom_records[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = JSON.stringify(podcastPaymentMetadata);
 			}
 
 			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
