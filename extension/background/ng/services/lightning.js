@@ -67,8 +67,8 @@
 		 * @param {number} amount amount in millisatoshis
 		 * @param {number} feeLimit fee limit in millisatoshis
 		 */
-		function sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue) {
-			return lightningClient.sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue);
+		function sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
+			return lightningClient.sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata);
 		}
 
 		function onMessage(message, callback) {

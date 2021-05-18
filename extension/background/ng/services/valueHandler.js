@@ -36,7 +36,7 @@
 			if(!lightningService.isActive())
 				return;
 
-			const podcastAndEpisode = getPodcastAndEpisode(episodeId);
+			const podcastAndEpisode = getPodcastAndEpisode(playedSegment.episodeId);
 
 			getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => {
 				if(valueConfiguration) {
@@ -170,7 +170,7 @@
 			console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
 
 			valuesToSettle.forEach((valueToSettle) => {
-				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, podcastPaymentMetadata)
+				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, buildPodcastPaymentMetadata(valueToSettle))
 				.catch((error) => {
 					cumulateAddressValues([valueToSettle]);
 				});
