@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Lightning value 4 value: Minimal support for the TLV custom record 7629169 as defined [here](https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md#field-7629169), which enabled sending value to podcasts using <https://satoshis.stream/>.
+
 ### Fixed
 
 - Fixed OPML export for feeds with invalid XML characters ([Issue #157](https://github.com/podStation/podStation/issues/157))

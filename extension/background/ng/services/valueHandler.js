@@ -36,12 +36,14 @@
 			if(!lightningService.isActive())
 				return;
 
-			getLightningEpisodeValue(playedSegment.episodeId).then((valueConfiguration) => {
+			const podcastAndEpisode = getPodcastAndEpisode(playedSegment.episodeId);
+
+			getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => {
 				if(valueConfiguration) {
 					const msatsPerSecond = lightningOptions.value / 3600.0;
 					const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
 
-					const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration);
+					const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration, podcastAndEpisode.podcast.url);
 
 					cumulateAddressValues(proratedValues);
 				}
@@ -52,12 +54,9 @@
 		 * 
 		 * @param {EpisodeId} episodeId
 		 */
-		function getLightningEpisodeValue(episodeId) {
+		function getLightningValueForPodcast(podcast) {
 			const deferred = $q.defer();
-			const podcastAndEpisode = getPodcastAndEpisode(episodeId);
-
-			const podcast = podcastAndEpisode.podcast;
-
+			
 			const value = podcast.values && podcast.values.find((value) => value.type === 'lightning');
 
 			if(value) {
@@ -111,7 +110,7 @@
 			};
 		}
 
-		function prorateSegmentValue(segmentValue, valueConfiguration) {
+		function prorateSegmentValue(segmentValue, valueConfiguration, feedUrl) {
 			const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
 			const appRate = 0.01;
 			const normalizerMultiple = (1 - appRate) / splitSum;
@@ -120,7 +119,8 @@
 			const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
 				const proratedSegmentValue = {
 					address: recipient.address,
-					value: segmentValue * recipient.split * normalizerMultiple
+					value: segmentValue * recipient.split * normalizerMultiple,
+					feedUrl: feedUrl
 				};
 
 				if(recipient.customKey && recipient.customValue) {
@@ -154,7 +154,7 @@
 				}
 				else {
 					unsettledValues.push(valuePerAddress);
-				}	
+				}
 			});
 
 			console.debug('valueHandlerService - cumulated values', JSON.stringify(unsettledValues, null, 2));
@@ -170,11 +170,21 @@
 			console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
 
 			valuesToSettle.forEach((valueToSettle) => {
-				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue)
+				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, buildPodcastPaymentMetadata(valueToSettle))
 				.catch((error) => {
 					cumulateAddressValues([valueToSettle]);
 				});
 			});
+		}
+
+		function buildPodcastPaymentMetadata(value) {
+			if(value.feedUrl) {
+				return {
+					url: value.feedUrl
+				}
+			}
+			
+			return null;
 		}
 
 		function isSameRecipient(valuePerAddress1, valuePerAddress2) {
