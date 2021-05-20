@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.41.0] - 2021-05-20
+
 ### Added
 
 - Lightning value 4 value: Minimal support for the TLV custom record 7629169 as defined [here](https://github.com/satoshisstream/satoshis.stream/blob/main/TLV_registry.md#field-7629169), which enabled sending value to podcasts using <https://satoshis.stream/>.
@@ -31,3 +33,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
+
+[Unreleased]: https://github.com/podStation/podStation/compare/v1.40.1...HEAD
+[1.41.0]: https://github.com/podStation/podStation/compare/v1.41.0...v1.40.1
+[1.40.1]: https://github.com/podStation/podStation/compare/v1.40.1...v1.40.0
+[1.40.0]: https://github.com/podStation/podStation/compare/v1.40.0...v1.38.0
