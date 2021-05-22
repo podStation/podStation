@@ -144,6 +144,12 @@
 			this._analyticsService.trackEvent('lightning', 'send_payment_test_mode', null, amount);
 			return Promise.resolve(); 
 		}
+
+		getBalance() {
+			return Promise.resolve({
+				balanceInSats: 10000000
+			});
+		}
 	}
 
 	class LNDClient {

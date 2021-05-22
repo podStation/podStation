@@ -1,0 +1,13 @@
+<style>
+.valueViewer {
+	background-color: #ffb811;
+	color: black;
+	padding: 5px;
+}
+</style>
+<div class="valueViewer" ng-if="valueStreamingInformation.isV4vConfigured">
+	<!--<span><strong>Streaming value?</strong> {{"Yes!"}}</span>-->
+	<span><strong>Pending:</strong> {{valueStreamingInformation.unsettledValue}} sats,</span>
+	<span><strong>Paid:</strong> {{valueStreamingInformation.settledValue}} sats,</span>
+	<!--<span><strong>Your balance:</strong> 3000 sats</span>-->
+</div>
