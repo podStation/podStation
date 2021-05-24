@@ -122,7 +122,7 @@
 				case 'lnd_rest':
 					return new LNDClient(_analyticsService, $http, $window, options.restBaseUrl, options.macaroon, options.maxFeePercent);
 				case 'lnpayco':
-					return new LNPayClient(_analyticsService, $http, options.lnpaycoApiKey, options.lnpaycoWalletAccessKey);
+					return new LNPayClient(_analyticsService, $http, options.lnpaycoApiKey, options.lnpaycoWalletAccessKey, options.maxFeePercent);
 			}
 		}
 	}
@@ -158,7 +158,7 @@
 
 		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 			const that = this;
-			const feeLimit = this.calculateMaxFeeIn_mSats(amount);
+			const feeLimit = calculateMaxFeeIn_mSats(amount, this.maxFeeInPercent);
 			return this.buildPreimageAndPaymentHash().then((preimageAndPaymentHash) => {
 				const additionalCustomRecords = {};
 
@@ -223,10 +223,6 @@
 			});
 		}
 
-		calculateMaxFeeIn_mSats(amount) {
-			return Math.round(amount * this.maxFeeInPercent / 100);
-		}
-
 		buildPreimageAndPaymentHash() {
 			const randomValues = new ArrayBuffer(32);
 			const randomValuesUint8 = new Uint8Array(randomValues);
@@ -261,13 +257,14 @@
 	}
 
 	class LNPayClient {
-		constructor(_analyticsService, $http, apiKey, walletAccessKey) {
+		constructor(_analyticsService, $http, apiKey, walletAccessKey, maxFeeInPercent) {
 			this._analyticsService = _analyticsService;
 			this._$http = $http;
 			this._apiKey = apiKey;
 			this._walletAccessKey = walletAccessKey;
 			this._paymentQueue = [];
 			this._isSendingPayment = false;
+			this.maxFeeInPercent = maxFeeInPercent;
 		}
 
 		/**
@@ -322,9 +319,12 @@
 				return Promise.reject();
 			}
 
+			const feeLimit = calculateMaxFeeIn_mSats(amount, this.maxFeeInPercent);
+
 			let body = {
 				dest_pubkey: nodeId,
-				num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount)
+				num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount),
+				fee_limit_msat: feeLimit
 			}
 
 			if(customRecordKey) {
@@ -371,6 +371,10 @@
 		static convertFrom_mSatsToSats(amountIn_mSats) {
 			return Math.round(amountIn_mSats / 1000)
 		}
+	}
+
+	function calculateMaxFeeIn_mSats(amountInmSats, maxFeeInPercent) {
+		return Math.round(amountInmSats * maxFeeInPercent / 100);
 	}
 
 	function hexToString(hexstring) {
