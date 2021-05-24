@@ -61,6 +61,9 @@
 			<span>Value (in millisats/hour):</span>
 			<input ng-model="lightningOptions.value">
 			<br>
+			<span>Maximum fee (in %):</span>
+			<input ng-model="lightningOptions.maxFeePercent">
+			<br>
 			<button ng-click="testLNPayConnection()">Test LNPay connection</button><span> (Save before testing)</span>
 		</div>
 		<br>
