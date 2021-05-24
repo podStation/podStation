@@ -136,18 +136,20 @@
 
 	class TestModeClient {
 		constructor(_analyticsService) {
+			this.balanceInmSats = 10000000;
 			this._analyticsService = _analyticsService;
 		}
 
 		sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 			console.info('Test mode - sendPaymentWithKeySend', nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata);
+			this.balanceInmSats -= amount;
 			this._analyticsService.trackEvent('lightning', 'send_payment_test_mode', null, amount);
 			return Promise.resolve(); 
 		}
 
 		getBalance() {
 			return Promise.resolve({
-				balanceInSats: 10000000
+				balanceInSats: Math.round(this.balanceInmSats/1000)
 			});
 		}
 	}

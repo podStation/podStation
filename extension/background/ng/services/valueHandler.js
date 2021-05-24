@@ -191,6 +191,7 @@
 				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, buildPodcastPaymentMetadata(valueToSettle))
 				.then(() => {
 					cumulateAddressValuesToSettledValues([valueToSettle]);
+					sendValuePaidMessage();
 				})
 				.catch((error) => {
 					cumulateAddressValuesToUnsettledValues([valueToSettle]);
@@ -219,6 +220,10 @@
 
 		function sendValueChangedMessage() {
 			messageService.for('valueHandlerService').sendMessage('valueChanged', calculateValueSummary());
+		}
+
+		function sendValuePaidMessage() {
+			messageService.for('valueHandlerService').sendMessage('valuePaid');
 		}
 		
 		function calculateValueSummary() {
