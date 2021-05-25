@@ -7,7 +7,7 @@
 </style>
 <div class="valueViewer" ng-if="valueStreamingInformation.isV4vConfigured">
 	<!--<span><strong>Streaming value?</strong> {{"Yes!"}}</span>-->
-	<span><strong>Pending:</strong> {{valueStreamingInformation.unsettledValue}} sats,</span>
-	<span><strong>Paid:</strong> {{valueStreamingInformation.settledValue}} sats,</span>
-	<span><strong>Balance:</strong> {{valueStreamingInformation.balance}} sats</span>
+	<span><strong>{{ 'value_pending' | chrome_i18n }}:</strong> {{valueStreamingInformation.unsettledValue}} sats,</span>
+	<span><strong>{{ 'value_paid' | chrome_i18n }}:</strong> {{valueStreamingInformation.settledValue}} sats,</span>
+	<span><strong>{{ 'value_balance' | chrome_i18n }}:</strong> {{valueStreamingInformation.balance}} sats</span>
 </div>

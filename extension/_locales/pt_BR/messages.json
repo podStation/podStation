@@ -122,6 +122,16 @@
 	"player_error" : {
 		"message": "Erro carregando seu episódio, clique no play para tentar novamente"
 	},
+	// value 4 value
+	"value_pending" : {
+		"message": "Pendente"
+	},
+	"value_paid" : {
+		"message": "Pago"
+	},
+	"value_balance" : {
+		"message": "Saldo"
+	},
 	// playlist
 	"remove_from_playlist": {
 		"message": "Remover da playlist"
