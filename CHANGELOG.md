@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Lightning value 4 value: Added max fee support for LNPay. It works the same way as for LND nodes. The default is 1%, it can be changed on the options.
+- Lightning value 4 value: Added value streaming information on the player, when value via lightning is configured
 
 ## [1.41.0] - 2021-05-20
 
