@@ -10,6 +10,7 @@
 		const PODSTATION_LNPAY_WALLET_ID = '77616c5f574d68334d6d794e76556f414e';
 
 		const unsettledValues = [];
+		const settledValues = [];
 		var lightningOptions = {};
 		
 		/**
@@ -17,8 +18,15 @@
 		 */
 		const podcastsValueCache = {};
 
+		// Notifications from other services
 		messageService.for('audioPlayer').onMessage('segmentPlayed', (playedSegment) => handlePlayedSegment(playedSegment));
 		messageService.for('lightningService').onMessage('optionsChanged', (options) => {lightningOptions = options});
+
+		// Message API from this services
+		messageService.for('valueHandlerService').onMessage('getValueSummary', (messageContent, sendResponse) => {
+			sendResponse(calculateValueSummary());
+			return true;
+		});
 
 		lightningService.getOptions().then((options) => {lightningOptions = options});
 
@@ -45,7 +53,9 @@
 
 					const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration, podcastAndEpisode.podcast.url);
 
-					cumulateAddressValues(proratedValues);
+					cumulateAddressValuesToUnsettledValues(proratedValues);
+
+					sendValueChangedMessage();
 				}
 			});
 		}
@@ -143,21 +153,29 @@
 			return proratedSegmentValues;
 		}
 
-		function cumulateAddressValues(valuePerAddresses) {
+		function cumulateAddressValuesToUnsettledValues(valuePerAddresses) {
 			console.debug('valueHandlerService - values to cumulate', JSON.stringify(valuePerAddresses, null, 2))
 
+			cumulateAddressValues(valuePerAddresses, unsettledValues);
+
+			console.debug('valueHandlerService - cumulated values', JSON.stringify(unsettledValues, null, 2));
+		}
+
+		function cumulateAddressValuesToSettledValues(valuePerAddresses) {
+			cumulateAddressValues(valuePerAddresses, settledValues);
+		}
+
+		function cumulateAddressValues(valuePerAddresses, cumulateTarget) {
 			valuePerAddresses.forEach(valuePerAddress => {
-				var unsettledValueForAddress = unsettledValues.find((unsettledValue) => isSameRecipient(unsettledValue, valuePerAddress));
+				var unsettledValueForAddress = cumulateTarget.find((unsettledValue) => isSameRecipient(unsettledValue, valuePerAddress));
 
 				if(unsettledValueForAddress) {
 					unsettledValueForAddress.value += valuePerAddress.value;
 				}
 				else {
-					unsettledValues.push(valuePerAddress);
+					cumulateTarget.push(valuePerAddress);
 				}
 			});
-
-			console.debug('valueHandlerService - cumulated values', JSON.stringify(unsettledValues, null, 2));
 		}
 
 		function getPodcastAndEpisode(episodeId) {
@@ -171,8 +189,15 @@
 
 			valuesToSettle.forEach((valueToSettle) => {
 				lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, buildPodcastPaymentMetadata(valueToSettle))
+				.then(() => {
+					cumulateAddressValuesToSettledValues([valueToSettle]);
+					sendValuePaidMessage();
+				})
 				.catch((error) => {
-					cumulateAddressValues([valueToSettle]);
+					cumulateAddressValuesToUnsettledValues([valueToSettle]);
+				})
+				.then(() => {
+					sendValueChangedMessage();
 				});
 			});
 		}
@@ -192,5 +217,33 @@
 				   valuePerAddress1.customRecordKey === valuePerAddress2.customRecordKey &&
 				   valuePerAddress1.customRecordValue === valuePerAddress2.customRecordValue;
 		}
+
+		function sendValueChangedMessage() {
+			messageService.for('valueHandlerService').sendMessage('valueChanged', calculateValueSummary());
+		}
+
+		function sendValuePaidMessage() {
+			messageService.for('valueHandlerService').sendMessage('valuePaid');
+		}
+		
+		function calculateValueSummary() {
+			return {
+				isActive: lightningService.isActive(),
+				unsettledValue: calculateTotalUnsettledValue(),
+				settledValue: calculateTotalSettledValue()
+			};
+		}
+
+		function calculateTotalUnsettledValue() {
+			return calculateTotalValue(unsettledValues);
+		}
+
+		function calculateTotalSettledValue() {
+			return calculateTotalValue(settledValues);
+		}
+
+		function calculateTotalValue(cumulatedValuesPerAddress) {
+			return cumulatedValuesPerAddress.reduce((previousValue, currentValue) => previousValue + currentValue.value, 0);
+		} 
 	}
 })();

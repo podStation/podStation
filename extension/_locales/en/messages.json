@@ -123,6 +123,16 @@
 	"player_error" : {
 		"message": "Error loading your episode, click play to retry"
 	},
+	// value 4 value
+	"value_pending" : {
+		"message": "Pending"
+	},
+	"value_paid" : {
+		"message": "Paid"
+	},
+	"value_balance" : {
+		"message": "Balance"
+	},
 	// playlist
 	"remove_from_playlist": {
 		"message": "Remove from playlist"
