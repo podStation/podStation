@@ -94,6 +94,12 @@
 		 * @returns {Boolean}
 		 */
 		function episodeIdEqualsId(episodeId1, episodeId2) {
+			if(episodeId1 === episodeId2)
+				return true;
+
+			if(!(episodeId1 && episodeId2))
+				return false;
+
 			for(var key in episodeId1.values) {
 				if(episodeId1.values[key] !== episodeId2.values[key]){
 					return false;

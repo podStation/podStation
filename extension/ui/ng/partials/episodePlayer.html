@@ -180,6 +180,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 							<div id="progressIn" style="width: {{episodePlayer.timePercent}}%"></div>
 						</div>
 						<div style="padding-bottom: 4px;" ng-if="!episodePlayer.miniPlayer">
+							<span class="funditBtn" ng-if="episodePlayer.showBoostButton" ng-click="episodePlayer.boost()"><i class="fa fa-bolt"></i> Boost!</span>
 							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="episodePlayer.tweet()"><i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}</span>
 							<!--<span style="color: gray;"> | </span>
 							<span class="psPlayerBtnSecondary icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="shareWithFacebook()"><i class="fa fa-share"></i> {{'facebook_share' | chrome_i18n}}</span>-->

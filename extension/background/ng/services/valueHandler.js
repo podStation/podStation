@@ -28,6 +28,18 @@
 			return true;
 		});
 
+		messageService.for('valueHandlerService').onMessage('canBoostValue', (episodeId, sendResponse) => {
+			determineCanBoostValue(episodeId).then((canBoostValue) => {
+				sendResponse(canBoostValue)
+			});
+			return true;
+		});
+
+		
+		messageService.for('valueHandlerService').onMessage('boost', (message, sendResponse) => {
+			boost(message.episodeId);
+		});
+
 		lightningService.getOptions().then((options) => {lightningOptions = options});
 
 		$interval(settleValues, 60000);
@@ -44,20 +56,54 @@
 			if(!lightningService.isActive())
 				return;
 
-			const podcastAndEpisode = getPodcastAndEpisode(playedSegment.episodeId);
+			const msatsPerSecond = lightningOptions.value / 3600.0;
+			const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
+
+			handleValueForEpisode(segmentValue, playedSegment.episodeId);
+		}
+
+		/**
+		 * 
+		 * @param {EpisodeId} episodeId
+		 */
+		function boost(episodeId) {
+			if(!lightningService.canBoost())
+				return;
+
+			handleValueForEpisode(lightningOptions.valueBoost, episodeId);
+		}
+
+		/**
+		 * 
+		 * @param {number} value
+		 * @param {EpisodeId} episodeId
+		 */
+		function handleValueForEpisode(value, episodeId) {
+			const podcastAndEpisode = getPodcastAndEpisode(episodeId);
 
 			getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => {
 				if(valueConfiguration) {
-					const msatsPerSecond = lightningOptions.value / 3600.0;
-					const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
-
-					const proratedValues = prorateSegmentValue(segmentValue, valueConfiguration, podcastAndEpisode.podcast.url);
+					const proratedValues = prorateSegmentValue(value, valueConfiguration, podcastAndEpisode.podcast.url);
 
 					cumulateAddressValuesToUnsettledValues(proratedValues);
 
 					sendValueChangedMessage();
 				}
 			});
+		}
+
+		/**
+		 * 
+		 * @param {EpisodeId} episodeId
+		 */
+		function determineCanBoostValue(episodeId) {
+			if(!lightningService.canBoost()) {
+				return Promise.resolve(false);
+			}
+
+			const podcastAndEpisode = getPodcastAndEpisode(episodeId);
+
+			return getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => Promise.resolve(valueConfiguration !== null));
 		}
 
 		/**
@@ -87,6 +133,10 @@
 						podcastsValueCache[podcast.url] = null;
 						deferred.resolve();
 					}
+				}).catch(() => {
+					// the api returns 400 when it does not find a value
+					podcastsValueCache[podcast.url] = null;
+					deferred.resolve();
 				});
 			}
 
