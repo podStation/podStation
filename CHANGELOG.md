@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.43.0] - 2021-05-28
+
 ### Added
 
 - Lightning value 4 value: Added a boost button in the player, boost value is configurable in the options ([PR #260](https://github.com/podStation/podStation/pull/260))
@@ -46,6 +48,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
 [Unreleased]: https://github.com/podStation/podStation/compare/v1.40.1...HEAD
+[1.43.0]: https://github.com/podStation/podStation/compare/v1.42.0...v1.43.0
 [1.42.0]: https://github.com/podStation/podStation/compare/v1.41.0...v1.42.0
 [1.41.0]: https://github.com/podStation/podStation/compare/v1.40.1...v1.41.0
 [1.40.1]: https://github.com/podStation/podStation/compare/v1.40.0...v1.40.1
