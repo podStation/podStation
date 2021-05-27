@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Lightning value 4 value: Added a boost button in the player, boost value is configurable in the options ([PR #260](https://github.com/podStation/podStation/pull/260))
+
 ## [1.42.0] - 2021-05-25
 
 ### Added

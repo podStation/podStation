@@ -1,9 +1,9 @@
 'use strict';
 
 (function() {
-angular.module('podstationApp').directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', episodePlayerDirective]);
+angular.module('podstationApp').directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective]);
 
-function episodePlayerDirective($document, $window, podcastManagerService, episodePlayer, messageService, socialService) {
+function episodePlayerDirective($document, $window, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
 
 	return {
 		restrict: 'E',
@@ -54,6 +54,8 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		controller.tweet = tweet;
 		controller.shareWithFacebook = shareWithFacebook;
 		controller.isVisible = isVisible;
+		controller.boost = boost;
+		controller.showBoostButton = false;
 
 		episodePlayer.onPlaying.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
 		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
@@ -115,6 +117,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 			controller.playbackRate = 1.0;
 			controller.volume = {};
 			controller.volume.value = 100;
+			controller.showBoostButton = false;
 
 			controller.showOptions = false;
 			
@@ -262,11 +265,21 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 			return controller.visible && (controller.miniPlayer ? controller.miniPlayerVisible : true)
 		}
 
+		function boost() {
+			messageService.for('valueHandlerService').sendMessage('boost', {episodeId: episodeId});
+		}
+
 		function getAudioInfoCallback(audioInfo) {
 			if(!audioInfo.episodeId)
 				return;
 
+			const oldEpisodeId = episodeId;
+
 			episodeId = audioInfo.episodeId;
+			
+			if(!podcastDataService.episodeIdEqualsId(episodeId, oldEpisodeId)) {
+				determineIfShouldShowBoostButton();
+			}
 
 			controller.playing = !audioInfo.audio.paused;
 
@@ -299,6 +312,12 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function backward() {
 			episodePlayer.backward();
+		}
+
+		function determineIfShouldShowBoostButton() {
+			messageService.for('valueHandlerService').sendMessage('canBoostValue', episodeId, (canBoostValue) => {
+				$scope.$apply(() => controller.showBoostButton = canBoostValue);
+			})
 		}
 	}
 }

@@ -42,6 +42,7 @@
 
 		return {
 			isActive: isActive,
+			canBoost: canBoost,
 			sendPaymentWithKeySend: sendPaymentWithKeySend,
 			getOptions: getOptions,
 			getBalance: getBalance
@@ -52,6 +53,10 @@
 		 */
 		function isActive() {
 			return options.type !== 'none';
+		}
+
+		function canBoost() {
+			return isActive() && options.valueBoost > 0;
 		}
 		
 		/**
@@ -80,6 +85,8 @@
 				return {
 					// Default is 50 sats per minute, value is msats/hour
 					value: 60 * 50000,
+					// Default boost = 10 mins of value
+					valueBoost: 10 * 50000,
 					maxFeePercent: 1,
 					type: 'none'
 				};

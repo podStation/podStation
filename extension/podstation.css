@@ -355,7 +355,8 @@ body.dark-scheme::-webkit-scrollbar-thumb:hover {
 	background-color: var(--dark_border);
 }
 
-a.funditBtn {
+a.funditBtn, .funditBtn {
+	cursor: pointer;
 	background-color: #ffb811;
 	border-radius: 10px;
 	padding: 0px 6px 2px 5px;
@@ -366,7 +367,7 @@ a.funditBtn:visited {
 	color: black;
 }
 
-a.funditBtn:hover {
+.funditBtn:hover {
 	text-decoration: none;
 	background-color: #da9800;
 }

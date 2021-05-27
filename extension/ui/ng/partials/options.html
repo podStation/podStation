@@ -43,8 +43,11 @@
 			<span>Macaroon (authentication), HEX encoded:</span>
 			<input ng-model="lightningOptions.macaroon">
 			<br>
-			<span>Value (in millisats/hour):</span>
+			<span>Streaming value (in millisats/hour):</span>
 			<input ng-model="lightningOptions.value">
+			<br>
+			<span>Boost value (in millisats/hour):</span>
+			<input ng-model="lightningOptions.valueBoost">
 			<br>
 			<span>Maximum fee (in %):</span>
 			<input ng-model="lightningOptions.maxFeePercent">
@@ -58,8 +61,11 @@
 			<span>Wallet Access Key</span>
 			<input ng-model="lightningOptions.lnpaycoWalletAccessKey">
 			<br>
-			<span>Value (in millisats/hour):</span>
+			<span>Streaming value (in millisats/hour):</span>
 			<input ng-model="lightningOptions.value">
+			<br>
+			<span>Boost value (in millisats/boost):</span>
+			<input ng-model="lightningOptions.valueBoost">
 			<br>
 			<span>Maximum fee (in %):</span>
 			<input ng-model="lightningOptions.maxFeePercent">
