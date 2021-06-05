@@ -16,6 +16,10 @@
 			valueStreamingInformationController.isV4vConfigured = false;
 			valueStreamingInformationController.unsettledValue = 0;
 			valueStreamingInformationController.balance = 0;
+			valueStreamingInformationController.invoice = "";
+
+			valueStreamingInformationController.generateInvoice = generateInvoice;
+			valueStreamingInformationController.clearInvoice = clearInvoice;
 
 			messageService.for('valueHandlerService').sendMessage('getValueSummary', null, (valueSummary) => handleValueSummary(valueSummary));
 			messageService.for('valueHandlerService').onMessage('valueChanged', (valueSummary) => handleValueSummary(valueSummary));
@@ -39,6 +43,35 @@
 						});
 					}
 				});
+			}
+
+			function generateInvoice() {
+				const invoiceAmountUserInput = prompt("How many sats?", "10000");
+
+				if(invoiceAmountUserInput === null) {
+					return;
+				}
+
+				const invoiceAmount = parseInt(invoiceAmountUserInput);
+
+				if(isNaN(invoiceAmount) || invoiceAmount <= 0) {
+					alert("Invalid amount, enter a positive number of sats greater than zero")
+					return;
+				}
+
+				messageService.for('lightningService').sendMessage('generateInvoice', convertFrom_SatsTo_mSats(invoiceAmount), (response) => {
+					$scope.$apply(() => {
+						valueStreamingInformationController.invoice = response.invoice;
+					});
+				});
+			}
+
+			function clearInvoice() {
+				valueStreamingInformationController.invoice = null;
+			}
+
+			function convertFrom_SatsTo_mSats(amountInSats) {
+				return amountInSats * 1000;
 			}
 		}
 	}

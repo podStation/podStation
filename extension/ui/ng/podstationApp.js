@@ -1,4 +1,4 @@
-var myApp = angular.module('podstationApp', ['podstationInternalReuse', 'ngRoute', 'ngSanitize', 'infinite-scroll', 'dndLists']);
+var myApp = angular.module('podstationApp', ['podstationInternalReuse', 'ngRoute', 'ngSanitize', 'infinite-scroll', 'dndLists', 'monospaced.qrcode']);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
 	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension|data):/;

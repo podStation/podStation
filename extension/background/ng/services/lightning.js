@@ -35,6 +35,16 @@
 			return true;
 		});
 
+		onMessage('generateInvoice', (message, sendResponse) => {
+			const invoiceAmount = message;
+			generateInvoice(invoiceAmount).then((invoice) => {
+				sendResponse({
+					invoice: invoice
+				});
+			});
+			return true;
+		});
+
 		getOptions().then((storedOption) => {
 			options = storedOption
 			lightningClient = buildClient();
@@ -64,6 +74,14 @@
 		 */
 		function getBalance() {
 			return lightningClient.getBalance();
+		}
+
+		/**
+		 * 
+		 * @param {number} amount Required payment amount in millisatoshis
+		 */
+		function generateInvoice(amount) {
+			return lightningClient.generateInvoice(amount);
 		}
 
 		/**
@@ -158,6 +176,10 @@
 			return Promise.resolve({
 				balanceInSats: Math.round(this.balanceInmSats/1000)
 			});
+		}
+
+		generateInvoice(amount) {
+			return Promise.resolve(`Test invoice for ${amount}`);
 		}
 	}
 
@@ -380,6 +402,26 @@
 				return {
 					balanceInSats: response.data.balance
 				}
+			});
+		}
+
+		generateInvoice(amount) {
+			const body = {
+				memo: 'Recharge wallet (created by podStation)',
+				num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount)
+			};
+
+			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/invoice`, body, {
+				headers: {
+					'X-Api-Key': this._apiKey
+				}
+			})
+			.then((response) => {
+				return response.data.payment_request;
+			})
+			.catch((error) => {
+				console.error('LNPay: Error generating invoice', amount, error);
+				throw new Error(error.data ? `LNPay: Error generating invoice, error message: ${error.data.message}`: 'LNPay: Error generating invoice');
 			});
 		}
 

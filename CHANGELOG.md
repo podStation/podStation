@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Lightning value 4 value: Added option to generate invoice to recharge the wallet used for sending value
+
 ## [1.43.0] - 2021-05-28
 
 ### Added
