@@ -60,9 +60,16 @@
 				}
 
 				messageService.for('lightningService').sendMessage('generateInvoice', convertFrom_SatsTo_mSats(invoiceAmount), (response) => {
-					$scope.$apply(() => {
-						valueStreamingInformationController.invoice = response.invoice;
-					});
+					const ERROR_MESSAGE = 'Error generating invoice';
+
+					if(response.invoice) {
+						$scope.$apply(() => {
+							valueStreamingInformationController.invoice = response.invoice;
+						});
+					}
+					else {
+						alert(typeof response.error === 'string' ? `${ERROR_MESSAGE}: ${response.error}`: ERROR_MESSAGE);
+					}
 				});
 			}
 

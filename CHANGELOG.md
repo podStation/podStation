@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Lightning value 4 value: Added option to generate invoice to recharge the wallet used for sending value
+- Lightning value 4 value: Added option to generate invoice to recharge the wallet used for sending value.  
+  For LND users, the _macaroon_ used for authentication must include the permission `invoices:write`
 
 ## [1.43.0] - 2021-05-28
 

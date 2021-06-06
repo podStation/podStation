@@ -37,9 +37,15 @@
 
 		onMessage('generateInvoice', (message, sendResponse) => {
 			const invoiceAmount = message;
-			generateInvoice(invoiceAmount).then((invoice) => {
+			generateInvoice(invoiceAmount)
+			.then((invoice) => {
 				sendResponse({
 					invoice: invoice
+				});
+			})
+			.catch((error) => {
+				sendResponse({
+					error: error.message
 				});
 			});
 			return true;
@@ -257,6 +263,26 @@
 				return {
 					balanceInSats: response.data.balance
 				}
+			});
+		}
+
+		generateInvoice(amount) {
+			const body = {
+				memo: 'Recharge wallet (created by podStation)',
+				value_msat: amount
+			}
+
+			return this.$http.post(this.restBaseUrl + '/v1/invoices', body, {
+				headers: {
+					'Grpc-Metadata-macaroon': this.macaroon
+				}
+			})
+			.then((response) => {
+				return response.data.payment_request;
+			})
+			.catch((error) => {
+				console.error('LND: Error getting invoice', error);
+				throw new Error(error.data? error.data.message : 'Error generating invoice');
 			});
 		}
 
