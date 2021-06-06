@@ -22,7 +22,8 @@
 		'1.40.1': {url: 'https://github.com/podStation/podStation/blob/v1.40.1/CHANGELOG.md'},
 		'1.41.0': {url: 'https://github.com/podStation/podStation/blob/v1.41.0/CHANGELOG.md'},
 		'1.42.0': {url: 'https://github.com/podStation/podStation/blob/v1.42.0/CHANGELOG.md'},
-		'1.43.0': {url: 'https://github.com/podStation/podStation/blob/v1.43.0/CHANGELOG.md'}
+		'1.43.0': {url: 'https://github.com/podStation/podStation/blob/v1.43.0/CHANGELOG.md'},
+		'1.44.0': {url: 'https://github.com/podStation/podStation/blob/v1.44.0/CHANGELOG.md'}
 	});
 
 	angular.module('podstationBackgroundApp')
