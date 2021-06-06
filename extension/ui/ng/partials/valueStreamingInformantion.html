@@ -4,6 +4,38 @@
 	color: black;
 	padding: 5px;
 }
+
+.value-button {
+	background-color: transparent;
+	border-color: transparent;
+	border-width: 1px;
+	/*color: #da9800;*/
+	border-style: solid;
+	cursor: pointer;
+	border-radius: 10px;
+}
+
+.value-button-float {
+	float: right;
+}
+
+.value-button:hover {
+	background-color: #da9800;
+	color: black;
+}
+
+.value-text {
+	background-color: transparent;
+}
+
+.invoice-box {
+	padding-top: 5px;
+}
+
+.qrcode {
+	padding: 5px;
+}
+
 </style>
 <div class="valueViewer" ng-if="valueStreamingInformation.isV4vConfigured">
 	<!--<span><strong>Streaming value?</strong> {{"Yes!"}}</span>-->
@@ -11,4 +43,12 @@
 	<span><strong>{{ 'value_pending' | chrome_i18n }}:</strong> {{valueStreamingInformation.unsettledValue}} sats,</span>
 	<span><strong>{{ 'value_paid' | chrome_i18n }}:</strong> {{valueStreamingInformation.settledValue}} sats,</span>
 	<span><strong>{{ 'value_balance' | chrome_i18n }}:</strong> {{valueStreamingInformation.balance}} sats</span>
+	<button class="value-button" ng-click="valueStreamingInformation.generateInvoice()">Add more funds</button>
+	<div class="invoice-box" ng-if="valueStreamingInformation.invoice">
+		<span>Invoice:</span>
+		<input class="value-text" type="text" value="{{valueStreamingInformation.invoice}}" readonly>
+		<button class="value-button" ng-click="valueStreamingInformation.clearInvoice()">Dismiss invoice</button>
+		<br>
+		<qrcode class="qrcode" data="{{valueStreamingInformation.invoice}}"></qrcode>
+	</div>
 </div>

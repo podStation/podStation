@@ -35,6 +35,22 @@
 			return true;
 		});
 
+		onMessage('generateInvoice', (message, sendResponse) => {
+			const invoiceAmount = message;
+			generateInvoice(invoiceAmount)
+			.then((invoice) => {
+				sendResponse({
+					invoice: invoice
+				});
+			})
+			.catch((error) => {
+				sendResponse({
+					error: error.message
+				});
+			});
+			return true;
+		});
+
 		getOptions().then((storedOption) => {
 			options = storedOption
 			lightningClient = buildClient();
@@ -64,6 +80,14 @@
 		 */
 		function getBalance() {
 			return lightningClient.getBalance();
+		}
+
+		/**
+		 * 
+		 * @param {number} amount Required payment amount in millisatoshis
+		 */
+		function generateInvoice(amount) {
+			return lightningClient.generateInvoice(amount);
 		}
 
 		/**
@@ -159,6 +183,10 @@
 				balanceInSats: Math.round(this.balanceInmSats/1000)
 			});
 		}
+
+		generateInvoice(amount) {
+			return Promise.resolve(`Test invoice for ${amount}`);
+		}
 	}
 
 	class LNDClient {
@@ -235,6 +263,26 @@
 				return {
 					balanceInSats: response.data.balance
 				}
+			});
+		}
+
+		generateInvoice(amount) {
+			const body = {
+				memo: 'Recharge wallet (created by podStation)',
+				value_msat: amount
+			}
+
+			return this.$http.post(this.restBaseUrl + '/v1/invoices', body, {
+				headers: {
+					'Grpc-Metadata-macaroon': this.macaroon
+				}
+			})
+			.then((response) => {
+				return response.data.payment_request;
+			})
+			.catch((error) => {
+				console.error('LND: Error getting invoice', error);
+				throw new Error(error.data? error.data.message : 'Error generating invoice');
 			});
 		}
 
@@ -380,6 +428,26 @@
 				return {
 					balanceInSats: response.data.balance
 				}
+			});
+		}
+
+		generateInvoice(amount) {
+			const body = {
+				memo: 'Recharge wallet (created by podStation)',
+				num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount)
+			};
+
+			return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/invoice`, body, {
+				headers: {
+					'X-Api-Key': this._apiKey
+				}
+			})
+			.then((response) => {
+				return response.data.payment_request;
+			})
+			.catch((error) => {
+				console.error('LNPay: Error generating invoice', amount, error);
+				throw new Error(error.data ? `LNPay: Error generating invoice, error message: ${error.data.message}`: 'LNPay: Error generating invoice');
 			});
 		}
 
