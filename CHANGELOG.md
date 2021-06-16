@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.44.1] - 2021-06-16
+
+### Fixed
+
+- Lightning value 4 value: Fixed a text in the options for boost value with LND nodes
+
 ## [1.44.0] - 2021-06-06
 
 ### Added
