@@ -30,13 +30,12 @@
 		{
 			"matches": ["http://*/*", "https://*/*"],
 			"js": [
-				"lib/jquery.min.js",
 				"feedFinder.js"
 			]
 		}
 	],
 	"background": {
-		"page": "background/background.html",
+		"page": "background.html",
 		"persistent": false
 	},
 	"manifest_version": 2,

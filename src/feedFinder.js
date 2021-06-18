@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 var feedList = [];
 
 function absolutePath(href) {

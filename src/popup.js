@@ -1,3 +1,11 @@
+import $ from 'jquery';
+import angular from 'angular';
+import podStationInternalReuse from './reuse/ng/reuse';
+
+import './popup.css';
+import './podstation.css';
+import 'font-awesome/css/font-awesome.css';
+
 $(document).ready(function() {
 	$('#open').click(function(event) {
 		event.preventDefault();
@@ -7,7 +15,7 @@ $(document).ready(function() {
 	});
 });
 
-var myApp = angular.module('podstationPopupApp', ['podstationInternalReuse']);
+const myApp = angular.module('podstationPopupApp', [podStationInternalReuse.name]);
 
 myApp.controller('feedsInPageController', ['$scope', 'analyticsService', function($scope, analyticsService) {
 	$scope.feedsInPage = [];
