@@ -1,3 +1,6 @@
+import PodcastManager from './entities/podcastManager';
+import podStationBackgroundAppModule, { podStationBackgroundAppRunModule } from './entities/backgroundApp';
+
 window.openPodStation = function(hash) {
 	const APP_PATH = '/podstation.html';
 
@@ -56,4 +59,4 @@ else {
 	chrome.runtime.setUninstallURL('https://goo.gl/forms/80WF29XcdmLnSuAY2');
 }
 
-angular.bootstrap(document, ['podstationBackgroundApp', 'podstationBackgroundAppRun']);
+angular.bootstrap(document, [podStationBackgroundAppModule.name, podStationBackgroundAppRunModule.name]);

@@ -1,3 +1,5 @@
+// TODO: Convert to to class
+
 /**
  * @constructor
  * @param {EpisodeSelectorType} type 
@@ -28,31 +30,30 @@ function EpisodeSelector(type, value, podcastUrl, podcastKey) {
 	}
 }
 
-(function() {
-	EpisodeSelector.GUID = 'guid';
-	EpisodeSelector.TITLE = 'title';
+EpisodeSelector.GUID = 'guid';
+EpisodeSelector.TITLE = 'title';
 
-	EpisodeSelector.ABBREVIATED_GUID = 'g';
-	EpisodeSelector.ABBREVIATED_TITLE = 't';
+EpisodeSelector.ABBREVIATED_GUID = 'g';
+EpisodeSelector.ABBREVIATED_TITLE = 't';
 
-	EpisodeSelector.fromId = fromId;
+EpisodeSelector.fromId = fromId;
 
-	/**
-	 * @param {EpisodeId} episodeId 
-	 * @param {PodcastKey} podcastKey
-	 * @returns {EpisodeSelector}
-	 */
-	function fromId(episodeId, podcastKey) {
-		const type = ['guid', 'title'].find(function(attribute) {
-			return episodeId.values[attribute];
-		});
+/**
+ * @param {EpisodeId} episodeId 
+ * @param {PodcastKey} podcastKey
+ * @returns {EpisodeSelector}
+ */
+function fromId(episodeId, podcastKey) {
+	const type = ['guid', 'title'].find(function(attribute) {
+		return episodeId.values[attribute];
+	});
 
-		const abbreviatedType = {
-			'guid': EpisodeSelector.ABBREVIATED_GUID,
-			'title': EpisodeSelector.ABBREVIATED_TITLE
-		}
-
-		return new EpisodeSelector(abbreviatedType[type], episodeId.values[type], episodeId.values.podcastUrl, podcastKey);
+	const abbreviatedType = {
+		'guid': EpisodeSelector.ABBREVIATED_GUID,
+		'title': EpisodeSelector.ABBREVIATED_TITLE
 	}
-})();
 
+	return new EpisodeSelector(abbreviatedType[type], episodeId.values[type], episodeId.values.podcastUrl, podcastKey);
+}
+
+export default EpisodeSelector;

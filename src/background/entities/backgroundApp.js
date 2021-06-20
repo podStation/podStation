@@ -1,17 +1,33 @@
-angular.module('podstationBackgroundApp', ['podstationInternalReuse']);
+import podStationInternalReuse from '../../reuse/ng/reuse';
+
+import notificationManager, { versionNews } from './services/notificationManager';
+import audioPlayerService, { audioBuilderService } from './services/audioPlayer';
+import OptionsManager from './services/optionsManager';
+import playlistService from './services/playlist';
+
+const podStationBackgroundAppModule = angular.module('podstationBackgroundApp', [podStationInternalReuse.name]);
 
 // separate module for initialization tasks we don't want to perform when 
-// runnign automated tests
-angular.module('podstationBackgroundAppRun', ['podstationBackgroundApp', 'podstationInternalReuse']);
+// running automated tests
+const podStationBackgroundAppRunModule = angular.module('podstationBackgroundAppRun', [podStationBackgroundAppModule.name, podStationInternalReuse.name]);
 
-angular.module('podstationBackgroundApp').config(['messageServiceProvider', function(messageServiceProvider) {
+podStationBackgroundAppModule
+  .constant('versionNews', versionNews)
+  .factory('audioBuilderService', audioBuilderService)
+  .factory('audioPlayerService', ['$injector', '$window', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService])
+  .service('notificationManager', ['versionNews', 'messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager])
+  .service('optionsManagerService', ['browser', 'messageService', OptionsManager])
+  .factory('playlist', ['$log', '$q', '$injector', 'messageService', 'podcastDataService', 'playlistStorageService', 'browser', playlistService]);
+
+podStationBackgroundAppModule.config(['messageServiceProvider', function(messageServiceProvider) {
 	messageServiceProvider.setIsBackgroundPage(true);
 }]);
 
-angular.module('podstationBackgroundAppRun').run([
+podStationBackgroundAppRunModule.run([
 '$window', '$timeout', '$log', 'playlist', 'browser', 'analyticsService', 'audioPlayerService', 'messageService', 'optionsManagerService', 'podcastStorageService', 'podcastManager', 'valueHandlerService',
 function($window, $timeout, $log, playlist, browser, analyticsService, audioPlayerService, messageService, optionsManagerService, podcastStorageService, podcastManager, valueHandlerService) {
 	// playlist, analyticsService and audioPlayerService, are here only to ensure the services are created as soon as possible
+	// they receive messages from the frontend, they cannot be instantiated on-demand by angular this way
 	
 	browser.runtime.onInstalled.addListener(function(details) {
 		var appDetails = browser.app.getDetails();
@@ -111,3 +127,6 @@ function getPodcastStorageService() {
 function getNotificationManagerService() {
 	return getAngularService('notificationManager');
 }
+
+export { podStationBackgroundAppRunModule };
+export default podStationBackgroundAppModule;

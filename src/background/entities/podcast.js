@@ -1,6 +1,6 @@
 'use strict';
 
-var Podcast = function(url) {
+function Podcast(url) {
 	var defaultImage = 'images/rss-alt-8x.png';
 
 	this.url = url;
@@ -502,3 +502,5 @@ function parseEmailTag(tagContent) {
 	
 	return email;
 }
+
+export default Podcast;

@@ -1,5 +1,4 @@
-angular.module('podstationBackgroundApp').factory('playlist', ['$log', '$q', '$injector', 'messageService', 'podcastDataService', 'playlistStorageService', 'browser', 
-	function($log, $q, $injector, messageService, podcastDataService, playlistStorageService, browserService) {
+function playlistService($log, $q, $injector, messageService, podcastDataService, playlistStorageService, browserService) {
 	var playlist = {};
 
 	playlist.visible = false;
@@ -10,7 +9,7 @@ angular.module('podstationBackgroundApp').factory('playlist', ['$log', '$q', '$i
 	playlist.get = get;
 
 	messageService.for('playlist')
-	  .onMessage('add', function(message) {
+		.onMessage('add', function(message) {
 		playlist.add(message.episodeId);
 	}).onMessage('remove', function(message) {
 		playlist.remove(message.episodeId);
@@ -76,4 +75,6 @@ angular.module('podstationBackgroundApp').factory('playlist', ['$log', '$q', '$i
 			return $injector.get('podcastManager').getEpisodeIds(episodeSelectors);
 		});
 	}
-}]);
+}
+
+export default playlistService;
