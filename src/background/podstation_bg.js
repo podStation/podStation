@@ -1,5 +1,5 @@
 import PodcastManager from './entities/podcastManager';
-import podStationBackgroundAppModule, { podStationBackgroundAppRunModule } from './entities/backgroundApp';
+import podStationBackgroundAppModule, { podStationBackgroundAppRunModule } from './ng/backgroundApp';
 
 window.openPodStation = function(hash) {
 	const APP_PATH = '/podstation.html';

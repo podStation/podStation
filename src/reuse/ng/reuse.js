@@ -67,3 +67,10 @@ function getBrowserService() {
  */
 
 export default module;
+export {
+	getAngularService,
+	getMessageService,
+	getAnalyticsService,
+	getPodcastDataService,
+	getBrowserService
+};

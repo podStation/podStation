@@ -1,9 +1,14 @@
 import podStationInternalReuse from '../../reuse/ng/reuse';
 
-import notificationManager, { versionNews } from './services/notificationManager';
+import notificationManager, { versionNews } from '../ng/services/notificationManager';
 import audioPlayerService, { audioBuilderService } from './services/audioPlayer';
-import OptionsManager from './services/optionsManager';
-import playlistService from './services/playlist';
+import OptionsManager from '../ng/services/optionsManager';
+import playlistService from '../ng/services/playlist';
+import PodcastManager from '../entities/podcastManager';
+import lightningService from './services/lightning';
+import podcastStorageService from './services/podcastStorageService';
+import playlistStorageService from './services/playlistStorageService';
+import valueHandlerService from './services/valueHandler';
 
 const podStationBackgroundAppModule = angular.module('podstationBackgroundApp', [podStationInternalReuse.name]);
 
@@ -17,7 +22,12 @@ podStationBackgroundAppModule
   .factory('audioPlayerService', ['$injector', '$window', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService])
   .service('notificationManager', ['versionNews', 'messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager])
   .service('optionsManagerService', ['browser', 'messageService', OptionsManager])
-  .factory('playlist', ['$log', '$q', '$injector', 'messageService', 'podcastDataService', 'playlistStorageService', 'browser', playlistService]);
+  .factory('playlist', ['$log', '$q', '$injector', 'messageService', 'podcastDataService', 'playlistStorageService', 'browser', playlistService])
+  .service('podcastManager', PodcastManager)
+  .factory('lightningService', ['$http', '$window', '$q', 'messageService', 'storageService', 'analyticsService', lightningService])
+  .factory('podcastStorageService', ['$q', 'messageService', 'storageService', 'browser', 'dateService', podcastStorageService])
+  .factory('playlistStorageService', ['browser', 'storageService', 'podcastStorageService', playlistStorageService])
+  .factory('valueHandlerService', ['$injector', '$interval', '$q', 'messageService', 'analyticsService', 'lightningService', 'podcastIndexOrgService', valueHandlerService]);
 
 podStationBackgroundAppModule.config(['messageServiceProvider', function(messageServiceProvider) {
 	messageServiceProvider.setIsBackgroundPage(true);
@@ -119,14 +129,6 @@ function($window, $timeout, $log, playlist, browser, analyticsService, audioPlay
 		}
 	}
 }]);
-
-function getPodcastStorageService() {
-	return getAngularService('podcastStorageService');
-}
-
-function getNotificationManagerService() {
-	return getAngularService('notificationManager');
-}
 
 export { podStationBackgroundAppRunModule };
 export default podStationBackgroundAppModule;

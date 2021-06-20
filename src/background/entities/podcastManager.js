@@ -1,3 +1,5 @@
+import { getAnalyticsService, getBrowserService, getMessageService } from "../../reuse/ng/reuse";
+import { getPodcastStorageService, getNotificationManagerService } from "../ng/serviceGetters";
 import Podcast from "./podcast";
 
 var instance;
@@ -81,7 +83,7 @@ function PodcastManager() {
 			getAnalyticsService().trackEvent('feed', 'add', undefined, urls.length);
 			var that = this;
 
-			podcastStorageService = getPodcastStorageService();
+			let podcastStorageService = getPodcastStorageService();
 
 			podcastStorageService.storePodcastsByFeedUrls(urls).then(function(addedUrls) {
 				addedUrls.forEach(function(addedUrl) {
@@ -496,7 +498,5 @@ function PodcastManager() {
 		});
 	}
 }
-
-// angular.module('podstationBackgroundApp').service('podcastManager', PodcastManager);
 
 export default PodcastManager;

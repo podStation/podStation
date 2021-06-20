@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 $(document).ready(function() {
 	$('#updateAll').click(function(event) {
 		event.preventDefault();

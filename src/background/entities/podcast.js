@@ -1,5 +1,12 @@
 'use strict';
 
+import $ from 'jquery';
+import { getBrowserService, getMessageService } from "../../reuse/ng/reuse";
+
+/**
+ * 
+ * @param {string} url Podcast feed url
+ */
 function Podcast(url) {
 	var defaultImage = 'images/rss-alt-8x.png';
 
