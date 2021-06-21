@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 function socialService($window, podcastManagerService) {
 	var service = {
 		tweet: tweet,
