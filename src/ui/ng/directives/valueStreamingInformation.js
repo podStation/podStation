@@ -29,14 +29,16 @@ function ValueStreamingInformationDirective(messageService) {
 		messageService.for('valueHandlerService').onMessage('valueChanged', (valueSummary) => handleValueSummary(valueSummary));
 		messageService.for('valueHandlerService').onMessage('valuePaid', () => updateBalance());
 
-		updateBalance();
-
 		return valueStreamingInformationController;
 
 		function handleValueSummary(valueSummary) {
 			valueStreamingInformationController.isV4vConfigured = valueSummary.isActive;
 			valueStreamingInformationController.unsettledValue = Math.round(valueSummary.unsettledValue/1000);
 			valueStreamingInformationController.settledValue = Math.round(valueSummary.settledValue/1000);
+
+			if(valueStreamingInformationController.isV4vConfigured) {
+				updateBalance();
+			}
 		}
 
 		function updateBalance() {

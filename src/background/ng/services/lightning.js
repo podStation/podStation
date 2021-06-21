@@ -149,6 +149,11 @@ function lightningService($http, $window, $q, messageService, storageService, _a
 				return new LNDClient(_analyticsService, $http, $window, options.restBaseUrl, options.macaroon, options.maxFeePercent);
 			case 'lnpayco':
 				return new LNPayClient(_analyticsService, $http, options.lnpaycoApiKey, options.lnpaycoWalletAccessKey, options.maxFeePercent);
+			case 'none':
+				return null;
+			default:
+				console.error('Unsupported lightning client type', options.type);
+				return null;
 		}
 	}
 }
