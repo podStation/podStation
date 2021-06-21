@@ -54,7 +54,7 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		episodePlayer.onPlaying.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
 		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
-		episodePlayer.onStopped.addListener(() => $scope.$apply(() => reset()). controller);
+		episodePlayer.onStopped.addListener(() => $scope.$apply(() => reset()), controller);
 		episodePlayer.onChanged.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
 		episodePlayer.onOptionsChanged.addListener((options) => setScopeOptions(options), controller);
 

@@ -1,4 +1,4 @@
-import { getAnalyticsService, getBrowserService, getMessageService } from "../../reuse/ng/reuse";
+import { getAnalyticsService, getBrowserService, getMessageService, getPodcastDataService } from "../../reuse/ng/reuse";
 import { getPodcastStorageService, getNotificationManagerService } from "../ng/serviceGetters";
 import Podcast from "./podcast";
 

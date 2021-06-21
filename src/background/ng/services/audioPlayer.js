@@ -1,4 +1,4 @@
-'use strict';
+import jsmediatags from 'jsmediatags';
 
 /**
  * 
@@ -229,7 +229,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 				playbackRate: audioPlayer ? audioPlayer.playbackRate : 1.0,
 				volume: audioPlayer ? audioPlayer.volume : 0,
 				error: audioPlayer ? audioPlayer.error : 0,
-				paused: audioPlayer.paused
+				paused: audioPlayer? audioPlayer.paused : false
 			},
 			episodeId: episodeInfo ? episodeInfo.episodeId : null
 		}

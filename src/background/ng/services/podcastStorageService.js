@@ -1,3 +1,5 @@
+import EpisodeSelector from '../../entities/episodeSelector';
+
 /**
  * @param {browser} browserService 
  */
