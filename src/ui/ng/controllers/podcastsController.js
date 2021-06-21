@@ -1,6 +1,6 @@
 import { formatDate } from "../../common";
 
-function PodcastsController($scope, messageService, storageServiceUI, socialService) {
+function PodcastsController($scope, messageService, storageServiceUI, socialService, analyticsService) {
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
