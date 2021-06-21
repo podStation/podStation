@@ -204,7 +204,7 @@ function EpisodesInProgressController($scope, $routeParams, episodePlayer, messa
 					const podcast = episodeInProgress.podcast;
 					const episode = episodeInProgress.episode;
 
-					episodeForController = {
+					let episodeForController = {
 						fromStoredEpisode: function(episode) {
 							this.link = episode.link;
 							this.title = episode.title ? episode.title : episode.url;
