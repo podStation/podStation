@@ -44,7 +44,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 			$scope.notifications = [];
 			$scope.importantNotifications = [];
 
-			for(key in notificationsAfterSplit.normal) {
+			for(let key in notificationsAfterSplit.normal) {
 				if(notificationsAfterSplit.normal[key]) {
 					var notification = notificationsAfterSplit.normal[key];
 					notification.id = key;
@@ -53,7 +53,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 				}
 			}
 
-			for(key in notificationsAfterSplit.important) {
+			for(let key in notificationsAfterSplit.important) {
 				if(notificationsAfterSplit.important[key]) {
 					var notification = notificationsAfterSplit.important[key];
 					notification.id = key;
