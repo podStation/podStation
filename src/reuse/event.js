@@ -20,3 +20,5 @@ function PodStationEvent() {
 		handlers.forEach(handler => {handler.callback.apply(null, arguments)});
 	}
 }
+
+export default PodStationEvent;

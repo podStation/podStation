@@ -1,4 +1,58 @@
-var myApp = angular.module('podstationApp', ['podstationInternalReuse', 'ngRoute', 'ngSanitize', 'infinite-scroll', 'dndLists', 'monospaced.qrcode']);
+import $ from 'jquery';
+import angular from 'angular';
+import ngRouteModuleName from 'angular-route';
+import ngSanitizeModuleName from 'angular-sanitize';
+import ngInfiniteScrollModuleName from 'ng-infinite-scroll';
+import dndListsModuleName from 'angular-drag-and-drop-lists';
+import qrcode from 'qrcode-generator';
+import qrcode_UTF8 from '/node_modules/qrcode-generator/qrcode_UTF8';
+import ngQrcode from 'angular-qrcode';
+import podStationInternalReuse from '../../reuse/ng/reuse';
+
+import storageServiceUI from './services/storageServiceUI';
+import HeaderController from './controllers/headerController';
+import AdController from './controllers/adController';
+import MenuController from './controllers/menuController';
+import AboutController from './controllers/aboutController';
+import { EpisodeController, EpisodesInProgressController, LastEpisodesController } from './controllers/episodesController';
+import NotificationController from './controllers/notificationController';
+import OptionsController from './controllers/optionsController';
+import PlaylistController from './controllers/playlistController';
+import PodcastsController from './controllers/podcastsController';
+import SearchController from './controllers/searchController';
+import WelcomeController from './controllers/welcomeController';
+import socialService from './services/socialService';
+import searchService from './services/searchService';
+import episodePlayerService from './services/episodePlayerService';
+import ValueStreamingInformationDirective from './directives/valueStreamingInformation';
+import ParticipantListDirective from './directives/participantListDirective';
+import episodePlayerDirective from './directives/episodePlayerDirective';
+import EpisodeListDirective from './directives/episodeListDirective';
+
+const myApp = angular.module('podstationApp', [podStationInternalReuse.name, ngRouteModuleName, ngSanitizeModuleName, ngInfiniteScrollModuleName, 'dndLists', ngQrcode]);
+
+myApp
+  .factory('storageServiceUI', [storageServiceUI])
+  .factory('socialService', ['$window','podcastManagerService', socialService])
+  .factory('searchService', ['$http', 'podcastIndexOrgService', searchService])
+  .factory('episodePlayer', ['messageService', episodePlayerService])
+  .controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', HeaderController])
+  .controller('adController', ['$scope', 'storageService', AdController])
+  .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
+  .controller('aboutController', ['$scope', AboutController])
+  .controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
+  .controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', EpisodeController])
+  .controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', EpisodesInProgressController])
+  .controller('notificationController', ['$scope', 'messageService', NotificationController])
+  .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
+  .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController])
+  .controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', PodcastsController])
+  .controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', 'analyticsService', SearchController])
+  .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])
+  .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
+  .directive('psParticipantList', [ParticipantListDirective])
+  .directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
+  .directive('psEpisodeList', ['$window', 'podcastManagerService', 'podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
 	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension|data):/;
@@ -83,7 +137,7 @@ function updSS(){
 	});
 }
 
-angular.module('podstationApp').run(['$route', '$rootScope', 'messageService', 'analyticsService', 'storageServiceUI',
+myApp.run(['$route', '$rootScope', 'messageService', 'analyticsService', 'storageServiceUI',
 function($route, $rootScope, messageService, analyticsService, storageServiceUI) {
 	messageService.for('optionsManager').sendMessage('getOptions', {}, function(options) {
 		if(options.integrateWithScreenShader) {
@@ -114,4 +168,3 @@ function($route, $rootScope, messageService, analyticsService, storageServiceUI)
 		});
 	});
 }]);
-

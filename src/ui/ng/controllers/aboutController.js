@@ -1,4 +1,4 @@
-myApp.controller('aboutController', ['$scope', function($scope) {
+function AboutController($scope) {
 	$scope.bytesInLocalStorage = 0;
 	$scope.bytesInSynchStorage = 0;
 	
@@ -13,4 +13,6 @@ myApp.controller('aboutController', ['$scope', function($scope) {
 			$scope.bytesInSynchStorage = bytesInStorage;
 		});
 	});
-}]);
+}
+
+export default AboutController; 

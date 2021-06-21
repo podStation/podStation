@@ -1,4 +1,4 @@
-myApp.controller('notificationController', ['$scope', 'messageService', function($scope, messageService, episodePlayer) {
+function NotificationController($scope, messageService, episodePlayer) {
 	$scope.notifications = [];
 	$scope.importantNotifications = [];
 
@@ -126,4 +126,6 @@ myApp.controller('notificationController', ['$scope', 'messageService', function
 	function dontShowAnymore(notificationId) {
 		messageService.for('notificationManager').sendMessage('dontShowAnymore', {notificationId: notificationId});
 	}
-}]);
+}
+
+export default NotificationController;

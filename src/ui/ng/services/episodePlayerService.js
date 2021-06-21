@@ -1,7 +1,12 @@
-'use strict';
+import PodStationEvent from "../../../reuse/event";
+import ChromeExtensionMessageService from "../../../reuse/messageServiceDefinition";
 
-(function() {
-angular.module('podstationApp').factory('episodePlayer', ['messageService', function(messageService) {
+/**
+ * 
+ * @param {ChromeExtensionMessageService} messageService 
+ * @returns 
+ */
+function episodePlayerService(messageService) {
 	var episodePlayer = {
 		play: play
 	};
@@ -105,5 +110,6 @@ angular.module('podstationApp').factory('episodePlayer', ['messageService', func
 		episodePlayer.onChanged.removeListeners(group);
 		episodePlayer.onOptionsChanged.removeListeners(group);
 	}
-}]);
-})();
+}
+
+export default episodePlayerService;

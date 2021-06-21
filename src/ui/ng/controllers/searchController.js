@@ -1,4 +1,14 @@
-myApp.controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', function($scope, $routeParams, $location, searchService) {
+import searchService from '../services/searchService';
+
+/**
+ * 
+ * @param {*} $scope 
+ * @param {*} $routeParams 
+ * @param {*} $location 
+ * @param {*} searchService 
+ * @param {*} analyticsService 
+ */
+function SearchController($scope, $routeParams, $location, searchService, analyticsService) {
 	$scope.searchTerms = $routeParams.searchTerms;
 
 	$scope.searchResults = [];
@@ -39,4 +49,6 @@ myApp.controller('searchController', ['$scope', '$routeParams', '$location', 'se
 	}
 
 	search();
-}]);
+}
+
+export default SearchController;

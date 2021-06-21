@@ -1,4 +1,8 @@
 import $ from 'jquery';
+import podStationApp from './ui/ng/podstationApp';
+
+import './podstation.css';
+import 'font-awesome/css/font-awesome.css';
 
 $(document).ready(function() {
 	$('#updateAll').click(function(event) {

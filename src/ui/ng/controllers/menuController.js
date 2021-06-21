@@ -1,4 +1,4 @@
-myApp.controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', function($scope, $document, $location, messageService, analyticsService) {
+function MenuController($scope, $document, $location, messageService, analyticsService) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
 	};
@@ -62,5 +62,7 @@ myApp.controller('menuController', ['$scope', '$document', '$location', 'message
 		$document[0].body.appendChild(element);
 		element.click();
 		$document[0].body.removeChild(element);
-	  }
-}]);
+	}
+}
+
+export default MenuController;

@@ -1,4 +1,6 @@
-myApp.controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', function($scope, $location, analyticsService, storageServiceUI) {
+import $ from 'jquery';
+
+function HeaderController($scope, $location, analyticsService, storageServiceUI) {
 	$scope.entry = "";
 
 	$scope.editBoxKeyPress = function(event) {
@@ -46,4 +48,6 @@ myApp.controller('headerController', ['$scope', '$location', 'analyticsService',
 
 		return true;
 	};
-}]);
+}
+
+export default HeaderController;

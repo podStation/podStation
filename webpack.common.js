@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { ProvidePlugin } = require('webpack');
 
 module.exports = {
 	entry: {
@@ -31,9 +32,13 @@ module.exports = {
 				{ from: './src/manifest.json' },
 				{ from: './src/_locales', to: '_locales' },
 				{ from: './src/images', to: 'images' },
+				{ from: './src/ui/ng/partials', to: 'ui/ng/partials' },
 			],
 		}),
 		new MiniCssExtractPlugin(),
+		new ProvidePlugin({
+			qrcode: 'qrcode-generator',
+		}),
 	],
 	module: {
 		rules: [

@@ -1,4 +1,6 @@
-myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', function($scope, messageService, storageServiceUI, socialService) {
+import { formatDate } from "../../common";
+
+function PodcastsController($scope, messageService, storageServiceUI, socialService) {
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
@@ -184,4 +186,6 @@ myApp.controller('podcastsController', ['$scope', 'messageService', 'storageServ
 	function ready() {
 		return podcastsLoaded && optionsLoaded;
 	}
-}]);
+}
+
+export default PodcastsController;

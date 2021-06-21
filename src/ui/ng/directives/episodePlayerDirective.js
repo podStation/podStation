@@ -1,8 +1,3 @@
-'use strict';
-
-(function() {
-angular.module('podstationApp').directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective]);
-
 function episodePlayerDirective($document, $window, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
 
 	return {
@@ -321,4 +316,5 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 		}
 	}
 }
-})();
+
+export default episodePlayerDirective;

@@ -1,6 +1,6 @@
-myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, socialService, podcastDataService) {
+import {formatDate} from '../../common';
 
+function LastEpisodesController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, socialService, podcastDataService) {
 	$scope.listType = 'big_list';
 	$scope.episodes = [];
 	$scope.numberEpisodes = 50;
@@ -82,11 +82,9 @@ myApp.controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePl
 	function ready() {
 		return episodesLoaded && optionsLoaded;
 	}
+}
 
-}]);
-
-myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
+function EpisodeController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
 
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_pubdate_descending';
@@ -184,10 +182,9 @@ myApp.controller('episodesController', ['$scope', '$routeParams', 'episodePlayer
 	function isReverseOrder() {
 		return $scope.sorting === 'by_pubdate_descending';
 	}
-}]);
+}
 
-myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService',
-	function($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
+function EpisodesInProgressController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
 
 	$scope.listType = 'big_list';
 	$scope.orderByField = 'lastTimePlayed';
@@ -280,7 +277,7 @@ myApp.controller('episodesInProgressController', ['$scope', '$routeParams', 'epi
 	function ready() {
 		return episodesLoaded && optionsLoaded;
 	}
-}]);
+}
 
 function updateIsInPlaylist($scope, messageService, podcastDataService) {
 	messageService.for('playlist').sendMessage('get', {}, function(playlist) {
@@ -293,3 +290,5 @@ function updateIsInPlaylist($scope, messageService, podcastDataService) {
 		});
 	});
 }
+
+export { LastEpisodesController, EpisodeController, EpisodesInProgressController };

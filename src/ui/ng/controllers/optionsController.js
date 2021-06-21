@@ -1,4 +1,4 @@
-myApp.controller('optionsController', ['$scope', '$window', 'messageService', function($scope, $window, messageService) {
+function OptionsController($scope, $window, messageService) {
 	$scope.loaded = false;
 	$scope.options = {};
 	$scope.options.autoUpdate = true;
@@ -50,4 +50,6 @@ myApp.controller('optionsController', ['$scope', '$window', 'messageService', fu
 	}
 
 	readOptions();
-}]);
+}
+
+export default OptionsController;

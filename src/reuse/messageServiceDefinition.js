@@ -93,6 +93,11 @@ function ChromeExtensionMessageService(isBackgroundPage) {
 		}
 	};
 
+	/**
+	 * 
+	 * @param {string} relayerName 
+	 * @returns {MessageRelayer}
+	 */
 	this.for = function(relayerName) {
 		if(!messageRelayers[relayerName]) {
 			messageRelayers[relayerName] = new MessageRelayer(relayerName);

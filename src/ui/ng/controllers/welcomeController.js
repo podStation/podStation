@@ -1,45 +1,41 @@
-'use strict';
+function WelcomeController($scope, $http, messageService, analyticsService) {
+	var controller = this;
 
-(() => {
-    angular.module('podstationApp').controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController]);
+	controller.addPodcast = addPodcast;
 
-    function WelcomeController($scope, $http, messageService, analyticsService) {
-        var controller = this;
+	initialize();
 
-        controller.addPodcast = addPodcast;
+	messageService.for('podcastManager').onMessage('podcastListChanged', () => {
+		initialize();
+	});
+	
+	return controller;
 
-        initialize();
+	function initialize() {
+		controller.language = navigator.language;
+		controller.recommendations = [];
 
-        messageService.for('podcastManager').onMessage('podcastListChanged', () => {
-            initialize();
-        });
-        
-        return controller;
+		$http.get('/resources/author-recommendations.' + controller.language + '.json').then((result) => {
+			controller.recommendations = result.data.recommendations;
 
-        function initialize() {
-            controller.language = navigator.language;
-            controller.recommendations = [];
+			const messagePayload = {
+				feeds: controller.recommendations.map((recommendation) => recommendation.feedUrl)
+			}
 
-            $http.get('/resources/author-recommendations.' + controller.language + '.json').then((result) => {
-                controller.recommendations = result.data.recommendations;
+			messageService.for('podcastManager').sendMessage('checkIsSubscribed', messagePayload, (response) => {
+				$scope.$apply(() => {
+					controller.recommendations.forEach((recommendation) => {
+						recommendation.subscribed = response[recommendation.feedUrl];
+					});
+				})
+			});
+		});
+	}
 
-                const messagePayload = {
-                    feeds: controller.recommendations.map((recommendation) => recommendation.feedUrl)
-                }
+	function addPodcast(recommendation) {
+		analyticsService.trackEvent('feed', 'add_by_recommendations', recommendation.feedUrl);
+		messageService.for('podcastManager').sendMessage('addPodcasts', {podcasts:[recommendation.feedUrl]});
+	}
+}
 
-                messageService.for('podcastManager').sendMessage('checkIsSubscribed', messagePayload, (response) => {
-                    $scope.$apply(() => {
-                        controller.recommendations.forEach((recommendation) => {
-                            recommendation.subscribed = response[recommendation.feedUrl];
-                        });
-                    })
-                });
-            });
-        }
-
-        function addPodcast(recommendation) {
-            analyticsService.trackEvent('feed', 'add_by_recommendations', recommendation.feedUrl);
-            messageService.for('podcastManager').sendMessage('addPodcasts', {podcasts:[recommendation.feedUrl]});
-        }
-    }
-})();
+export default WelcomeController;

@@ -1,9 +1,5 @@
 
-// the global instance is for services not yet converted into angular
-// var analyticsService;
-'use strict';
-
-function _analyticsService() {
+function AnalyticsService() {
 	var service = {
 		trackPageView: trackPageView,
 		trackEvent: trackEvent
@@ -40,4 +36,4 @@ function _analyticsService() {
 	}
 }
 
-export default _analyticsService;
+export default AnalyticsService;
