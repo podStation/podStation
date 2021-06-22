@@ -2,6 +2,7 @@
 
 import $ from 'jquery';
 import { getBrowserService, getMessageService } from "../../reuse/ng/reuse";
+import { getNotificationManagerService } from '../ng/serviceGetters';
 
 /**
  * 

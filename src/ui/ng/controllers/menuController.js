@@ -1,3 +1,14 @@
+import $ from 'jquery';
+import ChromeExtensionMessageService from '../../../reuse/messageServiceDefinition';
+
+/**
+ * 
+ * @param {*} $scope 
+ * @param {*} $document 
+ * @param {*} $location 
+ * @param {ChromeExtensionMessageService} messageService 
+ * @param {*} analyticsService 
+ */
 function MenuController($scope, $document, $location, messageService, analyticsService) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
