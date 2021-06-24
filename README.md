@@ -90,6 +90,19 @@ If you want to debug the tests run `npm run test_chrome` if you just want to run
 
 You can find the documentation on the [docs](/docs) folder.
 
+## Podcasting 2.0
+
+podStation is commited to support in its best capacity the new features introduced with with Podcasting 2.0.
+
+Currently with support:
+- search with the [podcastindex.org](https://podcastindex.org) API
+- the following tags from the podcast namespace
+    - funding
+    - value
+- value for value monetization / pledge model using Bitcoin through the Lightning Network
+
+Learn more at [Podcasting 2.0](https://github.com/Podcastindex-org/podcast-namespace/blob/main/podcasting2.0.md).
+
 ## Contributing
 
 If you are interesting in contributing to podStation, take a look at our [contribution documentation](https://github.com/podStation/.github/blob/master/CONTRIBUTING.md).
@@ -109,6 +122,14 @@ Wanna chat? Here is podStation's accounts on social media (in order of coolness)
 - [Mastodon @podstation@fostodon.org](https://fosstodon.org/@podstation)
 - [Twitter @podStation_app](https://twitter.com/podStation_app)
 - [Facebook](https://www.facebook.com/podStation)
+
+## Open source podcasting projects
+
+Here are other great open source projects related to podcastings:
+- [podcastindex.org](https://github.com/Podcastindex-org)
+- [Podfriend](https://github.com/MartinMouritzen/Podfriend) - multiplatform podcast aggregator / player
+- [Podlove](https://github.com/podlove) - Podcasting Software & Standards
+- [Antennapod](https://github.com/AntennaPod) - android podcast player
 
 ## References
 - Browser Extensions Documentation
