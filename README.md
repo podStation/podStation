@@ -94,7 +94,7 @@ You can find the documentation on the [docs](/docs) folder.
 
 podStation is commited to support in its best capacity the new features introduced with with Podcasting 2.0.
 
-Currently with support:
+Currently it supports:
 - search with the [podcastindex.org](https://podcastindex.org) API
 - the following tags from the podcast namespace
     - funding
