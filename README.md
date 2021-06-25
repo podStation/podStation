@@ -103,6 +103,10 @@ Currently with support:
 
 Learn more at [Podcasting 2.0](https://github.com/Podcastindex-org/podcast-namespace/blob/main/podcasting2.0.md).
 
+Find more Podcastings 2.0 apps at https://podcastindex.org/apps.
+
+Find podcasting 2.0 projects on GiHub by looking for the tag [podcasting20](https://github.com/topics/podcasting20).
+
 ## Contributing
 
 If you are interesting in contributing to podStation, take a look at our [contribution documentation](https://github.com/podStation/.github/blob/master/CONTRIBUTING.md).
