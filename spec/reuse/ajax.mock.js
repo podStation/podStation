@@ -15,10 +15,7 @@ function ajaxGetFeedFromFile(feedFileName) {
 
 		typeof settings.success === 'function' && (request.response);
 
-		let jqXHR = new XMLHttpRequest();
-		jqXHR.status = 200;
-
-		var deferred = $.Deferred().resolve(request.response, null, jqXHR);
+		var deferred = $.Deferred().resolve(request.response, null, request);
 		return deferred.promise();
 	}
 }
@@ -34,10 +31,7 @@ function ajaxGetFeed(settings) {
 
 	typeof settings.success === 'function' && settings.success(request.response);
 
-	let jqXHR = new XMLHttpRequest();
-	jqXHR.status = 200;
-
-	var deferred = $.Deferred().resolve(request.response, null, jqXHR);
+	var deferred = $.Deferred().resolve(request.response, null, request);
 	return deferred.promise();
 }
 
