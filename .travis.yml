@@ -4,6 +4,7 @@ node_js:
 addons:
   chrome: stable
 before_script:
+# jq is used on the script check_should_deploy_and_create_new_tag.sh
 - sudo apt-get install -y jq
 script:
 - npm run test-chrome-single-run-no-sandbox
