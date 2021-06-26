@@ -14,3 +14,5 @@ function fixAngularInjector($injector) {
 		angular.element[prop] = original[prop];
 	}
 }
+
+export default fixAngularInjector;

@@ -122,3 +122,5 @@ var browserStorageMockFn = function($timeout) {
 		}
 	}
 }
+
+export default browserStorageMockFn;

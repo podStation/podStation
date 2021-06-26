@@ -1,15 +1,20 @@
-'use strict';
+import $ from 'jquery';
+import podStationBackgrounAppModule from '../../src/background/ng/backgroundApp';
+import { ajaxGetFeed, ajaxGetFeedFromFile, syncGetFeedContent } from '../reuse/ajax.mock';
+import analyticsServiceMockFn from '../reuse/analyticsService.mock';
+import browserStorageMockFn from '../reuse/browser.mock';
+import fixAngularInjector from '../reuse/fixAngularInjector';
+import FEEDS from './feeds/feedsConstants';
 
 describe('podcastManager',  function() {
 
-	beforeEach(module('podstationBackgroundApp'));
+	beforeEach(angular.mock.module(podStationBackgrounAppModule.name));
 
-	beforeEach(module(function($provide) {
+	beforeEach(angular.mock.module(function($provide) {
 		$provide.factory('browser', browserStorageMockFn);
 
 		// Dummies
 		$provide.factory('analyticsService', analyticsServiceMockFn);
-		//$provide.service('messageService', messageServiceMockFn);
 	}));
 
 	var browserService;
@@ -20,7 +25,7 @@ describe('podcastManager',  function() {
 	var $rootScope;
 	var ajaxSpy;
 
-	beforeEach(inject(function($injector) {
+	beforeEach(angular.mock.inject(function($injector) {
 		fixAngularInjector($injector);
 		
 		ajaxSpy = spyOn($, 'ajax').and.callFake(ajaxGetFeed);

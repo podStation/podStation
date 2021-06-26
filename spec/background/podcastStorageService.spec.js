@@ -1,10 +1,12 @@
-'use strict';
+import podStationBackgrounAppModule from '../../src/background/ng/backgroundApp';
+import browserStorageMockFn from '../reuse/browser.mock';
+import fixAngularInjector from '../reuse/fixAngularInjector';
 
 describe('podcastStorageService',  function() {
 
-	beforeEach(module('podstationBackgroundApp'));
+	beforeEach(angular.mock.module(podStationBackgrounAppModule.name));
 
-	beforeEach(module(function($provide) {
+	beforeEach(angular.mock.module(function($provide) {
 		$provide.factory('browser', browserStorageMockFn);
 	}));
 
@@ -12,7 +14,7 @@ describe('podcastStorageService',  function() {
 	var browserService;
 	var $rootScope;
 
-	beforeEach(inject(function($injector) {
+	beforeEach(angular.mock.inject(function($injector) {
 		fixAngularInjector($injector);
 		
 		$rootScope = $injector.get('$rootScope');
@@ -177,7 +179,7 @@ describe('podcastStorageService',  function() {
 	describe('getEpisodeUserData', function() {
 		var podcastDataService;
 		
-		beforeEach(inject(function($injector) {
+		beforeEach(angular.mock.inject(function($injector) {
 			podcastDataService = $injector.get('podcastDataService');
 		}));
 

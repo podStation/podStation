@@ -4,3 +4,5 @@ function analyticsServiceMockFn() {
 		trackEvent: function() {}
 	}
 }
+
+export default analyticsServiceMockFn;

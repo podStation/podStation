@@ -1,14 +1,19 @@
-'use strict';
+import $ from 'jquery';
+import podStationBackgrounAppModule from '../../src/background/ng/backgroundApp';
+import { ajaxGetFeed } from '../reuse/ajax.mock';
+import analyticsServiceMockFn from '../reuse/analyticsService.mock';
+import browserStorageMockFn from '../reuse/browser.mock';
+import fixAngularInjector from '../reuse/fixAngularInjector';
+import FEEDS from './feeds/feedsConstants';
 
 describe('audioPlayerService', function() {
 
-	beforeEach(module('podstationBackgroundApp'));
+	beforeEach(angular.mock.module(podStationBackgrounAppModule.name));
 
-	beforeEach(module(function($provide) {
+	beforeEach(angular.mock.module(function($provide) {
 		$provide.factory('browser', browserStorageMockFn);
 
 		// Dummies
-		// $provide.service('messageService', messageServiceMockFn);
 		$provide.factory('analyticsService', analyticsServiceMockFn);
 		$provide.factory('audioBuilderService', function() {
 			var service = {
@@ -56,7 +61,7 @@ describe('audioPlayerService', function() {
 	
 	var ajaxSpy;
 
-	beforeEach(inject(function($injector) {
+	beforeEach(angular.mock.inject(function($injector) {
 		fixAngularInjector($injector);
 
 		ajaxSpy = spyOn($, 'ajax').and.callFake(ajaxGetFeed);
@@ -78,7 +83,7 @@ describe('audioPlayerService', function() {
 		// Ensure startup and message listening
 		$injector.get('audioPlayerService');
 	}));
-
+ 
 	describe('play', function() {
 		it("should play a podcast with guid", function() {
 			spyOn(audioBuilderService.audio, 'play');
@@ -222,7 +227,7 @@ describe('audioPlayerService', function() {
 		var episodeId;
 		var tickAudioPromise;
 
-		beforeEach(inject(function($injector) {
+		beforeEach(angular.mock.inject(function($injector) {
 			$interval = $injector.get('$interval');
 			podcastStorageService = $injector.get('podcastStorageService');
 		}));

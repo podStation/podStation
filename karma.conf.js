@@ -2,6 +2,9 @@
 // Generated on Sat Mar 03 2018 16:34:31 GMT+0100 (Hora Padrão da Europa Ocidental)
 
 const jasmineSeedReporter = require('./spec/support/jasmine-seed-reporter.js')
+const webpackConfig = require('./webpack.dev.js');
+
+delete webpackConfig.entry;
 
 module.exports = function(config) {
   config.set({
@@ -12,31 +15,19 @@ module.exports = function(config) {
 
 	// frameworks to use
 	// available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-	frameworks: ['jasmine'],
+	frameworks: ['jasmine', 'webpack'],
+
+	webpack: webpackConfig,
 
 	// list of files / patterns to load in the browser
 	files: [
-		'extension/lib/jquery.min.js',
-		'extension/lib/angular.js',
-		'extension/lib/jsmediatags.min.js',
-		'bower_components/angular-mocks/angular-mocks.js',
-		'extension/reuse/**/*.js',
-		'extension/background/entities/backgroundApp.js',
-		'extension/background/entities/audioPlayer.js',
-		'extension/background/entities/episodeSelector.js',
-		'extension/background/entities/podcastManager.js',
-		'extension/background/entities/notificationManager.js',
-		'extension/background/entities/optionsManager.js',
-		'extension/background/entities/playlist.js',
-		'extension/background/entities/podcast.js',
-		'extension/background/ng/**/*.js',
-		'spec/background/**/*.js',
-		'spec/reuse/**/*.js',
+		'node_modules/angular/angular.js',
+		'node_modules/angular-mocks/angular-mocks.js',
+		{ pattern: 'spec/**/*.spec.js', watched: false },
 		{pattern: 'spec/background/**/*.xml', included: false},
 		{pattern: 'spec/background/**/*.opml', included: false},
 		{pattern: 'spec/background/**/*.json', included: false}
 	],
-
 
 	// list of files / patterns to exclude
 	exclude: [
@@ -46,6 +37,7 @@ module.exports = function(config) {
 	// preprocess matching files before serving them to the browser
 	// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 	preprocessors: {
+		'spec/**/*.spec.js': [ 'webpack' ],
 	},
 
 	plugins: [
@@ -79,7 +71,8 @@ module.exports = function(config) {
 
 
 	// enable / disable watching file and executing tests whenever any file changes
-	autoWatch: true,
+	// we set it to false because webpack is already watching files
+	autoWatch: false,
 
 	customLaunchers: {
 		ChromeDebugging: {

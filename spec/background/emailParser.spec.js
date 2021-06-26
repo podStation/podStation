@@ -1,4 +1,4 @@
-'use strict';
+import parseEmailTag from "../../src/background/utils/parseEmailTag";
 
 describe('emailTagParser', () => {
 	it('return undefined when it gets undefined', ()=> {

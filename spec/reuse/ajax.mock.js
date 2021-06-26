@@ -1,19 +1,4 @@
-/**
- * 
- * @param {$httpBackend}  
- * @param {string} url 
- * @param {string} feedFileName 
- */
-/*function mockUrlWithFeedFile($httpBackend, url, feedFileName) {
-	$httpBackend.whenGET(url).respond(function(method, url, data) {
-		var request = new XMLHttpRequest();
-
-		request.open('GET', '/base/spec/background/feeds/' + feedFileName, false);
-		request.send(null);
-
-		return [request.status, request.response, {}];
-	});
-}*/
+import $ from 'jquery';
 
 function syncGetFeedContent(feedFileName) {
 	var request = new XMLHttpRequest();
@@ -55,3 +40,9 @@ function ajaxGetFeed(settings) {
 	var deferred = $.Deferred().resolve(request.response, null, jqXHR);
 	return deferred.promise();
 }
+
+export {
+	syncGetFeedContent, 
+	ajaxGetFeedFromFile, 
+	ajaxGetFeed
+};
