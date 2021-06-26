@@ -5,8 +5,6 @@ addons:
   chrome: stable
 before_script:
 - sudo apt-get install -y jq
-- npm run bower-install
-- "./copy_dependencies.sh"
 script:
 - npm run test-chrome-single-run-no-sandbox
 after_success:
