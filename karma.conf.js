@@ -25,9 +25,9 @@ module.exports = function(config) {
 		'node_modules/angular/angular.js',
 		'node_modules/angular-mocks/angular-mocks.js',
 		{ pattern: 'spec/**/*.spec.js', watched: false },
-		{pattern: 'spec/background/**/*.xml', included: false},
-		{pattern: 'spec/background/**/*.opml', included: false},
-		{pattern: 'spec/background/**/*.json', included: false}
+		{ pattern: 'spec/background/**/*.xml', included: false },
+		{ pattern: 'spec/background/**/*.opml', included: false },
+		{ pattern: 'spec/background/**/*.json', included: false }
 	],
 
 	// list of files / patterns to exclude
