@@ -19,7 +19,6 @@
   },
   "devDependencies": {
     "angular-mocks": "1.4.7",
-    "bower": "^1.8.8",
     "chrome-webstore-upload-cli": "^1.1.1",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.0",
@@ -40,9 +39,6 @@
   "scripts": {
     "start": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
-    "bower": "bower",
-    "bower-install": "bower install",
-    "bower-install-prod": "bower install",
     "test": "karma start --browsers ChromeHeadless",
     "test-chrome-debugging": "karma start --browsers ChromeDebugging",
     "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
