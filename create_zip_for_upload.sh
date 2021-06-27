@@ -3,6 +3,6 @@
 mkdir build_output
 rm build_output/output.zip
 
-cd extension
+cd dist
 zip -r ../build_output/output.zip *
 cd ..
