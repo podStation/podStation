@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+This version contains an under-the-hood refactoring to introduce bundling with Webpack.  
+It should not introduce any changes to the users, but despite our testing, it may introduce minor bugs.  
+Unfortunately, that is a necessary change to support a better development experience (and hopefully faster feature development as a consequence).
+
 ## [1.44.1] - 2021-06-16
 
 ### Fixed
