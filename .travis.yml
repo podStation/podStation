@@ -1,14 +1,14 @@
 language: node_js
 node_js:
-- 8
+- 10
 addons:
   chrome: stable
 before_script:
+# jq is used on the script check_should_deploy_and_create_new_tag.sh
 - sudo apt-get install -y jq
-- npm run bower-install
-- "./copy_dependencies.sh"
 script:
 - npm run test-chrome-single-run-no-sandbox
+- npm run build
 after_success:
 - source ./check_should_deploy_and_create_new_tag.sh
 deploy:

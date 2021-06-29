@@ -6,3 +6,5 @@ function messageServiceMockFn() {
 		}
 	}
 }
+
+export default messageServiceMockFn;

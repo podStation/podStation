@@ -4,3 +4,4 @@ build_output
 bower_components
 node_modules
 *.log
+dist

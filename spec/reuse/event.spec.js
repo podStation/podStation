@@ -1,4 +1,4 @@
-'use strict';
+import PodStationEvent from "../../src/reuse/event";
 
 describe('event', () => {
 	it('should call listener callback with notify arguments', () => {

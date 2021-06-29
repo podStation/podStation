@@ -1,4 +1,6 @@
-'use strict';
+import podStationBackgrounAppModule from '../../src/background/ng/backgroundApp';
+import browserStorageMockFn from '../reuse/browser.mock';
+import fixAngularInjector from '../reuse/fixAngularInjector';
 
 describe('notificationManager',  function() {
 
@@ -8,9 +10,9 @@ describe('notificationManager',  function() {
 		text: ' new episode(s) for '
 	}
 
-	beforeEach(module('podstationBackgroundApp'));
+	beforeEach(angular.mock.module(podStationBackgrounAppModule.name));
 
-	beforeEach(module(function($provide) {
+	beforeEach(angular.mock.module(function($provide) {
 		$provide.factory('browser', browserStorageMockFn);
 
 		$provide.constant('versionNews', {
@@ -23,7 +25,7 @@ describe('notificationManager',  function() {
 	var messageService;
 	var browserService;
 
-	beforeEach(inject(function($injector) {
+	beforeEach(angular.mock.inject(function($injector) {
 		fixAngularInjector($injector);
 		
 		$rootScope = $injector.get('$rootScope');
@@ -38,7 +40,7 @@ describe('notificationManager',  function() {
 
 		var notificationManagerService;
 
-		beforeEach(inject(function($injector) {
+		beforeEach(angular.mock.inject(function($injector) {
 			notificationManagerService = $injector.get('notificationManager');
 		}));
 
@@ -110,7 +112,7 @@ describe('notificationManager',  function() {
 	describe('service startup tests', () => {
 		var _$injector;
 
-		beforeEach(inject(function($injector) {
+		beforeEach(angular.mock.inject(function($injector) {
 			// save for deferred instantiation of notificationManager
 			_$injector = $injector;
 

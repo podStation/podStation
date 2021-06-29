@@ -1,19 +1,4 @@
-/**
- * 
- * @param {$httpBackend}  
- * @param {string} url 
- * @param {string} feedFileName 
- */
-/*function mockUrlWithFeedFile($httpBackend, url, feedFileName) {
-	$httpBackend.whenGET(url).respond(function(method, url, data) {
-		var request = new XMLHttpRequest();
-
-		request.open('GET', '/base/spec/background/feeds/' + feedFileName, false);
-		request.send(null);
-
-		return [request.status, request.response, {}];
-	});
-}*/
+import $ from 'jquery';
 
 function syncGetFeedContent(feedFileName) {
 	var request = new XMLHttpRequest();
@@ -30,10 +15,7 @@ function ajaxGetFeedFromFile(feedFileName) {
 
 		typeof settings.success === 'function' && (request.response);
 
-		let jqXHR = new XMLHttpRequest();
-		jqXHR.status = 200;
-
-		var deferred = $.Deferred().resolve(request.response, null, jqXHR);
+		var deferred = $.Deferred().resolve(request.response, null, request);
 		return deferred.promise();
 	}
 }
@@ -49,9 +31,12 @@ function ajaxGetFeed(settings) {
 
 	typeof settings.success === 'function' && settings.success(request.response);
 
-	let jqXHR = new XMLHttpRequest();
-	jqXHR.status = 200;
-
-	var deferred = $.Deferred().resolve(request.response, null, jqXHR);
+	var deferred = $.Deferred().resolve(request.response, null, request);
 	return deferred.promise();
 }
+
+export {
+	syncGetFeedContent, 
+	ajaxGetFeedFromFile, 
+	ajaxGetFeed
+};

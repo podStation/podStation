@@ -65,3 +65,5 @@ const FEEDS = {
 		URL: 'https://feed-with-escaped-chars.podstation.com?a=1&b=1'
 	}
 };
+
+export default FEEDS;

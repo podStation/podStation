@@ -60,20 +60,22 @@ There are also some features that I would like to implement, but they are unlike
 
 ### Installing the dependencies
 
-You will need to install [Node.js](https://nodejs.org/en/).
+You will need to install [Node.js](https://nodejs.org/en/). I use v10.15.1 at the moment, I assume anything above that should work fine.
 
-After that, install the dependencies in the following order:
+After that, install the dependencies:
 * `npm install`
-* `npm run bower-install`
-* `./copy_dependencies.sh`
 
 ### Running locally
 
 1. Clone this repository
+2. Build the extension (for development) with the command:
+    ```
+    npm start
+    ```
 2. Go to chrome's extensions page [chrome://extensions/](chrome://extensions/)
 3. Enable the _Developer Mode_
 4. Click the button _Load unpacked extension_.
-5. Choose the `extension` folder
+5. Choose the `dist` folder
 
 Voilà!  
 You should see podStation's icon on chrome's toolbar.  
@@ -81,10 +83,10 @@ You are now running a local copy of podStation, have fun!
 
 ### Automated tests
 
-We use Karma for automated tests.
+We use Karma and Jasmine for automated tests.
 
 You can run the tests with the command line `npm test`. 
-If you want to debug the tests run `npm run test_chrome` if you just want to run them.
+If you want to debug the tests run `npm run test-chrome-debugging` if you just want to run them.
 
 ### Documentation
 

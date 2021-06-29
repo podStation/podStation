@@ -1,0 +1,25 @@
+<html ng-app="podstationPopupApp">
+	<body class="popup_body">
+		<div id="header">
+			<h1 id="mainTitle"><img src="images/rss-alt-2x.png"></img> podStation - <a id='open' href='#'>{{ 'open' | chrome_i18n }}</a></h1>
+		</div>
+		<div ng-controller="feedsInPageController">
+			<h2>{{ 'feeds_in_page' | chrome_i18n }}</h2>
+			<div id="feedsInPage">
+				<table>
+					<tbody>
+						<tr ng-repeat="feed in feedsInPage">
+							<td nowrap>{{feed.title}}</td>
+							<!--<td nowrap>{{feed.url}}</td>-->
+							<td>{{feed.url}}</td>
+							<td nowrap>
+								<i ng-if="feed.added" class="fa fa-check" title="{{ 'feed_in_list' | chrome_i18n }}"></i>
+								<a ng-if="!feed.added" href='#' title="{{ 'add_feed' | chrome_i18n }}..." ng-click="feed.addPodcast()"><i class="fa fa-plus"></i></a>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</body>
+</html>
