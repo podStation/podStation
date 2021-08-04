@@ -400,7 +400,7 @@ class LNPayClient {
 			body.custom_records[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = JSON.stringify(podcastPaymentMetadata);
 		}
 
-		return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
+		return this._$http.post(`https://api.lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
 			headers: {
 				'X-Api-Key': this._apiKey
 			}
@@ -415,7 +415,7 @@ class LNPayClient {
 	};
 
 	getBalance() {
-		return this._$http.get(`https://lnpay.co/v1/wallet/${this._walletAccessKey}`, {
+		return this._$http.get(`https://api.lnpay.co/v1/wallet/${this._walletAccessKey}`, {
 			headers: {
 				'X-Api-Key': this._apiKey
 			}
@@ -437,7 +437,7 @@ class LNPayClient {
 			num_satoshis: LNPayClient.convertFrom_mSatsToSats(amount)
 		};
 
-		return this._$http.post(`https://lnpay.co/v1/wallet/${this._walletAccessKey}/invoice`, body, {
+		return this._$http.post(`https://api.lnpay.co/v1/wallet/${this._walletAccessKey}/invoice`, body, {
 			headers: {
 				'X-Api-Key': this._apiKey
 			}
