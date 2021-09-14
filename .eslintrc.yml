@@ -12,3 +12,4 @@ globals:
   chrome: readonly
   ga: readonly
   angular: readonly
+  MediaMetadata: readonly
