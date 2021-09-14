@@ -9,7 +9,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 			notificationId: this.id
 		});
 				
-		// just to trigger a ui reaction wihtout
+		// just to trigger a ui reaction without
 		// waiting for the notificationChanged message
 		var indexOf = $scope.notifications.indexOf(this);
 		
@@ -80,7 +80,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 				}
 			});
 			
-			// replace notifcations by groups if > 3
+			// replace notifications by groups if > 3
 			for(key in notificationGroups) {
 				if(notificationGroups[key].notifications.length > 3) {
 					var indexOfFirst = -1;
