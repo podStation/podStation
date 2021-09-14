@@ -40,6 +40,7 @@
   "scripts": {
     "start": "webpack --watch --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
+    "lint": "eslint \"src/**/*.js\"",
     "test": "karma start --browsers ChromeHeadless",
     "test-chrome-debugging": "karma start --browsers ChromeDebugging",
     "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
