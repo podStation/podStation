@@ -1,4 +1,4 @@
-function episodePlayerDirective($document, $window, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
+function episodePlayerDirective($document, $window, analyticsService, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
 
 	return {
 		restrict: 'E',

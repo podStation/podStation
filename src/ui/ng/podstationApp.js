@@ -51,7 +51,7 @@ myApp
   .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])
   .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
   .directive('psParticipantList', [ParticipantListDirective])
-  .directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
+  .directive('psEpisodePlayer', ['$document', '$window', 'analyticsService', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
   .directive('psEpisodeList', ['$window', 'podcastManagerService', 'podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
