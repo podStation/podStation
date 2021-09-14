@@ -46,7 +46,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 
 			for(let key in notificationsAfterSplit.normal) {
 				if(notificationsAfterSplit.normal[key]) {
-					var notification = notificationsAfterSplit.normal[key];
+					let notification = notificationsAfterSplit.normal[key];
 					notification.id = key;
 					notification.dismiss = dismissNotification;
 					$scope.notifications.push(notification);
@@ -55,7 +55,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 
 			for(let key in notificationsAfterSplit.important) {
 				if(notificationsAfterSplit.important[key]) {
-					var notification = notificationsAfterSplit.important[key];
+					let notification = notificationsAfterSplit.important[key];
 					notification.id = key;
 					notification.dismiss = dismissNotification;
 					$scope.importantNotifications.push(notification);
@@ -81,7 +81,7 @@ function NotificationController($scope, messageService, episodePlayer) {
 			});
 			
 			// replace notifications by groups if > 3
-			for(key in notificationGroups) {
+			for(let key in notificationGroups) {
 				if(notificationGroups[key].notifications.length > 3) {
 					var indexOfFirst = -1;
 					
