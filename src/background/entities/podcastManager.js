@@ -409,7 +409,7 @@ function PodcastManager() {
 
 			sendPodcastListChangedMessage();
 		});
-	};
+	}
 
 	function sendPodcastListChangedMessage() {
 		getBrowserService().runtime.sendMessage({

@@ -412,7 +412,7 @@ class LNPayClient {
 			console.info('LNPay: Payment successful', amount);
 			this._analyticsService.trackEvent('lightning', 'lnpay_send_payment_succeeded', null, amount);
 		});
-	};
+	}
 
 	getBalance() {
 		return this._$http.get(`https://lnpay.co/v1/wallet/${this._walletAccessKey}`, {

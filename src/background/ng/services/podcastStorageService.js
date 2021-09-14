@@ -324,7 +324,7 @@ function podcastStorageService($q, messageService, storageService, browserServic
 	 */
 	function loadPodcastsFromSync(loaded) {
 		return storageService.loadFromStorage('syncPodcastList', loaded, 'sync', function() {return []});
-	};
+	}
 
 	/**
 	 * Loads a single podcast info from sync storage
@@ -350,7 +350,7 @@ function podcastStorageService($q, messageService, storageService, browserServic
 			var key = 'P' + url;
 			return storageService.loadFromStorage(key, loaded, 'sync', function() {return {}});
 		}
-	};
+	}
 
 	/**
 	 * 

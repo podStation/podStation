@@ -24,7 +24,7 @@ function episodePlayerService(messageService) {
 		messageService.for('audioPlayer').sendMessage('play', {
 			episodeId: episodeId
 		});
-	};
+	}
 
 	episodePlayer.playNext = function() {
 		messageService.for('audioPlayer').sendMessage('playNext');

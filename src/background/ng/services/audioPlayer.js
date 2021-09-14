@@ -28,7 +28,7 @@ function audioBuilderService() {
 	 */
 	function buildAudio(audioUrl) {
 		return new Audio(audioUrl);
-	};
+	}
 }
 
 class PlayedSegmentAnnouncer {
@@ -129,7 +129,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 
 			return loaded && loaded(playerOptions);
 		}, 'sync', () => {return {};});
-	};
+	}
 
 	function loadSyncPlayerProperties(loaded) {
 		return storageService.loadFromStorage('plp', (properties) => {
@@ -150,7 +150,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 
 			return modifiedProperties;
 		}, 'sync', () => {return {};});
-	};
+	}
 
 	function getPodcastAndEpisode(episodeId) {
 		return $injector.get('podcastManager').getPodcastAndEpisode(episodeId);
@@ -385,7 +385,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 				if(options.continuous)
 					playNextOrPrevious(true, currentEpisodeInfo);
 			});
-		};
+		}
 
 		function onAudioError() {
 			_analyticsService.trackEvent('audio', 'error');

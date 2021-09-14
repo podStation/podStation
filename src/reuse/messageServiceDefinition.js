@@ -91,7 +91,7 @@ function ChromeExtensionMessageService(isBackgroundPage) {
 		function getBrowserService() {
 			return angular.element(document.body).injector() ? angular.element(document.body).injector().get('browser') : chrome;
 		}
-	};
+	}
 
 	/**
 	 * 

@@ -121,7 +121,7 @@ myApp.filter('format_seconds', function() {
 
 		// this will work fine as long as less than 24hs, which is reasonable
 		return date.toISOString().substr(11, 8);
-	};
+	}
 });
 
 // Shade your extension's page using Screen Shader. Code snippet courtesy of Marc Guiselin 2015

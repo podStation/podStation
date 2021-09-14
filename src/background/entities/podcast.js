@@ -178,7 +178,7 @@ function Podcast(url) {
 			that.description = feedParseResult.podcast.description;
 			that.link = feedParseResult.podcast.link;
 			that.pubDate = feedParseResult.podcast.pubDate;
-			that.image = feedParseResult.podcast.image ? feedParseResult.podcast.image : that.image = defaultImage;;
+			that.image = feedParseResult.podcast.image ? feedParseResult.podcast.image : that.image = defaultImage;
 
 			// >>> social namespace
 			that.email = feedParseResult.podcast.email;

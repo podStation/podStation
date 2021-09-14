@@ -57,12 +57,12 @@ function socialService($window, podcastManagerService) {
 			case 'youtube':
 				return 'https://youtube.com/user/' + socialHandle.handle;
 			case 'youtube.channel':
-				return 'https://youtube.com/channel/' + socialHandle.handle;;
+				return 'https://youtube.com/channel/' + socialHandle.handle;
 			case 'facebook':
 			case 'facebook.page':
-				return 'https://facebook.com/' + socialHandle.handle;;
+				return 'https://facebook.com/' + socialHandle.handle;
 			case 'facebook.group':
-				return 'https://facebook.com/groups/' + socialHandle.handle;;
+				return 'https://facebook.com/groups/' + socialHandle.handle;
 			case 'instagram':
 				return 'https://instagram.com/' + socialHandle.handle;
 			// <<< social handles
