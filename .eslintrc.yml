@@ -5,7 +5,9 @@ extends: 'eslint:recommended'
 parserOptions:
   ecmaVersion: 12
   sourceType: module
-rules: {}
+rules:
+  no-mixed-spaces-and-tabs: warn
+  no-unused-vars: warn
 globals:
   chrome: readonly
   ga: readonly
