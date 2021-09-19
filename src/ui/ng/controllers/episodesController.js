@@ -84,7 +84,7 @@ function LastEpisodesController($scope, $routeParams, episodePlayer, messageServ
 	}
 }
 
-function EpisodeController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
+function EpisodeController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService, socialService) {
 
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_pubdate_descending';
@@ -184,7 +184,7 @@ function EpisodeController($scope, $routeParams, episodePlayer, messageService, 
 	}
 }
 
-function EpisodesInProgressController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService) {
+function EpisodesInProgressController($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService, socialService) {
 
 	$scope.listType = 'big_list';
 	$scope.orderByField = 'lastTimePlayed';

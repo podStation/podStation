@@ -154,11 +154,6 @@ function searchService($http, podcastIndexOrgService) {
 		});
 	}
 
-	// https://stackoverflow.com/a/40031979/4274827
-	function buf2hex(buffer) {
-		return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
-	}
-
 	return service;
 }
 

@@ -23,7 +23,7 @@ function SearchController($scope, $routeParams, $location, searchService, analyt
 				$location.path('/Podcasts');
 			});
 		});
-	};
+	}
 
 	function fillIsSubscribed(searchResults) {
 		chrome.runtime.getBackgroundPage(function(bgPage) {

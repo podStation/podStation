@@ -30,7 +30,7 @@ $(document).ready(function() {
 });
 
 chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
-	if(message.action = 'getFeeds') {
+	if(message.action === 'getFeeds') {
 		sendResponse(feedList);
 	}
 });

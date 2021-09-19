@@ -41,8 +41,8 @@ myApp
   .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
   .controller('aboutController', ['$scope', AboutController])
   .controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
-  .controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', EpisodeController])
-  .controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', EpisodesInProgressController])
+  .controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
+  .controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
   .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController])
@@ -51,7 +51,7 @@ myApp
   .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])
   .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
   .directive('psParticipantList', [ParticipantListDirective])
-  .directive('psEpisodePlayer', ['$document', '$window', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
+  .directive('psEpisodePlayer', ['$document', '$window', 'analyticsService', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
   .directive('psEpisodeList', ['$window', 'podcastManagerService', 'podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
@@ -121,7 +121,7 @@ myApp.filter('format_seconds', function() {
 
 		// this will work fine as long as less than 24hs, which is reasonable
 		return date.toISOString().substr(11, 8);
-	};
+	}
 });
 
 // Shade your extension's page using Screen Shader. Code snippet courtesy of Marc Guiselin 2015

@@ -1,4 +1,4 @@
-function episodePlayerDirective($document, $window, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
+function episodePlayerDirective($document, $window, analyticsService, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
 
 	return {
 		restrict: 'E',
@@ -156,11 +156,11 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function nextPlaybackRateUp () {
 			return formatPlaybackRate(controller.playbackRate + playbackRateStepUp());
-		};
+		}
 
 		function nextPlaybackRateDown() {
 			return formatPlaybackRate(controller.playbackRate + playbackRateStepDown());
-		};
+		}
 
 		function currentPlaybackRate() {
 			return formatPlaybackRate(controller.playbackRate);
@@ -168,19 +168,19 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function play() {
 			episodePlayer.play();
-		};
+		}
 
 		function refresh() {
 			episodePlayer.refresh();
-		};
+		}
 
 		function pause() {
 			episodePlayer.pause();
-		};
+		}
 
 		function stop() {
 			episodePlayer.stop();
-		};
+		}
 
 		function speedDown() {
 			episodePlayer.shiftPlaybackRate(playbackRateStepDown());
@@ -222,11 +222,11 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function orderChanged() {
 			episodePlayer.setOptions({order: controller.options.order});
-		};
+		}
 
 		function continuousChanged() {
 			episodePlayer.setOptions({continuous: controller.options.continuous});
-		};
+		}
 
 		function onChangeReverseOrder() {
 			episodePlayer.setOptions({reverseOrder: controller.options.reverseOrder});
@@ -234,27 +234,27 @@ function episodePlayerDirective($document, $window, podcastManagerService, episo
 
 		function onChangeRemoveWhenFinished() {
 			episodePlayer.setOptions({removeWhenFinished: controller.options.removeWhenFinished});
-		};
+		}
 
 		function onChangePauseWhenLocked() {
 			episodePlayer.setOptions({pauseWhenLocked: controller.options.pauseWhenLocked});
-		};
+		}
 
 		function toggleShowOptions() {
 			controller.showOptions = !controller.showOptions;
-		};
+		}
 
 		function tooglePlaylistVisibility() {
 			messageService.for('playlist').sendMessage('toggleVisibility');
-		};
+		}
 
 		function tweet() {
 			socialService.tweet(episodeId);
-		};
+		}
 
 		function shareWithFacebook() {
 			socialService.shareWithFacebook(episodeId);
-		};
+		}
 
 		function isVisible() {
 			return controller.visible && (controller.miniPlayer ? controller.miniPlayerVisible : true)

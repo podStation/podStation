@@ -51,7 +51,7 @@ function MenuController($scope, $document, $location, messageService, analyticsS
 		};
 
 		reader.readAsText(file);
-	};
+	}
 
 	function togglePlaylistVisibility() {
 		messageService.for('playlist').sendMessage('toggleVisibility');

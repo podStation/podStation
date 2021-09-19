@@ -409,7 +409,7 @@ function PodcastManager() {
 
 			sendPodcastListChangedMessage();
 		});
-	};
+	}
 
 	function sendPodcastListChangedMessage() {
 		getBrowserService().runtime.sendMessage({
@@ -466,18 +466,6 @@ function PodcastManager() {
 			instance.addPodcasts(message.podcasts);
 		}).onMessage('setEpisodeInProgress', function(message) {
 			setEpisodeProgress(message.episodeId, message.currentTime);
-		}).onMessage('getSyncPodcastInfo', function(message, sendResponse) {
-			loadPodcastInfoFromSync(message.url, function(syncPodcastInfo) {
-
-				if(!syncPodcastInfo.e) {
-					syncPodcastInfo.e = [];
-				}
-
-				sendResponse(syncPodcastInfo);
-
-				return false;
-			});
-			return true;
 		}).onMessage('getOpml', (message, sendResponse) => {
 			sendResponse(getOpml());
 			return true;
