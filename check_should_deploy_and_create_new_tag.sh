@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 last_version_tag=$(git describe --tags --abbrev=0)
-current_version=v$(cat extension/manifest.json | jq -r ".version")
+current_version=v$(cat ./package.json | jq -r ".version")
 
 if [ $last_version_tag != $current_version ]
 then
@@ -11,4 +11,6 @@ then
     git tag $NEW_VERSION
     echo "Creating zip file for release"
     ./create_zip_for_upload.sh
+else
+	echo "Current version is the same as previous version:" $current_version 
 fi
