@@ -1,6 +1,6 @@
 # podStation Chrome Extension
 
-[![Build Status](https://travis-ci.com/podStation/podStation.svg?branch=master)](https://travis-ci.com/podStation/podStation)
+[![Build Status](https://travis-ci.com/podStation/podStation.svg?branch=master)](https://app.travis-ci.com/podStation/podStation)
 
 ## About 
 
