@@ -31,7 +31,7 @@ Back in the days before I had a good Bluetooth headset, that I now use with all 
 
 As such, I was searching for a cost effective solution to listen to podcasts on desktop operational systems, and also synchronize the list of podcasts between my home and work PC.
 
-There were solutions on the market, but I was thinking that I could build somthing myself.
+There were solutions on the market, but I was thinking that I could build something myself.
 Due to the projects I was working on at the time, I was learning font end development and also how to create chrome extensions.
 
 After some research, I decided a very cost effective way of keeping my list of podcasts in sync would be to use chrome's sync storage (in the order of Kilobytes) for extensions and chrome apps.
@@ -40,7 +40,7 @@ That was how the development of podStation started.
 
 ## Vision
 
-podStation has reached a mature state where increments are more tipically on the direction of bug fixes, optimizations and reduction of technical debt (see https://en.wikipedia.org/wiki/Technical_debt).
+podStation has reached a mature state where increments are more typically on the direction of bug fixes, optimizations and reduction of technical debt (see https://en.wikipedia.org/wiki/Technical_debt).
 
 If you would like to see all the proposed enhancements, check the open issues:
 * at [github][open-issues-at-github],
@@ -49,21 +49,31 @@ If you would like to see all the proposed enhancements, check the open issues:
 For an idea of the work in progress, check our [planning project][planning-project].
 
 Some features I consider more important (I will add links to existing issues later):
-- Become **podStation Browser Extension**: podStation is currently only available for chrome. Althouth this most likely address the majority of possible users, I don't like the idea of contributing to _vendor lock-in_. Having a port that works on other browsers would make it easier for our users to choose other browsers, and contribute to the competitiveness of this market
+- Become **podStation Browser Extension**: podStation is currently only available for chrome. Although this most likely address the majority of possible users, I don't like the idea of contributing to _vendor lock-in_. Having a port that works on other browsers would make it easier for our users to choose other browsers, and contribute to the competitiveness of this market
 - Reduce the necessary _permissions_ required by podStation
 
 There are also some features that I would like to implement, but they are unlikely to become a reality, as it would be a lot of effort:
-- Support _marking episodes as listened_ (history) - not enough Snyc Storage space
+- Support _marking episodes as listened_ (history) - not enough Sync Storage space
 - Integration with [mygpo](https://github.com/gpodder/mygpo) (http://gpodder.net/)
 
 ## Development
 
 ### Installing the dependencies
 
-You will need to install [Node.js](https://nodejs.org/en/). I use v10.15.1 at the moment, I assume anything above that should work fine.
+You will need to install [Node.js](https://nodejs.org/en/).
 
-After that, install the dependencies:
-* `npm install`
+I have recently updated to v14.17.6, but it worked well with v10.15.1 before that.
+
+If you use [nvm](http://nvm.sh/) to manage your node installations, you can install and set the current version of node by navigating to the folder of this repo and running the commands:
+```
+nvm install
+nvm use
+```
+
+After that, install the dependencies with the command:
+```
+npm install
+```
 
 ### Running locally
 
