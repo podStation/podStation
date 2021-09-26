@@ -64,7 +64,7 @@ You will need to install [Node.js](https://nodejs.org/en/).
 
 I have recently updated to v14.17.6, but it worked well with v10.15.1 before that.
 
-If you use [nvm](http://nvm.sh/) to manage your node installations, you can install and set the current version of node by navigating to the folder of this repo and running the commands:
+If you use [nvm](http://nvm.sh/) to manage your node installations, you can install and set the current version of node by navigating to the folder of this repo (after cloning it) and running the commands:
 ```
 nvm install
 nvm use
@@ -77,8 +77,7 @@ npm install
 
 ### Running locally
 
-1. Clone this repository
-2. Build the extension (for development) with the command:
+1. Build the extension (for development) with the command:
     ```
     npm start
     ```
