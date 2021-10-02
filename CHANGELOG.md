@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Technical Feature: Updated the API endpoint used for LNPay ([PR #273](https://github.com/podStation/podStation/pull/273))
+
 ## [1.45.0]
 
 This version contains an under-the-hood refactoring to introduce bundling with Webpack.  
