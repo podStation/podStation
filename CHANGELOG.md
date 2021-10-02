@@ -72,7 +72,7 @@ Unfortunately, that is a necessary change to support a better development experi
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
 [Unreleased]: https://github.com/podStation/podStation/compare/v1.45.0...HEAD
-[1.44.0]: https://github.com/podStation/podStation/compare/v1.44.0...v1.45.0
+[1.45.0]: https://github.com/podStation/podStation/compare/v1.44.0...v1.45.0
 [1.44.0]: https://github.com/podStation/podStation/compare/v1.43.0...v1.44.0
 [1.43.0]: https://github.com/podStation/podStation/compare/v1.42.0...v1.43.0
 [1.42.0]: https://github.com/podStation/podStation/compare/v1.41.0...v1.42.0
