@@ -7,10 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Value 4 Value: Added `<podcast:value>` on `<item>` level support
+
 ### Changed
 
 - Technical Feature: Updated the API endpoint used for LNPay ([PR #273](https://github.com/podStation/podStation/pull/273))
-- T
+- Regression: Added back lightning payment test mode options removed by mistake with [PR #206](https://github.com/podStation/podStation/pull/206)
 
 ## [1.45.0]
 
