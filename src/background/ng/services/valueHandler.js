@@ -76,7 +76,7 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 	function handleValueForEpisode(value, episodeId) {
 		const podcastAndEpisode = getPodcastAndEpisode(episodeId);
 
-		getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => {
+		getLightningValueForPodcastOrEpisode(podcastAndEpisode).then((valueConfiguration) => {
 			if(valueConfiguration) {
 				const proratedValues = prorateSegmentValue(value, valueConfiguration, podcastAndEpisode.podcast.url);
 
@@ -98,17 +98,16 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 
 		const podcastAndEpisode = getPodcastAndEpisode(episodeId);
 
-		return getLightningValueForPodcast(podcastAndEpisode.podcast).then((valueConfiguration) => Promise.resolve(valueConfiguration !== null));
+		return getLightningValueForPodcastOrEpisode(podcastAndEpisode).then((valueConfiguration) => Promise.resolve(valueConfiguration !== null));
 	}
 
-	/**
-	 * 
-	 * @param {EpisodeId} episodeId
-	 */
-	function getLightningValueForPodcast(podcast) {
+	function getLightningValueForPodcastOrEpisode(podcastAndEpisode) {
 		const deferred = $q.defer();
+
+		const podcast = podcastAndEpisode.podcast;
+		const episode = podcastAndEpisode.episode;
 		
-		const value = podcast.values && podcast.values.find((value) => value.type === 'lightning');
+		let value = findLightningValue(episode) || findLightningValue(podcast);
 
 		if(value) {
 			deferred.resolve(value)
@@ -136,6 +135,10 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		}
 
 		return deferred.promise; 
+	}
+
+	function findLightningValue(episodeOrPodcast) {
+		return episodeOrPodcast.values && episodeOrPodcast.values.find((value) => value.type === 'lightning');
 	}
 
 	/**
