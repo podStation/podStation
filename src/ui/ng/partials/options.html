@@ -36,6 +36,15 @@
 			<option value="lnd_rest" >LND REST API</option>
 			<option value="lnpayco"  >lnpay.co</option>
 		</select>
+		<div ng-if="lightningOptions.type === 'test_mode'">
+			<span>Streaming value (in millisats/hour):</span>
+			<input ng-model="lightningOptions.value">
+			<br>
+			<span>Boost value(in millisats/boost):</span>
+			<input ng-model="lightningOptions.valueBoost">
+			<br>
+			<button ng-click="testLNDConnection()">Test LND connection</button><span> (Save before testing)</span>
+		</div>
 		<div ng-if="lightningOptions.type === 'lnd_rest'">
 			<span>Lightning node REST API base url:</span>
 			<input ng-model="lightningOptions.restBaseUrl">
