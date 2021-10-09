@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Technical Feature: Updated the API endpoint used for LNPay ([PR #273](https://github.com/podStation/podStation/pull/273))
+- T
 
 ## [1.45.0]
 
