@@ -35,7 +35,8 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2",
-    "webpack-merge": "^5.8.0"
+    "webpack-merge": "^5.8.0",
+    "http-server": "^13.0.2"
   },
   "scripts": {
     "start": "webpack --watch --config webpack.dev.js",
@@ -44,7 +45,8 @@
     "test": "karma start --browsers ChromeHeadless",
     "test-chrome-debugging": "karma start --browsers ChromeDebugging",
     "test-chrome-single-run-no-sandbox": "karma start --single-run --browsers ChromeHeadlessNoSandbox",
-    "release": "webstore upload --source=build_output/output.zip --auto-publish"
+    "release": "webstore upload --source=build_output/output.zip --auto-publish",
+    "serve-test-feeds": "http-server docs/test-feeds"
   },
   "repository": {
     "type": "git",
