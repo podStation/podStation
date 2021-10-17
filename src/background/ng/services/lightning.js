@@ -208,11 +208,11 @@ class LNDClient {
 			const additionalCustomRecords = {};
 
 			if(customRecordKey) {
-				additionalCustomRecords[customRecordKey] = this.stringToUTF8ToB64(customRecordValue);
+				additionalCustomRecords[customRecordKey] = LNDClient.stringToUTF8ToB64(customRecordValue);
 			}
 
 			if(podcastPaymentMetadata) {
-				additionalCustomRecords[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = this.stringToUTF8ToB6(JSON.stringify(podcastPaymentMetadata))
+				additionalCustomRecords[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = LNDClient.stringToUTF8ToB64(JSON.stringify(podcastPaymentMetadata))
 			}
 
 			const body = {
@@ -321,7 +321,7 @@ class LNDClient {
 	}
 
 	// https://developer.mozilla.org/en-US/docs/Glossary/Base64#solution_1_%E2%80%93_escaping_the_string_before_encoding_it
-	stringToUTF8ToB64(str) {
+	static stringToUTF8ToB64(str) {
 		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
 			return String.fromCharCode('0x' + p1);
 		}));
