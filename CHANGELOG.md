@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Value 4 Value: Fixed wrong feed parsing and TLV record encoding for `customValue` attribute on the tag `podcast:valueRecipient` ([PR #283](https://github.com/podStation/podStation/pull/288))
+
 ## [1.46.0]
 
 ### Added
