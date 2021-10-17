@@ -5,12 +5,15 @@
 		<link>http://feed1.podstation.com/</link>  
 		<description>Description Feed 1</description> 
 		<language>pt-br</language>
-		<!-- 50 Sats per minute, aprox 0.01318 USD -->
 		<podcast:value type="lightning" method="keysend" suggested="0.0000005">
-			<!--<podcast:valueRecipient name="Recipient 1" type="node" address="[public key of bitcoin/lightning node(string)]" split="70" />
-			<podcast:valueRecipient name="Recipient 2" type="node" address="[public key of bitcoin/lightning node(string)]" split="30" />-->
-			<podcast:valueRecipient name="Recipient 1" type="node" address="03f04c869792e12ed5af321c1a8e75060be0b039b9ee9a9c5c93c907607d5604d7" split="70" />
-			<podcast:valueRecipient name="Recipient 2" type="node" address="036322c91bd3af768d7ea31fbcbaf014c33428e88051daf40f05c882ae24bca821" split="30" />
+			<podcast:valueRecipient
+				name="podStation podcaster wallet (via LNPAY.co)"
+				address="033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500"
+				type="node"
+				customKey="112111100"
+				customValue="wal_9MywGwtfgKTMAI"
+				split="100"
+			/>
 		</podcast:value>
 		<item>
 			<title>Title 3</title>
@@ -19,6 +22,17 @@
 			<enclosure url="https://media.blubrry.com/fdboteco/fliperamadeboteco.com/podcast/FDB218_cagadassega.mp3" type="audio/mpeg" />
 			<guid isPermaLink="true">http://feed1.podstation.com/3.mp3</guid>
 			<pubDate>Wed, 28 Feb 2018 00:01:01 -0300</pubDate>
+			<!-- item level override for value-->
+			<podcast:value type="lightning" method="keysend" suggested="0.0000005">
+				<podcast:valueRecipient
+					name="podStation Test Feed Wallet"
+					address="033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500"
+					type="node"
+					customKey="696969"
+					customValue="wal_Ymcc9odhNq1wQ"
+					split="100"
+				/>
+			</podcast:value>
 		</item>
 		<item>
 			<title>Title 2</title>
