@@ -90,6 +90,8 @@ function lightningService($http, $window, $q, messageService, storageService, _a
 	 * @param {String} nodeId Node Id (pubkey) in Hex format
 	 * @param {number} amount amount in millisatoshis
 	 * @param {number} feeLimit fee limit in millisatoshis
+	 * @param {number} customRecordKey
+	 * @param {string} customRecordValue
 	 */
 	function sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata) {
 		return lightningClient.sendPaymentWithKeySend(nodeId, amount, customRecordKey, customRecordValue, podcastPaymentMetadata);
@@ -206,11 +208,11 @@ class LNDClient {
 			const additionalCustomRecords = {};
 
 			if(customRecordKey) {
-				additionalCustomRecords[customRecordKey] = this.hexToBase64(customRecordValue);
+				additionalCustomRecords[customRecordKey] = this.stringToUTF8ToB64(customRecordValue);
 			}
 
 			if(podcastPaymentMetadata) {
-				additionalCustomRecords[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = btoa(JSON.stringify(podcastPaymentMetadata))
+				additionalCustomRecords[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = this.stringToUTF8ToB6(JSON.stringify(podcastPaymentMetadata))
 			}
 
 			const body = {
@@ -317,6 +319,13 @@ class LNDClient {
 
 		return this.$window.btoa( binary );
 	}
+
+	// https://developer.mozilla.org/en-US/docs/Glossary/Base64#solution_1_%E2%80%93_escaping_the_string_before_encoding_it
+	stringToUTF8ToB64(str) {
+		return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+			return String.fromCharCode('0x' + p1);
+		}));
+	}
 }
 
 class LNPayClient {
@@ -392,13 +401,22 @@ class LNPayClient {
 
 		if(customRecordKey) {
 			body.custom_records = {};
-			body.custom_records[customRecordKey] = hexToString(customRecordValue);
+			body.custom_records[customRecordKey] = customRecordValue;
 		}
 
 		if(podcastPaymentMetadata) {
 			body.custom_records = body.custom_records || {};
 			body.custom_records[PODCAST_PAYMENT_METADATA_CUSTOM_RECORD_KEY] = JSON.stringify(podcastPaymentMetadata);
 		}
+
+		/*
+		Remark regarding custom_records
+		The LNPay API expects a string for custom_records, while custom records in Lightning Payments 
+		can hold arbitrary binary data.
+		The keysend API documentation of LNPay (https://docs.lnpay.co/api/wallet-transactions/keysend) 
+		does not specify which encoding (UTF-8, ISO 8859-1, etc...) is used when encoding the strings
+		for usage on the TLV Stream.
+		*/
 
 		return this._$http.post(`https://api.lnpay.co/v1/wallet/${this._walletAccessKey}/keysend`, body, {
 			headers: {

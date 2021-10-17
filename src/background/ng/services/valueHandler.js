@@ -2,7 +2,7 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 
 	const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
 	const LNPAY_WALLET_ID_CUSTOM_RECORD_KEY = 696969;
-	const PODSTATION_LNPAY_WALLET_ID = '77616c5f574d68334d6d794e76556f414e';
+	const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
 
 	const unsettledValues = [];
 	const settledValues = [];
