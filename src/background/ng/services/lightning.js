@@ -337,6 +337,8 @@ class LNPayClient {
 		this._paymentQueue = [];
 		this._isSendingPayment = false;
 		this.maxFeeInPercent = maxFeeInPercent;
+		this._cachedBalanceInSats = 0;
+		this._cachedBalanceTimestamp = null;
 	}
 
 	/**
@@ -426,13 +428,23 @@ class LNPayClient {
 			console.error('LNPay: Error sending payment with KeySend', nodeId, amount, error);
 			this._analyticsService.trackEvent('lightning', 'lnpay_send_payment_failed', null, amount);
 			throw new Error(error.data ? `LNPay: Error sending payment with KeySend, error message: ${error.data.message}`: 'LNPay: Error sending payment with KeySend');
-		}).then(() => {
+		}).then((response) => {
+			this._cacheBalance(response.data.wal.balance);
 			console.info('LNPay: Payment successful', amount);
 			this._analyticsService.trackEvent('lightning', 'lnpay_send_payment_succeeded', null, amount);
 		});
 	}
 
 	getBalance() {
+		if(this._cachedBalanceIsValid()) {
+			console.debug('LNPay cached balance is valid, retrieving balance from cache');
+			return Promise.resolve({
+				balanceInSats: this._cachedBalanceInSats
+			});
+		}
+
+		console.debug('LNPay cached balance is invalid, retrieving balance from service');
+
 		return this._$http.get(`https://api.lnpay.co/v1/wallet/${this._walletAccessKey}`, {
 			headers: {
 				'X-Api-Key': this._apiKey
@@ -443,10 +455,24 @@ class LNPayClient {
 			throw new Error(error.data? error.data.message : 'Error getting wallet balance');
 		})
 		.then((response) => {
+			this._cacheBalance(response.data.balance);
 			return {
 				balanceInSats: response.data.balance
 			}
 		});
+	}
+
+	_cacheBalance(balanceInSats) {
+		this._cachedBalanceTimestamp = Date.now();
+		this._cachedBalanceInSats = balanceInSats;	
+	}
+
+	_cachedBalanceIsValid() {
+		/**
+		 * Cached balance time to live in milliseconds
+		 */
+		const CACHED_BALANCE_TTL = 60000;
+		return Date.now() - this._cachedBalanceTimestamp < CACHED_BALANCE_TTL;
 	}
 
 	generateInvoice(amount) {

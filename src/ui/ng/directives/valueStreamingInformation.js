@@ -25,7 +25,14 @@ function ValueStreamingInformationDirective(messageService) {
 		valueStreamingInformationController.generateInvoice = generateInvoice;
 		valueStreamingInformationController.clearInvoice = clearInvoice;
 
-		messageService.for('valueHandlerService').sendMessage('getValueSummary', null, (valueSummary) => handleValueSummary(valueSummary));
+		messageService.for('valueHandlerService').sendMessage('getValueSummary', null, (valueSummary) => {
+			handleValueSummary(valueSummary);
+
+			if(valueSummary.isV4vConfigured) {
+				updateBalance();
+			}
+		});
+		
 		messageService.for('valueHandlerService').onMessage('valueChanged', (valueSummary) => handleValueSummary(valueSummary));
 		messageService.for('valueHandlerService').onMessage('valuePaid', () => updateBalance());
 
@@ -35,10 +42,6 @@ function ValueStreamingInformationDirective(messageService) {
 			valueStreamingInformationController.isV4vConfigured = valueSummary.isActive;
 			valueStreamingInformationController.unsettledValue = Math.round(valueSummary.unsettledValue/1000);
 			valueStreamingInformationController.settledValue = Math.round(valueSummary.settledValue/1000);
-
-			if(valueStreamingInformationController.isV4vConfigured) {
-				updateBalance();
-			}
 		}
 
 		function updateBalance() {
