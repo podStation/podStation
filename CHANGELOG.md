@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.46.2]
+
 ### Fixed
 
 - Value 4 Value: Fixed excessive calls to LNPay for getting walled balance, by introducing a balance cache ([Issue #289](https://github.com/podStation/podStation/issues/289))
@@ -92,7 +94,8 @@ Unfortunately, that is a necessary change to support a better development experi
 
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
-[Unreleased]: https://github.com/podStation/podStation/compare/v1.46.1...HEAD
+[Unreleased]: https://github.com/podStation/podStation/compare/v1.46.2...HEAD
+[1.46.2]: https://github.com/podStation/podStation/compare/v1.46.1...v1.46.2
 [1.46.1]: https://github.com/podStation/podStation/compare/v1.46.0...v1.46.1
 [1.46.0]: https://github.com/podStation/podStation/compare/v1.45.0...v1.46.0
 [1.45.0]: https://github.com/podStation/podStation/compare/v1.44.1...v1.45.0
