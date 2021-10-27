@@ -7,6 +7,12 @@
 **podStation** is a podcast aggregator and player for Chrome and other compatible browsers.
 It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Browser_extension), but it behaves essentially like a standalone app that uses the browser as a platform. 
 
+### Chrome Web Store
+
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/users/bpcagekijmfcocgjlnnhpdogbplajjfn)][at-chrome-web-store]
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/bpcagekijmfcocgjlnnhpdogbplajjfn)][at-chrome-web-store]
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/rating-count/bpcagekijmfcocgjlnnhpdogbplajjfn)][at-chrome-web-store]
+
 ## How to install
 
 You can install it at the [chrome web store][at-chrome-web-store].
