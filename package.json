@@ -26,7 +26,9 @@
     "eslint": "^7.29.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
+    "http-server": "^13.0.2",
     "jasmine-core": "^3.1.0",
+    "json5": "^2.2.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^2.2.0",
     "karma-jasmine": "^1.1.1",
@@ -35,8 +37,7 @@
     "url-loader": "^4.1.1",
     "webpack": "^5.39.1",
     "webpack-cli": "^4.7.2",
-    "webpack-merge": "^5.8.0",
-    "http-server": "^13.0.2"
+    "webpack-merge": "^5.8.0"
   },
   "scripts": {
     "start": "webpack --watch --config webpack.dev.js",

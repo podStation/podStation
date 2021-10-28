@@ -3,6 +3,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ProvidePlugin } = require('webpack');
+const JSON5 = require('json5');
 const packageInformation = require('./package.json');
 
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
 		new CopyWebpackPlugin({
 			patterns: [
 				{ from: './src/manifest.json', transform: copyPackageInformationToExtensionManifest },
-				{ from: './src/_locales', to: '_locales' },
+				{ from: './src/_locales', to: '_locales', transform: stripJsonComments },
 				{ from: './src/images', to: 'images' },
 				{ from: './src/ui/ng/partials', to: 'ui/ng/partials' },
 			],
@@ -64,6 +65,12 @@ function copyPackageInformationToExtensionManifest(content) {
 	const parsedManifest = JSON.parse(content.toString());
 
 	parsedManifest.version = packageInformation.version;
+
+	return JSON.stringify(parsedManifest, null, 4);
+}
+
+function stripJsonComments(content) {
+	const parsedManifest = JSON5.parse(content.toString());
 
 	return JSON.stringify(parsedManifest, null, 4);
 }
