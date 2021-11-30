@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.46.3]
+
+### Fixed
+
+- Value 4 Value: Fixed delay in retrieval of lightning balance once you start playing ([Issue #293](https://github.com/podStation/podStation/issues/293))
+
 ## [1.46.2]
 
 ### Fixed
@@ -95,6 +101,7 @@ Unfortunately, that is a necessary change to support a better development experi
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
 [Unreleased]: https://github.com/podStation/podStation/compare/v1.46.2...HEAD
+[1.46.3]: https://github.com/podStation/podStation/compare/v1.46.2...v1.46.3
 [1.46.2]: https://github.com/podStation/podStation/compare/v1.46.1...v1.46.2
 [1.46.1]: https://github.com/podStation/podStation/compare/v1.46.0...v1.46.1
 [1.46.0]: https://github.com/podStation/podStation/compare/v1.45.0...v1.46.0
