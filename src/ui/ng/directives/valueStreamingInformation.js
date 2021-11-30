@@ -8,13 +8,13 @@ import ChromeExtensionMessageService from "../../../reuse/messageServiceDefiniti
 function ValueStreamingInformationDirective(messageService) {
 	return {
 		restrict: 'E',
-		controller: ['$scope', ValueStreamingInformation],
+		controller: ['$scope', ValueStreamingInformationController],
 		controllerAs: 'valueStreamingInformation',
 		bindToController: true,
 		templateUrl: 'ui/ng/partials/valueStreamingInformantion.html'
 	};
 
-	function ValueStreamingInformation($scope) {
+	function ValueStreamingInformationController($scope) {
 		var valueStreamingInformationController = this;
 
 		valueStreamingInformationController.isV4vConfigured = false;
@@ -26,19 +26,19 @@ function ValueStreamingInformationDirective(messageService) {
 		valueStreamingInformationController.clearInvoice = clearInvoice;
 
 		messageService.for('valueHandlerService').sendMessage('getValueSummary', null, (valueSummary) => {
-			handleValueSummary(valueSummary);
+			updateControllerFromValueSummary(valueSummary);
 
 			if(valueSummary.isV4vConfigured) {
 				updateBalance();
 			}
 		});
 		
-		messageService.for('valueHandlerService').onMessage('valueChanged', (valueSummary) => handleValueSummary(valueSummary));
+		messageService.for('valueHandlerService').onMessage('valueChanged', (valueSummary) => updateControllerFromValueSummary(valueSummary));
 		messageService.for('valueHandlerService').onMessage('valuePaid', () => updateBalance());
 
 		return valueStreamingInformationController;
 
-		function handleValueSummary(valueSummary) {
+		function updateControllerFromValueSummary(valueSummary) {
 			valueStreamingInformationController.isV4vConfigured = valueSummary.isActive;
 			valueStreamingInformationController.unsettledValue = Math.round(valueSummary.unsettledValue/1000);
 			valueStreamingInformationController.settledValue = Math.round(valueSummary.settledValue/1000);
