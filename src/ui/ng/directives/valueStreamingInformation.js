@@ -28,7 +28,7 @@ function ValueStreamingInformationDirective(messageService) {
 		messageService.for('valueHandlerService').sendMessage('getValueSummary', null, (valueSummary) => {
 			updateControllerFromValueSummary(valueSummary);
 
-			if(valueSummary.isV4vConfigured) {
+			if(valueStreamingInformationController.isV4vConfigured) {
 				updateBalance();
 			}
 		});
