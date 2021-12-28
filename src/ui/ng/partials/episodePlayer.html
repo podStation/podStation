@@ -44,7 +44,7 @@
 	border-radius: inherit;
 }
 
-#playerOptions {
+.playerOptions {
 	padding: 5px;
 	border-radius: 5px;
 	border-width: 1px;
@@ -130,6 +130,10 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 	box-shadow: 5px 5px 5px 0px rgba(145,143,145,1);
 }
 
+.psBoostagramTextArea {
+	resize: vertical;
+}
+
 </style>
 <div class="audioPlayer">
 	<div ng-if="episodePlayer.isVisible()" ng-class="{miniPlayer: episodePlayer.miniPlayer}">
@@ -181,6 +185,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 						</div>
 						<div style="padding-bottom: 4px;" ng-if="!episodePlayer.miniPlayer">
 							<span class="funditBtn" ng-if="episodePlayer.showBoostButton" ng-click="episodePlayer.boost()"><i class="fa fa-bolt"></i> Boost!</span>
+							<span class="funditBtn" ng-if="episodePlayer.showBoostButton" ng-click="episodePlayer.toggleBoostagramSender()"><i class="fa fa-bolt"></i> <i class="fa fa-envelope"></i> Boostagram</span>
 							<span class="psPlayerBtnSecondary psPlayerBtnSecondaryTwitter" title="{{'tweet_this_episode' | chrome_i18n}}" ng-click="episodePlayer.tweet()"><i class="fa fa-twitter"></i> {{'tweet' | chrome_i18n}}</span>
 							<!--<span style="color: gray;"> | </span>
 							<span class="psPlayerBtnSecondary icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="shareWithFacebook()"><i class="fa fa-share"></i> {{'facebook_share' | chrome_i18n}}</span>-->
@@ -189,7 +194,7 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 							<button class="psPlayerBtnSecondary psTransparent" href="" ng-click="episodePlayer.toggleShowOptions()" ng-if="!episodePlayer.showOptions">{{'show_player_options' | chrome_i18n}} <i class="fa fa-angle-double-right" title="{{'show_player_options' | chrome_i18n }}"></i></button>
 							<button class="psTransparent" ng-click="episodePlayer.toggleShowOptions()" ng-if="episodePlayer.showOptions">{{'hide_player_options' | chrome_i18n}} <i class="fa fa-angle-double-down" title=""></i></button>
 						</div>
-						<div id="playerOptions" ng-if="episodePlayer.showOptions" ng-if="!episodePlayer.miniPlayer">
+						<div class="playerOptions" ng-if="episodePlayer.showOptions" ng-if="!episodePlayer.miniPlayer">
 							<span>{{'order_next_previous' | chrome_i18n}}</span>
 							<select name="audio_list" ng-model="episodePlayer.options.order" ng-change="episodePlayer.orderChanged()">
 								<option value="from_podcast"      >{{'order_from_podcast'       | chrome_i18n}}</option>
@@ -213,6 +218,11 @@ input[type=range]:focus::-webkit-slider-runnable-track {
 								<input type="checkbox" name="pause_when_locked" ng-model="episodePlayer.options.pauseWhenLocked" ng-change="episodePlayer.onChangePauseWhenLocked()" />
 								<span> {{'pause_when_locked' | chrome_i18n}}</span>
 							</div>
+						</div>
+						<div ng-if="episodePlayer.showBoostagramSender" class="playerOptions">
+							<textarea rows="5" cols="60" class="psBoostagramTextArea" placeholder="Your message goes here" ng-model="episodePlayer.boostagramMessage"></textarea>
+							<br>
+							<span class="funditBtn" ng-click="episodePlayer.sendBoostagram()"><i class="fa fa-bolt"></i> <i class="fa fa-envelope"></i> Send Boostagram</span>
 						</div>
 						<div ng-show="error" id="playerErrorInfo"> 
 							<i class="fa fa-exclamation"></i> {{'player_error' | chrome_i18n}}

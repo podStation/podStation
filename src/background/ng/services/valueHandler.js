@@ -3,6 +3,7 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 	const PODSTATION_LIGHTNING_NODE_ID = '033868c219bdb51a33560d854d500fe7d3898a1ad9e05dd89d0007e11313588500';
 	const LNPAY_WALLET_ID_CUSTOM_RECORD_KEY = 696969;
 	const PODSTATION_LNPAY_WALLET_ID = 'wal_WMh3MmyNvUoAN';
+	const PODSTATION_APP_NAME = 'podStation Browser Extension';
 
 	const unsettledValues = [];
 	const settledValues = [];
@@ -30,9 +31,11 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		return true;
 	});
 
-	
 	messageService.for('valueHandlerService').onMessage('boost', (message, sendResponse) => {
-		boost(message.episodeId);
+		boost(message.episodeId, {
+			message: message.message,
+			ts: message.currentTime
+		});
 	});
 
 	lightningService.getOptions().then((options) => {lightningOptions = options});
@@ -61,11 +64,39 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 	 * 
 	 * @param {EpisodeId} episodeId
 	 */
-	function boost(episodeId) {
+	function boost(episodeId, boostMetadata) {
 		if(!lightningService.canBoost())
 			return;
 
-		handleValueForEpisode(lightningOptions.valueBoost, episodeId);
+		const podcastAndEpisode = getPodcastAndEpisode(episodeId);
+		const value = lightningOptions.valueBoost;
+
+		getLightningValueForPodcastOrEpisode(podcastAndEpisode).then((valueConfiguration) => {
+			if(valueConfiguration) {
+				const proratedValues = prorateSegmentValue(value, valueConfiguration);
+
+				const enhancedBoostMetadata = {
+					...boostMetadata,
+					action: 'boost',
+					value_msat_total: value,
+					url: podcastAndEpisode.podcast.url,
+					episde: podcastAndEpisode.episode.,
+					app_name: PODSTATION_APP_NAME
+				};
+
+				if(podcastAndEpisode.episode.guid) {
+					enhancedBoostMetadata.episode_guid = podcastAndEpisode.episode.guid;
+				}
+
+				if(podcastAndEpisode.episode.title) {
+					enhancedBoostMetadata.episode = podcastAndEpisode.episode.title
+				}
+
+				settleBoost(proratedValues, enhancedBoostMetadata);
+
+				sendValueChangedMessage();
+			}
+		});
 	}
 
 	/**
@@ -242,6 +273,28 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 				sendValuePaidMessage();
 			})
 			.catch((error) => {
+				cumulateAddressValuesToUnsettledValues([valueToSettle]);
+			})
+			.then(() => {
+				sendValueChangedMessage();
+			});
+		});
+	}
+
+	/**
+	 * Tries to settle a boost, if it fails, cumulate the value to be sent together with the 
+	 * sats streaming
+	 */
+	function settleBoost(valuesToSettle, boostMetadata) {
+		console.debug('valueHandlerService - will try to settle boost', JSON.stringify(valuesToSettle, null, 2));
+
+		valuesToSettle.forEach((valueToSettle) => {
+			lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, boostMetadata)
+			.then(() => {
+				cumulateAddressValuesToSettledValues([valueToSettle]);
+				sendValuePaidMessage();
+			})
+			.catch(() => {
 				cumulateAddressValuesToUnsettledValues([valueToSettle]);
 			})
 			.then(() => {
