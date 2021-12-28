@@ -80,7 +80,6 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 					action: 'boost',
 					value_msat_total: value,
 					url: podcastAndEpisode.podcast.url,
-					episde: podcastAndEpisode.episode.,
 					app_name: PODSTATION_APP_NAME
 				};
 
