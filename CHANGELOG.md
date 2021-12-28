@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.47.0]
+
+### Added 
+
+- Value 4 Value: Added support for boostagrams ([PR #297](https://github.com/podStation/podStation/pull/297))
+
 ## [1.46.3]
 
 ### Fixed
