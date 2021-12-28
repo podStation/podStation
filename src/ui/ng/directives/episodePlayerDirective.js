@@ -50,7 +50,11 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 		controller.shareWithFacebook = shareWithFacebook;
 		controller.isVisible = isVisible;
 		controller.boost = boost;
+		controller.toggleBoostagramSender = toggleBoostagramSender;
+		controller.sendBoostagram = sendBoostagram;
 		controller.showBoostButton = false;
+		controller.showBoostagramSender = false;
+		controller.boostagramMessage = '';
 
 		episodePlayer.onPlaying.addListener((audioInfo) => $scope.$apply(() => getAudioInfoCallback(audioInfo)), controller);
 		episodePlayer.onPaused.addListener(() => $scope.$apply(() => controller.playing = false), controller);
@@ -61,7 +65,7 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 		$scope.$on('$destroy', () => episodePlayer.removeListeners(controller));
 
 		$document[0].body.onkeyup = function(e) {
-			if(e.key === ' ' && controller.visible && e.target.localName !== 'input') {
+			if(checkKeyEvent(e)) {
 				analyticsService.trackEvent('audio', 'play_pause_space_key');
 				episodePlayer.togglePlayPause();
 			}
@@ -69,11 +73,18 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 
 		// prevent scroll down on space
 		$window.onkeydown = function(e) {
-			if(e.key == ' ' && controller.visible && e.target.localName !== 'input') {
+			if(checkKeyEvent(e)) {
 				e.preventDefault();
 				return false;
 			}
 		};
+
+		function checkKeyEvent(e) {
+			return e.key == ' ' && 
+				controller.visible && 
+				e.target.localName !== 'input' &&
+				e.target.localName !== 'textarea';
+		}
 
 		if(controller.miniPlayer) {
 			$window.addEventListener('scroll', function() {
@@ -261,7 +272,24 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 		}
 
 		function boost() {
-			messageService.for('valueHandlerService').sendMessage('boost', {episodeId: episodeId});
+			messageService.for('valueHandlerService').sendMessage('boost', {
+				episodeId: episodeId,
+				currentTime: controller.time
+			});
+		}
+
+		function toggleBoostagramSender() {
+			controller.showBoostagramSender = !controller.showBoostagramSender;
+		}
+
+		function sendBoostagram() {
+			messageService.for('valueHandlerService').sendMessage('boost', {
+				episodeId: episodeId,
+				message: controller.boostagramMessage,
+				currentTime: controller.time
+			});
+
+			controller.boostagramMessage = '';
 		}
 
 		function getAudioInfoCallback(audioInfo) {
