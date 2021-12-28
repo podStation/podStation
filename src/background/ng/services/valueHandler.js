@@ -30,9 +30,8 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		return true;
 	});
 
-	
 	messageService.for('valueHandlerService').onMessage('boost', (message, sendResponse) => {
-		boost(message.episodeId);
+		boost(message.episodeId, message.message, message.currentTime);
 	});
 
 	lightningService.getOptions().then((options) => {lightningOptions = options});
@@ -54,18 +53,26 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		const msatsPerSecond = lightningOptions.value / 3600.0;
 		const segmentValue = msatsPerSecond * (playedSegment.endPosition - playedSegment.startPosition);
 
-		handleValueForEpisode(segmentValue, playedSegment.episodeId);
+		handleValueForEpisode(segmentValue, playedSegment.episodeId, {
+			action: 'stream', 
+		});
 	}
 
 	/**
 	 * 
 	 * @param {EpisodeId} episodeId
+	 * @param {string} message Boostagram text message
+	 * @param {number} currentTime Current playback time
 	 */
-	function boost(episodeId) {
+	function boost(episodeId, message, currentTime) {
 		if(!lightningService.canBoost())
 			return;
 
-		handleValueForEpisode(lightningOptions.valueBoost, episodeId);
+		handleValueForEpisode(lightningOptions.valueBoost, episodeId, {
+			action: 'boost',
+			message: message,
+			ts: currentTime,
+		});
 	}
 
 	/**
@@ -73,12 +80,22 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 	 * @param {number} value
 	 * @param {EpisodeId} episodeId
 	 */
-	function handleValueForEpisode(value, episodeId) {
+	function handleValueForEpisode(value, episodeId, metadata) {
 		const podcastAndEpisode = getPodcastAndEpisode(episodeId);
 
 		getLightningValueForPodcastOrEpisode(podcastAndEpisode).then((valueConfiguration) => {
 			if(valueConfiguration) {
-				const proratedValues = prorateSegmentValue(value, valueConfiguration, podcastAndEpisode.podcast.url);
+				const enhancedMetadata = {
+					...metadata,
+					app_name: 'podStation Browser Extension',
+					app_version: chrome.runtime.getManifest().version,
+					value_msat_total: value,
+					url: podcastAndEpisode.podcast.url,
+					...(podcastAndEpisode.episode.title && {episode: podcastAndEpisode.episode.title}),
+					...(podcastAndEpisode.episode.guid && {episode_guid: podcastAndEpisode.episode.guid}),
+				};
+
+				const proratedValues = prorateSegmentValue(value, valueConfiguration, enhancedMetadata);
 
 				cumulateAddressValuesToUnsettledValues(proratedValues);
 
@@ -168,18 +185,22 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		};
 	}
 
-	function prorateSegmentValue(segmentValue, valueConfiguration, feedUrl) {
+	function prorateSegmentValue(segmentValue, valueConfiguration, metadata) {
 		const splitSum = valueConfiguration.recipients.reduce((accumulator, recipient) => accumulator + recipient.split, 0);
 		const appRate = 0.01;
 		const normalizerMultiple = (1 - appRate) / splitSum;
 		
 		// TODO: Do a consistency check 
 		const proratedSegmentValues = valueConfiguration.recipients.map((recipient) => {
+
 			const proratedSegmentValue = {
 				address: recipient.address,
 				value: segmentValue * recipient.split * normalizerMultiple,
 				feedUrl: feedUrl
 			};
+
+			// TODO only set if it is not a "fee" type recipient
+			proratedSegmentValue.metadataArray = [metadata];
 
 			if(recipient.customKey && recipient.customValue) {
 				proratedSegmentValue.customRecordKey = parseInt(recipient.customKey);
@@ -219,11 +240,25 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 
 			if(unsettledValueForAddress) {
 				unsettledValueForAddress.value += valuePerAddress.value;
+
+				if(valuePerAddress.metadataArray && valuePerAddress.metadataArray.length) {
+					unsettledValueForAddress.metadataArray = unsettledValueForAddress.metadataArray || [];
+					unsettledValueForAddress.metadataArray = unsettledValueForAddress.metadataArray.concat(valuePerAddress.metadataArray);
+					mergeMetadataArrayEntries(unsettledValueForAddress.metadataArray);
+				}
 			}
 			else {
 				cumulateTarget.push(valuePerAddress);
 			}
 		});
+	}
+
+	function mergeMetadataArrayEntries(metadataArray) {
+		for(let i = 0; i < metadataArray.length; i++) {
+			for(let j = i + 1 ; j < metadataArray.length) {
+				if()
+			}
+		}
 	}
 
 	function getPodcastAndEpisode(episodeId) {
@@ -236,7 +271,7 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 		console.debug('valueHandlerService - will try to settle values', JSON.stringify(valuesToSettle, null, 2));
 
 		valuesToSettle.forEach((valueToSettle) => {
-			lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, buildPodcastPaymentMetadata(valueToSettle))
+			lightningService.sendPaymentWithKeySend(valueToSettle.address, valueToSettle.value, valueToSettle.customRecordKey, valueToSettle.customRecordValue, valueToSettle.metadataArray)
 			.then(() => {
 				cumulateAddressValuesToSettledValues([valueToSettle]);
 				sendValuePaidMessage();
@@ -248,16 +283,6 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 				sendValueChangedMessage();
 			});
 		});
-	}
-
-	function buildPodcastPaymentMetadata(value) {
-		if(value.feedUrl) {
-			return {
-				url: value.feedUrl
-			}
-		}
-		
-		return null;
 	}
 
 	function isSameRecipient(valuePerAddress1, valuePerAddress2) {
