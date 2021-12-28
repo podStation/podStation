@@ -91,6 +91,10 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 					enhancedBoostMetadata.episode = podcastAndEpisode.episode.title
 				}
 
+				if(lightningOptions.senderName) {
+					enhancedBoostMetadata.sender_name = lightningOptions.senderName;
+				}
+
 				settleBoost(proratedValues, enhancedBoostMetadata);
 
 				sendValueChangedMessage();
