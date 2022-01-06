@@ -1,4 +1,5 @@
 import searchService from '../services/searchService';
+import { PodcastEngineHolder } from '../../../reuse/podcastEngine';
 
 /**
  * 
@@ -19,6 +20,14 @@ function SearchController($scope, $routeParams, $location, searchService, analyt
 			$scope.$apply(function() {
 				analyticsService.trackEvent('feed', 'add_by_search');
 				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
+
+				let podcastEngine = PodcastEngineHolder.getPodcastEngine();
+				
+				podcastEngine.addPodcast({
+					feedUrl: new URL(searchResult.feedUrl),
+					title: searchResult.title,
+					description: searchResult.description
+				});
 
 				$location.path('/Podcasts');
 			});

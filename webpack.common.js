@@ -57,7 +57,15 @@ module.exports = {
 				test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, 
 				use: "file-loader" 
 			},
+			{
+				test: /\.tsx?$/,
+				use: 'ts-loader',
+				exclude: /node_modules/,
+			},
 		],
+	},
+	resolve: {
+		extensions: ['.ts', '...'],
 	},
 }
 
