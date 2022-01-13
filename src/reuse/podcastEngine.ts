@@ -1,3 +1,4 @@
+import { PodcastUpdater } from "./podcastUpdater";
 import { IStorageEngine, StorageEngine } from "./storageEngine";
 
 /**
@@ -31,10 +32,10 @@ class PodcastEngine implements IPodcastEngine {
 			feedUrl: podcast.feedUrl.toString(),
 			description: podcast.description
 		});
-	}
 
-	private updateFromFeed(localPodcastId: number, feedUrl: URL) {
+		let podcastUpdater = new PodcastUpdater(this.storageEngine);
 
+		podcastUpdater.update(localPodcastId);
 	}
 }
 

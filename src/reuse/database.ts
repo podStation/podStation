@@ -24,7 +24,7 @@ export interface IPodcastTableRecord {
 
 export interface IEpisodeTableRecord {
 	id?: number,
-	feedUrl: string,
+	podcastId: number,
 	title?: string;
 	description?: string;
 	guid?: string;
