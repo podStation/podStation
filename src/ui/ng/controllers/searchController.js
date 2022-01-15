@@ -1,5 +1,5 @@
 import searchService from '../services/searchService';
-import { PodcastEngineHolder } from '../../../reuse/podcast-engine/podcastEngine';
+import { PodcastEngineHolder, IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
 /**
  * 
@@ -8,8 +8,9 @@ import { PodcastEngineHolder } from '../../../reuse/podcast-engine/podcastEngine
  * @param {*} $location 
  * @param {*} searchService 
  * @param {*} analyticsService 
+ * @param {IPodcastEngine} podcastEngine
  */
-function SearchController($scope, $routeParams, $location, searchService, analyticsService) {
+function SearchController($scope, $routeParams, $location, searchService, analyticsService, podcastEngine) {
 	$scope.searchTerms = $routeParams.searchTerms;
 
 	$scope.searchResults = [];
@@ -20,8 +21,6 @@ function SearchController($scope, $routeParams, $location, searchService, analyt
 			$scope.$apply(function() {
 				analyticsService.trackEvent('feed', 'add_by_search');
 				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
-
-				let podcastEngine = PodcastEngineHolder.getPodcastEngine();
 				
 				podcastEngine.addPodcast({
 					feedUrl: new URL(searchResult.feedUrl),

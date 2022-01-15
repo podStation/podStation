@@ -15,7 +15,7 @@ type PodcastToBeAdded = {
 	itunesId?: string;
 }
 
-interface IPodcastEngine {
+export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
 }
 
