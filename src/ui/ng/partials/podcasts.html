@@ -26,7 +26,7 @@
 						</td>
 						<td>
 							<div class="itemMenu">
-								<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
+								<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="deletePodcast(podcast)"><i class="fa fa-remove"></i></a> |
 								<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
 							</div>
 							<div class="textView">
@@ -85,7 +85,7 @@
 						<div class="listItemImageSmall">
 							<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
 						</div>
-						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a>
+						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="deletePodcast(podcast)"><i class="fa fa-remove"></i></a>
 						<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
 						<a ng-href="#/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
 						<span ng-if="podcast.link">

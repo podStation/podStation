@@ -1,6 +1,17 @@
 import { formatDate } from "../../common";
+import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
-function PodcastsController($scope, messageService, storageServiceUI, socialService, analyticsService) {
+/**
+ * 
+ * @param {*} $scope 
+ * @param {*} messageService 
+ * @param {*} storageServiceUI 
+ * @param {*} socialService 
+ * @param {*} analyticsService 
+ * @param {IPodcastEngine} podcastEngine 
+ * @returns 
+ */
+function PodcastsController($scope, messageService, storageServiceUI, socialService, analyticsService, podcastEngine) {
 	$scope.listType = 'big_list';
 	$scope.sorting = 'by_subscription_descending';
 	$scope.podcasts = [];
@@ -23,9 +34,23 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		}
 	}
 
-	$scope.updatePodcastList = function() {
-		var that = this;
+	$scope.updatePodcastList = async function() {
+		let podcasts = await podcastEngine.getAllPodcasts();
+		
+		$scope.podcasts = podcasts.map((podcast, index) => ({
+			index: index,
+			localPodcastId: podcast.id,
+			title: podcast.title,
+			description: podcast.description,
+			episodesNumber: podcast.numberOfEpisodes,
+			feedUrl: podcast.feedUrl
+		}))
 
+		podcastsLoaded = true;
+
+		$scope.$apply();
+
+		/*
 		chrome.runtime.getBackgroundPage(function(bgPage) {
 			that.podcasts = [];
 
@@ -93,7 +118,16 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 				podcastsLoaded = true;
 			});
 		});
+		*/
 	};
+
+	$scope.deletePodcast = (podcast) => {
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			bgPage.podcastManager.deletePodcast(podcast.feedUrl);
+		});
+
+		podcastEngine.deletePodcast(podcast.localPodcastId);
+	}
 
 	$scope.updatePodcast = function(storedPodcast) {
 		this.podcasts.forEach(function(podcast) {
