@@ -1,12 +1,11 @@
 import { IEpisodeTableRecord, IPodcastTableRecord, PodcastDatabase } from "./database";
-import { PodcastId } from "./ng/services/podcastDataService";
 
 export type LocalPodcastId = number;
 
 export interface IStorageEngine {
 	addPodcast(podcast: IPodcastTableRecord): Promise<number>;
-	getPodcast(localPodcastId: PodcastId): Promise<IPodcastTableRecord>;
-	getAllEpisodes(localPodcastId: PodcastId): Promise<IEpisodeTableRecord[]>;
+	getPodcast(localPodcastId: LocalPodcastId): Promise<IPodcastTableRecord>;
+	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]>;
 	updatePodcastAndEpisodes(podcast: IPodcastTableRecord, episodes: IEpisodeTableRecord[]): Promise<void>;
 }
 
@@ -35,7 +34,7 @@ export class StorageEngine implements IStorageEngine {
 		return;
 	}
 
-	getAllEpisodes(localPodcastId: PodcastId): Promise<IEpisodeTableRecord[]> {
+	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]> {
 		return this.db.episodes.where({podcastId: localPodcastId}).toArray();
 	}
 }

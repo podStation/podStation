@@ -1,4 +1,5 @@
-import parsePodcastFeed from "../background/utils/parsePodcastFeed";
+
+import parsePodcastFeed from "../../background/utils/parsePodcastFeed";
 import { IEpisodeTableRecord, IPodcastTableRecord } from "./database";
 import { IStorageEngine, LocalPodcastId } from "./storageEngine";
 

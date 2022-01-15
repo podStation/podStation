@@ -1,5 +1,5 @@
 import searchService from '../services/searchService';
-import { PodcastEngineHolder } from '../../../reuse/podcastEngine';
+import { PodcastEngineHolder } from '../../../reuse/podcast-engine/podcastEngine';
 
 /**
  * 
