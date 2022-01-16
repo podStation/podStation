@@ -20,6 +20,7 @@ export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
 	getAllPodcasts(): Promise<IPodcastTableRecord[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
+	updatePodcast(localPodcastId: LocalPodcastId): void;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -36,9 +37,7 @@ class PodcastEngine implements IPodcastEngine {
 			description: podcast.description
 		});
 
-		let podcastUpdater = new PodcastUpdater(this.storageEngine);
-
-		podcastUpdater.update(localPodcastId);
+		this.updatePodcast(localPodcastId);
 	}
 
 	getAllPodcasts(): Promise<IPodcastTableRecord[]> {
@@ -47,6 +46,12 @@ class PodcastEngine implements IPodcastEngine {
 
 	deletePodcast(localPodcastId: LocalPodcastId) {
 		return this.storageEngine.deletePodcast(localPodcastId);
+	}
+
+	updatePodcast(localPodcastId: LocalPodcastId) {
+		let podcastUpdater = new PodcastUpdater(this.storageEngine);
+
+		podcastUpdater.update(localPodcastId);
 	}
 }
 

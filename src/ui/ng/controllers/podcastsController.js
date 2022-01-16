@@ -129,6 +129,15 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		podcastEngine.deletePodcast(podcast.localPodcastId);
 	}
 
+	$scope.updatePodcastFromFeed = (podcast) => {
+		chrome.runtime.getBackgroundPage(function(bgPage) {
+			analyticsService.trackEvent('feed', 'user_update_one');
+			bgPage.podcastManager.updatePodcast(podcast.localPodcastId);
+		});
+
+		podcastEngine.updatePodcast(podcast.localPodcastId);
+	}
+
 	$scope.updatePodcast = function(storedPodcast) {
 		this.podcasts.forEach(function(podcast) {
 			if(podcast.url === storedPodcast.url) {
