@@ -23,8 +23,8 @@ export interface IPodcastTableRecord {
 }
 
 export interface IEpisodeTableRecord {
-	id?: number,
-	podcastId: number,
+	id?: number;
+	podcastId: number;
 	title?: string;
 	description?: string;
 	guid?: string;

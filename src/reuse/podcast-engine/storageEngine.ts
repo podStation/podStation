@@ -1,13 +1,38 @@
 import { IEpisodeTableRecord, IPodcastTableRecord, PodcastDatabase } from "./database";
 
 export type LocalPodcastId = number;
+export type LocalEpisodeId = number;
+
+/**
+ * A podcast as represented in local storage.
+ * A list of episodes is not available at the podcast, because 
+ * episodes can be too many, so they have to be accessed in a paginated way.
+ */
+type LocalStoragePodcast = {
+	id?: LocalPodcastId;
+	feedUrl: string;
+	title?: string;
+	description?: string; 
+	numberOfEpisodes?: number;
+}
+
+/**
+ * An episode as represented in local storage.
+ */
+type LocalStorageEpisode = {
+	id?: LocalEpisodeId;
+	podcastId: LocalPodcastId;
+	title?: string;
+	description?: string;
+	guid?: string;
+}
 
 export interface IStorageEngine {
-	addPodcast(podcast: IPodcastTableRecord): Promise<number>;
-	getPodcast(localPodcastId: LocalPodcastId): Promise<IPodcastTableRecord>;
-	getAllPodcasts(): Promise<IPodcastTableRecord[]>;
-	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]>;
-	updatePodcastAndEpisodes(podcast: IPodcastTableRecord, episodes: IEpisodeTableRecord[]): Promise<void>;
+	addPodcast(podcast: LocalStoragePodcast): Promise<number>;
+	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
+	getAllPodcasts(): Promise<LocalStoragePodcast[]>;
+	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
+	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 }
 
@@ -18,11 +43,11 @@ export class StorageEngine implements IStorageEngine {
 		this.db = new PodcastDatabase('podStationPodcastDB');
 	}
 	
-	addPodcast(podcast: IPodcastTableRecord) : Promise<number> {
+	addPodcast(podcast: LocalStoragePodcast) : Promise<number> {
 		return this.db.podcasts.put(podcast);
 	}
 
-	getPodcast(localPodcastId: LocalPodcastId): Promise<IPodcastTableRecord> {
+	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast> {
 		return this.db.podcasts.get(localPodcastId);
 	}
 
@@ -30,7 +55,7 @@ export class StorageEngine implements IStorageEngine {
 		return this.db.podcasts.toArray();
 	}
 
-	async updatePodcastAndEpisodes(podcast: IPodcastTableRecord, episodes: IEpisodeTableRecord[]): Promise<void> {
+	async updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void> {
 
 		await this.db.transaction('rw', this.db.podcasts, this.db.episodes, () => {
 			this.db.podcasts.put(podcast);
