@@ -43,7 +43,8 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 			title: podcast.title,
 			description: podcast.description,
 			episodesNumber: podcast.numberOfEpisodes,
-			feedUrl: podcast.feedUrl
+			feedUrl: podcast.feedUrl,
+			image: podcast.imageUrl
 		}))
 
 		podcastsLoaded = true;

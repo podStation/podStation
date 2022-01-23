@@ -11,6 +11,7 @@ export type LocalEpisodeId = number;
 type LocalStoragePodcast = {
 	id?: LocalPodcastId;
 	feedUrl: string;
+	imageUrl?: string;
 	title?: string;
 	description?: string; 
 	numberOfEpisodes?: number;

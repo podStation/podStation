@@ -18,8 +18,10 @@ export interface IPodcastTableRecord {
 	id?: number;
 	feedUrl: string;
 	title?: string;
+	imageUrl?: string;
 	description?: string; 
 	numberOfEpisodes?: number;
+	
 }
 
 export interface IEpisodeTableRecord {

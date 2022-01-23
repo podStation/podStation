@@ -25,7 +25,8 @@ export class PodcastUpdater {
 			...podcast,
 			title: parsedFeed.podcast.title,
 			description: parsedFeed.podcast.description,
-			numberOfEpisodes: parsedFeed.episodes.length
+			imageUrl: parsedFeed.podcast.image,
+			numberOfEpisodes: parsedFeed.episodes.length,
 		};
 
 		let episodeTableRecords = await this.storageEngine.getAllEpisodes(localPodcastId);
