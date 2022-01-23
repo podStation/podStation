@@ -34,7 +34,7 @@ function valueHandlerService($injector, $interval, $q, messageService, _analytic
 	messageService.for('valueHandlerService').onMessage('boost', (message, sendResponse) => {
 		boost(message.episodeId, {
 			message: message.message,
-			ts: message.currentTime
+			ts: Math.floor(message.currentTime)
 		});
 	});
 
