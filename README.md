@@ -159,6 +159,7 @@ Here are other great open source projects related to podcastings:
     - [What are extensions](https://developer.chrome.com/extensions)
     - [Extension APIs](https://developer.chrome.com/extensions/api_index)
     - [Chromium Extensions - Google Group](https://groups.google.com/a/chromium.org/forum/#!forum/chromium-extensions) - Forum
+- https://www.w3.org/community/webextensions/
 
 <!-- links -->
 [at-chrome-web-store]: https://chrome.google.com/webstore/detail/podstation/bpcagekijmfcocgjlnnhpdogbplajjfn
