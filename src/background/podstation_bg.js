@@ -23,7 +23,11 @@ window.openPodStation = function(hash) {
 		});
 	}
 	else {
-		window.open(APP_PATH + ( hash ? '#' + hash : ''));
+		// chrome.tabs.create is used instead of window.open because of
+		// https://bugs.chromium.org/p/chromium/issues/detail?id=1298195
+		chrome.tabs.create({
+			url: APP_PATH + ( hash ? '#' + hash : '')
+		});
 	}
 }
 

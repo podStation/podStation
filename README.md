@@ -113,16 +113,18 @@ podStation is commited to support in its best capacity the new features introduc
 
 Currently it supports:
 - search with the [podcastindex.org](https://podcastindex.org) API
-- the following tags from the podcast namespace
-    - funding
-    - value
-- value for value monetization / pledge model using Bitcoin through the Lightning Network
+- the following tags from the [podcast namespace](https://github.com/Podcastindex-org/podcast-namespace/blob/main/docs/1.0.md)
+    - `podcast:funding`
+    - `podcast:value`
+- value for value monetization / pledge model using Bitcoin through the [Lightning Network](https://lightning.network/)
 
 Learn more at [Podcasting 2.0](https://github.com/Podcastindex-org/podcast-namespace/blob/main/podcasting2.0.md).
 
 Find more Podcastings 2.0 apps at https://podcastindex.org/apps.
 
-Find podcasting 2.0 projects on GiHub by looking for the tag [podcasting20](https://github.com/topics/podcasting20).
+Find Podcasting 2.0 projects on GitHub by looking for the topic [podcasting20](https://github.com/topics/podcasting20).
+
+Find podStation backlog for Podcasting 2.0 by looking for [issues with the label `pc20`](https://github.com/podStation/podStation/issues?q=is%3Aissue+is%3Aopen+label%3Apc20).
 
 ## Contributing
 
