@@ -2,6 +2,7 @@ import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
 /**
+ * Angular controller for the list of subscribed podcasts
  * 
  * @param {*} $scope 
  * @param {*} messageService 
