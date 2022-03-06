@@ -21,7 +21,7 @@ export interface IPodcastTableRecord {
 	imageUrl?: string;
 	description?: string; 
 	numberOfEpisodes?: number;
-	
+	pubDate?: Date;
 }
 
 export interface IEpisodeTableRecord {

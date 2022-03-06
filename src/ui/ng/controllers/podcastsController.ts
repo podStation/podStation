@@ -14,7 +14,9 @@ type Podcast = {
 	description: string,
 	episodesNumber: number,
 	feedUrl: string,
-	image: string
+	image: string,
+	pubDate: Date,
+	formattedPubDate: string
 }
 
 /**
@@ -78,7 +80,9 @@ class PodcastsControllerClass {
 			description: podcast.description,
 			episodesNumber: podcast.numberOfEpisodes,
 			feedUrl: podcast.feedUrl,
-			image: podcast.imageUrl
+			image: podcast.imageUrl,
+			pubDate: podcast.pubDate,
+			formattedPubDate: podcast.pubDate ? formatDate(podcast.pubDate) : undefined
 		}))
 
 		this.podcastsLoaded = true;
@@ -210,7 +214,7 @@ class PodcastsControllerClass {
 				return 'title';
 			case 'by_pubdate_ascending':
 			case 'by_pubdate_descending':
-				return 'pubDateUnformatted';
+				return 'pubDate';
 		}
 	}
 
@@ -254,9 +258,9 @@ class PodcastsControllerClass {
 			});
 		});
 		
-		this.messageService.for('podcast').onMessage('changed', (messageContent: any) => {
+		/*this.messageService.for('podcast').onMessage('changed', (messageContent: any) => {
 			this.updatePodcast(messageContent.podcast);
-		});
+		});*/
 	}
 }
 

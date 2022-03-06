@@ -57,7 +57,7 @@
 									</span>
 									<br>
 									<!--must add a check for pubdate-->
-									<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+									<span>{{'publication_date' | chrome_i18n }}: {{podcast.formattedPubDate}}</span>
 									<span ng-if="podcast.crowdfundings">
 										<br>
 										{{'fund_this_podcast' | chrome_i18n }}: 
@@ -93,7 +93,7 @@
 							<span>{{'open_podcast_website' | chrome_i18n }}</span>
 						</a> -
 						</span>
-						<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+						<span>{{'publication_date' | chrome_i18n }}: {{podcast.formattedPubDate}}</span>
 					</li>
 				</ul>
 			</div>

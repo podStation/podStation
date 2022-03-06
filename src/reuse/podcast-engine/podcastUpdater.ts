@@ -26,6 +26,7 @@ export class PodcastUpdater {
 			title: parsedFeed.podcast.title,
 			description: parsedFeed.podcast.description,
 			imageUrl: parsedFeed.podcast.image,
+			pubDate: new Date(parsedFeed.podcast.pubDate),
 			numberOfEpisodes: parsedFeed.episodes.length,
 		};
 
