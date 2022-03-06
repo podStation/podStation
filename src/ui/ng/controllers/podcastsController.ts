@@ -1,26 +1,59 @@
 import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
+declare var chrome: any;
+
+function PodcastsController($scope: any, messageService: any, storageServiceUI: any, socialService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
+	return new PodcastsControllerClass($scope, messageService, storageServiceUI, socialService, analyticsService, podcastEngine);
+}
+
+type Podcast = {
+	index: number,
+	localPodcastId: number,
+	title: string,
+	description: string,
+	episodesNumber: number,
+	feedUrl: string,
+	image: string
+}
+
 /**
  * Angular controller for the list of subscribed podcasts
  * 
- * @param {*} $scope 
- * @param {*} messageService 
- * @param {*} storageServiceUI 
- * @param {*} socialService 
- * @param {*} analyticsService 
- * @param {IPodcastEngine} podcastEngine 
- * @returns 
  */
-function PodcastsController($scope, messageService, storageServiceUI, socialService, analyticsService, podcastEngine) {
-	$scope.listType = 'big_list';
-	$scope.sorting = 'by_subscription_descending';
-	$scope.podcasts = [];
+class PodcastsControllerClass {
+	private $scope: any;
+	private messageService: any;
+	private storageServiceUI: any;
+	private socialService: any;
+	private analyticsService: any;
+	private podcastEngine: IPodcastEngine;
+	
+	listType: string;
+	sorting: string;
+	podcasts: Podcast[];
+	podcastsLoaded: boolean;
+	optionsLoaded: boolean;
 
-	var podcastsLoaded = false;
-	var optionsLoaded = false;
+	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
+		this.$scope = $scope;
+		this.messageService = messageService;
+		this.storageServiceUI = storageServiceUI;
+		this.socialService = socialService;
+		this.analyticsService = analyticsService;
+		this.podcastEngine = podcastEngine;
 
-	function getStatusClass(status) {
+		this.listType = 'big_list';
+		this.sorting = 'by_subscription_descending';
+		this.podcasts = [];
+
+		this.podcastsLoaded = false;
+		this.optionsLoaded = false;
+
+		this.initialize();
+	}
+
+	static getStatusClass(status: string): string {
 		if(status === 'updating') {
 			return 'fa-refresh fa-spin';
 		}
@@ -35,10 +68,10 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		}
 	}
 
-	$scope.updatePodcastList = async function() {
-		let podcasts = await podcastEngine.getAllPodcasts();
+	async updatePodcastList() {
+		let podcasts = await this.podcastEngine.getAllPodcasts();
 		
-		$scope.podcasts = podcasts.map((podcast, index) => ({
+		this.podcasts = podcasts.map((podcast, index) => ({
 			index: index,
 			localPodcastId: podcast.id,
 			title: podcast.title,
@@ -48,9 +81,9 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 			image: podcast.imageUrl
 		}))
 
-		podcastsLoaded = true;
+		this.podcastsLoaded = true;
 
-		$scope.$apply();
+		this.$scope.$apply();
 
 		/*
 		chrome.runtime.getBackgroundPage(function(bgPage) {
@@ -121,84 +154,52 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 			});
 		});
 		*/
-	};
+	}
 
-	$scope.deletePodcast = (podcast) => {
-		chrome.runtime.getBackgroundPage(function(bgPage) {
+	deletePodcast(podcast: Podcast) {
+		chrome.runtime.getBackgroundPage(function(bgPage: any) {
 			bgPage.podcastManager.deletePodcast(podcast.feedUrl);
 		});
 
-		podcastEngine.deletePodcast(podcast.localPodcastId);
+		this.podcastEngine.deletePodcast(podcast.localPodcastId);
 	}
 
-	$scope.updatePodcastFromFeed = (podcast) => {
-		chrome.runtime.getBackgroundPage(function(bgPage) {
-			analyticsService.trackEvent('feed', 'user_update_one');
+	updatePodcastFromFeed(podcast: Podcast) {
+		chrome.runtime.getBackgroundPage(function(bgPage: any) {
+			this.analyticsService.trackEvent('feed', 'user_update_one');
 			bgPage.podcastManager.updatePodcast(podcast.localPodcastId);
 		});
 
-		podcastEngine.updatePodcast(podcast.localPodcastId);
+		this.podcastEngine.updatePodcast(podcast.localPodcastId);
 	}
 
-	$scope.updatePodcast = function(storedPodcast) {
+	/*updatePodcast(storedPodcast) {
 		this.podcasts.forEach(function(podcast) {
 			if(podcast.url === storedPodcast.url) {
 				podcast.fromStoredPodcast(storedPodcast);
 				return false;
 			}
 		});
-	}
+	}*/
 
-	$scope.listTypeChanged = listTypeChanged;
-	$scope.sortingChanged = sortingChanged;
-	$scope.orderBy = orderBy;
-	$scope.isReverseOrder = isReverseOrder;
-	$scope.ready = ready;
-
-	$scope.updatePodcastList();
-
-	storageServiceUI.loadSyncUIOptions(function(uiOptions) {
-		$scope.listType = uiOptions.plt;
-		$scope.sorting = uiOptions.ps;
-		optionsLoaded = true;
-	});
-
-	chrome.runtime.onMessage.addListener(function(message) {
-		$scope.$apply(function() {
-			if(!message.type){
-				return;
-			}
-
-			if(message.type === 'podcastListChanged') {
-				$scope.updatePodcastList();
-			}
-		});
-	});
-	
-	messageService.for('podcast').onMessage('changed', function(messageContent) {
-		$scope.updatePodcast(messageContent.podcast);
-	});
-
-	return;
-
-	function listTypeChanged() {
-		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
-			uiOptions.plt = $scope.listType;
+	listTypeChanged() {
+		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			uiOptions.plt = this.listType;
 
 			return true;
 		});
 	}
 
-	function sortingChanged() {
-		storageServiceUI.loadSyncUIOptions(function(uiOptions) {
-			uiOptions.ps = $scope.sorting;
+	sortingChanged() {
+		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			uiOptions.ps = this.sorting;
 
 			return true;
 		});
 	}
 
-	function orderBy() {
-		switch($scope.sorting) {
+	orderBy() {
+		switch(this.sorting) {
 			default:
 				return 'index';
 			case 'by_subscription_ascending':
@@ -213,8 +214,8 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		}
 	}
 
-	function isReverseOrder() {
-		switch($scope.sorting) {
+	isReverseOrder() {
+		switch(this.sorting) {
 			default:
 				return false;
 			case 'by_alpha_descending':
@@ -228,8 +229,34 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		}
 	}
 
-	function ready() {
-		return podcastsLoaded && optionsLoaded;
+	ready() {
+		return this.podcastsLoaded && this.optionsLoaded;
+	}
+
+	initialize() {
+		this.updatePodcastList();
+
+		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			this.listType = uiOptions.plt;
+			this.sorting = uiOptions.ps;
+			this.optionsLoaded = true;
+		});
+
+		chrome.runtime.onMessage.addListener((message: any) => {
+			this.$scope.$apply(() => {
+				if(!message.type){
+					return;
+				}
+
+				if(message.type === 'podcastListChanged') {
+					this.updatePodcastList();
+				}
+			});
+		});
+		
+		this.messageService.for('podcast').onMessage('changed', (messageContent: any) => {
+			this.updatePodcast(messageContent.podcast);
+		});
 	}
 }
 
