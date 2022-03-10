@@ -1,62 +1,73 @@
 import searchService from '../services/searchService';
-import { PodcastEngineHolder, IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
+import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
-/**
- * 
- * @param {*} $scope 
- * @param {*} $routeParams 
- * @param {*} $location 
- * @param {*} searchService 
- * @param {*} analyticsService 
- * @param {IPodcastEngine} podcastEngine
- */
-function SearchController($scope, $routeParams, $location, searchService, analyticsService, podcastEngine) {
-	$scope.searchTerms = $routeParams.searchTerms;
+declare var chrome: any;
 
-	$scope.searchResults = [];
-	$scope.addPodcast = addPodcast;
+function SearchController($scope: any, $routeParams: any, $location: any, searchService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
+	return new SearchControllerClass($scope, $routeParams, $location, searchService, analyticsService, podcastEngine);
+}
 
-	function addPodcast(searchResult) {
-		chrome.runtime.getBackgroundPage(function(bgPage) {
-			$scope.$apply(function() {
-				analyticsService.trackEvent('feed', 'add_by_search');
+class SearchControllerClass {
+	private $scope: any;
+	private $location: any;
+	private searchService: any;
+	private analyticsService: any;
+	private podcastEngine: IPodcastEngine;
+
+	searchTerms: string;
+	searchResults: [];
+
+	constructor($scope: any, $routeParams: any, $location: any, searchService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
+		this.$scope = $scope;
+		this.$location = $location;
+		this.searchService = searchService;
+		this.analyticsService = analyticsService;
+		this.podcastEngine = podcastEngine;
+
+		this.searchTerms = $routeParams.searchTerms;
+
+		this.search();
+	}
+
+	addPodcast(searchResult: any) {
+		chrome.runtime.getBackgroundPage((bgPage: any) => {
+			this.$scope.$apply(() => {
+				this.analyticsService.trackEvent('feed', 'add_by_search');
 				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
 				
-				podcastEngine.addPodcast({
+				this.podcastEngine.addPodcast({
 					feedUrl: new URL(searchResult.feedUrl),
 					title: searchResult.title,
 					description: searchResult.description
 				});
 
-				$location.path('/Podcasts');
+				this.$location.path('/Podcasts');
 			});
 		});
 	}
 
-	function fillIsSubscribed(searchResults) {
-		chrome.runtime.getBackgroundPage(function(bgPage) {
-			$scope.$apply(function() {
-				searchResults.forEach(function(searchResult) {
+	fillIsSubscribed(searchResults: any) {
+		chrome.runtime.getBackgroundPage((bgPage: any) => {
+			this.$scope.$apply(() => {
+				searchResults.forEach((searchResult: any) => {
 					searchResult.subscribed = bgPage.podcastManager.getPodcast(searchResult.feedUrl) !== undefined;
 				});
 			});
 		});
 	}
 
-	function search() {
-		$scope.searchResults = [];
+	search() {
+		this.$scope.searchResults = [];
 
-		searchService.search($scope.searchTerms, function(event, eventData) {
+		this.searchService.search(this.searchTerms, (event: string, eventData: any) => {
 			switch(event) {
 				case 'resultAvailable':
-					$scope.searchResults = eventData;
-					fillIsSubscribed($scope.searchResults);
+					this.searchResults = eventData;
+					this.fillIsSubscribed(this.searchResults);
 					break;
 			}
 		});
 	}
-
-	search();
 }
 
 export default SearchController;

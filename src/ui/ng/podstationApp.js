@@ -77,7 +77,7 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		controller: 'episodesInProgressController'
 	}).when('/Search/:searchTerms', {
 		templateUrl: '/ui/ng/partials/search.html',
-		controller: 'searchController'
+		controller: 'searchController as searchController'
 	}).when('/About', {
 		templateUrl: '/ui/ng/partials/about.html',
 		controller: 'aboutController'

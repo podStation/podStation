@@ -1,5 +1,5 @@
 <div id="podcasts" class="mainContentBox">
-	<h1 class="sectionTitle" ng-bind-html="{ message: 'search_results_for', arguments: [searchTerms] } | chrome_i18n"></h1>
+	<h1 class="sectionTitle" ng-bind-html="{ message: 'search_results_for', arguments: [searchController.searchTerms] } | chrome_i18n"></h1>
 	<p>{{'results_from' | chrome_i18n}}</p>
 	<ul>
 		<li><a href="http://www.digitalpodcast.com/" target="_blank">Digital Podcast</a></li>
@@ -7,7 +7,7 @@
 		<li><a href="https://podcastindex.org/" target="_blank">Podcastindex.org</a></li>
 	</ul>
 	<p>{{ 'itunes_trademark' | chrome_i18n }}</p>
-	<div class="listEntry" ng-repeat="searchResult in searchResults">
+	<div class="listEntry" ng-repeat="searchResult in searchController.searchResults">
 		<div>
 			<table>
 				<tbody>
@@ -17,7 +17,7 @@
 						</td>
 						<td>
 							<div class="itemMenu">
-								<a href="" ng-if="!searchResult.subscribed" title="{{ 'subscribe' | chrome_i18n }}" ng-click="addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
+								<a href="" ng-if="!searchResult.subscribed" title="{{ 'subscribe' | chrome_i18n }}" ng-click="searchController.addPodcast(searchResult)"><i class="fa fa-plus"></i></a>
 								<i ng-if="searchResult.subscribed" title="{{ 'feed_in_list' | chrome_i18n }}" class="fa fa-check"></i>
 							</div>
 							<div class="textView">
@@ -26,7 +26,7 @@
 								</a>
 								<span class="itemTitle" ng-if="!searchResult.link">{{searchResult.title}}</span>
 								<br>
-								<a href="" ng-if="!searchResult.subscribed" ng-click="addPodcast(searchResult)"><b>{{ 'subscribe' | chrome_i18n }}</b></a>
+								<a href="" ng-if="!searchResult.subscribed" ng-click="searchController.addPodcast(searchResult)"><b>{{ 'subscribe' | chrome_i18n }}</b></a>
 								<span ng-if="searchResult.subscribed"><b>{{'feed_in_list' | chrome_i18n}}</b></span>
 								<br>
 								<a ng-if="searchResult.itunesLink" ng-href="{{searchResult.itunesLink}}" target="_blank">{{ 'open_in_itunes' | chrome_i18n }}</a>
@@ -41,5 +41,5 @@
 		</div>
 	</div>
 
-	<h3 ng-if="!searchResults.length">{{ 'no_results' | chrome_i18n }}</h3>
+	<h3 ng-if="!searchController.searchResults.length">{{ 'no_results' | chrome_i18n }}</h3>
 </div>
