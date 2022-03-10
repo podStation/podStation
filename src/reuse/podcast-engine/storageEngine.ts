@@ -8,14 +8,18 @@ export type LocalEpisodeId = number;
  * A list of episodes is not available at the podcast, because 
  * episodes can be too many, so they have to be accessed in a paginated way.
  */
-type LocalStoragePodcast = {
+export type LocalStoragePodcast = {
 	id?: LocalPodcastId;
 	feedUrl: string;
 	imageUrl?: string;
 	title?: string;
 	description?: string; 
 	numberOfEpisodes?: number;
+	pubDate?: Date;
+	state: LocalStoragePodcastState;
 }
+
+export type LocalStoragePodcastState = 'added' | 'ready';
 
 /**
  * An episode as represented in local storage.
@@ -52,7 +56,7 @@ export class StorageEngine implements IStorageEngine {
 		return this.db.podcasts.get(localPodcastId);
 	}
 
-	getAllPodcasts(): Promise<IPodcastTableRecord[]> {
+	getAllPodcasts(): Promise<LocalStoragePodcast[]> {
 		return this.db.podcasts.toArray();
 	}
 

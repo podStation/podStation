@@ -1,5 +1,6 @@
 import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
+import { LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
 
 declare var chrome: any;
 
@@ -16,7 +17,8 @@ type Podcast = {
 	feedUrl: string,
 	image: string,
 	pubDate: Date,
-	formattedPubDate: string
+	formattedPubDate: string,
+	statusClass: string,
 }
 
 /**
@@ -55,18 +57,12 @@ class PodcastsControllerClass {
 		this.initialize();
 	}
 
-	static getStatusClass(status: string): string {
-		if(status === 'updating') {
-			return 'fa-refresh fa-spin';
-		}
-		else if(status === 'loaded') {
-			return 'fa-check';
-		}
-		else if(status === 'failed') {
-			return 'fa-close';
-		}
-		else {
-			return 'fa-question'
+	static getStatusClass(state: LocalStoragePodcastState): string {
+		switch(state) {
+			case 'ready':
+				return 'fa-check';
+			default:
+				return 'fa-question';
 		}
 	}
 
@@ -82,7 +78,8 @@ class PodcastsControllerClass {
 			feedUrl: podcast.feedUrl,
 			image: podcast.imageUrl,
 			pubDate: podcast.pubDate,
-			formattedPubDate: podcast.pubDate ? formatDate(podcast.pubDate) : undefined
+			formattedPubDate: podcast.pubDate ? formatDate(podcast.pubDate) : undefined,
+			statusClass: PodcastsControllerClass.getStatusClass(podcast.state) 
 		}))
 
 		this.podcastsLoaded = true;

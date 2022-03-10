@@ -22,7 +22,10 @@ export interface IPodcastTableRecord {
 	description?: string; 
 	numberOfEpisodes?: number;
 	pubDate?: Date;
+	state: PodcastTableRecordState;
 }
+
+type PodcastTableRecordState = 'added' | 'ready';
 
 export interface IEpisodeTableRecord {
 	id?: number;

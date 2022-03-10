@@ -1,6 +1,6 @@
 import { IPodcastTableRecord } from "./database";
 import { PodcastUpdater } from "./podcastUpdater";
-import { IStorageEngine, LocalPodcastId, StorageEngine } from "./storageEngine";
+import { IStorageEngine, LocalPodcastId, LocalStoragePodcast, StorageEngine } from "./storageEngine";
 
 /**
  * A podcast to be added, to the engine, identified by its feed URL.
@@ -18,7 +18,7 @@ type PodcastToBeAdded = {
 
 export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
-	getAllPodcasts(): Promise<IPodcastTableRecord[]>
+	getAllPodcasts(): Promise<LocalStoragePodcast[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	updatePodcast(localPodcastId: LocalPodcastId): void;
 }
@@ -34,7 +34,8 @@ class PodcastEngine implements IPodcastEngine {
 		let localPodcastId = await this.storageEngine.addPodcast({
 			title: podcast.title,
 			feedUrl: podcast.feedUrl.toString(),
-			description: podcast.description
+			description: podcast.description,
+			state: 'added'
 		});
 
 		this.updatePodcast(localPodcastId);

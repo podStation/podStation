@@ -1,7 +1,7 @@
 
 import parsePodcastFeed from "../../background/utils/parsePodcastFeed";
 import { IEpisodeTableRecord, IPodcastTableRecord } from "./database";
-import { IStorageEngine, LocalPodcastId } from "./storageEngine";
+import { IStorageEngine, LocalPodcastId, LocalStoragePodcast } from "./storageEngine";
 
 interface IPodcastUpdater {
 	update(localPodcastId: number): Promise<void>
@@ -21,13 +21,14 @@ export class PodcastUpdater {
 
 		let parsedFeed = parsePodcastFeed(response) as any;
 
-		let podcastTableRecord: IPodcastTableRecord = {
+		let podcastTableRecord: LocalStoragePodcast = {
 			...podcast,
 			title: parsedFeed.podcast.title,
 			description: parsedFeed.podcast.description,
 			imageUrl: parsedFeed.podcast.image,
 			pubDate: new Date(parsedFeed.podcast.pubDate),
 			numberOfEpisodes: parsedFeed.episodes.length,
+			state: 'ready'
 		};
 
 		let episodeTableRecords = await this.storageEngine.getAllEpisodes(localPodcastId);
