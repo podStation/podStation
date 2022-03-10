@@ -38,12 +38,18 @@ class SearchControllerClass {
 				this.podcastEngine.addPodcast({
 					feedUrl: new URL(searchResult.feedUrl),
 					title: searchResult.title,
-					description: searchResult.description
+					description: searchResult.description,
+					imageUrl: SearchControllerClass.getImageUrl(searchResult),
 				});
 
 				this.$location.path('/Podcasts');
 			});
 		});
+	}
+
+	private static getImageUrl(searchResult: any): URL | null {
+		const imageUrl = searchResult.imageOriginal || searchResult.image;
+		return imageUrl ? new URL(imageUrl) : null;
 	}
 
 	fillIsSubscribed(searchResults: any) {

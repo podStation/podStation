@@ -34,6 +34,7 @@ class PodcastEngine implements IPodcastEngine {
 		let localPodcastId = await this.storageEngine.addPodcast({
 			title: podcast.title,
 			feedUrl: podcast.feedUrl.toString(),
+			imageUrl: podcast.imageUrl.toString(),
 			description: podcast.description,
 			state: 'added'
 		});
