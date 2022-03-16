@@ -68,7 +68,7 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		controller: 'podcastsController'
 	}).when('/LastEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
-		controller: 'lastEpisodesController'
+		controller: 'lastEpisodesController as lastEpisodesController'
 	}).when('/Episodes/:podcastIndex', {
 		templateUrl: '/ui/ng/partials/episodes.html',
 		controller: 'episodesController'
