@@ -2,7 +2,24 @@ import {formatDate} from '../../common';
 
 declare var chrome: any;
 
-function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: any, episodes?: []) {
+export type ControllerEpisode = {
+	link?: string;
+	title?: string;
+	image?: string;
+	podcastIndex?: number;
+	podcastTitle?: string;
+	podcastUrl?: string;
+	url?: string;
+	description?: string;
+	pubDateUnformatted?: Date;
+	pubDate?: string;
+	guid?: string;
+	isInPlaylist: boolean;
+	participants?: [];
+	duration?: number;
+}
+
+function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: any, episodes?: ControllerEpisode[]) {
 	messageService.for('playlist').sendMessage('get', {}, (playlist: any) => {
 		$scope.$apply(() => {
 			// transition phase, we support episodes on scope and as a dedicated argument
@@ -30,7 +47,7 @@ class LastEpisodesControllerClass {
 	podcastDataService: any;
 
 	listType: string = 'big_list';
-	episodes: [] = [];
+	episodes: ControllerEpisode[] = [];
 	numberEpisodes: number = 50;
 
 	private episodesLoaded = false; 
@@ -70,7 +87,9 @@ class LastEpisodesControllerClass {
 				const storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
 
 				this.episodes = storedEpisodeContainers.map((storedEpisodeContainer: any) => {
-					const episode: any = {};
+					const episode: ControllerEpisode = {
+						isInPlaylist: false,
+					};
 
 					episode.link = storedEpisodeContainer.episode.link;
 					episode.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
