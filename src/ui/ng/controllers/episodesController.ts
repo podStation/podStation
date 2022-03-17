@@ -135,35 +135,75 @@ class LastEpisodesControllerClass {
 }
 
 function EpisodeController($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+	return new EpisodeControllerClass($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService, socialService);
+}
 
-	$scope.listType = 'big_list';
-	$scope.sorting = 'by_pubdate_descending';
-	$scope.episodes = [];
-	$scope.numberEpisodes = 50;
-	$scope.podcastUrl = '';
+class EpisodeControllerClass {
+	$scope: any;
+	$routeParams: any;
+	episodePlayer: any;
+	messageService: any;
+	storageServiceUI: any;
+	socialService: any;
+	podcastDataService: any;
 
-	$scope.updateEpisodes = function() {
-		var that = this;
-		
+	listType: string = 'big_list';
+	sorting: string = 'by_pubdate_descending';
+	episodes: ControllerEpisode[] = [];
+	numberEpisodes: number = 50;
+	podcastUrl: string = '';
+	podcastTitle: string = '';
+	podcastImage: string = '';
+
+	constructor($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+		this.$scope = $scope;
+		this.$routeParams = $routeParams;
+		this.episodePlayer = episodePlayer;
+		this.messageService = messageService;
+		this.storageServiceUI = storageServiceUI;
+		this.socialService = socialService;
+		this.podcastDataService = podcastDataService;
+
+		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			$scope.listType = uiOptions.elt;
+			$scope.sorting = uiOptions.es;
+		});
+	
+		messageService.for('podcast').onMessage('changed', (messageContent: any) => {
+			if(messageContent.episodeListChanged && messageContent.podcast.url === $scope.podcastUrl) {
+				$scope.$apply(function() {
+					$scope.updateEpisodes();
+				});
+			}
+		});
+	
+		messageService.for('playlist').onMessage('changed', () => { updateIsInPlaylist($scope, messageService, podcastDataService, this.episodes); });
+
+		this.updateEpisodes();
+	}
+
+	updateEpisodes() {
 		this.episodes = [];
 		this.podcastTitle = '';
 
 		chrome.runtime.getBackgroundPage((bgPage: any) => {
-			var storedPodcast = bgPage.podcastManager.getPodcast(parseInt($routeParams.podcastIndex));
+			const storedPodcast = bgPage.podcastManager.getPodcast(parseInt(this.$routeParams.podcastIndex));
 
-			$scope.podcastUrl = storedPodcast.url;
+			this.podcastUrl = storedPodcast.url;
 
-			$scope.$apply(function() {
-				that.podcastImage = storedPodcast.image;
-				that.podcastTitle = storedPodcast.title;
+			this.$scope.$apply(() => {
+				this.podcastImage = storedPodcast.image;
+				this.podcastTitle = storedPodcast.title;
 			});
 
 			// the following part is more expensive, we let the browser update 
 			// the content on the screen before going on.
 			setTimeout(() => {
-				$scope.$apply(() => {
+				this.$scope.$apply(() => {
 					this.episodes = storedPodcast.episodes.map((storedEpisode: any) => {
-						const episode: any = {};
+						const episode: ControllerEpisode = {
+							isInPlaylist: false,
+						};
 
 						episode.podcastUrl = storedPodcast.url;
 						episode.link = storedEpisode.link;
@@ -173,64 +213,41 @@ function EpisodeController($scope: any, $routeParams: any, episodePlayer: any, m
 						episode.pubDateUnformatted = new Date(storedEpisode.pubDate);
 						episode.pubDate = formatDate(episode.pubDateUnformatted);
 						episode.guid = storedEpisode.guid;
-						episode.participants = storedEpisode.participants && storedEpisode.participants.map(socialService.participantMapping);
+						episode.participants = storedEpisode.participants && storedEpisode.participants.map(this.socialService.participantMapping);
 						episode.duration = storedEpisode.duration;
 
 						return episode;
 					});
 
-					updateIsInPlaylist($scope, messageService, podcastDataService);
+					updateIsInPlaylist(this.$scope, this.messageService, this.podcastDataService, this.episodes);
 				});
 			} ,1);
 		});
 	};
 
-	$scope.myPagingFunction = function() {
-		$scope.numberEpisodes += 20;
-		console.log('Paging function - ' + $scope.numberEpisodes);
+	myPagingFunction() {
+		this.numberEpisodes += 20;
+		console.log('Paging function - ' + this.numberEpisodes);
 	};
 
-	$scope.listTypeChanged = listTypeChanged;
-	$scope.sortingChanged = sortingChanged;
-	$scope.isReverseOrder = isReverseOrder;
-
-	storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
-		$scope.listType = uiOptions.elt;
-		$scope.sorting = uiOptions.es;
-	});
-
-	messageService.for('podcast').onMessage('changed', (messageContent: any) => {
-		if(messageContent.episodeListChanged && messageContent.podcast.url === $scope.podcastUrl) {
-			$scope.$apply(function() {
-				$scope.updateEpisodes();
-			});
-		}
-	});
-
-	messageService.for('playlist').onMessage('changed', function() { updateIsInPlaylist($scope, messageService, podcastDataService); });
-
-	$scope.updateEpisodes();
-
-	return;
-
-	function listTypeChanged() {
-		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
-			uiOptions.elt = $scope.listType;
+	listTypeChanged() {
+		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			uiOptions.elt = this.$scope.listType;
 
 			return true;
 		});
 	}
 
-	function sortingChanged() {
-		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
-			uiOptions.es = $scope.sorting;
+	sortingChanged() {
+		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
+			uiOptions.es = this.$scope.sorting;
 
 			return true;
 		});
 	}
 
-	function isReverseOrder() {
-		return $scope.sorting === 'by_pubdate_descending';
+	isReverseOrder() {
+		return this.$scope.sorting === 'by_pubdate_descending';
 	}
 }
 
