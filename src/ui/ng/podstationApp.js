@@ -40,9 +40,9 @@ myApp
   .controller('adController', ['$scope', 'storageService', AdController])
   .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
   .controller('aboutController', ['$scope', AboutController])
-  .controller('lastEpisodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
-  .controller('episodesController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
-  .controller('episodesInProgressController', ['$scope', '$routeParams', 'episodePlayer', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
+  .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
+  .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
+  .controller('episodesInProgressController', ['$scope', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
   .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController])
@@ -68,13 +68,13 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		controller: 'podcastsController'
 	}).when('/LastEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
-		controller: 'lastEpisodesController'
+		controller: 'lastEpisodesController as lastEpisodesController'
 	}).when('/Episodes/:podcastIndex', {
 		templateUrl: '/ui/ng/partials/episodes.html',
-		controller: 'episodesController'
+		controller: 'episodesController as episodesController'
 	}).when('/InProgress', {
 		templateUrl: '/ui/ng/partials/episodesInProgress.html',
-		controller: 'episodesInProgressController'
+		controller: 'episodesInProgressController as episodesInProgressController'
 	}).when('/Search/:searchTerms', {
 		templateUrl: '/ui/ng/partials/search.html',
 		controller: 'searchController'

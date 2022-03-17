@@ -1,19 +1,19 @@
 <div id="episodes" class="mainContentBox">
 	<div class="sectionTitleImage">
-		<img ng-src="{{podcastImage}}"></img>
+		<img ng-src="{{episodesController.podcastImage}}"></img>
 	</div>
-	<h1 class="sectionTitle episodesSectionTitle" ng-bind-html="{ message: 'all_eps_from', arguments: [podcastTitle]} | chrome_i18n"></h1>
-	<div id="episodeList" infinite-scroll="myPagingFunction()" infinite-scroll-distance="1">
-		<div id="listMenu" ng-show="episodes.length">
-			<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+	<h1 class="sectionTitle episodesSectionTitle" ng-bind-html="{ message: 'all_eps_from', arguments: [episodesController.podcastTitle]} | chrome_i18n"></h1>
+	<div id="episodeList" infinite-scroll="episodesController.myPagingFunction()" infinite-scroll-distance="1">
+		<div id="listMenu" ng-show="episodesController.episodes.length">
+			<select ng-model="sorting" ng-change="episodesController.sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 				<option value="by_pubdate_ascending" >&#xf160; {{ 'oldest' | chrome_i18n}}</option>
 				<option value="by_pubdate_descending">&#xf161; {{ 'most_recent' | chrome_i18n}}</option>
 			</select>
-			<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+			<select ng-model="listType" ng-change="episodesController.listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 				<option value="big_list"  >&#xf00b; Big list</option>
 				<option value="small_list">&#xf03a; Small list</option>
 			</select>
 		</div>
-		<ps-episode-list episodes="episodes" list-type="listType" limit-to="numberEpisodes" reverse-order="isReverseOrder()" />
+		<ps-episode-list episodes="episodesController.episodes" list-type="episodesController.listType" limit-to="episodesController.numberEpisodes" reverse-order="episodesController.isReverseOrder()" />
 	</div>
 </div>
