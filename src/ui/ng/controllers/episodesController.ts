@@ -35,15 +35,13 @@ function updateIsInPlaylist($scope: any, messageService: any, podcastDataService
 	});
 }
 
-function LastEpisodesController($scope: any, $routeParams: any, episodePlayer: any , messageService: any, storageServiceUI: any, socialService: any, podcastDataService: any) {
-	return new LastEpisodesControllerClass($scope, $routeParams, episodePlayer , messageService, storageServiceUI, socialService, podcastDataService);
+function LastEpisodesController($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: any) {
+	return new LastEpisodesControllerClass($scope, messageService, storageServiceUI, socialService, podcastDataService);
 }
 
 class LastEpisodesControllerClass {
 
 	$scope: any;
-	$routeParams: any;
-	episodePlayer: any;
 	messageService: any;
 	storageServiceUI: any;
 	socialService: any;
@@ -56,10 +54,8 @@ class LastEpisodesControllerClass {
 	private episodesLoaded = false; 
 	private optionsLoaded = false;
 
-	constructor($scope: any, $routeParams: any, episodePlayer: any , messageService: any, storageServiceUI: any, socialService: any, podcastDataService: any) {
+	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: any) {
 		this.$scope = $scope;
-		this.$routeParams = $routeParams;
-		this.episodePlayer = episodePlayer;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
 		this.socialService = socialService;
@@ -137,14 +133,13 @@ class LastEpisodesControllerClass {
 	}
 }
 
-function EpisodeController($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
-	return new EpisodeControllerClass($scope, $routeParams, episodePlayer, messageService, storageServiceUI, podcastDataService, socialService);
+function EpisodeController($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+	return new EpisodeControllerClass($scope, $routeParams, messageService, storageServiceUI, podcastDataService, socialService);
 }
 
 class EpisodeControllerClass {
 	$scope: any;
 	$routeParams: any;
-	episodePlayer: any;
 	messageService: any;
 	storageServiceUI: any;
 	socialService: any;
@@ -158,10 +153,9 @@ class EpisodeControllerClass {
 	podcastTitle: string = '';
 	podcastImage: string = '';
 
-	constructor($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
 		this.$scope = $scope;
 		this.$routeParams = $routeParams;
-		this.episodePlayer = episodePlayer;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
 		this.socialService = socialService;
@@ -173,9 +167,9 @@ class EpisodeControllerClass {
 		});
 	
 		messageService.for('podcast').onMessage('changed', (messageContent: any) => {
-			if(messageContent.episodeListChanged && messageContent.podcast.url === $scope.podcastUrl) {
+			if(messageContent.episodeListChanged && messageContent.podcast.url === this.podcastUrl) {
 				$scope.$apply(function() {
-					$scope.updateEpisodes();
+					this.updateEpisodes();
 				});
 			}
 		});
@@ -254,14 +248,12 @@ class EpisodeControllerClass {
 	}
 }
 
-function EpisodesInProgressController($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
-	return new EpisodesInProgressControllerClass($scope, $routeParams, episodePlayer , messageService, storageServiceUI, podcastDataService, socialService);
+function EpisodesInProgressController($scope: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+	return new EpisodesInProgressControllerClass($scope, messageService, storageServiceUI, podcastDataService, socialService);
 }
 
 class EpisodesInProgressControllerClass {
 	$scope: any;
-	$routeParams: any;
-	episodePlayer: any;
 	messageService: any;
 	storageServiceUI: any;
 	socialService: any;
@@ -274,10 +266,8 @@ class EpisodesInProgressControllerClass {
 	private episodesLoaded = false;
 	private optionsLoaded = false;
 
-	constructor($scope: any, $routeParams: any, episodePlayer: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
+	constructor($scope: any, messageService: any, storageServiceUI: any, podcastDataService: any, socialService: any) {
 		this.$scope = $scope;
-		this.$routeParams = $routeParams;
-		this.episodePlayer = episodePlayer;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
 		this.socialService = socialService;
@@ -296,7 +286,7 @@ class EpisodesInProgressControllerClass {
 			}
 		});
 	
-		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', function() {
+		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', () => {
 			$scope.$apply(() => {
 				this.updateEpisodes();
 			});
