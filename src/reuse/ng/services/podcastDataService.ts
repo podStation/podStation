@@ -163,3 +163,4 @@ class PodcastDataServiceClass {
 }
 
 export default PodcastDataService;
+export { PodcastDataServiceClass };
