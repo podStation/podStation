@@ -2,7 +2,7 @@ import angular from 'angular';
 import analyticsService from './services/analyticsService';
 import dateService from './services/dateService';
 import messageServiceProvider from './services/messageService';
-import podcastDataService from './services/podcastDataService';
+import PodcastDataService from './services/podcastDataService';
 import podcastIndexOrgService from './services/podcastIndexOrgService';
 import podcastManagerService from './services/podcastManagerService';
 import storageService from './services/storageService';
@@ -14,7 +14,7 @@ module
   .factory('browser', browserService)
   .factory('analyticsService', analyticsService)
   .factory('dateService', dateService)
-  .factory('podcastDataService', podcastDataService)
+  .factory('podcastDataService', PodcastDataService)
   .factory('podcastIndexOrgService', ['$http', '$window', podcastIndexOrgService])
   .factory('podcastManagerService', ['$q', podcastManagerService])
   .factory('storageService', ['$q', 'browser', storageService]);
