@@ -36,7 +36,7 @@ export interface IStorageEngine {
 	addPodcast(podcast: LocalStoragePodcast): Promise<number>;
 	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
 	getAllPodcasts(): Promise<LocalStoragePodcast[]>;
-	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
+	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 }
@@ -70,7 +70,7 @@ export class StorageEngine implements IStorageEngine {
 		return;
 	}
 
-	getAllEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]> {
+	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]> {
 		return this.db.episodes.where({podcastId: localPodcastId}).toArray();
 	}
 

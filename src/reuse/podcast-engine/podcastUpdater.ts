@@ -31,7 +31,7 @@ export class PodcastUpdater {
 			state: 'ready'
 		};
 
-		let episodeTableRecords = await this.storageEngine.getAllEpisodes(localPodcastId);
+		let episodeTableRecords = await this.storageEngine.getAllPodcastEpisodes(localPodcastId);
 
 		let updatedEpisodeTableRecords = PodcastUpdater.updateEpisodes(episodeTableRecords, parsedFeed.episodes, localPodcastId);
 
