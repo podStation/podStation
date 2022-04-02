@@ -24,12 +24,19 @@ export type LocalStoragePodcastState = 'added' | 'ready';
 /**
  * An episode as represented in local storage.
  */
-type LocalStorageEpisode = {
+export type LocalStorageEpisode = {
 	id?: LocalEpisodeId;
 	podcastId: LocalPodcastId;
+	podcast?: LocalStoragePodcast;
 	title?: string;
 	description?: string;
 	guid?: string;
+	pubDate?: Date;
+	link?: string;
+	enclosureUrl?: string;
+	enclosureLength?: number;
+	enclosureType?: string;
+	duration?: number;
 }
 
 export interface IStorageEngine {
@@ -39,6 +46,7 @@ export interface IStorageEngine {
 	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
+	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 }
 
 export class StorageEngine implements IStorageEngine {
@@ -79,5 +87,30 @@ export class StorageEngine implements IStorageEngine {
 			this.db.podcasts.delete(localPodcastId);
 			this.db.episodes.where('podcastId').equals(localPodcastId).delete();
 		});
+	}
+
+	async getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
+		const episodes: LocalStorageEpisode[] = await this.db.episodes.orderBy('pubDate').reverse().offset(offset).limit(limit).toArray();
+
+		const uniquePodcastIds = episodes.map((episode) => episode.podcastId)
+			// filter unique podcastIds
+			.filter((podcastId, index, self) => self.indexOf(podcastId) === index);
+
+		const podcasts: LocalStoragePodcast[] = await this.db.podcasts.where('id').anyOf(uniquePodcastIds).toArray();
+
+		return StorageEngine.enrichEpisodesWithPodcast(episodes, podcasts);
+	}
+
+	private static enrichEpisodesWithPodcast(episodes: LocalStorageEpisode[], podcasts: LocalStoragePodcast[]): LocalStorageEpisode[] {
+		return episodes.map((episode) => {
+			// I'm not treating exceptions here because the data constraints ensure that a single entry
+			// will exist here
+			const podcast = podcasts.filter((podcast) => podcast.id === episode.podcastId)[0];
+
+			return {
+				...episode,
+				podcast: podcast
+			}
+		})
 	}
 }

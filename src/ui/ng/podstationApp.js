@@ -40,7 +40,7 @@ myApp
   .controller('adController', ['$scope', 'storageService', AdController])
   .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
   .controller('aboutController', ['$scope', AboutController])
-  .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
+  .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', 'podcastEngine', LastEpisodesController])
   .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
   .controller('episodesInProgressController', ['$scope', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])

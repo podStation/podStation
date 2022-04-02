@@ -1,4 +1,5 @@
 import { PodcastDataServiceClass } from '../../../reuse/ng/services/podcastDataService';
+import IPodcastEngine from '../../../reuse/podcast-engine/podcastEngine';
 import {formatDate} from '../../common';
 
 declare var chrome: any;
@@ -9,7 +10,10 @@ export type ControllerEpisode = {
 	image?: string;
 	podcastIndex?: number;
 	podcastTitle?: string;
+	/** Probably not used */
 	podcastUrl?: string;
+	podcastId?: number;
+	/** Url of the episode enclosure */
 	url?: string;
 	description?: string;
 	pubDateUnformatted?: Date;
@@ -36,8 +40,8 @@ function updateIsInPlaylist($scope: any, messageService: any, podcastDataService
 	});
 }
 
-function LastEpisodesController($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass) {
-	return new LastEpisodesControllerClass($scope, messageService, storageServiceUI, socialService, podcastDataService);
+function LastEpisodesController($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass, podcastEngine: IPodcastEngine) {
+	return new LastEpisodesControllerClass($scope, messageService, storageServiceUI, socialService, podcastDataService, podcastEngine);
 }
 
 class LastEpisodesControllerClass {
@@ -47,78 +51,59 @@ class LastEpisodesControllerClass {
 	storageServiceUI: any;
 	socialService: any;
 	podcastDataService: PodcastDataServiceClass;
+	private podcastEngine: IPodcastEngine;
 
 	listType: string = 'big_list';
 	episodes: ControllerEpisode[] = [];
-	numberEpisodes: number = 50;
+	// numberEpisodes: number = 50;
+	private nextPageOffset: number = 0;
+	private nextPageSize: number = 50;
+	private readonly PAGE_SIZE = 20;
 
 	private episodesLoaded = false; 
 	private optionsLoaded = false;
 
-	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass) {
+	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
 		this.socialService = socialService;
 		this.podcastDataService = podcastDataService;
+		this.podcastEngine = podcastEngine;
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			this.listType = uiOptions.llt;
 			this.optionsLoaded = true;
 		});
 
-		messageService.for('podcast').onMessage('changed', (messageContent: any) => {
-			if(messageContent.episodeListChanged) {
-				this.$scope.$apply(() => {
-					this.updateEpisodes();
-				});
-			}
-		});
-
-		messageService.for('playlist').onMessage('changed', () => { updateIsInPlaylist($scope, messageService, podcastDataService, this.episodes); });
-		
-		this.updateEpisodes();
+		this.fetchNextPage();
 	}
 
-	updateEpisodes() {
-		chrome.runtime.getBackgroundPage((bgPage: any) => {
-			this.$scope.$apply(() => {
-				this.episodes = [];
-				const storedEpisodeContainers = bgPage.podcastManager.getAllEpisodes();
+	async fetchNextPage() {
+		const nextPageEpisodes = await this.podcastEngine.getLastEpisodes(this.nextPageOffset, this.nextPageSize);
+		this.episodes.push(...nextPageEpisodes.map((episode) => {
+			const controllerEpisode: ControllerEpisode = {
+				...episode, 
+				isInPlaylist: false,
+				pubDate: formatDate(episode.pubDate),
+				pubDateUnformatted: episode.pubDate,
+				image: episode.podcast?.imageUrl,
+				podcastTitle: episode.podcast?.title,
+				url: episode.enclosureUrl,
+			};
 
-				this.episodes = storedEpisodeContainers.map((storedEpisodeContainer: any) => {
-					const episode: ControllerEpisode = {
-						isInPlaylist: false,
-					};
+			return controllerEpisode; 
+		}));
 
-					episode.link = storedEpisodeContainer.episode.link;
-					episode.title = storedEpisodeContainer.episode.title ? storedEpisodeContainer.episode.title : storedEpisodeContainer.episode.url;
-					episode.image = storedEpisodeContainer.podcast.image;
-					episode.podcastIndex = storedEpisodeContainer.podcastIndex;
-					episode.podcastTitle = storedEpisodeContainer.podcast.title;
-					episode.podcastUrl = storedEpisodeContainer.podcast.url;
-					episode.url = storedEpisodeContainer.episode.enclosure.url;
-					episode.description = storedEpisodeContainer.episode.description;
-					episode.pubDateUnformatted = new Date(storedEpisodeContainer.episode.pubDate);
-					episode.pubDate = formatDate(episode.pubDateUnformatted);
-					episode.guid = storedEpisodeContainer.episode.guid;
-					episode.isInPlaylist = false;
-					episode.participants = storedEpisodeContainer.episode.participants && storedEpisodeContainer.episode.participants.map(this.socialService.participantMapping);
-					episode.duration = storedEpisodeContainer.episode.duration;
+		this.nextPageOffset += this.PAGE_SIZE;
+		this.nextPageSize = this.PAGE_SIZE;
+		this.episodesLoaded = true;
 
-					return episode;
-				});
-
-				updateIsInPlaylist(this.$scope, this.messageService, this.podcastDataService, this.episodes);
-
-				this.episodesLoaded = true;
-			});
-		});
-	};
+		this.$scope.$apply();
+	}
 
 	myPagingFunction() {
-		this.numberEpisodes += 20;
-		console.log('Paging function - ' + this.numberEpisodes);
+		this.fetchNextPage();
 	};
 
 	listTypeChanged() {

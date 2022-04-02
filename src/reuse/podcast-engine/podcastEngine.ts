@@ -1,6 +1,6 @@
 import { IPodcastTableRecord } from "./database";
 import { PodcastUpdater } from "./podcastUpdater";
-import { IStorageEngine, LocalPodcastId, LocalStoragePodcast, StorageEngine } from "./storageEngine";
+import { IStorageEngine, LocalPodcastId, LocalStorageEpisode, LocalStoragePodcast, StorageEngine } from "./storageEngine";
 
 /**
  * A podcast to be added, to the engine, identified by its feed URL.
@@ -21,6 +21,7 @@ export interface IPodcastEngine {
 	getAllPodcasts(): Promise<LocalStoragePodcast[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	updatePodcast(localPodcastId: LocalPodcastId): void;
+	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -54,6 +55,10 @@ class PodcastEngine implements IPodcastEngine {
 		let podcastUpdater = new PodcastUpdater(this.storageEngine);
 
 		podcastUpdater.update(localPodcastId);
+	}
+
+	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
+		return this.storageEngine.getLastEpisodes(offset, limit);
 	}
 }
 

@@ -51,7 +51,13 @@ export class PodcastUpdater {
 			podcastId: localPodcastId,
 			title: feedEpisode.title,
 			description: feedEpisode.description,
-			guid: feedEpisode.guid
+			guid: feedEpisode.guid,
+			pubDate: feedEpisode.pubDate ? new Date(feedEpisode.pubDate) : undefined,
+			link: feedEpisode.link,
+			enclosureUrl: feedEpisode.enclosure?.url,
+			enclosureLength: feedEpisode.enclosure?.length,
+			enclosureType: feedEpisode.enclosure?.type,
+			duration: feedEpisode.duration,
 		}
 
 		return episodeTableRecord;
