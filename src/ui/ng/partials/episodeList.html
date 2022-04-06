@@ -34,9 +34,9 @@
 						<span class="psBtn icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="episodeList.shareWithFacebook(episode)">
 							<i class="fa fa-facebook"></i> {{'facebook_share' | chrome_i18n}}
 						</span>-->
-						<span ng-if="episode.podcastIndex !== undefined">
+						<span ng-if="episode.podcastId !== undefined">
 							<br>
-							<a ng-href="#/Episodes/{{episode.podcastIndex}}">
+							<a ng-href="#/Episodes/{{episode.podcastId}}">
 								<span ng-bind-html="{ message: 'all_eps_from', arguments: [episode.podcastTitle]} | chrome_i18n"></span>
 							</a>
 						</span>
