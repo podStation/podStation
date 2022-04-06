@@ -3,6 +3,8 @@ import parsePodcastFeed from "../../background/utils/parsePodcastFeed";
 import { IEpisodeTableRecord, IPodcastTableRecord } from "./database";
 import { IStorageEngine, LocalPodcastId, LocalStoragePodcast } from "./storageEngine";
 
+const LOW_DATE = new Date(0);
+
 interface IPodcastUpdater {
 	update(localPodcastId: number): Promise<void>
 }
@@ -26,7 +28,7 @@ export class PodcastUpdater {
 			title: parsedFeed.podcast.title,
 			description: parsedFeed.podcast.description,
 			imageUrl: parsedFeed.podcast.image,
-			pubDate: new Date(parsedFeed.podcast.pubDate),
+			pubDate: new Date(parsedFeed.podcast.pubDate ? parsedFeed.podcast.pubDate : LOW_DATE),
 			numberOfEpisodes: parsedFeed.episodes.length,
 			state: 'ready'
 		};
@@ -52,7 +54,7 @@ export class PodcastUpdater {
 			title: feedEpisode.title,
 			description: feedEpisode.description,
 			guid: feedEpisode.guid,
-			pubDate: feedEpisode.pubDate ? new Date(feedEpisode.pubDate) : undefined,
+			pubDate: feedEpisode.pubDate ? new Date(feedEpisode.pubDate) : LOW_DATE,
 			link: feedEpisode.link,
 			enclosureUrl: feedEpisode.enclosure?.url,
 			enclosureLength: feedEpisode.enclosure?.length,

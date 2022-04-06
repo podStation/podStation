@@ -1,6 +1,6 @@
 import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
-import { LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
+import { LocalPodcastId, LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
 
 declare var chrome: any;
 
@@ -10,7 +10,7 @@ function PodcastsController($scope: any, messageService: any, storageServiceUI: 
 
 type Podcast = {
 	index: number,
-	localPodcastId: number,
+	localPodcastId: LocalPodcastId,
 	title: string,
 	description: string,
 	episodesNumber: number,

@@ -8,8 +8,10 @@ export class PodcastDatabase extends Dexie {
 		super(databaseName);
 
 		this.version(1).stores({
-			podcasts: '++id, &feedUrl, title',
-			episodes: '++id, podcastId, title, guid, pubDate'
+			podcasts: '++id, &feedUrl',
+			// [podcastId+pubDate] is useful for getting all episodes of a podcast
+			// ordered by pubDate
+			episodes: '++id, [podcastId+pubDate], pubDate'
 		});
 	}
 }
@@ -69,7 +71,7 @@ export interface IEpisodeTableRecord {
 	title?: string;
 	description?: string;
 	guid?: string;
-	pubDate?: Date;
+	pubDate: Date;
 	link?: string;
 	enclosureUrl?: string;
 	enclosureLength?: number;

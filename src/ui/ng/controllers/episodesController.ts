@@ -1,5 +1,6 @@
 import { PodcastDataServiceClass } from '../../../reuse/ng/services/podcastDataService';
 import IPodcastEngine from '../../../reuse/podcast-engine/podcastEngine';
+import { LocalPodcastId } from '../../../reuse/podcast-engine/storageEngine';
 import {formatDate} from '../../common';
 
 declare var chrome: any;
@@ -12,7 +13,7 @@ export type ControllerEpisode = {
 	podcastTitle?: string;
 	/** Probably not used */
 	podcastUrl?: string;
-	podcastId?: number;
+	podcastId?: LocalPodcastId;
 	/** Url of the episode enclosure */
 	url?: string;
 	description?: string;
@@ -55,7 +56,8 @@ class LastEpisodesControllerClass {
 
 	listType: string = 'big_list';
 	episodes: ControllerEpisode[] = [];
-	// numberEpisodes: number = 50;
+
+	private isReadingPage: boolean = false;
 	private nextPageOffset: number = 0;
 	private nextPageSize: number = 50;
 	private readonly PAGE_SIZE = 20;
@@ -76,10 +78,15 @@ class LastEpisodesControllerClass {
 			this.optionsLoaded = true;
 		});
 
-		this.fetchNextPage();
+		this.readNextEpisodesPage();
 	}
 
-	async fetchNextPage() {
+	async readNextEpisodesPage() {
+		// avoid parallel page reads
+		if(this.isReadingPage)
+			return;
+
+		this.isReadingPage = true;
 		const nextPageEpisodes = await this.podcastEngine.getLastEpisodes(this.nextPageOffset, this.nextPageSize);
 		this.episodes.push(...nextPageEpisodes.map((episode) => {
 			const controllerEpisode: ControllerEpisode = {
@@ -95,15 +102,17 @@ class LastEpisodesControllerClass {
 			return controllerEpisode; 
 		}));
 
-		this.nextPageOffset += this.PAGE_SIZE;
+		this.nextPageOffset += this.nextPageSize;
 		this.nextPageSize = this.PAGE_SIZE;
 		this.episodesLoaded = true;
 
 		this.$scope.$apply();
+
+		this.isReadingPage = false;
 	}
 
 	myPagingFunction() {
-		this.fetchNextPage();
+		this.readNextEpisodesPage();
 	};
 
 	listTypeChanged() {
@@ -119,103 +128,96 @@ class LastEpisodesControllerClass {
 	}
 }
 
-function EpisodeController($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any) {
-	return new EpisodeControllerClass($scope, $routeParams, messageService, storageServiceUI, podcastDataService, socialService);
+function EpisodeController($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any, podcastEngine: IPodcastEngine) {
+	return new EpisodeControllerClass($scope, $routeParams, messageService, storageServiceUI, podcastDataService, socialService, podcastEngine);
 }
 
 class EpisodeControllerClass {
-	$scope: any;
-	$routeParams: any;
-	messageService: any;
-	storageServiceUI: any;
-	socialService: any;
-	podcastDataService: PodcastDataServiceClass;
+	private $scope: any;
+	private messageService: any;
+	private storageServiceUI: any;
+	private socialService: any;
+	private podcastDataService: PodcastDataServiceClass;
+	private podcastEngine: IPodcastEngine;
+
+	private isReadingPage: boolean = false;
+	private nextPageOffset: number = 0;
+	private nextPageSize: number = 50;
+	private readonly PAGE_SIZE = 20;
+
+	private localPodcastId: LocalPodcastId;
 
 	listType: string = 'big_list';
 	sorting: string = 'by_pubdate_descending';
 	episodes: ControllerEpisode[] = [];
 	numberEpisodes: number = 50;
-	podcastUrl: string = '';
+	// podcastUrl: string = '';
 	podcastTitle: string = '';
 	podcastImage: string = '';
 
-	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any) {
+	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
-		this.$routeParams = $routeParams;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
 		this.socialService = socialService;
 		this.podcastDataService = podcastDataService;
+		this.podcastEngine = podcastEngine;
+
+		this.localPodcastId = parseInt($routeParams.localPodcastId);
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			$scope.listType = uiOptions.elt;
 			$scope.sorting = uiOptions.es;
 		});
-	
-		messageService.for('podcast').onMessage('changed', (messageContent: any) => {
-			if(messageContent.episodeListChanged && messageContent.podcast.url === this.podcastUrl) {
-				$scope.$apply(function() {
-					this.updateEpisodes();
-				});
-			}
-		});
-	
-		messageService.for('playlist').onMessage('changed', () => { updateIsInPlaylist($scope, messageService, podcastDataService, this.episodes); });
 
-		this.updateEpisodes();
+		this.readPodcast();
+		this.readNextEpisodesPage();
 	}
 
-	updateEpisodes() {
-		this.episodes = [];
-		this.podcastTitle = '';
+	async readPodcast() {
+		const podcast = await this.podcastEngine.getPodcast(this.localPodcastId);
 
-		chrome.runtime.getBackgroundPage((bgPage: any) => {
-			const storedPodcast = bgPage.podcastManager.getPodcast(parseInt(this.$routeParams.podcastIndex));
+		this.podcastTitle = podcast.title;
+		this.podcastImage = podcast.imageUrl;
 
-			this.podcastUrl = storedPodcast.url;
+		this.$scope.$apply();
+	}
 
-			this.$scope.$apply(() => {
-				this.podcastImage = storedPodcast.image;
-				this.podcastTitle = storedPodcast.title;
-			});
+	async readNextEpisodesPage() {
+		// avoid parallel page reads
+		if(this.isReadingPage)
+			return;
 
-			// the following part is more expensive, we let the browser update 
-			// the content on the screen before going on.
-			setTimeout(() => {
-				this.$scope.$apply(() => {
-					this.episodes = storedPodcast.episodes.map((storedEpisode: any) => {
-						const episode: ControllerEpisode = {
-							isInPlaylist: false,
-						};
+		this.isReadingPage = true;
+		const nextEpisodesPage = await this.podcastEngine.getPodcastEpisodes(this.localPodcastId, this.nextPageOffset, this.nextPageSize, this.isReverseOrder());
 
-						episode.podcastUrl = storedPodcast.url;
-						episode.link = storedEpisode.link;
-						episode.title = storedEpisode.title ? storedEpisode.title : storedEpisode.url;
-						episode.url = storedEpisode.enclosure.url;
-						episode.description = storedEpisode.description;
-						episode.pubDateUnformatted = new Date(storedEpisode.pubDate);
-						episode.pubDate = formatDate(episode.pubDateUnformatted);
-						episode.guid = storedEpisode.guid;
-						episode.participants = storedEpisode.participants && storedEpisode.participants.map(this.socialService.participantMapping);
-						episode.duration = storedEpisode.duration;
+		this.episodes.push(...nextEpisodesPage.map((episode) => {
+			const controllerEpisode: ControllerEpisode = {
+				...episode, 
+				isInPlaylist: false,
+				pubDate: formatDate(episode.pubDate),
+				pubDateUnformatted: episode.pubDate,
+				url: episode.enclosureUrl,
+			};
 
-						return episode;
-					});
+			return controllerEpisode; 
+		}));
 
-					updateIsInPlaylist(this.$scope, this.messageService, this.podcastDataService, this.episodes);
-				});
-			} ,1);
-		});
-	};
+		this.nextPageOffset += this.nextPageSize;
+		this.nextPageSize = this.PAGE_SIZE;
+
+		this.$scope.$apply();
+
+		this.isReadingPage = false;
+	}
 
 	myPagingFunction() {
-		this.numberEpisodes += 20;
-		console.log('Paging function - ' + this.numberEpisodes);
+		this.readNextEpisodesPage();
 	};
 
 	listTypeChanged() {
 		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
-			uiOptions.elt = this.$scope.listType;
+			uiOptions.elt = this.listType;
 
 			return true;
 		});
@@ -223,14 +225,14 @@ class EpisodeControllerClass {
 
 	sortingChanged() {
 		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
-			uiOptions.es = this.$scope.sorting;
+			uiOptions.es = this.sorting;
 
 			return true;
 		});
 	}
 
 	isReverseOrder() {
-		return this.$scope.sorting === 'by_pubdate_descending';
+		return this.sorting === 'by_pubdate_descending';
 	}
 }
 

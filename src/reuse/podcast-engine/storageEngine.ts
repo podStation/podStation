@@ -1,3 +1,4 @@
+import Dexie from "dexie";
 import { IEpisodeTableRecord, IPodcastTableRecord, PodcastDatabase } from "./database";
 
 export type LocalPodcastId = number;
@@ -31,7 +32,7 @@ export type LocalStorageEpisode = {
 	title?: string;
 	description?: string;
 	guid?: string;
-	pubDate?: Date;
+	pubDate: Date;
 	link?: string;
 	enclosureUrl?: string;
 	enclosureLength?: number;
@@ -44,6 +45,7 @@ export interface IStorageEngine {
 	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
 	getAllPodcasts(): Promise<LocalStoragePodcast[]>;
 	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
+	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]>;
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
@@ -80,6 +82,15 @@ export class StorageEngine implements IStorageEngine {
 
 	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]> {
 		return this.db.episodes.where({podcastId: localPodcastId}).toArray();
+	}
+
+	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]> {
+		// important note, this query will not bring entries without a pubDate, so it
+		// needs to be ensured that this field is set on the record 
+		return this.db.episodes.where('[podcastId+pubDate]').between(
+			[localPodcastId, Dexie.minKey],
+			[localPodcastId, Dexie.maxKey]
+		).reverse().offset(offset).limit(limit).toArray();
 	}
 
 	deletePodcast(localPodcastId: number): void {

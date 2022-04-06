@@ -18,9 +18,14 @@ type PodcastToBeAdded = {
 
 export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
+	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
 	getAllPodcasts(): Promise<LocalStoragePodcast[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	updatePodcast(localPodcastId: LocalPodcastId): void;
+	/**
+	 * Get all episodes of a podcast, sorted by pubDate
+	 */
+	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]>;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 }
 
@@ -43,6 +48,10 @@ class PodcastEngine implements IPodcastEngine {
 		this.updatePodcast(localPodcastId);
 	}
 
+	async getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast> {
+		return this.storageEngine.getPodcast(localPodcastId);
+	}
+
 	getAllPodcasts(): Promise<IPodcastTableRecord[]> {
 		return this.storageEngine.getAllPodcasts();
 	}
@@ -55,6 +64,10 @@ class PodcastEngine implements IPodcastEngine {
 		let podcastUpdater = new PodcastUpdater(this.storageEngine);
 
 		podcastUpdater.update(localPodcastId);
+	}
+
+	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]> {
+		return this.storageEngine.getPodcastEpisodes(localPodcastId, offset, limit, reverse);
 	}
 
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {

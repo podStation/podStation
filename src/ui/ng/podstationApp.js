@@ -41,7 +41,7 @@ myApp
   .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
   .controller('aboutController', ['$scope', AboutController])
   .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', 'podcastEngine', LastEpisodesController])
-  .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
+  .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', 'podcastEngine', EpisodeController])
   .controller('episodesInProgressController', ['$scope', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
@@ -69,9 +69,10 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 	}).when('/LastEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
 		controller: 'lastEpisodesController as lastEpisodesController'
-	}).when('/Episodes/:podcastIndex', {
+	}).when('/Episodes/:localPodcastId', {
 		templateUrl: '/ui/ng/partials/episodes.html',
-		controller: 'episodesController as episodesController'
+		controller: 'episodesController',
+		controllerAs: 'episodesController'
 	}).when('/InProgress', {
 		templateUrl: '/ui/ng/partials/episodesInProgress.html',
 		controller: 'episodesInProgressController as episodesInProgressController'
