@@ -87,10 +87,16 @@ export class StorageEngine implements IStorageEngine {
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]> {
 		// important note, this query will not bring entries without a pubDate, so it
 		// needs to be ensured that this field is set on the record 
-		return this.db.episodes.where('[podcastId+pubDate]').between(
+		let collection = this.db.episodes.where('[podcastId+pubDate]').between(
 			[localPodcastId, Dexie.minKey],
 			[localPodcastId, Dexie.maxKey]
-		).reverse().offset(offset).limit(limit).toArray();
+		);
+
+		if(reverse) {
+			collection = collection.reverse();
+		}
+		
+		return collection.offset(offset).limit(limit).toArray();
 	}
 
 	deletePodcast(localPodcastId: number): void {

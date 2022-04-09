@@ -254,6 +254,11 @@ class EpisodeControllerClass {
 
 			return true;
 		});
+
+		this.pagedEpisodes = new PagedEpisodes();
+		this.readNextEpisodesPage();
+
+		this.$scope.$apply();
 	}
 
 	isReverseOrder() {
