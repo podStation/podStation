@@ -41,6 +41,43 @@ function updateIsInPlaylist($scope: any, messageService: any, podcastDataService
 	});
 }
 
+class PagedEpisodes {
+	private episodes: ControllerEpisode[] = [];
+	private isReadingPage: boolean = false;
+	private nextPageOffset: number = 0;
+	private nextPageSize: number = 50;
+	private readonly PAGE_SIZE = 20;
+
+	getEpisodes(): ControllerEpisode[] {
+		// I tried returning [...this.episodes], but angular goes haywire.
+		// possibly because a new value is returned every time the expression is 
+		// evaluated, so returning the same reference all the time seems to be
+		// the way to go.
+		return this.episodes;
+	}
+
+	/**
+	 * 
+	 * @param pageReader A function that provides a new page of episodes
+	 * @returns true if a new page is pushed, false if a page is already being read and nothing will be done
+	 */
+	async pushPage(pageReader: (pageOffset: number, pageSize: number) => Promise<ControllerEpisode[]>): Promise<boolean> {
+		// avoid concurrent page reads
+		if(!this.isReadingPage) {
+			this.isReadingPage = true;
+		
+			this.episodes.push(...await pageReader(this.nextPageOffset, this.nextPageSize));
+
+			this.nextPageOffset += this.nextPageSize;
+			this.nextPageSize = this.PAGE_SIZE;
+			this.isReadingPage = false;
+			return true;
+		}
+
+		return false;
+	};
+}
+
 function LastEpisodesController($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass, podcastEngine: IPodcastEngine) {
 	return new LastEpisodesControllerClass($scope, messageService, storageServiceUI, socialService, podcastDataService, podcastEngine);
 }
@@ -53,14 +90,9 @@ class LastEpisodesControllerClass {
 	socialService: any;
 	podcastDataService: PodcastDataServiceClass;
 	private podcastEngine: IPodcastEngine;
-
-	listType: string = 'big_list';
-	episodes: ControllerEpisode[] = [];
-
-	private isReadingPage: boolean = false;
-	private nextPageOffset: number = 0;
-	private nextPageSize: number = 50;
-	private readonly PAGE_SIZE = 20;
+	
+	private pagedEpisodes: PagedEpisodes;
+	listType: string = 'big_list';	
 
 	private episodesLoaded = false; 
 	private optionsLoaded = false;
@@ -73,6 +105,8 @@ class LastEpisodesControllerClass {
 		this.podcastDataService = podcastDataService;
 		this.podcastEngine = podcastEngine;
 
+		this.pagedEpisodes = new PagedEpisodes();
+
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			this.listType = uiOptions.llt;
 			this.optionsLoaded = true;
@@ -82,33 +116,32 @@ class LastEpisodesControllerClass {
 	}
 
 	async readNextEpisodesPage() {
-		// avoid parallel page reads
-		if(this.isReadingPage)
-			return;
+		let pagePushed: boolean = await this.pagedEpisodes.pushPage(async (pageOffset, pageSize) => {
+			const pageEpisodes = await this.podcastEngine.getLastEpisodes(pageOffset, pageSize);
+			
+			return pageEpisodes.map((episode) => {
+				const controllerEpisode: ControllerEpisode = {
+					...episode, 
+					isInPlaylist: false,
+					pubDate: formatDate(episode.pubDate),
+					pubDateUnformatted: episode.pubDate,
+					image: episode.podcast?.imageUrl,
+					podcastTitle: episode.podcast?.title,
+					url: episode.enclosureUrl,
+				};
 
-		this.isReadingPage = true;
-		const nextPageEpisodes = await this.podcastEngine.getLastEpisodes(this.nextPageOffset, this.nextPageSize);
-		this.episodes.push(...nextPageEpisodes.map((episode) => {
-			const controllerEpisode: ControllerEpisode = {
-				...episode, 
-				isInPlaylist: false,
-				pubDate: formatDate(episode.pubDate),
-				pubDateUnformatted: episode.pubDate,
-				image: episode.podcast?.imageUrl,
-				podcastTitle: episode.podcast?.title,
-				url: episode.enclosureUrl,
-			};
+				return controllerEpisode; 
+			});
+		});
 
-			return controllerEpisode; 
-		}));
+		if(pagePushed) {
+			this.episodesLoaded = true;
+			this.$scope.$apply();
+		}
+	}
 
-		this.nextPageOffset += this.nextPageSize;
-		this.nextPageSize = this.PAGE_SIZE;
-		this.episodesLoaded = true;
-
-		this.$scope.$apply();
-
-		this.isReadingPage = false;
+	getEpisodes() {
+		return this.pagedEpisodes.getEpisodes();
 	}
 
 	myPagingFunction() {
