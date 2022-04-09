@@ -173,18 +173,11 @@ class EpisodeControllerClass {
 	private podcastDataService: PodcastDataServiceClass;
 	private podcastEngine: IPodcastEngine;
 
-	private isReadingPage: boolean = false;
-	private nextPageOffset: number = 0;
-	private nextPageSize: number = 50;
-	private readonly PAGE_SIZE = 20;
-
 	private localPodcastId: LocalPodcastId;
+	private pagedEpisodes: PagedEpisodes;
 
 	listType: string = 'big_list';
 	sorting: string = 'by_pubdate_descending';
-	episodes: ControllerEpisode[] = [];
-	numberEpisodes: number = 50;
-	// podcastUrl: string = '';
 	podcastTitle: string = '';
 	podcastImage: string = '';
 
@@ -197,6 +190,7 @@ class EpisodeControllerClass {
 		this.podcastEngine = podcastEngine;
 
 		this.localPodcastId = parseInt($routeParams.localPodcastId);
+		this.pagedEpisodes = new PagedEpisodes();
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			$scope.listType = uiOptions.elt;
@@ -217,31 +211,29 @@ class EpisodeControllerClass {
 	}
 
 	async readNextEpisodesPage() {
-		// avoid parallel page reads
-		if(this.isReadingPage)
-			return;
+		let pagePushed: boolean = await this.pagedEpisodes.pushPage(async (pageOffset, pageSize) => {
+			const pageEpisodes = await this.podcastEngine.getPodcastEpisodes(this.localPodcastId, pageOffset, pageSize, this.isReverseOrder());
+			
+			return pageEpisodes.map((episode) => {
+				const controllerEpisode: ControllerEpisode = {
+					...episode, 
+					isInPlaylist: false,
+					pubDate: formatDate(episode.pubDate),
+					pubDateUnformatted: episode.pubDate,
+					url: episode.enclosureUrl,
+				};
+	
+				return controllerEpisode; 
+			});
+		});
 
-		this.isReadingPage = true;
-		const nextEpisodesPage = await this.podcastEngine.getPodcastEpisodes(this.localPodcastId, this.nextPageOffset, this.nextPageSize, this.isReverseOrder());
+		if(pagePushed) {
+			this.$scope.$apply();
+		}
+	}
 
-		this.episodes.push(...nextEpisodesPage.map((episode) => {
-			const controllerEpisode: ControllerEpisode = {
-				...episode, 
-				isInPlaylist: false,
-				pubDate: formatDate(episode.pubDate),
-				pubDateUnformatted: episode.pubDate,
-				url: episode.enclosureUrl,
-			};
-
-			return controllerEpisode; 
-		}));
-
-		this.nextPageOffset += this.nextPageSize;
-		this.nextPageSize = this.PAGE_SIZE;
-
-		this.$scope.$apply();
-
-		this.isReadingPage = false;
+	getEpisodes() {
+		return this.pagedEpisodes.getEpisodes();
 	}
 
 	myPagingFunction() {
