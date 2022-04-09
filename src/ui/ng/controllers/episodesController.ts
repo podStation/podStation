@@ -84,11 +84,11 @@ function LastEpisodesController($scope: any, messageService: any, storageService
 
 class LastEpisodesControllerClass {
 
-	$scope: any;
-	messageService: any;
-	storageServiceUI: any;
-	socialService: any;
-	podcastDataService: PodcastDataServiceClass;
+	private $scope: any;
+	private messageService: any;
+	private storageServiceUI: any;
+	private socialService: any;
+	private podcastDataService: PodcastDataServiceClass;
 	private podcastEngine: IPodcastEngine;
 	
 	private pagedEpisodes: PagedEpisodes;
