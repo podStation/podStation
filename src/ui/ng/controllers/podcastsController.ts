@@ -4,10 +4,6 @@ import { LocalPodcastId, LocalStoragePodcastState } from "../../../reuse/podcast
 
 declare var chrome: any;
 
-function PodcastsController($scope: any, messageService: any, storageServiceUI: any, socialService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
-	return new PodcastsControllerClass($scope, messageService, storageServiceUI, socialService, analyticsService, podcastEngine);
-}
-
 type Podcast = {
 	index: number,
 	localPodcastId: LocalPodcastId,
@@ -25,7 +21,7 @@ type Podcast = {
  * Angular controller for the list of subscribed podcasts
  * 
  */
-class PodcastsControllerClass {
+class PodcastsController {
 	private $scope: any;
 	private messageService: any;
 	private storageServiceUI: any;
@@ -79,7 +75,7 @@ class PodcastsControllerClass {
 			image: podcast.imageUrl,
 			pubDate: podcast.pubDate,
 			formattedPubDate: podcast.pubDate ? formatDate(podcast.pubDate) : undefined,
-			statusClass: PodcastsControllerClass.getStatusClass(podcast.state) 
+			statusClass: PodcastsController.getStatusClass(podcast.state) 
 		}))
 
 		this.podcastsLoaded = true;

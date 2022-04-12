@@ -3,11 +3,7 @@ import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 
 declare var chrome: any;
 
-function SearchController($scope: any, $routeParams: any, $location: any, searchService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
-	return new SearchControllerClass($scope, $routeParams, $location, searchService, analyticsService, podcastEngine);
-}
-
-class SearchControllerClass {
+class SearchController {
 	private $scope: any;
 	private $location: any;
 	private searchService: any;
@@ -39,7 +35,7 @@ class SearchControllerClass {
 					feedUrl: new URL(searchResult.feedUrl),
 					title: searchResult.title,
 					description: searchResult.description,
-					imageUrl: SearchControllerClass.getImageUrl(searchResult),
+					imageUrl: SearchController.getImageUrl(searchResult),
 				});
 
 				this.$location.path('/Podcasts');

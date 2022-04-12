@@ -1,4 +1,4 @@
-import { PodcastDataServiceClass } from '../../../reuse/ng/services/podcastDataService';
+import PodcastDataService from '../../../reuse/ng/services/podcastDataService';
 import IPodcastEngine from '../../../reuse/podcast-engine/podcastEngine';
 import { LocalPodcastId } from '../../../reuse/podcast-engine/storageEngine';
 import {formatDate} from '../../common';
@@ -28,7 +28,7 @@ export type ControllerEpisode = {
 	pausedAt?: number;
 }
 
-function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: PodcastDataServiceClass, episodes?: ControllerEpisode[]) {
+function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: PodcastDataService, episodes?: ControllerEpisode[]) {
 	messageService.for('playlist').sendMessage('get', {}, (playlist: any) => {
 		$scope.$apply(() => {
 			// transition phase, we support episodes on scope and as a dedicated argument
@@ -78,17 +78,13 @@ class PagedEpisodes {
 	};
 }
 
-function LastEpisodesController($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass, podcastEngine: IPodcastEngine) {
-	return new LastEpisodesControllerClass($scope, messageService, storageServiceUI, socialService, podcastDataService, podcastEngine);
-}
-
-class LastEpisodesControllerClass {
+class LastEpisodesController {
 
 	private $scope: any;
 	private messageService: any;
 	private storageServiceUI: any;
 	private socialService: any;
-	private podcastDataService: PodcastDataServiceClass;
+	private podcastDataService: PodcastDataService;
 	private podcastEngine: IPodcastEngine;
 	
 	private pagedEpisodes: PagedEpisodes;
@@ -97,7 +93,7 @@ class LastEpisodesControllerClass {
 	private episodesLoaded = false; 
 	private optionsLoaded = false;
 
-	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataServiceClass, podcastEngine: IPodcastEngine) {
+	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataService, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
@@ -161,16 +157,12 @@ class LastEpisodesControllerClass {
 	}
 }
 
-function EpisodeController($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any, podcastEngine: IPodcastEngine) {
-	return new EpisodeControllerClass($scope, $routeParams, messageService, storageServiceUI, podcastDataService, socialService, podcastEngine);
-}
-
-class EpisodeControllerClass {
+class EpisodeController {
 	private $scope: any;
 	private messageService: any;
 	private storageServiceUI: any;
 	private socialService: any;
-	private podcastDataService: PodcastDataServiceClass;
+	private podcastDataService: PodcastDataService;
 	private podcastEngine: IPodcastEngine;
 
 	private localPodcastId: LocalPodcastId;
@@ -181,7 +173,7 @@ class EpisodeControllerClass {
 	podcastTitle: string = '';
 	podcastImage: string = '';
 
-	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any, podcastEngine: IPodcastEngine) {
+	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataService, socialService: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
@@ -266,16 +258,12 @@ class EpisodeControllerClass {
 	}
 }
 
-function EpisodesInProgressController($scope: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any) {
-	return new EpisodesInProgressControllerClass($scope, messageService, storageServiceUI, podcastDataService, socialService);
-}
-
-class EpisodesInProgressControllerClass {
+class EpisodesInProgressController {
 	$scope: any;
 	messageService: any;
 	storageServiceUI: any;
 	socialService: any;
-	podcastDataService: PodcastDataServiceClass;
+	podcastDataService: PodcastDataService;
 
 	listType = 'big_list';
 	orderByField = 'lastTimePlayed';
@@ -284,7 +272,7 @@ class EpisodesInProgressControllerClass {
 	private episodesLoaded = false;
 	private optionsLoaded = false;
 
-	constructor($scope: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataServiceClass, socialService: any) {
+	constructor($scope: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataService, socialService: any) {
 		this.$scope = $scope;
 		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
