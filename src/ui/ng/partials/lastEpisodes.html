@@ -4,7 +4,7 @@
 		<h3 ng-if="!lastEpisodesController.episodes.length">{{'no_episodes' | chrome_i18n }}</h3>
 		<div id="episodeList" infinite-scroll="lastEpisodesController.myPagingFunction()" infinite-scroll-distance="1">
 			<div id="listMenu" ng-show="lastEpisodesController.episodes.length">
-				<select ng-model="listType" ng-change="lastEpisodesController.listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<select ng-model="lastEpisodesController.listType" ng-change="lastEpisodesController.listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 					<option value="big_list"  >&#xf00b; Big list</option>
 					<option value="small_list">&#xf03a; Small list</option>
 				</select>
