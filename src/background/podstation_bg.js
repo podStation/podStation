@@ -11,7 +11,7 @@ window.openPodStation = function(hash) {
 
 		if(hash) {
 			firstView.location.pathname = APP_PATH
-			firstView.location.hash = hash;
+			firstView.location.hash = '!' + hash;
 		}
 		
 		firstView.chrome.windows.getCurrent({}, (currentWindow) => {
@@ -26,7 +26,7 @@ window.openPodStation = function(hash) {
 		// chrome.tabs.create is used instead of window.open because of
 		// https://bugs.chromium.org/p/chromium/issues/detail?id=1298195
 		chrome.tabs.create({
-			url: APP_PATH + ( hash ? '#' + hash : '')
+			url: APP_PATH + ( hash ? '#!' + hash : '')
 		});
 	}
 }
