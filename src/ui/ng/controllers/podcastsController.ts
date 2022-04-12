@@ -241,6 +241,7 @@ class PodcastsControllerClass {
 			this.listType = uiOptions.plt;
 			this.sorting = uiOptions.ps;
 			this.optionsLoaded = true;
+			this.$scope.$apply();
 		});
 
 		chrome.runtime.onMessage.addListener((message: any) => {

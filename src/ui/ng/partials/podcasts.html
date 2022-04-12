@@ -31,9 +31,9 @@
 							</div>
 							<div class="textView">
 								<div class="itemHeader">
-									<a ng-href="#/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
+									<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
 									<br>
-									<a ng-href="#/Episodes/{{podcast.localPodcastId}}" class="linkToEpisodes" id="{{podcast.url}}">
+									<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" class="linkToEpisodes" id="{{podcast.url}}">
 										<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span><!--
 									--></a>
 									<span ng-if="podcast.link">
@@ -87,7 +87,7 @@
 						</div>
 						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.deletePodcast(podcast)"><i class="fa fa-remove"></i></a>
 						<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.updatePodcastFromFeed(podcast)"><i class="fa fa-refresh"></i></a>
-						<a ng-href="#/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
+						<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
 						<span ng-if="podcast.link">
 						<a ng-href="{{podcast.link}}" target="_blank">
 							<span>{{'open_podcast_website' | chrome_i18n }}</span>

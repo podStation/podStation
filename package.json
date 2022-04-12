@@ -1,17 +1,17 @@
 {
   "name": "podstation_chrome_ext",
-  "version": "1.47.2",
+  "version": "1.47.3",
   "description": "podStation Podcast Player - Browser Extension",
   "main": "podstation.js",
   "directories": {
     "doc": "docs"
   },
   "dependencies": {
-    "angular": "1.4.7",
+    "angular": "^1.8.3",
     "angular-drag-and-drop-lists": "2.1.0",
     "angular-qrcode": "^7.2.0",
-    "angular-route": "1.4.7",
-    "angular-sanitize": "1.4.7",
+    "angular-route": "^1.8.3",
+    "angular-sanitize": "^1.8.3",
     "dexie": "^3.2.0",
     "font-awesome": "4.7.0",
     "jquery": "2.1.4",
@@ -20,7 +20,7 @@
   },
   "devDependencies": {
     "@types/dexie": "^1.3.1",
-    "angular-mocks": "1.4.7",
+    "angular-mocks": "^1.8.3",
     "chrome-webstore-upload-cli": "^1.1.1",
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.0",

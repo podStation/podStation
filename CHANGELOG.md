@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.47.3]
+
+- Internal refactoring
+- Updating AngularJS dependency to 1.8.3
+
 ## [1.47.2]
 
 ### Fixed
@@ -118,7 +123,8 @@ Unfortunately, that is a necessary change to support a better development experi
 
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
-[Unreleased]: https://github.com/podStation/podStation/compare/v1.47.2...HEAD
+[Unreleased]: https://github.com/podStation/podStation/compare/v1.47.3...HEAD
+[1.47.3]: https://github.com/podStation/podStation/compare/v1.47.2...v1.47.3
 [1.47.2]: https://github.com/podStation/podStation/compare/v1.47.1...v1.47.2
 [1.47.1]: https://github.com/podStation/podStation/compare/v1.47.0...v1.47.1
 [1.47.0]: https://github.com/podStation/podStation/compare/v1.46.3...v1.47.0
