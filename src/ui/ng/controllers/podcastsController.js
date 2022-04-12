@@ -116,6 +116,7 @@ function PodcastsController($scope, messageService, storageServiceUI, socialServ
 		$scope.listType = uiOptions.plt;
 		$scope.sorting = uiOptions.ps;
 		optionsLoaded = true;
+		$scope.$apply();
 	});
 
 	chrome.runtime.onMessage.addListener(function(message) {
