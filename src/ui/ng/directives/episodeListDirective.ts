@@ -1,4 +1,4 @@
-function EpisodeListDirective($window, podcastManagerService, podcastDataService, episodePlayer, messageService, socialService) {
+function EpisodeListDirective() {
 	return {
 		restrict: 'E',
 		scope: {
@@ -8,65 +8,66 @@ function EpisodeListDirective($window, podcastManagerService, podcastDataService
 			reverseOrder: '=reverseOrder',
 			orderByField: '=orderBy'
 		},
-		controller: EpisodeListController,
+		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListController],
 		controllerAs: 'episodeList',
 		bindToController: true,
 		templateUrl: 'ui/ng/partials/episodeList.html'
 	};
+}
 
-	function EpisodeListController() {
-		var episodeListController = this;
+class EpisodeListController {
+	private podcastDataService: any;
+	private episodePlayer: any;
+	private messageService: any;
+	private socialService: any;
 
-		episodeListController.play = play;
-		episodeListController.addToPlaylist = addToPlaylist;
-		episodeListController.removeFromPlaylist = removeFromPlaylist;
-		episodeListController.deletePlayTime = deletePlayTime;
-		episodeListController.tweet = tweet;
-		episodeListController.shareWithFacebook = shareWithFacebook;
-		
-		episodeListController.isReverseOrder = isReverseOrder;
-		episodeListController.orderBy = orderBy;
+	reverseOrder: boolean;
+	orderByField: string;
 
-		return episodeListController;
+	constructor(podcastDataService: any, episodePlayer: any, messageService: any, socialService: any) {
+		this.podcastDataService = podcastDataService;
+		this.episodePlayer = episodePlayer;
+		this.messageService = messageService;
+		this.socialService = socialService;
+	}
 
-		function play(episode) {
-			episodePlayer.play(podcastDataService.episodeId(episode));
-		}
+	play(episode: any) {
+		this.episodePlayer.play(this.podcastDataService.episodeId(episode));
+	}
 
-		function addToPlaylist(episode) {
-			messageService.for('playlist').sendMessage('add', {
-				episodeId: podcastDataService.episodeId(episode)
-			});
-		}
+	addToPlaylist(episode: any) {
+		this.messageService.for('playlist').sendMessage('add', {
+			episodeId: this.podcastDataService.episodeId(episode)
+		});
+	}
 
-		function removeFromPlaylist(episode) {
-			messageService.for('playlist').sendMessage('remove', {
-				episodeId: podcastDataService.episodeId(episode)
-			});
-		}
+	removeFromPlaylist(episode: any) {
+		this.messageService.for('playlist').sendMessage('remove', {
+			episodeId: this.podcastDataService.episodeId(episode)
+		});
+	}
 
-		function deletePlayTime(episode) {
-			messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-				episodeId: podcastDataService.episodeId(episode),
-				currentTime: 0
-			});
-		}
+	deletePlayTime(episode: any) {
+		this.messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
+			episodeId: this.podcastDataService.episodeId(episode),
+			currentTime: 0
+		});
+	}
 
-		function tweet(episode) {
-			socialService.tweet(podcastDataService.episodeId(episode));
-		}
+	tweet(episode: any) {
+		this.socialService.tweet(this.podcastDataService.episodeId(episode));
+	}
 
-		function shareWithFacebook(episode) {
-			socialService.shareWithFacebook(podcastDataService.episodeId(episode));
-		}
+	shareWithFacebook(episode: any) {
+		this.socialService.shareWithFacebook(this.podcastDataService.episodeId(episode));
+	}
 
-		function isReverseOrder() {
-			return episodeListController.reverseOrder !== undefined ? episodeListController.reverseOrder : true;
-		}
+	isReverseOrder(): boolean {
+		return this.reverseOrder !== undefined ? this.reverseOrder : true;
+	}
 
-		function orderBy() {
-			return episodeListController.orderByField ? episodeListController.orderByField : 'pubDateUnformatted';
-		}
+	orderBy(): string {
+		return this.orderByField ? this.orderByField : 'pubDateUnformatted';
 	}
 }
 
