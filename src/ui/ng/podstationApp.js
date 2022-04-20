@@ -52,7 +52,7 @@ myApp
   .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
   .directive('psParticipantList', [ParticipantListDirective])
   .directive('psEpisodePlayer', ['$document', '$window', 'analyticsService', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
-  .directive('psEpisodeList', ['$window', 'podcastManagerService', 'podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListDirective]);
+  .directive('psEpisodeList', [EpisodeListDirective]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
 	var whiteList = /^\s*(https?|ftp|mailto|chrome-extension|data):/;
