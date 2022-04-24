@@ -190,11 +190,15 @@ export class StorageEngine implements IStorageEngine {
 		}
 	}
 
+	private queryDefaultPlaylist() {
+		return this.db.playlists.where({isDefault: 1}).toArray();
+	}
+
 	private async getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
 		let playlists;
 
 		try {
-			playlists = await this.db.playlists.where({isDefault: 1}).toArray();
+			playlists = await this.queryDefaultPlaylist();
 		}
 		catch(e) {
 			console.log(e);
@@ -204,6 +208,6 @@ export class StorageEngine implements IStorageEngine {
 	}
 
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]> {
-		return liveQuery(() => this.db.playlists.where({isDefault: 1}).toArray());
+		return liveQuery(() => this.queryDefaultPlaylist());
 	}
 }
