@@ -16,9 +16,14 @@ class PlaylistController {
 	}
 
 	async readPlaylist() {
-		const playlist = await this.podcastEngine.getDefaultPlaylist();
-		this.entries = playlist.episodes;
-		this.$scope.$apply();
+		const playlistObservable = this.podcastEngine.getDefaultPlaylistObservable();
+
+		playlistObservable.subscribe((playlists) => {
+			if(playlists.length) {
+				this.entries = playlists[0].episodes;
+				this.$scope.$apply();
+			}
+		});
 	}
 
 	play(localEpisodeId: LocalEpisodeId) {

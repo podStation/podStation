@@ -1,4 +1,4 @@
-import Dexie from "dexie";
+import Dexie, { liveQuery, Observable } from "dexie";
 import { IEpisodeTableRecord, IPodcastTableRecord, PodcastDatabase } from "./database";
 
 export type LocalPodcastId = number;
@@ -68,7 +68,8 @@ export interface IStorageEngine {
 	// >>> Playlist storage
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
-	getDefaultPlaylist(): Promise<LocalStoragePlaylist | null>;
+	// getDefaultPlaylist(): Promise<LocalStoragePlaylist | null>;
+	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>;
 	// <<< Playlist storage
 }
 
@@ -189,7 +190,7 @@ export class StorageEngine implements IStorageEngine {
 		}
 	}
 
-	async getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
+	private async getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
 		let playlists;
 
 		try {
@@ -200,5 +201,9 @@ export class StorageEngine implements IStorageEngine {
 		}
 
 		return playlists?.length ? playlists[0] : null;
+	}
+
+	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]> {
+		return liveQuery(() => this.db.playlists.where({isDefault: 1}).toArray());
 	}
 }

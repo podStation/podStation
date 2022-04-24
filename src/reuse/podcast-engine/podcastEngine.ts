@@ -1,3 +1,4 @@
+import { Observable } from "dexie";
 import { IPodcastTableRecord } from "./database";
 import { PodcastUpdater } from "./podcastUpdater";
 import { IStorageEngine, LocalEpisodeId, LocalPodcastId, LocalStorageEpisode, LocalStoragePlaylist, LocalStoragePodcast, StorageEngine } from "./storageEngine";
@@ -30,7 +31,7 @@ export interface IPodcastEngine {
 	
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
-	getDefaultPlaylist(): Promise<LocalStoragePlaylist>;
+	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -87,8 +88,8 @@ class PodcastEngine implements IPodcastEngine {
 		return this.storageEngine.removeEpisodeFromDefaultPlaylist(localEpisodeId);
 	}
 
-	getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
-		return this.storageEngine.getDefaultPlaylist();
+	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]> {
+		return this.storageEngine.getDefaultPlaylistObservable();
 	}
 }
 
