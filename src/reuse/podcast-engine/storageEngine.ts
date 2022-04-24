@@ -3,6 +3,7 @@ import { IEpisodeTableRecord, IPodcastTableRecord, PodcastDatabase } from "./dat
 
 export type LocalPodcastId = number;
 export type LocalEpisodeId = number;
+export type LocalPlaylistId = number;
 
 /**
  * A podcast as represented in local storage.
@@ -10,7 +11,7 @@ export type LocalEpisodeId = number;
  * episodes can be too many, so they have to be accessed in a paginated way.
  */
 export type LocalStoragePodcast = {
-	id?: LocalPodcastId;
+	id: LocalPodcastId;
 	feedUrl: string;
 	imageUrl?: string;
 	title?: string;
@@ -26,7 +27,7 @@ export type LocalStoragePodcastState = 'added' | 'ready';
  * An episode as represented in local storage.
  */
 export type LocalStorageEpisode = {
-	id?: LocalEpisodeId;
+	id: LocalEpisodeId;
 	podcastId: LocalPodcastId;
 	podcast?: LocalStoragePodcast;
 	title?: string;
@@ -38,6 +39,20 @@ export type LocalStorageEpisode = {
 	enclosureLength?: number;
 	enclosureType?: string;
 	duration?: number;
+	isInDefaultPlaylist: boolean;
+}
+
+export type LocalStoragePlaylistEpisode = {
+	episodeId?: LocalEpisodeId;
+	imageUrl?: string;
+	title?: string;
+	duration?: number;
+}
+
+export type LocalStoragePlaylist = {
+	id?: LocalPlaylistId;
+	episodes: LocalStoragePlaylistEpisode[];
+	isDefault: number;
 }
 
 export interface IStorageEngine {
@@ -49,6 +64,12 @@ export interface IStorageEngine {
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
+	
+	// >>> Playlist storage
+	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
+	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
+	getDefaultPlaylist(): Promise<LocalStoragePlaylist | null>;
+	// <<< Playlist storage
 }
 
 export class StorageEngine implements IStorageEngine {
@@ -80,7 +101,7 @@ export class StorageEngine implements IStorageEngine {
 		return;
 	}
 
-	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<IEpisodeTableRecord[]> {
+	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]> {
 		return this.db.episodes.where({podcastId: localPodcastId}).toArray();
 	}
 
@@ -129,5 +150,55 @@ export class StorageEngine implements IStorageEngine {
 				podcast: podcast
 			}
 		})
+	}
+
+	async addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
+		this.db.transaction('rw', this.db.episodes, this.db.podcasts, this.db.playlists, async () => {
+			const episode = await this.db.episodes.get(localEpisodeId);
+			const podcast = await this.db.podcasts.get(episode.podcastId);
+			let playlist = await this.getDefaultPlaylist();
+
+			if(!playlist) {
+				playlist = {
+					episodes: [],
+					isDefault: 1
+				}
+			}
+
+			playlist.episodes.push({
+				episodeId: episode.id,
+				imageUrl: podcast.imageUrl,
+				title: episode.title,
+				duration: episode.duration
+			});
+
+			this.db.playlists.put(playlist);
+		});
+
+	}
+
+	async removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
+		const defaultPlaylist = await this.getDefaultPlaylist();
+
+		if(defaultPlaylist) {
+			const episodeIndexInPlaylist = defaultPlaylist.episodes.findIndex((episode) => episode.episodeId === localEpisodeId);
+
+			defaultPlaylist.episodes.splice(episodeIndexInPlaylist);
+
+			await this.db.playlists.put(defaultPlaylist);
+		}
+	}
+
+	async getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
+		let playlists;
+
+		try {
+			playlists = await this.db.playlists.where({isDefault: 1}).toArray();
+		}
+		catch(e) {
+			console.log(e);
+		}
+
+		return playlists?.length ? playlists[0] : null;
 	}
 }

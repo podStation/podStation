@@ -1,6 +1,6 @@
 import { IPodcastTableRecord } from "./database";
 import { PodcastUpdater } from "./podcastUpdater";
-import { IStorageEngine, LocalPodcastId, LocalStorageEpisode, LocalStoragePodcast, StorageEngine } from "./storageEngine";
+import { IStorageEngine, LocalEpisodeId, LocalPodcastId, LocalStorageEpisode, LocalStoragePlaylist, LocalStoragePodcast, StorageEngine } from "./storageEngine";
 
 /**
  * A podcast to be added, to the engine, identified by its feed URL.
@@ -27,6 +27,10 @@ export interface IPodcastEngine {
 	 */
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]>;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
+	
+	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
+	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
+	getDefaultPlaylist(): Promise<LocalStoragePlaylist>;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -38,6 +42,7 @@ class PodcastEngine implements IPodcastEngine {
 	
 	async addPodcast(podcast: PodcastToBeAdded): Promise<void> {
 		let localPodcastId = await this.storageEngine.addPodcast({
+			id: undefined, // autoincremented
 			title: podcast.title,
 			feedUrl: podcast.feedUrl.toString(),
 			imageUrl: podcast.imageUrl.toString(),
@@ -72,6 +77,18 @@ class PodcastEngine implements IPodcastEngine {
 
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
 		return this.storageEngine.getLastEpisodes(offset, limit);
+	}
+
+	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
+		return this.storageEngine.addEpisodeToDefaultPlaylist(localEpisodeId);
+	}
+
+	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
+		return this.storageEngine.removeEpisodeFromDefaultPlaylist(localEpisodeId);
+	}
+
+	getDefaultPlaylist(): Promise<LocalStoragePlaylist | null> {
+		return this.storageEngine.getDefaultPlaylist();
 	}
 }
 

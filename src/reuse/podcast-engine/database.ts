@@ -3,6 +3,7 @@ import Dexie from 'dexie';
 export class PodcastDatabase extends Dexie {
 	podcasts!: Dexie.Table<IPodcastTableRecord, number>;
 	episodes!: Dexie.Table<IEpisodeTableRecord, number>;
+	playlists!: Dexie.Table<IPlaylistTableRecord, number>;
 	
 	constructor(databaseName: string) {
 		super(databaseName);
@@ -11,7 +12,8 @@ export class PodcastDatabase extends Dexie {
 			podcasts: '++id, &feedUrl',
 			// [podcastId+pubDate] is useful for getting all episodes of a podcast
 			// ordered by pubDate
-			episodes: '++id, [podcastId+pubDate], pubDate'
+			episodes: '++id, [podcastId+pubDate], pubDate',
+			playlists: '++id, isDefault'
 		});
 	}
 }
@@ -25,7 +27,7 @@ export class PodcastDatabase extends Dexie {
  * Reference: https://www.rssboard.org/rss-specification#requiredChannelElements
  */
 export interface IPodcastTableRecord {
-	id?: number;
+	id: number;
 	feedUrl: string;
 	state: PodcastTableRecordState;
 
@@ -64,7 +66,7 @@ type PodcastTableRecordState = 'added' | 'ready';
  * Reference: https://www.rssboard.org/rss-specification#hrelementsOfLtitemgt
  */
 export interface IEpisodeTableRecord {
-	id?: number;
+	id: number;
 	podcastId: number;
 
 	// >>> Feed Data
@@ -78,4 +80,30 @@ export interface IEpisodeTableRecord {
 	enclosureType?: string;
 	duration?: number;
 	// <<< Feed Data
+
+	isInDefaultPlaylist: boolean;
+}
+
+type PlaylistEpisode = {
+	episodeId?: number;
+	imageUrl?: string;
+	title?: string;
+	duration?: number;
+}
+
+/**
+ * A DB record that represents a playlist
+ * 
+ * A playlist is just a list of ordered episodes.
+ * In principle we only have a single playlist, but
+ * it should be possible to add multiple playlists in the future if
+ * required.
+ */
+export interface IPlaylistTableRecord {
+	id?: number;
+	/**
+	 * IndexedDB cannot index boolean type, so 1 is true, 0 is false
+	 */
+	isDefault: number;
+	episodes: PlaylistEpisode[];
 }

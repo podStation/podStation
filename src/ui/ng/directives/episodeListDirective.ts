@@ -1,3 +1,6 @@
+import IPodcastEngine, { PodcastEngineHolder } from "../../../reuse/podcast-engine/podcastEngine";
+import { ControllerEpisode } from "../common/controllerEpisode";
+
 function EpisodeListDirective() {
 	return {
 		restrict: 'E',
@@ -8,7 +11,7 @@ function EpisodeListDirective() {
 			reverseOrder: '=reverseOrder',
 			orderByField: '=orderBy'
 		},
-		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListController],
+		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', 'podcastEngine', EpisodeListController],
 		controllerAs: 'episodeList',
 		bindToController: true,
 		templateUrl: 'ui/ng/partials/episodeList.html'
@@ -20,22 +23,26 @@ class EpisodeListController {
 	private episodePlayer: any;
 	private messageService: any;
 	private socialService: any;
+	private podcastEngine: IPodcastEngine;
 
 	reverseOrder: boolean;
 	orderByField: string;
 
-	constructor(podcastDataService: any, episodePlayer: any, messageService: any, socialService: any) {
+	constructor(podcastDataService: any, episodePlayer: any, messageService: any, socialService: any, podcastEngine: IPodcastEngine) {
 		this.podcastDataService = podcastDataService;
 		this.episodePlayer = episodePlayer;
 		this.messageService = messageService;
 		this.socialService = socialService;
+		this.podcastEngine = podcastEngine;
 	}
 
 	play(episode: any) {
 		this.episodePlayer.play(this.podcastDataService.episodeId(episode));
 	}
 
-	addToPlaylist(episode: any) {
+	addToPlaylist(episode: ControllerEpisode) {
+		this.podcastEngine.addEpisodeToDefaultPlaylist(episode.id);
+
 		this.messageService.for('playlist').sendMessage('add', {
 			episodeId: this.podcastDataService.episodeId(episode)
 		});

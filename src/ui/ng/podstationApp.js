@@ -45,7 +45,7 @@ myApp
   .controller('episodesInProgressController', ['$scope', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
-  .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController])
+  .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', 'podcastEngine', PlaylistController])
   .controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'analyticsService', 'podcastEngine', PodcastsController])
   .controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', 'analyticsService', 'podcastEngine', SearchController])
   .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])

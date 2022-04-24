@@ -2,31 +2,9 @@ import PodcastDataService from '../../../reuse/ng/services/podcastDataService';
 import IPodcastEngine from '../../../reuse/podcast-engine/podcastEngine';
 import { LocalPodcastId } from '../../../reuse/podcast-engine/storageEngine';
 import {formatDate} from '../../common';
+import { ControllerEpisode } from '../common/controllerEpisode';
 
 declare var chrome: any;
-
-export type ControllerEpisode = {
-	link?: string;
-	title?: string;
-	image?: string;
-	podcastIndex?: number;
-	podcastTitle?: string;
-	/** Probably not used */
-	podcastUrl?: string;
-	podcastId?: LocalPodcastId;
-	/** Url of the episode enclosure */
-	url?: string;
-	description?: string;
-	pubDateUnformatted?: Date;
-	pubDate?: string;
-	guid?: string;
-	isInPlaylist: boolean;
-	participants?: [];
-	duration?: number;
-	lastTimePlayed?: Date;
-	lastTimePlayedFormatted?: string;
-	pausedAt?: number;
-}
 
 function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: PodcastDataService, episodes?: ControllerEpisode[]) {
 	messageService.for('playlist').sendMessage('get', {}, (playlist: any) => {
@@ -311,6 +289,7 @@ class EpisodesInProgressController {
 					const episode = episodeInProgress.episode;
 
 					const controllerEpisode: ControllerEpisode = {
+						id: episode.id,
 						isInPlaylist: false,
 					};
 

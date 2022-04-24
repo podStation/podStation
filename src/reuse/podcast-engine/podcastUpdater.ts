@@ -50,6 +50,7 @@ export class PodcastUpdater {
 
 	private static mapFeedEpisodeToTableRecord(feedEpisode: any, localPodcastId: LocalPodcastId): IEpisodeTableRecord {
 		const episodeTableRecord: IEpisodeTableRecord = {
+			id: undefined, // autoincremented
 			podcastId: localPodcastId,
 			title: feedEpisode.title,
 			description: feedEpisode.description,
@@ -60,6 +61,7 @@ export class PodcastUpdater {
 			enclosureLength: feedEpisode.enclosure?.length,
 			enclosureType: feedEpisode.enclosure?.type,
 			duration: feedEpisode.duration,
+			isInDefaultPlaylist: false,
 		}
 
 		return episodeTableRecord;
@@ -78,7 +80,8 @@ export class PodcastUpdater {
 				// nested objects or arrays
 				updatedEpisodes.push({
 					...correspondingCurrentEpisode,
-					...feedEpisodeAsTableRecord
+					...feedEpisodeAsTableRecord,
+					isInDefaultPlaylist: correspondingCurrentEpisode.isInDefaultPlaylist,
 				});
 			}
 			else {
