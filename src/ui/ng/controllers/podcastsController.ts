@@ -2,8 +2,6 @@ import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
 import { LocalPodcastId, LocalStoragePodcast, LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
 
-declare var chrome: any;
-
 type Podcast = {
 	index: number,
 	localPodcastId: LocalPodcastId,
