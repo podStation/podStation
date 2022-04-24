@@ -182,9 +182,8 @@ export class StorageEngine implements IStorageEngine {
 		const defaultPlaylist = await this.getDefaultPlaylist();
 
 		if(defaultPlaylist) {
-			const episodeIndexInPlaylist = defaultPlaylist.episodes.findIndex((episode) => episode.episodeId === localEpisodeId);
-
-			defaultPlaylist.episodes.splice(episodeIndexInPlaylist);
+			// We could stop at first find, but just in case we let double entries slip, we use a filter
+			defaultPlaylist.episodes = defaultPlaylist.episodes.filter((episode) => episode.episodeId !== localEpisodeId);
 
 			await this.db.playlists.put(defaultPlaylist);
 		}
