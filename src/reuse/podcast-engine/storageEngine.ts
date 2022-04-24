@@ -58,7 +58,7 @@ export type LocalStoragePlaylist = {
 export interface IStorageEngine {
 	addPodcast(podcast: LocalStoragePodcast): Promise<number>;
 	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
-	getAllPodcasts(): Promise<LocalStoragePodcast[]>;
+	getObservableForAllPodcasts(): Observable<LocalStoragePodcast[]>;
 	getAllPodcastEpisodes(localPodcastId: LocalPodcastId): Promise<LocalStorageEpisode[]>;
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]>;
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
@@ -88,8 +88,8 @@ export class StorageEngine implements IStorageEngine {
 		return this.db.podcasts.get(localPodcastId);
 	}
 
-	getAllPodcasts(): Promise<LocalStoragePodcast[]> {
-		return this.db.podcasts.toArray();
+	getObservableForAllPodcasts(): Observable<LocalStoragePodcast[]> {
+		return liveQuery(() => this.db.podcasts.toArray());
 	}
 
 	async updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void> {

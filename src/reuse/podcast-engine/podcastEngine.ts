@@ -20,7 +20,7 @@ type PodcastToBeAdded = {
 export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
 	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
-	getAllPodcasts(): Promise<LocalStoragePodcast[]>
+	getObservableForAllPodcasts(): Observable<LocalStoragePodcast[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	updatePodcast(localPodcastId: LocalPodcastId): void;
 	/**
@@ -58,8 +58,8 @@ class PodcastEngine implements IPodcastEngine {
 		return this.storageEngine.getPodcast(localPodcastId);
 	}
 
-	getAllPodcasts(): Promise<IPodcastTableRecord[]> {
-		return this.storageEngine.getAllPodcasts();
+	getObservableForAllPodcasts(): Observable<IPodcastTableRecord[]> {
+		return this.storageEngine.getObservableForAllPodcasts();
 	}
 
 	deletePodcast(localPodcastId: LocalPodcastId) {

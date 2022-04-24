@@ -1,6 +1,6 @@
 import { formatDate } from "../../common";
 import { IPodcastEngine } from '../../../reuse/podcast-engine/podcastEngine';
-import { LocalPodcastId, LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
+import { LocalPodcastId, LocalStoragePodcast, LocalStoragePodcastState } from "../../../reuse/podcast-engine/storageEngine";
 
 declare var chrome: any;
 
@@ -62,9 +62,13 @@ class PodcastsController {
 		}
 	}
 
-	async updatePodcastList() {
-		let podcasts = await this.podcastEngine.getAllPodcasts();
-		
+	async observeAllPodcasts() {
+		const allPodcastsObservable = this.podcastEngine.getObservableForAllPodcasts();
+
+		allPodcastsObservable.subscribe((allPodcasts) => this.updatePodcasts(allPodcasts));
+	}
+
+	updatePodcasts(podcasts: LocalStoragePodcast[]) {
 		this.podcasts = podcasts.map((podcast, index) => ({
 			index: index,
 			localPodcastId: podcast.id,
@@ -143,7 +147,7 @@ class PodcastsController {
 	}
 
 	initialize() {
-		this.updatePodcastList();
+		this.observeAllPodcasts();
 
 		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			this.listType = uiOptions.plt;
