@@ -21,10 +21,7 @@ type Podcast = {
  */
 class PodcastsController {
 	private $scope: any;
-	private messageService: any;
 	private storageServiceUI: any;
-	private socialService: any;
-	private analyticsService: any;
 	private podcastEngine: IPodcastEngine;
 	
 	listType: string;
@@ -33,12 +30,9 @@ class PodcastsController {
 	podcastsLoaded: boolean;
 	optionsLoaded: boolean;
 
-	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, analyticsService: any, podcastEngine: IPodcastEngine) {
+	constructor($scope: any, storageServiceUI: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
-		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
-		this.socialService = socialService;
-		this.analyticsService = analyticsService;
 		this.podcastEngine = podcastEngine;
 
 		this.listType = 'big_list';

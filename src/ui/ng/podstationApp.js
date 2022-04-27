@@ -46,7 +46,7 @@ myApp
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
   .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', 'podcastEngine', PlaylistController])
-  .controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'analyticsService', 'podcastEngine', PodcastsController])
+  .controller('podcastsController', ['$scope', 'storageServiceUI', 'podcastEngine', PodcastsController])
   .controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', 'analyticsService', 'podcastEngine', SearchController])
   .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])
   .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
