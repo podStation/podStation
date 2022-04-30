@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Internal refactoring
 
+### Fixed
+
+- The mini player (that shows up when scrolling down, making the main player not visible) was not showing up anymore, as a side effect of updating AngularJS ([Issue #330](https://github.com/podStation/podStation/issues/330))
+
 ## [1.47.3]
 
 - Internal refactoring
