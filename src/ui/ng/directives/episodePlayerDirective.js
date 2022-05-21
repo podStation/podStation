@@ -2,12 +2,12 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 
 	return {
 		restrict: 'E',
-		scope: {
-			miniPlayer: '=miniPlayer',
-		},
+		scope: {},
 		controller: ['$scope', episodePlayerController],
 		controllerAs: 'episodePlayer',
-		bindToController: true,
+		bindToController: {
+			miniPlayer: '=miniPlayer',
+		},
 		templateUrl: 'ui/ng/partials/episodePlayer.html'
 	};
 
@@ -21,6 +21,7 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 		 */
 		var episodeId;
 
+		controller.$onInit = $onInit;
 		controller.forward = forward;
 		controller.backward = backward;
 		controller.nextPlaybackRateUp = nextPlaybackRateUp;
@@ -86,25 +87,27 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 				e.target.localName !== 'textarea';
 		}
 
-		if(controller.miniPlayer) {
-			$window.addEventListener('scroll', function() {
-				const mainPlayerBottom = $document[0].getElementById('audioPlayer').getBoundingClientRect().bottom;
-				controller.miniPlayerVisible = mainPlayerBottom < 0;
-
-				if((!(typeof controller.previousMiniPlayerVisible === 'undefined')) && 
-				   controller.miniPlayerVisible !== controller.previousMiniPlayerVisible) {
-					$scope.$apply(function() {});
-				}
-				
-				controller.previousMiniPlayerVisible = controller.miniPlayerVisible;
-			});
-		}
-
 		reset();
 
 		episodePlayer.getAudioInfo(getAudioInfoCallback);
 
 		return controller;
+
+		function $onInit() {
+			if(controller.miniPlayer) {
+				$window.addEventListener('scroll', function() {
+					const mainPlayerBottom = $document[0].getElementById('audioPlayer').getBoundingClientRect().bottom;
+					controller.miniPlayerVisible = mainPlayerBottom < 0;
+	
+					if((!(typeof controller.previousMiniPlayerVisible === 'undefined')) && 
+					   controller.miniPlayerVisible !== controller.previousMiniPlayerVisible) {
+						$scope.$apply(function() {});
+					}
+					
+					controller.previousMiniPlayerVisible = controller.miniPlayerVisible;
+				});
+			}
+		}
 
 		function reset() {
 			durationInSeconds = 0;
