@@ -1,7 +1,8 @@
 on:
-  push
+  [workflow_call, push, pull_request, workflow_dispatch]
 jobs:
-  build:
+  test-and-build:
+    name: Run automated tests and build script
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -11,5 +12,4 @@ jobs:
       - run: npm ci
       - run: npm run test-chrome-single-run-no-sandbox
       - run: npm run lint
-      - run: npm run build 
-      
+      - run: npm run build
