@@ -53,6 +53,9 @@ function($window, $timeout, $log, playlist, browser, analyticsService, audioPlay
 				case '1.32.2':
 					$window.open('https://github.com/podStation/podStation/blob/master/docs/blog/2020-12-13-feature-at-risk.md#2020-12-13-feature-at-risk-playing-podcast-on-the-background')
 					break;
+				case '1.47.5':
+					$window.open('https://podstation.github.io/blog/2024/01/30/upcoming-changes-that-you-should-know/');
+					break;
 			}
 		}
 		else if(details.reason === 'install') {
