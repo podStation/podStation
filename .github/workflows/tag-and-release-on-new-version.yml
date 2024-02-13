@@ -1,0 +1,59 @@
+on:
+  workflow_call:
+    outputs:
+      version_has_changed:
+        description: Set to 1 if the version has changed in comparison with the last tag 
+        value: ${{ jobs.check-new-version.outputs.version_has_changed }}
+  workflow_dispatch:
+jobs:
+  test-and-build:
+    uses: ./.github/workflows/test-and-build.yml
+  check-new-version:
+    name: Checks if a new version was created with the last commit, then creates a check-new-version-create-release
+    needs: [ test-and-build ]
+    runs-on: ubuntu-latest
+    outputs:
+      version_has_changed: ${{ steps.check-new-version-step.outputs.version_has_changed }}
+      next_version_tag: ${{ steps.check-new-version-step.outputs.next_version_tag }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ## Required for checking if the version changed. It use tags.
+          ## See https://github.com/actions/checkout/issues/1471
+          fetch-depth: 0
+          filter: tree:0
+      - id: check-new-version-step
+        name: Check if the version has changed
+        # The script must be sourced, in order to export the environment variables
+        # The first two echos are just for debugging
+        run: | 
+          source ./check_version_has_changed.sh
+          echo "version_has_changed=$VERSION_HAS_CHANGED"
+          echo "next_version_tag=$NEXT_VERSION_TAG"
+          echo "version_has_changed=$VERSION_HAS_CHANGED" >> $GITHUB_OUTPUT
+          echo "next_version_tag=$NEXT_VERSION_TAG" >> $GITHUB_OUTPUT
+  create-zip-tag-and-release:
+    name: Create zip file, tag the repository and create release
+    needs: [check-new-version]
+    if: needs.check-new-version.outputs.version_has_changed == 1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4   
+        with:
+          name: build-artifacts
+          path: dist
+      - name: Create zip file for release and deployment
+        run: ./create_zip_for_upload.sh
+      - name: Upload zip file to archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: compressed-build-artifact
+          path: build_output/output.zip
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        ## This step is needed for tagging the repository
+        ## The tag is used to check if a new release and deployment is needed.
+        ## Docu for the command below: https://cli.github.com/manual/gh_release_create
+        run: gh release create ${{ needs.check-new-version.outputs.next_version_tag }} build_output/output.zip
