@@ -1,0 +1,20 @@
+on:
+  [workflow_call, workflow_dispatch]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '14.17.6'
+          cache: 'npm'
+      - name: Download latest release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir build_output
+          gh release download --pattern output.zip --output build_output/output.zip
+      - run: npm install --only=dev
+      - name: Deploy to Chrome Web Store
+        run: npm run release
