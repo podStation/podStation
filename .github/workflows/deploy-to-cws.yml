@@ -17,4 +17,9 @@ jobs:
           gh release download --pattern output.zip --output build_output/output.zip
       - run: npm install --only=dev
       - name: Deploy to Chrome Web Store
+        env:
+          EXTENSION_ID: bpcagekijmfcocgjlnnhpdogbplajjfn
+          CLIENT_ID: ${{ secrets.cwsClientId }}
+          CLIENT_SECRET: ${{ secrets.cwsClientSecret }}
+          REFRESH_TOKEN: ${{ secrets.cwsRefreshToken }}
         run: npm run release
