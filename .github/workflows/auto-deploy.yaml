@@ -1,0 +1,11 @@
+on:
+  push: 
+    branches:
+      - master
+jobs:
+  tag-and-release-on-new-version:
+    uses: ./.github/workflows/tag-and-release-on-new-version.yml
+  deploy-to-cws:
+    needs: [tag-and-release-on-new-version]
+    if: needs.tag-and-release-on-new-version.outputs.version_has_changed == 1
+    uses: ./.github/workflows/deploy-to-cws.yml

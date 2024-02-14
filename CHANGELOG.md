@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.47.5]
+
+There is no feature or fix delivered in this version.  
+It was introduced only to get the attention of users to <https://podstation.github.io/blog/2024/01/30/upcoming-changes-that-you-should-know/>.
+
 ## [1.47.4]
 
 - Internal refactoring
