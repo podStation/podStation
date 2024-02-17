@@ -2,7 +2,7 @@
 	"name": "podStation Podcast Player",
 	"short_name": "podStation",
 	"author": "Guilherme Dellagustin",
-	"description": "A podcast aggregator for Chrome",
+	"description": "A free/libre and open-source (FLOSS) podcast aggregator for Chrome",
 	"default_locale": "en",
 	"icons": {
 		"8": "images/rss-alt.png",
