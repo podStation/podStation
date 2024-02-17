@@ -1,5 +1,13 @@
 on:
-  [workflow_call, workflow_dispatch]
+  workflow_call:
+    secrets:
+      cwsClientId:
+        required: true
+      cwsClientSecret:
+        required: true
+      cwsRefreshToken:
+        required: true
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
