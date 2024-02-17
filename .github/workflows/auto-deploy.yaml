@@ -9,3 +9,7 @@ jobs:
     needs: [tag-and-release-on-new-version]
     if: needs.tag-and-release-on-new-version.outputs.version_has_changed == 1
     uses: ./.github/workflows/deploy-to-cws.yml
+    secrets:
+      cwsClientId: ${{ secrets.cwsClientId }}
+      cwsClientSecret: ${{ secrets.cwsClientSecret }}
+      cwsRefreshToken: ${{ secrets.cwsRefreshToken }}
