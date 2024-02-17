@@ -4,7 +4,7 @@
 
 ## About 
 
-**podStation** is a podcast aggregator and player for Chrome and other compatible browsers.
+**podStation** is a free/libre and open-source (FLOSS) podcast aggregator and player for Chrome and other compatible browsers.
 It is distributed as a browser extension (see https://en.wikipedia.org/wiki/Browser_extension), but it behaves essentially like a standalone app that uses the browser as a platform. 
 
 ### Chrome Web Store
@@ -28,8 +28,9 @@ Although not officially supported yet (no tests in place), it also works on:
   - Yandex (Android, https://browser.yandex.com/mobile/)
     - I tried to install on iOS, but I don't think extensions are supported
     
-A port for Firefox is on the way. If there is any browser not listed above where you use podStation, please let me know.
+If there is any browser not listed above where you use podStation, please let me know.
 If you want to request a port for a browser, create an issue here, or send us a mail (see the session _Support and Contact_)
+A port to Firefox is part of the long term vision of the project, but not in active development.
 
 ## History
 
@@ -38,15 +39,15 @@ Back in the days before I had a good Bluetooth headset, that I now use with all 
 As such, I was searching for a cost effective solution to listen to podcasts on desktop operational systems, and also synchronize the list of podcasts between my home and work PC.
 
 There were solutions on the market, but I was thinking that I could build something myself.
-Due to the projects I was working on at the time, I was learning font end development and also how to create chrome extensions.
+Due to the projects I was working on at the time, I was learning front end development and also how to create chrome extensions.
 
-After some research, I decided a very cost effective way of keeping my list of podcasts in sync would be to use chrome's sync storage (in the order of Kilobytes) for extensions and chrome apps.
+After some research, I decided that a very cost effective way of keeping my list of podcasts in sync would be to use chrome's sync storage (in the order of Kilobytes) for extensions and chrome apps.
 
 That was how the development of podStation started.
 
 ## Vision
 
-podStation has reached a mature state where increments are more typically on the direction of bug fixes, optimizations and reduction of technical debt (see https://en.wikipedia.org/wiki/Technical_debt).
+podStation has reached a mature state where increments are more typically on the direction of bug fixes, optimizations and reduction of technical debt (see <https://en.wikipedia.org/wiki/Technical_debt>).
 
 If you would like to see all the proposed enhancements, check the open issues:
 * at [github][open-issues-at-github],
@@ -109,7 +110,7 @@ You can find the documentation on the [docs](/docs) folder.
 
 ## Podcasting 2.0
 
-podStation is commited to support in its best capacity the new features introduced with with Podcasting 2.0.
+podStation is committed to support in its best capacity the new features introduced with with Podcasting 2.0.
 
 Currently it supports:
 - search with the [podcastindex.org](https://podcastindex.org) API
@@ -155,6 +156,7 @@ Here are other great open source projects related to podcastings:
 - [Antennapod](https://github.com/AntennaPod) - android podcast player
 
 ## References
+- https://en.wikipedia.org/wiki/Free_and_open-source_software
 - Browser Extensions Documentation
   - https://browserext.github.io/
   - Chrome
