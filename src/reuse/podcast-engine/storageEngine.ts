@@ -155,8 +155,6 @@ export class StorageEngine implements IStorageEngine {
 
 	async addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
 		this.db.transaction('rw', this.db.episodes, this.db.podcasts, this.db.playlists, async () => {
-			const episode = await this.db.episodes.get(localEpisodeId);
-			const podcast = await this.db.podcasts.get(episode.podcastId);
 			let playlist = await this.getDefaultPlaylist();
 
 			if(!playlist) {
@@ -166,14 +164,22 @@ export class StorageEngine implements IStorageEngine {
 				}
 			}
 
-			playlist.episodes.push({
-				episodeId: episode.id,
-				imageUrl: podcast.imageUrl,
-				title: episode.title,
-				duration: episode.duration
-			});
+			const foundEpisode = playlist.episodes.find((episode) => episode.episodeId === localEpisodeId);
 
-			this.db.playlists.put(playlist);
+			// check to avoid duplicate items on the playlist
+			if(!foundEpisode) {
+				const episode = await this.db.episodes.get(localEpisodeId);
+				const podcast = await this.db.podcasts.get(episode.podcastId);
+
+				playlist.episodes.push({
+					episodeId: episode.id,
+					imageUrl: podcast.imageUrl,
+					title: episode.title,
+					duration: episode.duration
+				});
+
+				this.db.playlists.put(playlist);
+			}
 		});
 
 	}
