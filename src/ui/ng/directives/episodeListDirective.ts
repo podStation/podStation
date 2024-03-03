@@ -42,16 +42,10 @@ class EpisodeListController {
 
 	addToPlaylist(episode: ControllerEpisode) {
 		this.podcastEngine.addEpisodeToDefaultPlaylist(episode.id);
-
-		this.messageService.for('playlist').sendMessage('add', {
-			episodeId: this.podcastDataService.episodeId(episode)
-		});
 	}
 
 	removeFromPlaylist(episode: any) {
-		this.messageService.for('playlist').sendMessage('remove', {
-			episodeId: this.podcastDataService.episodeId(episode)
-		});
+		this.podcastEngine.removeEpisodeFromDefaultPlaylist(episode.id);
 	}
 
 	deletePlayTime(episode: any) {

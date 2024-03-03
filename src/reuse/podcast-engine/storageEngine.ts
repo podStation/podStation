@@ -179,20 +179,24 @@ export class StorageEngine implements IStorageEngine {
 				});
 
 				this.db.playlists.put(playlist);
+				this.db.episodes.update(localEpisodeId, { isInDefaultPlaylist: true });
 			}
 		});
 
 	}
 
 	async removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {
-		const defaultPlaylist = await this.getDefaultPlaylist();
+		this.db.transaction('rw', this.db.episodes, this.db.playlists, async () => {
+			const defaultPlaylist = await this.getDefaultPlaylist();
 
-		if(defaultPlaylist) {
-			// We could stop at first find, but just in case we let double entries slip, we use a filter
-			defaultPlaylist.episodes = defaultPlaylist.episodes.filter((episode) => episode.episodeId !== localEpisodeId);
+			if(defaultPlaylist) {
+				// We could stop at first find, but just in case we let double entries slip, we use a filter
+				defaultPlaylist.episodes = defaultPlaylist.episodes.filter((episode) => episode.episodeId !== localEpisodeId);
 
-			await this.db.playlists.put(defaultPlaylist);
-		}
+				await this.db.playlists.put(defaultPlaylist);
+				await this.db.episodes.update(localEpisodeId, { isInDefaultPlaylist: false });
+			}
+		});
 	}
 
 	private queryDefaultPlaylist() {
