@@ -7,6 +7,11 @@
 		"target": "es6",
 		"jsx": "react",
 		"allowJs": true,
-		"moduleResolution": "node"
+		"moduleResolution": "node",
+		"lib": [
+			"dom",
+			"dom.iterable",
+			"es2019"
+		  ]
 	}
 }

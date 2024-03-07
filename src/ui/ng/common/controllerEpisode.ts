@@ -16,7 +16,7 @@ export type ControllerEpisode = {
 	pubDateUnformatted?: Date;
 	pubDate?: string;
 	guid?: string;
-	isInPlaylist: boolean;
+	isInDefaultPlaylist: boolean;
 	participants?: [];
 	duration?: number;
 	lastTimePlayed?: Date;

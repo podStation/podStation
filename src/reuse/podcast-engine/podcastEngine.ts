@@ -1,4 +1,4 @@
-import { Observable } from "dexie";
+import { Observable, liveQuery } from "dexie";
 import { IPodcastTableRecord } from "./database";
 import { PodcastUpdater } from "./podcastUpdater";
 import { IStorageEngine, LocalEpisodeId, LocalPodcastId, LocalStorageEpisode, LocalStoragePlaylist, LocalStoragePodcast, StorageEngine } from "./storageEngine";
@@ -27,7 +27,9 @@ export interface IPodcastEngine {
 	 * Get all episodes of a podcast, sorted by pubDate
 	 */
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]>;
+	getPodcastEpisodesObservable(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Observable<LocalStorageEpisode[]>;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
+	getLastEpisodesObservable(offset: number, limit: number): Observable<LocalStorageEpisode[]>;
 	
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
@@ -76,8 +78,16 @@ class PodcastEngine implements IPodcastEngine {
 		return this.storageEngine.getPodcastEpisodes(localPodcastId, offset, limit, reverse);
 	}
 
+	getPodcastEpisodesObservable(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Observable<LocalStorageEpisode[]> {
+		return liveQuery(() => this.getPodcastEpisodes(localPodcastId, offset, limit, reverse));
+	}
+
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
 		return this.storageEngine.getLastEpisodes(offset, limit);
+	}
+
+	getLastEpisodesObservable(offset: number, limit: number): Observable<LocalStorageEpisode[]> {
+		return liveQuery(() => this.getLastEpisodes(offset, limit));
 	}
 
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {

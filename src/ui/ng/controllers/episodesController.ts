@@ -1,6 +1,7 @@
+import { Observable, Subscription } from 'dexie';
 import PodcastDataService from '../../../reuse/ng/services/podcastDataService';
 import IPodcastEngine from '../../../reuse/podcast-engine/podcastEngine';
-import { LocalPodcastId } from '../../../reuse/podcast-engine/storageEngine';
+import { LocalPodcastId, LocalStorageEpisode } from '../../../reuse/podcast-engine/storageEngine';
 import {formatDate} from '../../common';
 import { ControllerEpisode } from '../common/controllerEpisode';
 
@@ -19,45 +20,60 @@ function updateIsInPlaylist($scope: any, messageService: any, podcastDataService
 	});
 }
 
-class PagedEpisodes {
-	private episodes: ControllerEpisode[] = [];
-	private isReadingPage: boolean = false;
-	private nextPageOffset: number = 0;
-	private nextPageSize: number = 50;
-	private readonly PAGE_SIZE = 20;
+type EpidodesObervableGetter = (offset: number, limit: number) => Observable<LocalStorageEpisode[]>;
+type EpisodeListChangedCallback = () => void;
 
-	getEpisodes(): ControllerEpisode[] {
-		// I tried returning [...this.episodes], but angular goes haywire.
-		// possibly because a new value is returned every time the expression is 
-		// evaluated, so returning the same reference all the time seems to be
-		// the way to go.
-		return this.episodes;
+class PagedEpisodesSubscriber {
+	private pageNumber: number = 0;
+	private readonly PAGE_SIZE = 50;
+	private pages: ControllerEpisode[][] = [];
+	private pagesSubscriptions: Subscription[] = [];
+	private episodesObservableGetter: EpidodesObervableGetter;
+	private episodeListChangedCallback: EpisodeListChangedCallback;
+
+	constructor(episodesObservableGetter: EpidodesObervableGetter, episodeListChangedCallback: EpisodeListChangedCallback) {
+		this.episodesObservableGetter = episodesObservableGetter;
+		this.episodeListChangedCallback = episodeListChangedCallback;
+
+		this.subscribeToCurrentPage();
 	}
 
-	/**
-	 * 
-	 * @param pageReader A function that provides a new page of episodes
-	 * @returns true if a new page is pushed, false if a page is already being read and nothing will be done
-	 */
-	async pushPage(pageReader: (pageOffset: number, pageSize: number) => Promise<ControllerEpisode[]>): Promise<boolean> {
-		// avoid concurrent page reads
-		if(!this.isReadingPage) {
-			this.isReadingPage = true;
-		
-			this.episodes.push(...await pageReader(this.nextPageOffset, this.nextPageSize));
+	private subscribeToCurrentPage() {
+		const currentPage = this.pageNumber;
+		this.pages[currentPage] = [];
 
-			this.nextPageOffset += this.nextPageSize;
-			this.nextPageSize = this.PAGE_SIZE;
-			this.isReadingPage = false;
-			return true;
-		}
+		const observable = this.episodesObservableGetter(this.pageNumber * this.PAGE_SIZE, this.PAGE_SIZE);
+		const subscription = observable.subscribe((episodes) => {
+			this.pages[currentPage] = episodes.map((episode) => ({
+				...episode, 
+				pubDate: formatDate(episode.pubDate),
+				pubDateUnformatted: episode.pubDate,
+				image: episode.podcast?.imageUrl,
+				podcastTitle: episode.podcast?.title,
+				url: episode.enclosureUrl,
+			}));
 
-		return false;
-	};
+			this.episodeListChangedCallback();
+		});
+
+		this.pagesSubscriptions[currentPage] = subscription;
+	}
+
+	subscribeToNextPage() {
+		this.pageNumber++;
+		this.subscribeToCurrentPage();
+	}
+
+	unsubscribe() {
+		this.pagesSubscriptions.forEach(subscription => subscription.unsubscribe());
+	}
+
+	getEpisodes(): ControllerEpisode[] {
+		return this.pages.flat(1);
+	}
 }
 
 class LastEpisodesController {
-
 	private $scope: any;
 	private messageService: any;
 	private storageServiceUI: any;
@@ -65,11 +81,12 @@ class LastEpisodesController {
 	private podcastDataService: PodcastDataService;
 	private podcastEngine: IPodcastEngine;
 	
-	private pagedEpisodes: PagedEpisodes;
+	private pagedEpisodes: PagedEpisodesSubscriber;
 	listType: string = 'big_list';	
 
 	private episodesLoaded = false; 
 	private optionsLoaded = false;
+	episodes: ControllerEpisode[] = [];
 
 	constructor($scope: any, messageService: any, storageServiceUI: any, socialService: any, podcastDataService: PodcastDataService, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
@@ -79,48 +96,29 @@ class LastEpisodesController {
 		this.podcastDataService = podcastDataService;
 		this.podcastEngine = podcastEngine;
 
-		this.pagedEpisodes = new PagedEpisodes();
+		this.pagedEpisodes = new PagedEpisodesSubscriber((offset, limit) => this.podcastEngine.getLastEpisodesObservable(offset, limit), () => {
+			// replacing the entire array (this.episodes = this.pagedEpisodes.getEpisodes()) causes and issue on AngularJS
+			this.episodes.length = 0;
+			this.episodes.push(...this.pagedEpisodes.getEpisodes());
+			this.episodesLoaded = true;
+			this.$scope.$apply();
+		});
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			this.listType = uiOptions.llt;
 			this.optionsLoaded = true;
 		});
 
-		this.readNextEpisodesPage();
-	}
-
-	async readNextEpisodesPage() {
-		let pagePushed: boolean = await this.pagedEpisodes.pushPage(async (pageOffset, pageSize) => {
-			const pageEpisodes = await this.podcastEngine.getLastEpisodes(pageOffset, pageSize);
-			
-			return pageEpisodes.map((episode) => {
-				const controllerEpisode: ControllerEpisode = {
-					...episode, 
-					isInPlaylist: false,
-					pubDate: formatDate(episode.pubDate),
-					pubDateUnformatted: episode.pubDate,
-					image: episode.podcast?.imageUrl,
-					podcastTitle: episode.podcast?.title,
-					url: episode.enclosureUrl,
-				};
-
-				return controllerEpisode; 
-			});
-		});
-
-		if(pagePushed) {
-			this.episodesLoaded = true;
-			this.$scope.$apply();
-		}
-	}
-
-	getEpisodes() {
-		return this.pagedEpisodes.getEpisodes();
+		$scope.$on('$destroy', () => this.pagedEpisodes.unsubscribe());
 	}
 
 	myPagingFunction() {
-		this.readNextEpisodesPage();
+		this.pagedEpisodes.subscribeToNextPage()
 	};
+
+	getEpisodes() {
+		return this.episodes;
+	}
 
 	listTypeChanged() {
 		this.storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
@@ -144,12 +142,13 @@ class EpisodeController {
 	private podcastEngine: IPodcastEngine;
 
 	private localPodcastId: LocalPodcastId;
-	private pagedEpisodes: PagedEpisodes;
+	private pagedEpisodes: PagedEpisodesSubscriber;
 
 	listType: string = 'big_list';
 	sorting: string = 'by_pubdate_descending';
 	podcastTitle: string = '';
 	podcastImage: string = '';
+	episodes: ControllerEpisode[] = [];
 
 	constructor($scope: any, $routeParams: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataService, socialService: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
@@ -160,7 +159,7 @@ class EpisodeController {
 		this.podcastEngine = podcastEngine;
 
 		this.localPodcastId = parseInt($routeParams.localPodcastId);
-		this.pagedEpisodes = new PagedEpisodes();
+		this.createPagedEpisodesSubscriber();
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			$scope.listType = uiOptions.elt;
@@ -168,7 +167,19 @@ class EpisodeController {
 		});
 
 		this.readPodcast();
-		this.readNextEpisodesPage();
+
+		$scope.$on('$destroy', () => this.pagedEpisodes.unsubscribe());
+	}
+
+	private createPagedEpisodesSubscriber() {
+		this.pagedEpisodes && this.pagedEpisodes.unsubscribe();
+		
+		this.pagedEpisodes = new PagedEpisodesSubscriber((offset, limit) => this.podcastEngine.getPodcastEpisodesObservable(this.localPodcastId, offset, limit, this.isReverseOrder()), () => {
+			// replacing the entire array (this.episodes = this.pagedEpisodes.getEpisodes()) causes and issue on AngularJS
+			this.episodes.length = 0;
+			this.episodes.push(...this.pagedEpisodes.getEpisodes());
+			this.$scope.$apply();
+		});
 	}
 
 	async readPodcast() {
@@ -180,34 +191,12 @@ class EpisodeController {
 		this.$scope.$apply();
 	}
 
-	async readNextEpisodesPage() {
-		let pagePushed: boolean = await this.pagedEpisodes.pushPage(async (pageOffset, pageSize) => {
-			const pageEpisodes = await this.podcastEngine.getPodcastEpisodes(this.localPodcastId, pageOffset, pageSize, this.isReverseOrder());
-			
-			return pageEpisodes.map((episode) => {
-				const controllerEpisode: ControllerEpisode = {
-					...episode, 
-					isInPlaylist: false,
-					pubDate: formatDate(episode.pubDate),
-					pubDateUnformatted: episode.pubDate,
-					url: episode.enclosureUrl,
-				};
-	
-				return controllerEpisode; 
-			});
-		});
-
-		if(pagePushed) {
-			this.$scope.$apply();
-		}
-	}
-
 	getEpisodes() {
-		return this.pagedEpisodes.getEpisodes();
+		return this.episodes;
 	}
 
 	myPagingFunction() {
-		this.readNextEpisodesPage();
+		this.pagedEpisodes.subscribeToNextPage();
 	};
 
 	listTypeChanged() {
@@ -225,10 +214,7 @@ class EpisodeController {
 			return true;
 		});
 
-		this.pagedEpisodes = new PagedEpisodes();
-		this.readNextEpisodesPage();
-
-		this.$scope.$apply();
+		this.createPagedEpisodesSubscriber();
 	}
 
 	isReverseOrder() {
@@ -290,7 +276,7 @@ class EpisodesInProgressController {
 
 					const controllerEpisode: ControllerEpisode = {
 						id: episode.id,
-						isInPlaylist: false,
+						isInDefaultPlaylist: false,
 					};
 
 					controllerEpisode.link = episode.link;
