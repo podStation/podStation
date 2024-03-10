@@ -9,7 +9,12 @@
 					<option value="small_list">&#xf03a; Small list</option>
 				</select>
 			</div>
-			<ps-episode-list episodes="lastEpisodesController.getEpisodes()" list-type="lastEpisodesController.listType" limit-to="lastEpisodesController.getEpisodes().length"/>
+			<ps-episode-list 
+			  episodes="lastEpisodesController.getEpisodes()"
+			  list-type="lastEpisodesController.listType"
+			  limit-to="lastEpisodesController.getEpisodes().length"
+			  show-open-all-episodes-from-podcast="true"
+			/>
 		</div>
 	</div>
 </div>

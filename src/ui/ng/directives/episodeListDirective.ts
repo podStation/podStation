@@ -9,7 +9,8 @@ function EpisodeListDirective() {
 			listType: '=listType',
 			limitTo: '=limitTo',
 			reverseOrder: '=reverseOrder',
-			orderByField: '=orderBy'
+			orderByField: '=orderBy',
+			showOpenAllEpisodesFromPodcast: '=showOpenAllEpisodesFromPodcast'
 		},
 		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', 'podcastEngine', EpisodeListController],
 		controllerAs: 'episodeList',
