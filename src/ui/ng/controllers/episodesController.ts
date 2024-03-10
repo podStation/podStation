@@ -7,6 +7,7 @@ import { ControllerEpisode } from '../common/controllerEpisode';
 
 declare var chrome: any;
 
+// TODO: Remove this code later
 function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: PodcastDataService, episodes?: ControllerEpisode[]) {
 	messageService.for('playlist').sendMessage('get', {}, (playlist: any) => {
 		$scope.$apply(() => {

@@ -70,6 +70,7 @@ export interface IStorageEngine {
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	// getDefaultPlaylist(): Promise<LocalStoragePlaylist | null>;
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>;
+	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void>;
 	// <<< Playlist storage
 }
 
@@ -218,5 +219,14 @@ export class StorageEngine implements IStorageEngine {
 
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]> {
 		return liveQuery(() => this.queryDefaultPlaylist());
+	}
+
+	async reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void> {
+		const playlist = await this.db.playlists.get(playlistId);
+
+		let resortedEpisodes = episodeIds.map((episodeId) => playlist.episodes.find((episode) => episode.episodeId === episodeId)).filter((episode) => episode !== null);
+
+		playlist.episodes = resortedEpisodes;
+		await this.db.playlists.put(playlist);
 	}
 }

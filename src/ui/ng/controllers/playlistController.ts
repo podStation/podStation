@@ -5,6 +5,7 @@ class PlaylistController {
 	private $scope: ng.IScope;
 	private podcastEngine: IPodcastEngine;
 
+	private playlistId: number;
 	entries: LocalStoragePlaylistEpisode[] = [];
 	// TODO: Persist playlist visibility - local storage should be ok
 	isVisible: boolean = true;
@@ -12,14 +13,15 @@ class PlaylistController {
 	constructor($scope: ng.IScope, messageService: any, episodePlayer: any, podcastDataService: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
 		this.podcastEngine = podcastEngine;
-		this.readPlaylist();
+		this.subscribeToPlaylist();
 	}
 
-	async readPlaylist() {
+	async subscribeToPlaylist() {
 		const playlistObservable = this.podcastEngine.getDefaultPlaylistObservable();
 
 		playlistObservable.subscribe((playlists) => {
 			if(playlists.length) {
+				this.playlistId = playlists[0].id;
 				this.entries = playlists[0].episodes;
 				this.$scope.$apply();
 			}
@@ -32,18 +34,11 @@ class PlaylistController {
 
 	async remove(localEpisodeId: LocalEpisodeId) {
 		await this.podcastEngine.removeEpisodeFromDefaultPlaylist(localEpisodeId);
-		this.readPlaylist();
+		this.subscribeToPlaylist();
 	}
 
 	dragEnded() {
-		// playlist.entries should sufice for the moment
-		/*
-		messageService.for('playlist').sendMessage('set', { 
-			entries: playlist.entries.map(function(entry) {
-				return entry.episodeId;
-			})
-		 });
-		 */
+		this.podcastEngine.reorderPlaylistEpisodes(this.playlistId, this.entries.map((episode) => episode.episodeId));
 	}
 }
 

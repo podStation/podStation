@@ -34,6 +34,7 @@ export interface IPodcastEngine {
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>
+	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void>;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -100,6 +101,10 @@ class PodcastEngine implements IPodcastEngine {
 
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]> {
 		return this.storageEngine.getDefaultPlaylistObservable();
+	}
+
+	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void> {
+		return this.storageEngine.reorderPlaylistEpisodes(playlistId, episodeIds);
 	}
 }
 
