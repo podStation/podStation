@@ -6,6 +6,7 @@ class PlaylistController {
 	private podcastEngine: IPodcastEngine;
 
 	private playlistId: number;
+	private onToggleVisibilityDeregistrator: any;
 	entries: LocalStoragePlaylistEpisode[] = [];
 	// TODO: Persist playlist visibility - local storage should be ok
 	isVisible: boolean = true;
@@ -14,6 +15,12 @@ class PlaylistController {
 		this.$scope = $scope;
 		this.podcastEngine = podcastEngine;
 		this.subscribeToPlaylist();
+
+		this.onToggleVisibilityDeregistrator = $scope.$on('playlist.toggleVisibility', (event, args) => {
+			this.isVisible = !this.isVisible
+		});
+
+		$scope.$on('$destroy', () => this.onToggleVisibilityDeregistrator());
 	}
 
 	async subscribeToPlaylist() {

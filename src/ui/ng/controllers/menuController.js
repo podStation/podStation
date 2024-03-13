@@ -9,7 +9,7 @@ import ChromeExtensionMessageService from '../../../reuse/messageServiceDefiniti
  * @param {ChromeExtensionMessageService} messageService 
  * @param {*} analyticsService 
  */
-function MenuController($scope, $document, $location, messageService, analyticsService) {
+function MenuController($rootScope, $scope, $document, $location, messageService, analyticsService) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
 	};
@@ -55,6 +55,7 @@ function MenuController($scope, $document, $location, messageService, analyticsS
 
 	function togglePlaylistVisibility() {
 		messageService.for('playlist').sendMessage('toggleVisibility');
+		$rootScope.$broadcast('playlist.toggleVisibility');
 	}
 
 	function exportOpml() {
