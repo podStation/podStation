@@ -54,7 +54,6 @@ function MenuController($rootScope, $scope, $document, $location, messageService
 	}
 
 	function togglePlaylistVisibility() {
-		messageService.for('playlist').sendMessage('toggleVisibility');
 		$rootScope.$broadcast('playlist.toggleVisibility');
 	}
 
