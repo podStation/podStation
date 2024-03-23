@@ -30,6 +30,8 @@ export type LocalStorageEpisode = {
 	id: LocalEpisodeId;
 	podcastId: LocalPodcastId;
 	podcast?: LocalStoragePodcast;
+	
+	// >>> Feed Data
 	title?: string;
 	description?: string;
 	guid?: string;
@@ -39,7 +41,12 @@ export type LocalStorageEpisode = {
 	enclosureLength?: number;
 	enclosureType?: string;
 	duration?: number;
+	// <<< Feed Data
+
+	// >>> User Data
 	isInDefaultPlaylist: boolean;
+	progress?: number;
+	// <<< User Data
 }
 
 export type LocalStoragePlaylistEpisode = {
@@ -64,6 +71,9 @@ export interface IStorageEngine {
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
+	getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode>;
+
+	setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void>;
 	
 	// >>> Playlist storage
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
@@ -139,6 +149,20 @@ export class StorageEngine implements IStorageEngine {
 		const podcasts: LocalStoragePodcast[] = await this.db.podcasts.where('id').anyOf(uniquePodcastIds).toArray();
 
 		return StorageEngine.enrichEpisodesWithPodcast(episodes, podcasts);
+	}
+
+	async getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode> {
+		const episode: LocalStorageEpisode = await this.db.episodes.get(localEpisodeId);
+		const podcast: LocalStoragePodcast = await this.db.podcasts.get(episode.podcastId);
+
+		return {
+			...episode,
+			podcast: podcast
+		}
+	}
+
+	async setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void> {
+		await this.db.episodes.update(localEpisodeId, {progress: progress});
 	}
 
 	private static enrichEpisodesWithPodcast(episodes: LocalStorageEpisode[], podcasts: LocalStoragePodcast[]): LocalStorageEpisode[] {

@@ -4,6 +4,7 @@ import { LocalEpisodeId, LocalStoragePlaylistEpisode } from "../../../reuse/podc
 class PlaylistController {
 	private $scope: ng.IScope;
 	private podcastEngine: IPodcastEngine;
+	private episodePlayer: any;
 
 	private playlistId: number;
 	private onToggleVisibilityDeregistrator: any;
@@ -14,6 +15,7 @@ class PlaylistController {
 	constructor($scope: ng.IScope, messageService: any, episodePlayer: any, podcastDataService: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
 		this.podcastEngine = podcastEngine;
+		this.episodePlayer = episodePlayer;
 		this.subscribeToPlaylist();
 
 		this.onToggleVisibilityDeregistrator = $scope.$on('playlist.toggleVisibility', (event, args) => {
@@ -36,7 +38,7 @@ class PlaylistController {
 	}
 
 	play(localEpisodeId: LocalEpisodeId) {
-		// episodePlayer.play(playlistEntry.episodeId);
+		this.episodePlayer.play(localEpisodeId);
 	}
 
 	async remove(localEpisodeId: LocalEpisodeId) {

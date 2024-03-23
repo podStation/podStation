@@ -30,6 +30,14 @@ export interface IPodcastEngine {
 	getPodcastEpisodesObservable(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Observable<LocalStorageEpisode[]>;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 	getLastEpisodesObservable(offset: number, limit: number): Observable<LocalStorageEpisode[]>;
+	getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode>;
+	
+	/**
+	 * 
+	 * @param localEpisodeId 
+	 * @param progress progress of the episode in seconds
+	 */
+	setEpisodeProgress(localEpisodeId: LocalEpisodeId, progress: number): Promise<void>;
 	
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
@@ -89,6 +97,16 @@ class PodcastEngine implements IPodcastEngine {
 
 	getLastEpisodesObservable(offset: number, limit: number): Observable<LocalStorageEpisode[]> {
 		return liveQuery(() => this.getLastEpisodes(offset, limit));
+	}
+
+	getEpisode(localEpisodeId: number): Promise<LocalStorageEpisode> {
+		return this.storageEngine.getEpisode(localEpisodeId);
+	}
+
+	async setEpisodeProgress(localEpisodeId: LocalEpisodeId, progress: number): Promise<void> {
+		await this.storageEngine.setEpisodeProgress(localEpisodeId, progress);
+
+		// TODO: Update sync storage, react to sync storage change
 	}
 
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void> {

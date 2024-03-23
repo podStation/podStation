@@ -17,7 +17,7 @@ const podStationBackgroundAppRunModule = angular.module('podstationBackgroundApp
 podStationBackgroundAppModule
   .constant('versionNews', versionNews)
   .factory('audioBuilderService', audioBuilderService)
-  .factory('audioPlayerService', ['$injector', '$window', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', audioPlayerService])
+  .factory('audioPlayerService', ['$injector', '$window', '$interval', '$q', 'browser', 'messageService', 'storageService', 'audioBuilderService', 'podcastDataService', 'podcastStorageService', 'analyticsService', 'podcastEngine', audioPlayerService])
   .service('notificationManager', ['versionNews', 'messageService', 'browser', 'storageService', 'optionsManagerService', notificationManager])
   .service('optionsManagerService', ['browser', 'messageService', OptionsManager])
   .service('podcastManager', PodcastManager)

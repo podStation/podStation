@@ -38,7 +38,7 @@ class EpisodeListController {
 	}
 
 	play(episode: any) {
-		this.episodePlayer.play(this.podcastDataService.episodeId(episode));
+		this.episodePlayer.play(episode.id);
 	}
 
 	addToPlaylist(episode: ControllerEpisode) {

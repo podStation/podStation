@@ -1,4 +1,5 @@
 import jsmediatags from 'jsmediatags/dist/jsmediatags.min.js';
+import ChromeExtensionMessageService from '../../../reuse/messageServiceDefinition';
 
 /**
  * 
@@ -56,7 +57,13 @@ class PlayedSegmentAnnouncer {
 	}
 }
 
-function audioPlayerService($injector, $window, $interval, $q, browserService, messageService, storageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService) {
+/**
+ * Background audio player service. It wraps the actual audio element that plays the audio.
+ * @param {ChromeExtensionMessageService} messageService
+ * @param  {import('../../../reuse/podcast-engine/podcastEngine').IPodcastEngine} podcastEngine
+ * @returns 
+ */
+function audioPlayerService($injector, $window, $interval, $q, browserService, messageService, storageService, audioBuilderService, podcastDataService, podcastStorageService, _analyticsService, podcastEngine) {
 	/**
 	 * @type {HTMLAudioElement}
 	 */ 
@@ -66,6 +73,11 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 	 * @type {EpisodePlayerInfo}
 	 */
 	var episodeInfo;
+
+	/**
+	 * @type {import('../../../reuse/podcast-engine/storageEngine').LocalStorageEpisode}
+	 */
+	let cachedEpisode = null;
 	
 	/**
 	 * @type {Promise}
@@ -164,9 +176,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 			return episodeInfo.audioTags.imageDataUrl;
 		}
 		else if(episodeInfo) {
-			var podcastAndEpisode = getPodcastAndEpisode(episodeInfo.episodeId);
-
-			return podcastAndEpisode.podcast ? podcastAndEpisode.podcast.image : 'images/rss-alt-8x.png';
+			return cachedEpisode.podcast ? cachedEpisode.podcast.imageUrl : 'images/rss-alt-8x.png';
 		}
 
 		return undefined;
@@ -216,10 +226,6 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 	}
 
 	function buildAudioInfo() {
-		var podcastAndEpisode;
-		
-		podcastAndEpisode = episodeInfo ? getPodcastAndEpisode(episodeInfo.episodeId) : {};
-
 		return {
 			audio: {
 				url: audioPlayer ? audioPlayer.src : '',
@@ -236,22 +242,20 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 	}
 
 	function setEpisodeInProgress(episodeInfo, currentTime) {
-		podcastStorageService.storeEpisodeUserData(episodeInfo.episodeId, {
-			currentTime: currentTime
-		});
+		podcastEngine.setEpisodeProgress(episodeInfo.episodeId, currentTime);
 	}
 
-	function setCurrentTimeFromEpisode() {
+	async function setCurrentTimeFromEpisode() {
 		if(!episodeInfo) {
 			return;
 		}
 
-		podcastStorageService.getEpisodeUserData(episodeInfo.episodeId).then(function(episodeUserData) {
-			if(episodeUserData.currentTime >= 0 && Math.abs(episodeUserData.currentTime - audioPlayer.currentTime) > 20) {
-				announcePlayedSegment(episodeUserData.currentTime);
-				audioPlayer.currentTime = episodeUserData.currentTime;
-			}
-		});
+		const episode = await podcastEngine.getEpisode(episodeInfo.episodeId);
+
+		if(episode.progress && episode.progress >= 0 && Math.abs(episode.progress - audioPlayer.currentTime) > 20) {
+			announcePlayedSegment(episode.progress);
+			audioPlayer.currentTime = episode.progress;
+		}
 	}
 
 	function playingTimeOut() {
@@ -289,9 +293,9 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 		play(playData);
 	}
 
-	function play(playData) {
+	async function play(playData) {
 		if(playData && playData.episodeId &&
-			(!audioPlayer || !podcastDataService.episodeIdEqualsId(playData.episodeId, episodeInfo.episodeId ))
+			(!audioPlayer || (playData.episodeId !== episodeInfo.episodeId ))
 		) {
 			if(audioPlayer) {
 				audioPlayer.pause( );
@@ -303,16 +307,17 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 				announcePlayedSegment();
 			}
 
-			var podcastAndEpisode = getPodcastAndEpisode(playData.episodeId);
+			// var podcastAndEpisode = getPodcastAndEpisode(playData.episodeId);
+			cachedEpisode = await podcastEngine.getEpisode(playData.episodeId)
 
-			_analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(playData.episodeId.values.podcastUrl));
-			audioPlayer = audioBuilderService.buildAudio(podcastAndEpisode.episode.enclosure.url);
+			_analyticsService.trackEvent('audio', 'play_podcast_url', stripAuthFromURI(cachedEpisode.podcast.feedUrl));
+			audioPlayer = audioBuilderService.buildAudio(cachedEpisode.enclosureUrl);
 
 			episodeInfo = { 
 				episodeId: playData.episodeId,
 				mediaSessionMetadata: {
-					artist: podcastAndEpisode.podcast.title,
-					title: podcastAndEpisode.episode.title
+					artist: cachedEpisode.podcast.title,
+					title: cachedEpisode.title
 				}
 			};
 

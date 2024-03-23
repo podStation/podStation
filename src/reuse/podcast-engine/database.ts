@@ -81,7 +81,10 @@ export interface IEpisodeTableRecord {
 	duration?: number;
 	// <<< Feed Data
 
+	// >>> User Data
 	isInDefaultPlaylist: boolean;
+	progress?: number;
+	// <<< User Data
 }
 
 type PlaylistEpisode = {
