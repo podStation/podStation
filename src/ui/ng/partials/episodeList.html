@@ -14,7 +14,7 @@
 							<a href="" ng-click="episodeList.addToPlaylist(episode)" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a> |
 						</span>
 						<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a> |
-						<span ng-show="episode.pausedAt">
+						<span ng-show="episode.progress">
 							<a href="" ng-click="episodeList.deletePlayTime(episode)" title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a> |
 						</span>
 						<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
@@ -62,7 +62,7 @@
 			<a href="" ng-show="episode.isInDefaultPlaylist"  ng-click="episodeList.removeFromPlaylist(episode)" title="{{ 'remove_from_playlist' | chrome_i18n }}"><i class="fa fa-minus"></i></a>
 			<a href="" ng-show="!episode.isInDefaultPlaylist" ng-click="episodeList.addToPlaylist(episode)"      title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a>
 			<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
-			<a href="" ng-show="episode.pausedAt"      ng-click="episodeList.deletePlayTime(episode)"     title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a>
+			<a href="" ng-show="episode.progress"      ng-click="episodeList.deletePlayTime(episode)"     title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a>
 			<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
 			<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}" class="listItemTitleSmall">{{episode.title}}</a>
 

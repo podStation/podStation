@@ -12,7 +12,7 @@ function EpisodeListDirective() {
 			orderByField: '=orderBy',
 			showOpenAllEpisodesFromPodcast: '=showOpenAllEpisodesFromPodcast'
 		},
-		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', 'podcastEngine', EpisodeListController],
+		controller: ['podcastDataService', 'episodePlayer', 'socialService', 'podcastEngine', EpisodeListController],
 		controllerAs: 'episodeList',
 		bindToController: true,
 		templateUrl: 'ui/ng/partials/episodeList.html'
@@ -22,17 +22,15 @@ function EpisodeListDirective() {
 class EpisodeListController {
 	private podcastDataService: any;
 	private episodePlayer: any;
-	private messageService: any;
 	private socialService: any;
 	private podcastEngine: IPodcastEngine;
 
 	reverseOrder: boolean;
 	orderByField: string;
 
-	constructor(podcastDataService: any, episodePlayer: any, messageService: any, socialService: any, podcastEngine: IPodcastEngine) {
+	constructor(podcastDataService: any, episodePlayer: any, socialService: any, podcastEngine: IPodcastEngine) {
 		this.podcastDataService = podcastDataService;
 		this.episodePlayer = episodePlayer;
-		this.messageService = messageService;
 		this.socialService = socialService;
 		this.podcastEngine = podcastEngine;
 	}
@@ -50,10 +48,7 @@ class EpisodeListController {
 	}
 
 	deletePlayTime(episode: any) {
-		this.messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-			episodeId: this.podcastDataService.episodeId(episode),
-			currentTime: 0
-		});
+		this.podcastEngine.setEpisodeProgress(episode.id, 0);
 	}
 
 	tweet(episode: any) {
