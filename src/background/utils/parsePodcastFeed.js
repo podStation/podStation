@@ -1,6 +1,11 @@
 import parseEmailTag from './parseEmailTag';
 import $ from 'jquery';
 
+/**
+ * 
+ * @param {string | XMLDocument} feedContent 
+ * @returns 
+ */
 function parsePodcastFeed(feedContent) {
 
 	var result;

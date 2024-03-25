@@ -1,10 +1,10 @@
 <div id="podcasts" class="mainContentBox">
 	<h1 class="sectionTitle">Podcasts</h1>
-	<div ng-show="ready()">
-		<h3 ng-if="!podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
-		<div id="podcastList" ng-show="podcasts.length">
+	<div ng-show="podcastsController.ready()">
+		<h3 ng-if="!podcastsController.podcasts.length">{{'no_podcasts' | chrome_i18n }}</h3>
+		<div id="podcastList" ng-show="podcastsController.podcasts.length">
 			<div id="listMenu">
-				<select ng-model="sorting" ng-change="sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<select ng-model="podcastsController.sorting" ng-change="podcastsController.sortingChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 					<option value="by_alpha_ascending" >&#xf15d; A-Z</option>
 					<option value="by_alpha_descending">&#xf15e; Z-A</option>
 					<option value="by_pubdate_ascending" >&#xf160; {{ 'oldest' | chrome_i18n}}</option>
@@ -12,12 +12,12 @@
 					<option value="by_subscription_ascending">&#xf160; {{ 'first_added' | chrome_i18n}}</option>
 					<option value="by_subscription_descending">&#xf161; {{ 'last_added' | chrome_i18n}}</option>
 				</select>
-				<select ng-model="listType" ng-change="listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
+				<select ng-model="podcastsController.listType" ng-change="podcastsController.listTypeChanged()" style="font-family: 'FontAwesome', Tahoma, sans-serif; font-size: 14px; height: 22px;">
 					<option value="big_list"  >&#xf00b; Big list</option>
 					<option value="small_list">&#xf03a; Small list</option>
 				</select>
 			</div>
-			<div ng-if="listType==='big_list'" ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder()" id="podcast_{{podcast.url}}" class="podcastEntry">
+			<div ng-if="podcastsController.listType==='big_list'" ng-repeat="podcast in podcastsController.podcasts | orderBy:podcastsController.orderBy():podcastsController.isReverseOrder()" id="podcast_{{podcast.url}}" class="podcastEntry">
 				<div>
 				<table>
 					<tr>
@@ -26,14 +26,14 @@
 						</td>
 						<td>
 							<div class="itemMenu">
-								<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a> |
-								<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
+								<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.deletePodcast(podcast)"><i class="fa fa-remove"></i></a> |
+								<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.updatePodcastFromFeed(podcast)"><i class="fa fa-refresh"></i></a>
 							</div>
 							<div class="textView">
 								<div class="itemHeader">
-									<a ng-href="#!/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
+									<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="itemTitle podcastTitle">{{podcast.title}}</a>
 									<br>
-									<a ng-href="#!/Episodes/{{podcast.index}}" class="linkToEpisodes" id="{{podcast.url}}">
+									<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" class="linkToEpisodes" id="{{podcast.url}}">
 										<span class="episodes">{{ { message: 'number_episodes', arguments: [podcast.episodesNumber]} | chrome_i18n }}</span><!--
 									--></a>
 									<span ng-if="podcast.link">
@@ -57,7 +57,7 @@
 									</span>
 									<br>
 									<!--must add a check for pubdate-->
-									<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+									<span>{{'publication_date' | chrome_i18n }}: {{podcast.formattedPubDate}}</span>
 									<span ng-if="podcast.crowdfundings">
 										<br>
 										{{'fund_this_podcast' | chrome_i18n }}: 
@@ -79,21 +79,21 @@
 				</table>
 				</div>
 			</div>
-			<div ng-if="listType!=='big_list'" style="padding-top: 5px">
+			<div ng-if="podcastsController.listType!=='big_list'" style="padding-top: 5px">
 				<ul class="contentList">
-					<li ng-repeat="podcast in podcasts | orderBy:orderBy():isReverseOrder()" class="listItemSmall">
+					<li ng-repeat="podcast in podcastsController.podcasts | orderBy:podcastsController.orderBy():podcastsController.isReverseOrder()" class="listItemSmall">
 						<div class="listItemImageSmall">
 							<img ng-src="{{podcast.image}}" class="listItemImageSmall"></img>
 						</div>
-						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcast.delete()"><i class="fa fa-remove"></i></a>
-						<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcast.update()"><i class="fa fa-refresh"></i></a>
-						<a ng-href="#!/Episodes/{{podcast.index}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
+						<a class="removePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.deletePodcast(podcast)"><i class="fa fa-remove"></i></a>
+						<a class="updatePodcast" href="" id="{{podcast.url}}" ng-click="podcastsController.updatePodcastFromFeed(podcast)"><i class="fa fa-refresh"></i></a>
+						<a ng-href="#!/Episodes/{{podcast.localPodcastId}}" title="{{'show_episodes' | chrome_i18n }}" class="listItemTitleSmall">{{podcast.title}}</a> - 
 						<span ng-if="podcast.link">
 						<a ng-href="{{podcast.link}}" target="_blank">
 							<span>{{'open_podcast_website' | chrome_i18n }}</span>
 						</a> -
 						</span>
-						<span>{{'publication_date' | chrome_i18n }}: {{podcast.pubDate}}</span>
+						<span>{{'publication_date' | chrome_i18n }}: {{podcast.formattedPubDate}}</span>
 					</li>
 				</ul>
 			</div>

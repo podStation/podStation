@@ -66,17 +66,13 @@ type EpisodeForIdDetermination = {
 	return url;
 }
 
-function PodcastDataService() {
-	return new PodcastDataServiceClass();
-}
-
 // This does not have to be a class a all, the functions could exist individually.
 // It was created as an angular service before we introduced webpack and the usage of modules.
 // I cannot remember exactly why it was an angular service, maybe to avoid adding too many global
 // functions (again, before we used modules).
 // I'll keep it as a class for now to keep it backwards compatible, but this could be
 // refactored.
-class PodcastDataServiceClass {
+class PodcastDataService {
 	/**
 	 * Returns and non-persistent identifier for a podcast
 	 */
@@ -163,4 +159,3 @@ class PodcastDataServiceClass {
 }
 
 export default PodcastDataService;
-export { PodcastDataServiceClass };

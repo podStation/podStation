@@ -1,4 +1,17 @@
-function episodePlayerDirective($document, $window, analyticsService, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService) {
+/**
+ * 
+ * @param {*} $document 
+ * @param {*} $window 
+ * @param {*} analyticsService 
+ * @param {*} podcastManagerService 
+ * @param {*} episodePlayer 
+ * @param {*} messageService 
+ * @param {*} socialService 
+ * @param {*} podcastDataService 
+ * @param {import("../../../reuse/podcast-engine/podcastEngine").IPodcastEngine} podcastEngine 
+ * @returns 
+ */
+function episodePlayerDirective($document, $window, analyticsService, podcastManagerService, episodePlayer, messageService, socialService, podcastDataService, podcastEngine) {
 
 	return {
 		restrict: 'E',
@@ -295,7 +308,7 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 			controller.boostagramMessage = '';
 		}
 
-		function getAudioInfoCallback(audioInfo) {
+		async function getAudioInfoCallback(audioInfo) {
 			if(!audioInfo.episodeId)
 				return;
 
@@ -309,27 +322,27 @@ function episodePlayerDirective($document, $window, analyticsService, podcastMan
 
 			controller.playing = !audioInfo.audio.paused;
 
-			podcastManagerService.getPodcastAndEpisode(audioInfo.episodeId).then(function(result) {
-				var episode = result.episode;
+			const episode = await podcastEngine.getEpisode(audioInfo.episodeId);
 
-				controller.mediaTitle = episode.title;
-				controller.mediaLink = episode.link;
-				controller.time = audioInfo.audio.currentTime;
-				controller.duration = audioInfo.audio.duration;
-				controller.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
-				controller.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
-				controller.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
-				controller.error = audioInfo.audio.error ? true : false;
-				controller.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
-				controller.playbackRate = audioInfo.audio.playbackRate;
-				controller.volume.value = audioInfo.audio.volume * 100;
+			controller.mediaTitle = episode.title;
+			controller.mediaLink = episode.link;
+			controller.time = audioInfo.audio.currentTime;
+			controller.duration = audioInfo.audio.duration;
+			controller.imageUrl = audioInfo.audio.imageUrl ? audioInfo.audio.imageUrl : '';
+			controller.timePercent = audioInfo.audio.duration ?  ( audioInfo.audio.currentTime / audioInfo.audio.duration ) * 100 : 0;
+			controller.loading = audioInfo.audio.url && !audioInfo.audio.duration && !audioInfo.audio.error;
+			controller.error = audioInfo.audio.error ? true : false;
+			controller.visible = audioInfo.audio.url && audioInfo.audio.url !== '';
+			controller.playbackRate = audioInfo.audio.playbackRate;
+			controller.volume.value = audioInfo.audio.volume * 100;
 
-				if(controller.error) {
-					controller.playing = false;
-				}
+			if(controller.error) {
+				controller.playing = false;
+			}
 
-				durationInSeconds = audioInfo.audio.duration;
-			});
+			durationInSeconds = audioInfo.audio.duration;
+
+			$scope.$apply();
 		}
 
 		function forward() {
