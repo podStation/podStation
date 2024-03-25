@@ -51,12 +51,12 @@ class EpisodeListController {
 		this.podcastEngine.setEpisodeProgress(episode.id, 0);
 	}
 
-	tweet(episode: any) {
-		this.socialService.tweet(this.podcastDataService.episodeId(episode));
+	tweet(episode: ControllerEpisode) {
+		this.socialService.tweet(episode.id);
 	}
 
-	shareWithFacebook(episode: any) {
-		this.socialService.shareWithFacebook(this.podcastDataService.episodeId(episode));
+	shareWithFacebook(episode: ControllerEpisode) {
+		this.socialService.shareWithFacebook(episode.id);
 	}
 
 	isReverseOrder(): boolean {

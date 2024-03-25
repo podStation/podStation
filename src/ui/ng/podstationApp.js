@@ -33,7 +33,7 @@ const myApp = angular.module('podstationApp', [podStationInternalReuse.name, ngR
 
 myApp
   .factory('storageServiceUI', [storageServiceUI])
-  .factory('socialService', ['$window','podcastManagerService', socialService])
+  .factory('socialService', ['$window','podcastEngine', socialService])
   .factory('searchService', ['$http', 'podcastIndexOrgService', searchService])
   .factory('episodePlayer', ['messageService', episodePlayerService])
   .controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', HeaderController])
