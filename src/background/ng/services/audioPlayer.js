@@ -414,8 +414,11 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 
 		loadSyncPlayerOptions(function(playerOptions) {
 			const calculatedIsNext = playerOptions.reverseOrder ? !isNext : isNext;
-			$injector.get('podcastManager').getNextOrPreviousEpisode(calculatedIsNext, playerOptions.order, refEpisodeInfo.episodeId, function(nextEpisodeId) {
-				play({episodeId: nextEpisodeId});
+
+			podcastEngine.getNextOrPreviousEpisode(refEpisodeInfo.episodeId, playerOptions.order, calculatedIsNext).then((nextOrPreviousEpisode) => {
+				if(nextOrPreviousEpisode) {
+					play({episodeId: nextOrPreviousEpisode.id});
+				}
 			});
 
 			return false;

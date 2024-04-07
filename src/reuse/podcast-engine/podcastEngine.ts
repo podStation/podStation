@@ -31,6 +31,7 @@ export interface IPodcastEngine {
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 	getLastEpisodesObservable(offset: number, limit: number): Observable<LocalStorageEpisode[]>;
 	getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode>;
+	getNextOrPreviousEpisode(localEpisodeId: number, order: string, isNext: boolean): Promise<LocalStorageEpisode>
 	
 	/**
 	 * 
@@ -101,6 +102,10 @@ class PodcastEngine implements IPodcastEngine {
 
 	getEpisode(localEpisodeId: number): Promise<LocalStorageEpisode> {
 		return this.storageEngine.getEpisode(localEpisodeId);
+	}
+
+	getNextOrPreviousEpisode(localEpisodeId: number, order: string, isNext: boolean): Promise<LocalStorageEpisode> {
+		return this.storageEngine.getNextOrPreviousEpisode(localEpisodeId, order, isNext);
 	}
 
 	async setEpisodeProgress(localEpisodeId: LocalEpisodeId, progress: number): Promise<void> {

@@ -72,6 +72,7 @@ export interface IStorageEngine {
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 	getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode>;
+	getNextOrPreviousEpisode(localEpisodeId: number, order: string, isNext: boolean): Promise<LocalStorageEpisode>
 
 	setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void>;
 	
@@ -159,6 +160,89 @@ export class StorageEngine implements IStorageEngine {
 			...episode,
 			podcast: podcast
 		}
+	}
+
+	async getNextOrPreviousEpisode(localEpisodeId: number, order: string, isNext: boolean): Promise<LocalStorageEpisode> {
+		switch(order ? order : 'from_last_episodes') {
+			case 'from_podcast':
+			default:
+				return this.getNextOrPreviousEpisodeFromPodcast(localEpisodeId, isNext);
+			case 'from_last_episodes':
+				return this.getEpisodeFromLastEpisodes(localEpisodeId, isNext);
+			case 'from_playlist':
+				return this.getEpisodeFromDefaultPlaylist(localEpisodeId, isNext);
+		}
+	}
+
+	private async getNextOrPreviousEpisodeFromPodcast(localEpisodeId: number, isNext: boolean): Promise<LocalStorageEpisode> {
+		const episode = await this.db.episodes.get(localEpisodeId);
+		const pubDateRange = StorageEngine.getPubdateRange(episode.pubDate, isNext);
+
+		let collection = this.db.episodes.where('[podcastId+pubDate]').between(
+			[episode.podcastId, pubDateRange.lower],
+			[episode.podcastId, pubDateRange.upper]
+		);
+
+		if(!isNext) {
+			collection = collection.reverse();
+		}
+
+		// this code will not work well if there are multiple episodes with the same pubDate, but I think this is unusual
+		// I'll fix if reported.
+		collection = collection
+		  .filter(item => item.id != localEpisodeId)
+		  .limit(1)
+
+		const nextOrPreviousEpisode = await collection.toArray();
+
+		return nextOrPreviousEpisode.length ? nextOrPreviousEpisode[0] : null;
+	}
+
+	private async getEpisodeFromLastEpisodes(localEpisodeId: number, isNext: boolean): Promise<LocalStorageEpisode>  {
+		const episode = await this.db.episodes.get(localEpisodeId);
+		const pubDateRange = StorageEngine.getPubdateRange(episode.pubDate, isNext);
+		
+		let collection = this.db.episodes.where('pubDate').between(pubDateRange.lower, pubDateRange.upper);
+
+		if(!isNext) {
+			collection = collection.reverse();
+		}
+
+		// this code will not work well if there are multiple episodes with the same pubDate, but I think this is unusual
+		// I'll fix if reported.
+		collection = collection
+		  .filter(item => item.id != localEpisodeId)
+		  .limit(1)
+
+		const nextOrPreviousEpisode = await collection.toArray();
+
+		return nextOrPreviousEpisode.length ? nextOrPreviousEpisode[0] : null;
+	}
+
+	private async getEpisodeFromDefaultPlaylist(localEpisodeId: number, isNext: boolean): Promise<LocalStorageEpisode> {
+		const playlist = await this.getDefaultPlaylist();
+
+		let index = playlist.episodes.findIndex((episode) => episode.episodeId === localEpisodeId);
+		
+		if(index < 0)
+			return null;
+
+		index += isNext ? 1 : -1;
+
+		if(index >= 0 && index < playlist.episodes.length) {
+			const nextOrPreviousEpisodeId = playlist.episodes[index].episodeId;
+
+			return this.getEpisode(nextOrPreviousEpisodeId);
+		}
+
+		return null;
+	}
+
+	private static getPubdateRange(currentEpisodePubDate: Date, isNext: boolean) {
+		return {
+			lower: isNext ? currentEpisodePubDate : Dexie.minKey,
+			upper: isNext ? Dexie.maxKey : currentEpisodePubDate
+		} 
 	}
 
 	async setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void> {
