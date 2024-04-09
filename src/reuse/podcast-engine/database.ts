@@ -11,8 +11,9 @@ export class PodcastDatabase extends Dexie {
 		this.version(1).stores({
 			podcasts: '++id, &feedUrl',
 			// [podcastId+pubDate] is useful for getting all episodes of a podcast
-			// ordered by pubDate
-			episodes: '++id, [podcastId+pubDate], pubDate',
+			// ordered by pubDate.
+			// [lastTimePlayed+progress] is useful for getting all episodes in progress
+			episodes: '++id, [podcastId+pubDate], pubDate, [lastTimePlayed+progress]',
 			playlists: '++id, isDefault'
 		});
 	}
@@ -84,6 +85,7 @@ export interface IEpisodeTableRecord {
 	// >>> User Data
 	isInDefaultPlaylist: boolean;
 	progress?: number;
+	lastTimePlayed?: Date;
 	// <<< User Data
 }
 

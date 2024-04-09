@@ -43,7 +43,7 @@
 						<span ng-if="episode.lastTimePlayedFormatted"><br>{{'last_time_played' | chrome_i18n }}: {{ episode.lastTimePlayedFormatted }}</span>
 						<span ng-if="episode.pubDate"><br>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 						<span ng-if="episode.duration"><br>{{'duration' | chrome_i18n }}: {{episode.duration | format_seconds}}</span>
-						<span ng-if="episode.pausedAt"><br>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt | format_seconds}}</span>
+						<span ng-if="episode.progress"><br>{{'paused_at' | chrome_i18n }}: {{episode.progress | format_seconds}}</span>
 					</div>
 					<div class="itemDescription" ng-bind-html="episode.description">
 					</div>
@@ -69,7 +69,7 @@
 			<span ng-if="episode.duration"> - {{episode.duration | format_seconds}}</span>
 			<span ng-if="episode.link"> - <a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a></span>
 			<span ng-if="episode.pubDate"> - {{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
-			<span ng-if="episode.pausedAt"> - {{'paused_at' | chrome_i18n }}: {{episode.pausedAt | format_seconds}}</span>
+			<span ng-if="episode.progress"> - {{'paused_at' | chrome_i18n }}: {{episode.progress | format_seconds}}</span>
 		</li>
 	</ul>
 </div>

@@ -48,7 +48,7 @@ class EpisodeListController {
 	}
 
 	deletePlayTime(episode: any) {
-		this.podcastEngine.setEpisodeProgress(episode.id, 0);
+		this.podcastEngine.setEpisodeProgress(episode.id, 0, null);
 	}
 
 	tweet(episode: ControllerEpisode) {

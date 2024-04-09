@@ -46,6 +46,7 @@ export type LocalStorageEpisode = {
 	// >>> User Data
 	isInDefaultPlaylist: boolean;
 	progress?: number;
+	lastTimePlayed?: Date;
 	// <<< User Data
 }
 
@@ -71,10 +72,11 @@ export interface IStorageEngine {
 	updatePodcastAndEpisodes(podcast: LocalStoragePodcast, episodes: LocalStorageEpisode[]): Promise<void>;
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
+	getEpisodesInProgress(offset: number, limit: number): Promise<LocalStorageEpisode[]>;
 	getEpisode(localEpisodeId: LocalEpisodeId): Promise<LocalStorageEpisode>;
 	getNextOrPreviousEpisode(localEpisodeId: number, order: string, isNext: boolean): Promise<LocalStorageEpisode>
 
-	setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void>;
+	setEpisodeProgress(localEpisodeId: number, progress: number, lastTimePlayed: Date): Promise<void>;
 	
 	// >>> Playlist storage
 	addEpisodeToDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
@@ -142,6 +144,23 @@ export class StorageEngine implements IStorageEngine {
 
 	async getLastEpisodes(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
 		const episodes: LocalStorageEpisode[] = await this.db.episodes.orderBy('pubDate').reverse().offset(offset).limit(limit).toArray();
+
+		const uniquePodcastIds = episodes.map((episode) => episode.podcastId)
+			// filter unique podcastIds
+			.filter((podcastId, index, self) => self.indexOf(podcastId) === index);
+
+		const podcasts: LocalStoragePodcast[] = await this.db.podcasts.where('id').anyOf(uniquePodcastIds).toArray();
+
+		return StorageEngine.enrichEpisodesWithPodcast(episodes, podcasts);
+	}
+
+	async getEpisodesInProgress(offset: number, limit: number): Promise<LocalStorageEpisode[]> {
+		const episodes: LocalStorageEpisode[] = await this.db.episodes.where('[lastTimePlayed+progress]').between(
+			[Dexie.minKey, 1],
+			[Dexie.maxKey, Dexie.maxKey]
+		)
+		.offset(offset).limit(limit).reverse()
+		.toArray();
 
 		const uniquePodcastIds = episodes.map((episode) => episode.podcastId)
 			// filter unique podcastIds
@@ -245,8 +264,8 @@ export class StorageEngine implements IStorageEngine {
 		} 
 	}
 
-	async setEpisodeProgress(localEpisodeId: number, progress: number): Promise<void> {
-		await this.db.episodes.update(localEpisodeId, {progress: progress});
+	async setEpisodeProgress(localEpisodeId: number, progress: number, lastTimePlayed: Date): Promise<void> {
+		await this.db.episodes.update(localEpisodeId, {progress: progress, lastTimePlayed: lastTimePlayed});
 	}
 
 	private static enrichEpisodesWithPodcast(episodes: LocalStorageEpisode[], podcasts: LocalStoragePodcast[]): LocalStorageEpisode[] {

@@ -7,20 +7,6 @@ import { ControllerEpisode } from '../common/controllerEpisode';
 
 declare var chrome: any;
 
-// TODO: Remove this code later
-function updateIsInPlaylist($scope: any, messageService: any, podcastDataService: PodcastDataService, episodes?: ControllerEpisode[]) {
-	messageService.for('playlist').sendMessage('get', {}, (playlist: any) => {
-		$scope.$apply(() => {
-			// transition phase, we support episodes on scope and as a dedicated argument
-			($scope.episodes || episodes).forEach((episode: any) => {
-				episode.isInPlaylist = playlist.entries.find((entry: any) => {
-					return podcastDataService.episodeMatchesId(episode, null, entry);
-				}) !== undefined;
-			});
-		});
-	});
-}
-
 type EpidodesObervableGetter = (offset: number, limit: number) => Observable<LocalStorageEpisode[]>;
 type EpisodeListChangedCallback = () => void;
 
@@ -52,6 +38,7 @@ class PagedEpisodesSubscriber {
 				image: episode.podcast?.imageUrl,
 				podcastTitle: episode.podcast?.title,
 				url: episode.enclosureUrl,
+				lastTimePlayedFormatted: episode.lastTimePlayed && formatDate(episode.lastTimePlayed),
 			}));
 
 			this.episodeListChangedCallback();
@@ -225,10 +212,11 @@ class EpisodeController {
 
 class EpisodesInProgressController {
 	$scope: any;
-	messageService: any;
+
 	storageServiceUI: any;
-	socialService: any;
-	podcastDataService: PodcastDataService;
+	private podcastEngine: IPodcastEngine;
+
+	private pagedEpisodes: PagedEpisodesSubscriber;
 
 	listType = 'big_list';
 	orderByField = 'lastTimePlayed';
@@ -237,76 +225,27 @@ class EpisodesInProgressController {
 	private episodesLoaded = false;
 	private optionsLoaded = false;
 
-	constructor($scope: any, messageService: any, storageServiceUI: any, podcastDataService: PodcastDataService, socialService: any) {
+	constructor($scope: any, storageServiceUI: any, podcastEngine: IPodcastEngine) {
 		this.$scope = $scope;
-		this.messageService = messageService;
 		this.storageServiceUI = storageServiceUI;
-		this.socialService = socialService;
-		this.podcastDataService = podcastDataService;
+		this.podcastEngine = podcastEngine;
 
 		storageServiceUI.loadSyncUIOptions((uiOptions: any) => {
 			$scope.listType = uiOptions.ilt;
 			this.optionsLoaded = true;
 		});
 	
-		messageService.for('podcast').onMessage('changed', (messageContent: any) => {
-			if(messageContent.episodeListChanged) {
-				$scope.$apply(() => {
-					this.updateEpisodes();
-				});
-			}
+		this.pagedEpisodes = new PagedEpisodesSubscriber((offset, limit) => this.podcastEngine.getEpisodesInProgressObservable(offset, limit), () => {
+			// replacing the entire array (this.episodes = this.pagedEpisodes.getEpisodes()) causes and issue on AngularJS
+			this.episodes.length = 0;
+			this.episodes.push(...this.pagedEpisodes.getEpisodes());
+			this.episodesLoaded = true;
+			this.$scope.$apply();
 		});
-	
-		messageService.for('podcastManager').onMessage('podcastSyncInfoChanged', () => {
-			$scope.$apply(() => {
-				this.updateEpisodes();
-			});
-		});
-	
-		messageService.for('playlist').onMessage('changed', () =>{ updateIsInPlaylist($scope, messageService, podcastDataService, this.episodes); });
-	
-		this.updateEpisodes();
 	}
 
-	updateEpisodes() {
-		chrome.runtime.getBackgroundPage((bgPage: any) => {
-			bgPage.podcastManager.getEpisodesInProgress().then((episodesInProgress: any) => {
-				this.episodes = episodesInProgress.map((episodeInProgress: any) => {
-					const podcast = episodeInProgress.podcast;
-					const episode = episodeInProgress.episode;
-
-					const controllerEpisode: ControllerEpisode = {
-						id: episode.id,
-						isInDefaultPlaylist: false,
-					};
-
-					controllerEpisode.link = episode.link;
-					controllerEpisode.title = episode.title ? episode.title : episode.url;
-					controllerEpisode.image = podcast.image;
-					controllerEpisode.podcastTitle = podcast.title;
-					controllerEpisode.podcastUrl = podcast.url;
-					controllerEpisode.url = episode.enclosure.url;
-					controllerEpisode.guid = episode.guid;
-					controllerEpisode.lastTimePlayed = episodeInProgress.episodeUserData.lastTimePlayed;
-					controllerEpisode.lastTimePlayedFormatted = formatDate(controllerEpisode.lastTimePlayed);
-					controllerEpisode.pausedAt = episodeInProgress.episodeUserData.currentTime;
-					controllerEpisode.participants = episode.participants && episode.participants.map(this.socialService.participantMapping);
-					controllerEpisode.duration = episode.duration;
-
-					return controllerEpisode;
-				});
-
-				updateIsInPlaylist(this.$scope, this.messageService, this.podcastDataService, this.episodes);
-
-				this.episodesLoaded = true;
-			});
-				
-		});
-	};
-
 	myPagingFunction = function() {
-		this.numberEpisodes += 20;
-		console.log('Paging function - ' + this.numberEpisodes);
+		this.pagedEpisodes.subscribeToNextPage();
 	};
 
 	listTypeChanged() {

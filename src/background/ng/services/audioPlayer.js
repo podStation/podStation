@@ -242,7 +242,7 @@ function audioPlayerService($injector, $window, $interval, $q, browserService, m
 	}
 
 	function setEpisodeInProgress(episodeInfo, currentTime) {
-		podcastEngine.setEpisodeProgress(episodeInfo.episodeId, currentTime);
+		podcastEngine.setEpisodeProgress(episodeInfo.episodeId, currentTime, new Date());
 	}
 
 	async function setCurrentTimeFromEpisode() {
