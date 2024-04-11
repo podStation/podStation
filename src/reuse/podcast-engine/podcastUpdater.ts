@@ -5,11 +5,11 @@ import { IStorageEngine, LocalPodcastId, LocalStoragePodcast } from "./storageEn
 
 const LOW_DATE = new Date(0);
 
-interface IPodcastUpdater {
+export interface IPodcastUpdater {
 	update(localPodcastId: number): Promise<void>
 }
 
-export class PodcastUpdater {
+export class PodcastUpdater implements IPodcastUpdater {
 	private storageEngine: IStorageEngine;
 
 	constructor(storageEngine: IStorageEngine) {

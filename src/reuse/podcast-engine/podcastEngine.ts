@@ -1,6 +1,6 @@
 import { Observable, liveQuery } from "dexie";
 import { IPodcastTableRecord } from "./database";
-import { PodcastUpdater } from "./podcastUpdater";
+import { IPodcastUpdater, PodcastUpdater } from "./podcastUpdater";
 import { IStorageEngine, LocalEpisodeId, LocalPodcastId, LocalStorageEpisode, LocalStoragePlaylist, LocalStoragePodcast, StorageEngine } from "./storageEngine";
 
 /**
@@ -50,9 +50,11 @@ export interface IPodcastEngine {
 
 class PodcastEngine implements IPodcastEngine {
 	private storageEngine: IStorageEngine;
+	private podcastUpdater: IPodcastUpdater;
 	
-	constructor(storageEngine: IStorageEngine) {
+	constructor(storageEngine: IStorageEngine, podcastUpdater: IPodcastUpdater) {
 		this.storageEngine = storageEngine;
+		this.podcastUpdater = podcastUpdater;
 	}
 	
 	async addPodcast(podcast: PodcastToBeAdded): Promise<void> {
@@ -81,9 +83,7 @@ class PodcastEngine implements IPodcastEngine {
 	}
 
 	updatePodcast(localPodcastId: LocalPodcastId) {
-		let podcastUpdater = new PodcastUpdater(this.storageEngine);
-
-		podcastUpdater.update(localPodcastId);
+		this.podcastUpdater.update(localPodcastId);
 	}
 
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]> {
@@ -147,8 +147,9 @@ export class PodcastEngineHolder {
 	static getPodcastEngine(): IPodcastEngine {
 		if(!PodcastEngineHolder.podcastEngine) {
 			let localStorageEngine = new StorageEngine();
+			let podcastUpdater = new PodcastUpdater(localStorageEngine);
 
-			PodcastEngineHolder.podcastEngine = new PodcastEngine(localStorageEngine);
+			PodcastEngineHolder.podcastEngine = new PodcastEngine(localStorageEngine, podcastUpdater);
 		}
 
 		return PodcastEngineHolder.podcastEngine;
