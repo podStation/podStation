@@ -76,23 +76,6 @@ function PodcastManager() {
 		}
 	};
 
-	this.deletePodcast = function(url) {
-		var that = this;
-
-		this.podcastList.forEach(function(item, index) {
-			if( item.url === url) {
-				getAnalyticsService().trackEvent('feed', 'delete');
-				item.deleteFromStorage();
-				that.podcastList.splice(index, 1);
-				return false;
-			}
-		});
-
-		getPodcastStorageService().deletePodcastsByFeedUrl(url);
-
-		sendPodcastListChangedMessage();
-	}
-
 	this.updatePodcast = function(url) {
 		if(typeof url === "string" && url !== '') {
 			var podcast;
