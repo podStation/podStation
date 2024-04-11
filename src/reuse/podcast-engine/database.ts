@@ -59,18 +59,9 @@ export interface IPodcastTableRecord {
 type PodcastTableRecordState = 'added' | 'ready';
 
 /**
- * A DB record that represents a podcast episode
- * 
- * As episodes come from feeds, and RSS is the leading format,
- * we will keep the fields as much as possible in line with the
- * elements of the RSS 2.0 item tag.
- * Reference: https://www.rssboard.org/rss-specification#hrelementsOfLtitemgt
+ * The fields of a DB episode table record that come from the RSS feed 
  */
-export interface IEpisodeTableRecord {
-	id: number;
-	podcastId: number;
-
-	// >>> Feed Data
+export interface IEpisodeTableRecordFeedData {
 	title?: string;
 	description?: string;
 	guid?: string;
@@ -80,10 +71,30 @@ export interface IEpisodeTableRecord {
 	enclosureLength?: number;
 	enclosureType?: string;
 	duration?: number;
-	// <<< Feed Data
+}
+
+/**
+ * A DB record that represents a podcast episode
+ * 
+ * As episodes come from feeds, and RSS is the leading format,
+ * we will keep the fields as much as possible in line with the
+ * elements of the RSS 2.0 item tag.
+ * Reference: https://www.rssboard.org/rss-specification#hrelementsOfLtitemgt
+ */
+export interface IEpisodeTableRecord extends IEpisodeTableRecordFeedData {
+	id: number;
+
+	/**
+	 * Id of the corresponding IPodcastTableRecord
+	 */
+	podcastId: number;
 
 	// >>> User Data
 	isInDefaultPlaylist: boolean;
+	
+	/**
+	 * Current progress of the episode in seconds
+	 */
 	progress?: number;
 	lastTimePlayed?: Date;
 	// <<< User Data

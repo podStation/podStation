@@ -1,6 +1,6 @@
 
 import parsePodcastFeed from "../../background/utils/parsePodcastFeed";
-import { IEpisodeTableRecord, IPodcastTableRecord } from "./database";
+import { IEpisodeTableRecord, IEpisodeTableRecordFeedData, IPodcastTableRecord } from "./database";
 import { IStorageEngine, LocalPodcastId, LocalStoragePodcast } from "./storageEngine";
 
 const LOW_DATE = new Date(0);
@@ -48,10 +48,8 @@ export class PodcastUpdater {
 		})).text();
 	}
 
-	private static mapFeedEpisodeToTableRecord(feedEpisode: any, localPodcastId: LocalPodcastId): IEpisodeTableRecord {
-		const episodeTableRecord: IEpisodeTableRecord = {
-			id: undefined, // autoincremented
-			podcastId: localPodcastId,
+	private static mapFeedEpisodeToTableRecord(feedEpisode: any): IEpisodeTableRecordFeedData {
+		const episodeTableRecord: IEpisodeTableRecordFeedData = {
 			title: feedEpisode.title,
 			description: feedEpisode.description,
 			guid: feedEpisode.guid,
@@ -61,14 +59,13 @@ export class PodcastUpdater {
 			enclosureLength: feedEpisode.enclosure?.length,
 			enclosureType: feedEpisode.enclosure?.type,
 			duration: feedEpisode.duration,
-			isInDefaultPlaylist: false,
 		}
 
 		return episodeTableRecord;
 	}
 
 	private static updateEpisodes(currentEpisodes: IEpisodeTableRecord[], feedEpisodes: Object[], localPodcastId: LocalPodcastId): IEpisodeTableRecord[] {
-		const feedEpisodesAsTableRecords = feedEpisodes.map((feedEpisode => PodcastUpdater.mapFeedEpisodeToTableRecord(feedEpisode, localPodcastId)));
+		const feedEpisodesAsTableRecords = feedEpisodes.map((feedEpisode => PodcastUpdater.mapFeedEpisodeToTableRecord(feedEpisode)));
 
 		const updatedEpisodes: IEpisodeTableRecord[] = [];
 
@@ -81,18 +78,22 @@ export class PodcastUpdater {
 				updatedEpisodes.push({
 					...correspondingCurrentEpisode,
 					...feedEpisodeAsTableRecord,
-					isInDefaultPlaylist: correspondingCurrentEpisode.isInDefaultPlaylist,
 				});
 			}
 			else {
-				updatedEpisodes.push(feedEpisodeAsTableRecord);
+				updatedEpisodes.push({
+					...feedEpisodeAsTableRecord,
+					id: undefined,
+					podcastId: localPodcastId,
+					isInDefaultPlaylist: false
+				});
 			}
 		}
 
 		return updatedEpisodes;
 	}
 
-	private static findCorrespondingEpisode(episodeToFind: IEpisodeTableRecord, episodes: IEpisodeTableRecord[]) : IEpisodeTableRecord | null {
+	private static findCorrespondingEpisode(episodeToFind: IEpisodeTableRecordFeedData, episodes: IEpisodeTableRecord[]) : IEpisodeTableRecord | null {
 		return episodes.find((episode) =>
 			(episodeToFind.guid  && episode.guid  === episodeToFind.guid) ||
 			(episodeToFind.title && episode.title === episodeToFind.title)
