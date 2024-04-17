@@ -8,8 +8,9 @@ import ChromeExtensionMessageService from '../../../reuse/messageServiceDefiniti
  * @param {*} $location 
  * @param {ChromeExtensionMessageService} messageService 
  * @param {*} analyticsService 
+ * @param {import('../../../reuse/podcast-engine/podcastEngine').IPodcastEngine} podcastEngine
  */
-function MenuController($rootScope, $scope, $document, $location, messageService, analyticsService) {
+function MenuController($rootScope, $scope, $document, $location, messageService, analyticsService, podcastEngine) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
 	};
@@ -57,10 +58,10 @@ function MenuController($rootScope, $scope, $document, $location, messageService
 		$rootScope.$broadcast('playlist.toggleVisibility');
 	}
 
-	function exportOpml() {
-		messageService.for('podcastManager').sendMessage('getOpml', null, response => {
-			download(response);
-		});
+	async function exportOpml() {
+		const opml = await podcastEngine.getOpml();
+
+		download(opml);
 	}
 
 	function download(text) {

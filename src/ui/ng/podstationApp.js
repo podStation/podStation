@@ -38,7 +38,7 @@ myApp
   .factory('episodePlayer', ['messageService', episodePlayerService])
   .controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', HeaderController])
   .controller('adController', ['$scope', 'storageService', AdController])
-  .controller('menuController', ['$rootScope', '$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
+  .controller('menuController', ['$rootScope', '$scope', '$document', '$location', 'messageService', 'analyticsService', 'podcastEngine', MenuController])
   .controller('aboutController', ['$scope', AboutController])
   .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', 'podcastEngine', LastEpisodesController])
   .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', 'podcastEngine', EpisodeController])

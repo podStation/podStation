@@ -16,7 +16,6 @@ function PodcastManager() {
 	this.setEpisodeProgress = setEpisodeProgress;
 	this.getEpisodeIds = getEpisodeIds;
 	this.reset = reset;
-	this.getOpml = getOpml;
 
 	function triggerNotifications() {
 		var loadingEpisodes = 0;
@@ -249,35 +248,6 @@ function PodcastManager() {
 		getMessageService().for('podcastManager').sendMessage('podcastListChanged');
 	}
 
-	function getOpml() {
-		const subscriptions = instance.podcastList.reduce((previous, current) => {
-			return previous + `<outline title="${escapeXml(current.title)}" type="rss" xmlUrl="${escapeXml(current.url)}"/>\n`
-		}, '');
-
-		return `<?xml version="1.0" encoding="utf-8"?>
-<opml version="1.1">
-<head>
-	<title>podStation OPML export</title>
-</head>
-<body>
-	<outline text="Subscriptions">
-		${subscriptions}
-	</outline>
-</body>
-</opml>`;
-		function escapeXml(unsafe) {
-			return unsafe.replace(/[<>&'"]/g, function (c) {
-				switch (c) {
-					case '<': return '&lt;';
-					case '>': return '&gt;';
-					case '&': return '&amp;';
-					case '\'': return '&apos;';
-					case '"': return '&quot;';
-				}
-			});
-		}
-	}
-
 	// do it async as it need to be executed after
 	// angular bootstrap
 	angular.element(document).ready(function() {
@@ -296,9 +266,6 @@ function PodcastManager() {
 			instance.addPodcasts(message.podcasts);
 		}).onMessage('setEpisodeInProgress', function(message) {
 			setEpisodeProgress(message.episodeId, message.currentTime);
-		}).onMessage('getOpml', (message, sendResponse) => {
-			sendResponse(getOpml());
-			return true;
 		}).onMessage('checkIsSubscribed', (message, sendResponse) => {
 			const response = {};
 			

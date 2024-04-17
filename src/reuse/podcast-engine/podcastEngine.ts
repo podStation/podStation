@@ -46,6 +46,8 @@ export interface IPodcastEngine {
 	removeEpisodeFromDefaultPlaylist(localEpisodeId: LocalEpisodeId): Promise<void>;
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>
 	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void>;
+
+	getOpml(): Promise<string>;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -138,6 +140,37 @@ class PodcastEngine implements IPodcastEngine {
 
 	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void> {
 		return this.storageEngine.reorderPlaylistEpisodes(playlistId, episodeIds);
+	}
+
+	async getOpml(): Promise<string> {
+		const podcasts = await this.storageEngine.getAllPodcasts();
+
+		const subscriptions = podcasts.reduce((previous, current) => {
+			return previous + `<outline title="${escapeXml(current.title)}" type="rss" xmlUrl="${escapeXml(current.feedUrl)}"/>\n`
+		}, '');
+
+		return `<?xml version="1.0" encoding="utf-8"?>
+<opml version="1.1">
+<head>
+	<title>podStation OPML export</title>
+</head>
+<body>
+	<outline text="Subscriptions">
+		${subscriptions}
+	</outline>
+</body>
+</opml>`;
+		function escapeXml(unsafe: any) {
+			return unsafe.replace(/[<>&'"]/g, function (c: string) {
+				switch (c) {
+					case '<': return '&lt;';
+					case '>': return '&gt;';
+					case '&': return '&amp;';
+					case '\'': return '&apos;';
+					case '"': return '&quot;';
+				}
+			});
+		}
 	}
 }
 
