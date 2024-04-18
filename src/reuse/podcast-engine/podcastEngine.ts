@@ -19,10 +19,14 @@ type PodcastToBeAdded = {
 
 export interface IPodcastEngine {
 	addPodcast(podcast: PodcastToBeAdded): Promise<void>;
+	addPodcasts(podcast: PodcastToBeAdded[]): Promise<void>;
 	getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast>;
+	getAllPodcasts(): Promise<LocalStoragePodcast[]>
 	getObservableForAllPodcasts(): Observable<LocalStoragePodcast[]>
 	deletePodcast(localPodcastId: LocalPodcastId): void;
 	updatePodcast(localPodcastId: LocalPodcastId): void;
+	updatePodcasts(localPodcastIds: LocalPodcastId[]): void;
+	updateAddedPodcasts(): Promise<void>
 	/**
 	 * Get all episodes of a podcast, sorted by pubDate
 	 */
@@ -60,20 +64,26 @@ class PodcastEngine implements IPodcastEngine {
 	}
 	
 	async addPodcast(podcast: PodcastToBeAdded): Promise<void> {
-		let localPodcastId = await this.storageEngine.addPodcast({
+		await this.addPodcasts([podcast]);
+	}
+
+	async addPodcasts(podcasts: PodcastToBeAdded[]): Promise<void> {
+		await this.storageEngine.addPodcasts(podcasts.map((podcast) => ({
 			id: undefined, // autoincremented
-			title: podcast.title,
-			feedUrl: podcast.feedUrl.toString(),
-			imageUrl: podcast.imageUrl.toString(),
+			title: podcast.title || podcast.feedUrl?.toString(),
+			feedUrl: podcast.feedUrl?.toString(),
+			imageUrl: podcast.imageUrl?.toString(),
 			description: podcast.description,
 			state: 'added'
-		});
-
-		this.updatePodcast(localPodcastId);
+		})))
 	}
 
 	async getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast> {
 		return this.storageEngine.getPodcast(localPodcastId);
+	}
+
+	getAllPodcasts(): Promise<LocalStoragePodcast[]> {
+		return this.storageEngine.getAllPodcasts();	
 	}
 
 	getObservableForAllPodcasts(): Observable<IPodcastTableRecord[]> {
@@ -86,6 +96,20 @@ class PodcastEngine implements IPodcastEngine {
 
 	updatePodcast(localPodcastId: LocalPodcastId) {
 		this.podcastUpdater.update(localPodcastId);
+	}
+
+	updatePodcasts(localPodcastIds: LocalPodcastId[]) {
+
+		localPodcastIds.forEach((localPodcastId) => this.podcastUpdater.update(localPodcastId))
+	}
+
+	async updateAddedPodcasts(): Promise<void> { 
+		const podcasts = await this.storageEngine.getAllPodcasts();
+
+		const addedPodcasts = podcasts.filter((podcast) => podcast.state === 'added')
+		const addedPodcastIds = addedPodcasts.map((podcast) => podcast.id);
+
+		this.updatePodcasts(addedPodcastIds)
 	}
 
 	getPodcastEpisodes(localPodcastId: LocalPodcastId, offset: number, limit: number, reverse: boolean): Promise<LocalStorageEpisode[]> {

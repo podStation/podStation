@@ -29,6 +29,8 @@ class SearchController {
 		chrome.runtime.getBackgroundPage((bgPage: any) => {
 			this.$scope.$apply(() => {
 				this.analyticsService.trackEvent('feed', 'add_by_search');
+
+				// TODO: Remove usage of old engine
 				bgPage.podcastManager.addPodcast(searchResult.feedUrl);
 				
 				this.podcastEngine.addPodcast({
@@ -37,6 +39,9 @@ class SearchController {
 					description: searchResult.description,
 					imageUrl: SearchController.getImageUrl(searchResult),
 				});
+
+				// TODO: Move to background
+				this.podcastEngine.updateAddedPodcasts();
 
 				this.$location.path('/Podcasts');
 			});
@@ -48,13 +53,18 @@ class SearchController {
 		return imageUrl ? new URL(imageUrl) : null;
 	}
 
-	fillIsSubscribed(searchResults: any) {
-		chrome.runtime.getBackgroundPage((bgPage: any) => {
+	async fillIsSubscribed(searchResults: any) {
+		/*chrome.runtime.getBackgroundPage((bgPage: any) => {
 			this.$scope.$apply(() => {
 				searchResults.forEach((searchResult: any) => {
 					searchResult.subscribed = bgPage.podcastManager.getPodcast(searchResult.feedUrl) !== undefined;
 				});
 			});
+		});*/
+
+		const podcasts = await this.podcastEngine.getAllPodcasts();
+		searchResults.forEach((searchResult: any) => {
+			searchResult.subscribed = podcasts.find((podcast) => podcast.feedUrl === searchResult.feedUrl) !== undefined;
 		});
 	}
 

@@ -30,13 +30,15 @@ function MenuController($rootScope, $scope, $document, $location, messageService
 
 		var reader = new FileReader;
 
-		reader.onload = function(e) {
+		reader.onload = async function(e) {
 			var jqParsed = $(e.currentTarget.result);
 			var podcasts = [];
 
 			var rssFeeds = jqParsed.find('outline[type="rss"]');
 			
 			rssFeeds.each(function(index, value) {
+				// TODO: Process other fields to use as temp data
+				// e.g.: title
 				var feedURL = $(value).attr('xmlUrl');
 
 				if(feedURL) {
@@ -47,7 +49,12 @@ function MenuController($rootScope, $scope, $document, $location, messageService
 			if(podcasts.length) {
 				$location.path('/Podcasts');
 				analyticsService.trackEvent('feed', 'add_by_opml_file', undefined, podcasts.length);
-				messageService.for('podcastManager').sendMessage('addPodcasts', { podcasts: podcasts});
+				// messageService.for('podcastManager').sendMessage('addPodcasts', { podcasts: podcasts});
+				
+				await podcastEngine.addPodcasts(podcasts.map((podcast) => ({feedUrl: podcast})));
+				
+				// TODO: Move to background
+				await podcastEngine.updateAddedPodcasts();
 			}
 		};
 
