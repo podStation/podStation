@@ -7,6 +7,18 @@ We have only 100 KB of `sync` storage!
 
 ## Tricks for sync storage
 
+### Testing
+
+For testing sync storage, check the following links:
+- <https://groups.google.com/a/chromium.org/g/chromium-extensions/c/qp_087h_vrU/m/ucb63AT5BQAJ>
+- <https://stackoverflow.com/questions/20970833/does-chrome-app-id-for-extensions-affect-sync-storage>
+
+Once you managed to get the `key`, create a `.env` file and add a line with `EXTENSION_KEY=<key value>`.
+
+Now, when you run `npm start`, the resulting `manifest.json` file will have the `key` field set.
+
+Now, loading the unpacked extensions in two computers, and logging in with your google user, will make it possible to test the sync storage for development.
+
 ### Attribute naming
 
 When using the sync storage, due to limited space, podStation

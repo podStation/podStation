@@ -26,6 +26,7 @@
     "clean-webpack-plugin": "^4.0.0-alpha.0",
     "copy-webpack-plugin": "^9.0.0",
     "css-loader": "^5.2.6",
+    "dotenv": "^16.4.5",
     "eslint": "^7.29.0",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.3.1",
