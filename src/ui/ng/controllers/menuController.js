@@ -66,7 +66,7 @@ function MenuController($rootScope, $scope, $document, $location, messageService
 	}
 
 	async function exportOpml() {
-		const opml = await podcastEngine.getOpml();
+		const opml = await podcastEngine.exportToOpml();
 
 		download(opml);
 	}

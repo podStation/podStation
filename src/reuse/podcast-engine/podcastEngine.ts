@@ -51,7 +51,7 @@ export interface IPodcastEngine {
 	getDefaultPlaylistObservable(): Observable<LocalStoragePlaylist[]>
 	reorderPlaylistEpisodes(playlistId: number, episodeIds: number[]): Promise<void>;
 
-	getOpml(): Promise<string>;
+	exportToOpml(): Promise<string>;
 }
 
 class PodcastEngine implements IPodcastEngine {
@@ -166,7 +166,7 @@ class PodcastEngine implements IPodcastEngine {
 		return this.storageEngine.reorderPlaylistEpisodes(playlistId, episodeIds);
 	}
 
-	async getOpml(): Promise<string> {
+	async exportToOpml(): Promise<string> {
 		const podcasts = await this.storageEngine.getAllPodcasts();
 
 		const subscriptions = podcasts.reduce((previous, current) => {
