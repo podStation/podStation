@@ -8,8 +8,9 @@ import ChromeExtensionMessageService from '../../../reuse/messageServiceDefiniti
  * @param {*} $location 
  * @param {ChromeExtensionMessageService} messageService 
  * @param {*} analyticsService 
+ * @param {import('../../../reuse/podcast-engine/podcastEngine').IPodcastEngine} podcastEngine
  */
-function MenuController($scope, $document, $location, messageService, analyticsService) {
+function MenuController($rootScope, $scope, $document, $location, messageService, analyticsService, podcastEngine) {
 	$scope.importOpml = function() {
 		$('#opmlUploader').trigger('click');
 	};
@@ -29,13 +30,15 @@ function MenuController($scope, $document, $location, messageService, analyticsS
 
 		var reader = new FileReader;
 
-		reader.onload = function(e) {
+		reader.onload = async function(e) {
 			var jqParsed = $(e.currentTarget.result);
 			var podcasts = [];
 
 			var rssFeeds = jqParsed.find('outline[type="rss"]');
 			
 			rssFeeds.each(function(index, value) {
+				// TODO: Process other fields to use as temp data
+				// e.g.: title
 				var feedURL = $(value).attr('xmlUrl');
 
 				if(feedURL) {
@@ -46,7 +49,12 @@ function MenuController($scope, $document, $location, messageService, analyticsS
 			if(podcasts.length) {
 				$location.path('/Podcasts');
 				analyticsService.trackEvent('feed', 'add_by_opml_file', undefined, podcasts.length);
-				messageService.for('podcastManager').sendMessage('addPodcasts', { podcasts: podcasts});
+				// messageService.for('podcastManager').sendMessage('addPodcasts', { podcasts: podcasts});
+				
+				await podcastEngine.addPodcasts(podcasts.map((podcast) => ({feedUrl: podcast})));
+				
+				// TODO: Move to background
+				await podcastEngine.updateAddedPodcasts();
 			}
 		};
 
@@ -54,13 +62,13 @@ function MenuController($scope, $document, $location, messageService, analyticsS
 	}
 
 	function togglePlaylistVisibility() {
-		messageService.for('playlist').sendMessage('toggleVisibility');
+		$rootScope.$broadcast('playlist.toggleVisibility');
 	}
 
-	function exportOpml() {
-		messageService.for('podcastManager').sendMessage('getOpml', null, response => {
-			download(response);
-		});
+	async function exportOpml() {
+		const opml = await podcastEngine.exportToOpml();
+
+		download(opml);
 	}
 
 	function download(text) {

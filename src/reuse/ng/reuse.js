@@ -1,4 +1,5 @@
 import angular from 'angular';
+import { PodcastEngineHolder } from '../podcast-engine/podcastEngine';
 import analyticsService from './services/analyticsService';
 import dateService from './services/dateService';
 import messageServiceProvider from './services/messageService';
@@ -12,6 +13,7 @@ const module = angular.module('podStationInternalReuse', []);
 module
   .provider('messageService', messageServiceProvider)
   .factory('browser', browserService)
+  .factory('podcastEngine', podcastEngineService)
   .factory('analyticsService', analyticsService)
   .factory('dateService', dateService)
   .factory('podcastDataService', PodcastDataService)
@@ -27,6 +29,10 @@ module
  */
 function browserService() {
 	return chrome;
+}
+
+function podcastEngineService() {
+	return PodcastEngineHolder.getPodcastEngine();
 }
 
 // >>> For services not yes converted to angular

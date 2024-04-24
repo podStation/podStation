@@ -7,14 +7,14 @@
 			<td>
 				<div class="itemMenu">
 					<div ng-if="episode.url">
-						<span ng-show="episode.isInPlaylist">
+						<span ng-show="episode.isInDefaultPlaylist">
 							<a href="" ng-click="episodeList.removeFromPlaylist(episode)" title="{{ 'remove_from_playlist' | chrome_i18n }}"><i class="fa fa-minus"></i></a> |
 						</span>
-						<span ng-show="!episode.isInPlaylist">
+						<span ng-show="!episode.isInDefaultPlaylist">
 							<a href="" ng-click="episodeList.addToPlaylist(episode)" title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a> |
 						</span>
 						<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a> |
-						<span ng-show="episode.pausedAt">
+						<span ng-show="episode.progress">
 							<a href="" ng-click="episodeList.deletePlayTime(episode)" title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a> |
 						</span>
 						<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
@@ -34,16 +34,16 @@
 						<span class="psBtn icon_facebook" title="{{'facebook_share_this_episode' | chrome_i18n}}" ng-click="episodeList.shareWithFacebook(episode)">
 							<i class="fa fa-facebook"></i> {{'facebook_share' | chrome_i18n}}
 						</span>-->
-						<span ng-if="episode.podcastIndex !== undefined">
+						<span ng-if="episodeList.showOpenAllEpisodesFromPodcast">
 							<br>
-							<a ng-href="#!/Episodes/{{episode.podcastIndex}}">
+							<a ng-href="#!/Episodes/{{episode.podcastId}}">
 								<span ng-bind-html="{ message: 'all_eps_from', arguments: [episode.podcastTitle]} | chrome_i18n"></span>
 							</a>
 						</span>
 						<span ng-if="episode.lastTimePlayedFormatted"><br>{{'last_time_played' | chrome_i18n }}: {{ episode.lastTimePlayedFormatted }}</span>
 						<span ng-if="episode.pubDate"><br>{{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
 						<span ng-if="episode.duration"><br>{{'duration' | chrome_i18n }}: {{episode.duration | format_seconds}}</span>
-						<span ng-if="episode.pausedAt"><br>{{'paused_at' | chrome_i18n }}: {{episode.pausedAt | format_seconds}}</span>
+						<span ng-if="episode.progress"><br>{{'paused_at' | chrome_i18n }}: {{episode.progress | format_seconds}}</span>
 					</div>
 					<div class="itemDescription" ng-bind-html="episode.description">
 					</div>
@@ -59,17 +59,17 @@
 			<div ng-if="episode.image" class="listItemImageSmall">
 				<img ng-src="{{episode.image}}" class="listItemImageSmall"></img>
 			</div>
-			<a href="" ng-show="episode.isInPlaylist"  ng-click="episodeList.removeFromPlaylist(episode)" title="{{ 'remove_from_playlist' | chrome_i18n }}"><i class="fa fa-minus"></i></a>
-			<a href="" ng-show="!episode.isInPlaylist" ng-click="episodeList.addToPlaylist(episode)"      title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a>
+			<a href="" ng-show="episode.isInDefaultPlaylist"  ng-click="episodeList.removeFromPlaylist(episode)" title="{{ 'remove_from_playlist' | chrome_i18n }}"><i class="fa fa-minus"></i></a>
+			<a href="" ng-show="!episode.isInDefaultPlaylist" ng-click="episodeList.addToPlaylist(episode)"      title="{{ 'add_to_playlist' | chrome_i18n }}"><i class="fa fa-plus"></i></a>
 			<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}"><i class="fa fa-play"></i></a>
-			<a href="" ng-show="episode.pausedAt"      ng-click="episodeList.deletePlayTime(episode)"     title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a>
+			<a href="" ng-show="episode.progress"      ng-click="episodeList.deletePlayTime(episode)"     title="{{ 'remove_progress' | chrome_i18n }}"><i class="fa fa-stop"></i></a>
 			<a ng-href="{{episode.url}}" download><i class="fa fa-download"></i></a>
 			<a href="" ng-click="episodeList.play(episode)" title="{{'play_episode' | chrome_i18n}}" class="listItemTitleSmall">{{episode.title}}</a>
 
 			<span ng-if="episode.duration"> - {{episode.duration | format_seconds}}</span>
 			<span ng-if="episode.link"> - <a ng-href="{{episode.link}}" target="_blank">{{'open_episode_website' | chrome_i18n}}</a></span>
 			<span ng-if="episode.pubDate"> - {{'publication_date' | chrome_i18n }}: {{episode.pubDate}}</span>
-			<span ng-if="episode.pausedAt"> - {{'paused_at' | chrome_i18n }}: {{episode.pausedAt | format_seconds}}</span>
+			<span ng-if="episode.progress"> - {{'paused_at' | chrome_i18n }}: {{episode.progress | format_seconds}}</span>
 		</li>
 	</ul>
 </div>

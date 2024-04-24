@@ -33,25 +33,25 @@ const myApp = angular.module('podstationApp', [podStationInternalReuse.name, ngR
 
 myApp
   .factory('storageServiceUI', [storageServiceUI])
-  .factory('socialService', ['$window','podcastManagerService', socialService])
+  .factory('socialService', ['$window','podcastEngine', socialService])
   .factory('searchService', ['$http', 'podcastIndexOrgService', searchService])
   .factory('episodePlayer', ['messageService', episodePlayerService])
   .controller('headerController', ['$scope', '$location', 'analyticsService','storageServiceUI', HeaderController])
   .controller('adController', ['$scope', 'storageService', AdController])
-  .controller('menuController', ['$scope', '$document', '$location', 'messageService', 'analyticsService', MenuController])
+  .controller('menuController', ['$rootScope', '$scope', '$document', '$location', 'messageService', 'analyticsService', 'podcastEngine', MenuController])
   .controller('aboutController', ['$scope', AboutController])
-  .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', LastEpisodesController])
-  .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodeController])
-  .controller('episodesInProgressController', ['$scope', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', EpisodesInProgressController])
+  .controller('lastEpisodesController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'podcastDataService', 'podcastEngine', LastEpisodesController])
+  .controller('episodesController', ['$scope', '$routeParams', 'messageService', 'storageServiceUI', 'podcastDataService', 'socialService', 'podcastEngine', EpisodeController])
+  .controller('episodesInProgressController', ['$scope', 'storageServiceUI', 'podcastEngine', EpisodesInProgressController])
   .controller('notificationController', ['$scope', 'messageService', NotificationController])
   .controller('optionsController', ['$scope', '$window', 'messageService', OptionsController])
-  .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', PlaylistController])
-  .controller('podcastsController', ['$scope', 'messageService', 'storageServiceUI', 'socialService', 'analyticsService', PodcastsController])
-  .controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', 'analyticsService', SearchController])
+  .controller('playlistController', ['$scope', 'messageService', 'episodePlayer', 'podcastDataService', 'podcastEngine', PlaylistController])
+  .controller('podcastsController', ['$scope', 'storageServiceUI', 'podcastEngine', PodcastsController])
+  .controller('searchController', ['$scope', '$routeParams', '$location', 'searchService', 'analyticsService', 'podcastEngine', SearchController])
   .controller('welcomeController', ['$scope', '$http', 'messageService', 'analyticsService', WelcomeController])
   .directive('psValueStreamingInformation', ['messageService', ValueStreamingInformationDirective])
   .directive('psParticipantList', [ParticipantListDirective])
-  .directive('psEpisodePlayer', ['$document', '$window', 'analyticsService', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', episodePlayerDirective])
+  .directive('psEpisodePlayer', ['$document', '$window', 'analyticsService', 'podcastManagerService', 'episodePlayer', 'messageService', 'socialService', 'podcastDataService', 'podcastEngine', episodePlayerDirective])
   .directive('psEpisodeList', [EpisodeListDirective]);
 
 myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $compileProvider, $rootScope) {
@@ -65,19 +65,20 @@ myApp.config(['$routeProvider', '$compileProvider', function ($routeProvider, $c
 		controllerAs: 'welcome'
 	}).when('/Podcasts', {
 		templateUrl: '/ui/ng/partials/podcasts.html',
-		controller: 'podcastsController'
+		controller: 'podcastsController as podcastsController'
 	}).when('/LastEpisodes', {
 		templateUrl: '/ui/ng/partials/lastEpisodes.html',
 		controller: 'lastEpisodesController as lastEpisodesController'
-	}).when('/Episodes/:podcastIndex', {
+	}).when('/Episodes/:localPodcastId', {
 		templateUrl: '/ui/ng/partials/episodes.html',
-		controller: 'episodesController as episodesController'
+		controller: 'episodesController',
+		controllerAs: 'episodesController'
 	}).when('/InProgress', {
 		templateUrl: '/ui/ng/partials/episodesInProgress.html',
 		controller: 'episodesInProgressController as episodesInProgressController'
 	}).when('/Search/:searchTerms', {
 		templateUrl: '/ui/ng/partials/search.html',
-		controller: 'searchController'
+		controller: 'searchController as searchController'
 	}).when('/About', {
 		templateUrl: '/ui/ng/partials/about.html',
 		controller: 'aboutController'

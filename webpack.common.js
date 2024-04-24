@@ -5,6 +5,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { ProvidePlugin } = require('webpack');
 const JSON5 = require('json5');
 const packageInformation = require('./package.json');
+require('dotenv').config();
 
 module.exports = {
 	entry: {
@@ -31,7 +32,7 @@ module.exports = {
 		}),
 		new CopyWebpackPlugin({
 			patterns: [
-				{ from: './src/manifest.json', transform: copyPackageInformationToExtensionManifest },
+				{ from: './src/manifest.json', transform: injectDataToManifest },
 				{ from: './src/_locales', to: '_locales', transform: stripJsonComments },
 				{ from: './src/images', to: 'images' },
 				{ from: './src/ui/ng/partials', to: 'ui/ng/partials' },
@@ -69,10 +70,15 @@ module.exports = {
 	},
 }
 
-function copyPackageInformationToExtensionManifest(content) {
+function injectDataToManifest(content) {
+	// Inject version from package to the manifest
 	const parsedManifest = JSON.parse(content.toString());
-
 	parsedManifest.version = packageInformation.version;
+
+	// Inject extension key from environment
+	if(process.env.EXTENSION_KEY) {
+		parsedManifest.key = process.env.EXTENSION_KEY;
+	}
 
 	return JSON.stringify(parsedManifest, null, 4);
 }

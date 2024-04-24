@@ -1,3 +1,6 @@
+import IPodcastEngine, { PodcastEngineHolder } from "../../../reuse/podcast-engine/podcastEngine";
+import { ControllerEpisode } from "../common/controllerEpisode";
+
 function EpisodeListDirective() {
 	return {
 		restrict: 'E',
@@ -6,9 +9,10 @@ function EpisodeListDirective() {
 			listType: '=listType',
 			limitTo: '=limitTo',
 			reverseOrder: '=reverseOrder',
-			orderByField: '=orderBy'
+			orderByField: '=orderBy',
+			showOpenAllEpisodesFromPodcast: '=showOpenAllEpisodesFromPodcast'
 		},
-		controller: ['podcastDataService', 'episodePlayer', 'messageService', 'socialService', EpisodeListController],
+		controller: ['podcastDataService', 'episodePlayer', 'socialService', 'podcastEngine', EpisodeListController],
 		controllerAs: 'episodeList',
 		bindToController: true,
 		templateUrl: 'ui/ng/partials/episodeList.html'
@@ -18,48 +22,41 @@ function EpisodeListDirective() {
 class EpisodeListController {
 	private podcastDataService: any;
 	private episodePlayer: any;
-	private messageService: any;
 	private socialService: any;
+	private podcastEngine: IPodcastEngine;
 
 	reverseOrder: boolean;
 	orderByField: string;
 
-	constructor(podcastDataService: any, episodePlayer: any, messageService: any, socialService: any) {
+	constructor(podcastDataService: any, episodePlayer: any, socialService: any, podcastEngine: IPodcastEngine) {
 		this.podcastDataService = podcastDataService;
 		this.episodePlayer = episodePlayer;
-		this.messageService = messageService;
 		this.socialService = socialService;
+		this.podcastEngine = podcastEngine;
 	}
 
 	play(episode: any) {
-		this.episodePlayer.play(this.podcastDataService.episodeId(episode));
+		this.episodePlayer.play(episode.id);
 	}
 
-	addToPlaylist(episode: any) {
-		this.messageService.for('playlist').sendMessage('add', {
-			episodeId: this.podcastDataService.episodeId(episode)
-		});
+	addToPlaylist(episode: ControllerEpisode) {
+		this.podcastEngine.addEpisodeToDefaultPlaylist(episode.id);
 	}
 
 	removeFromPlaylist(episode: any) {
-		this.messageService.for('playlist').sendMessage('remove', {
-			episodeId: this.podcastDataService.episodeId(episode)
-		});
+		this.podcastEngine.removeEpisodeFromDefaultPlaylist(episode.id);
 	}
 
 	deletePlayTime(episode: any) {
-		this.messageService.for('podcastManager').sendMessage('setEpisodeInProgress', {
-			episodeId: this.podcastDataService.episodeId(episode),
-			currentTime: 0
-		});
+		this.podcastEngine.setEpisodeProgress(episode.id, 0, null);
 	}
 
-	tweet(episode: any) {
-		this.socialService.tweet(this.podcastDataService.episodeId(episode));
+	tweet(episode: ControllerEpisode) {
+		this.socialService.tweet(episode.id);
 	}
 
-	shareWithFacebook(episode: any) {
-		this.socialService.shareWithFacebook(this.podcastDataService.episodeId(episode));
+	shareWithFacebook(episode: ControllerEpisode) {
+		this.socialService.shareWithFacebook(episode.id);
 	}
 
 	isReverseOrder(): boolean {
