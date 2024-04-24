@@ -2,6 +2,9 @@ import { Observable, liveQuery } from "dexie";
 import { IPodcastTableRecord } from "./database";
 import { IPodcastUpdater, PodcastUpdater } from "./podcastUpdater";
 import { IStorageEngine, LocalEpisodeId, LocalPodcastId, LocalStorageEpisode, LocalStoragePlaylist, LocalStoragePodcast, StorageEngine } from "./storageEngine";
+import { ISyncStorageEngine, SyncStorageEngine } from "./syncStorageEngine";
+
+declare var chrome: any;
 
 /**
  * A podcast to be added, to the engine, identified by its feed URL.
@@ -56,10 +59,12 @@ export interface IPodcastEngine {
 
 class PodcastEngine implements IPodcastEngine {
 	private storageEngine: IStorageEngine;
+	private syncStorageEngine: ISyncStorageEngine;
 	private podcastUpdater: IPodcastUpdater;
 	
-	constructor(storageEngine: IStorageEngine, podcastUpdater: IPodcastUpdater) {
+	constructor(storageEngine: IStorageEngine, syncStorageEngine: ISyncStorageEngine, podcastUpdater: IPodcastUpdater) {
 		this.storageEngine = storageEngine;
+		this.syncStorageEngine = syncStorageEngine;
 		this.podcastUpdater = podcastUpdater;
 	}
 	
@@ -75,19 +80,34 @@ class PodcastEngine implements IPodcastEngine {
 			imageUrl: podcast.imageUrl?.toString(),
 			description: podcast.description,
 			state: 'added'
-		})))
+		})));
+
+		await this.syncStorageEngine.addPodcasts(podcasts.map((podcast) => podcast.feedUrl?.toString()));
 	}
 
 	async getPodcast(localPodcastId: LocalPodcastId): Promise<LocalStoragePodcast> {
 		return this.storageEngine.getPodcast(localPodcastId);
 	}
 
-	getAllPodcasts(): Promise<LocalStoragePodcast[]> {
-		return this.storageEngine.getAllPodcasts();	
+	async getAllPodcasts(): Promise<LocalStoragePodcast[]> {
+		const allPodcasts = await this.storageEngine.getAllPodcasts();
+
+		this.synchronizePodcasts(allPodcasts);
+
+		return this.storageEngine.getAllPodcasts();
 	}
 
 	getObservableForAllPodcasts(): Observable<IPodcastTableRecord[]> {
-		return this.storageEngine.getObservableForAllPodcasts();
+		const observable = this.storageEngine.getObservableForAllPodcasts();
+
+		const subscription = observable.subscribe((allPodcasts) => {
+			// as soon as we get the first result, we will use it
+			// to synchronize with the podcast list in sync storage
+			subscription.unsubscribe();
+			this.synchronizePodcasts(allPodcasts);
+		});
+
+		return observable;
 	}
 
 	deletePodcast(localPodcastId: LocalPodcastId) {
@@ -196,6 +216,21 @@ class PodcastEngine implements IPodcastEngine {
 			});
 		}
 	}
+
+	private async synchronizePodcasts(allPodcasts: LocalStoragePodcast[]): Promise <void> {
+		const syncStoragePodcasts = await this.syncStorageEngine.getPodcasts();
+
+		const newPodcasts = syncStoragePodcasts.filter((item) => !allPodcasts.find((fitem) => fitem.feedUrl === item.feedUrl));
+
+		const newPodcastIds = await this.storageEngine.addPodcasts(newPodcasts.map((item) => ({
+			...item,
+			title: item.feedUrl,
+			state: 'added'
+		})));
+
+		// TODO: Decouple from this method so that it can be moved to background
+		this.updatePodcasts(newPodcastIds);
+	}
 }
 
 export class PodcastEngineHolder {
@@ -204,9 +239,10 @@ export class PodcastEngineHolder {
 	static getPodcastEngine(): IPodcastEngine {
 		if(!PodcastEngineHolder.podcastEngine) {
 			let localStorageEngine = new StorageEngine();
+			let syncStorageEngine = new SyncStorageEngine(chrome);
 			let podcastUpdater = new PodcastUpdater(localStorageEngine);
 
-			PodcastEngineHolder.podcastEngine = new PodcastEngine(localStorageEngine, podcastUpdater);
+			PodcastEngineHolder.podcastEngine = new PodcastEngine(localStorageEngine, syncStorageEngine, podcastUpdater);
 		}
 
 		return PodcastEngineHolder.podcastEngine;

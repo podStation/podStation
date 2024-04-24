@@ -62,6 +62,7 @@ class SearchController {
 			});
 		});*/
 
+		// TODO: switch to observable, as it will react to updates due to changes on sync storage
 		const podcasts = await this.podcastEngine.getAllPodcasts();
 		searchResults.forEach((searchResult: any) => {
 			searchResult.subscribed = podcasts.find((podcast) => podcast.feedUrl === searchResult.feedUrl) !== undefined;
