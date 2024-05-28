@@ -56,6 +56,9 @@ function($window, $timeout, $log, playlist, browser, analyticsService, audioPlay
 				case '1.47.5':
 					$window.open('https://podstation.github.io/blog/2024/01/30/upcoming-changes-that-you-should-know/');
 					break;
+				case '1.48.0':
+					$window.open('https://podstation.github.io/blog/2024/05/20/the-state-and-future-of-podstation-with-the-transition-to-chromes-manifest-v3/');
+					break;
 			}
 		}
 		else if(details.reason === 'install') {

@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.48.0]
+
+### Added
+
+- Pop up message about the state and future of podStation
+
 ## [1.47.6]
 
 ### Changed
@@ -144,6 +150,7 @@ Unfortunately, that is a necessary change to support a better development experi
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
 [Unreleased]: https://github.com/podStation/podStation/compare/v1.47.6...HEAD
+[1.48.0]: https://github.com/podStation/podStation/compare/v1.47.6...v1.48.0
 [1.47.6]: https://github.com/podStation/podStation/compare/v1.47.5...v1.47.6
 [1.47.5]: https://github.com/podStation/podStation/compare/v1.47.4...v1.47.5
 [1.47.4]: https://github.com/podStation/podStation/compare/v1.47.3...v1.47.4
