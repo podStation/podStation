@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.48.1]
+
 ### Fixed
 
 - The OPML file is generated with error when there are podcasts in a known error state (added, but the feed is invalid) - the generated OPML file contains only the text `undefined`. Fixes issue [#358](https://github.com/podStation/podStation/issues/358).
@@ -153,7 +155,8 @@ Unfortunately, that is a necessary change to support a better development experi
 
 - Player option to play next or previous episodes in reverse order (i.e. play older episodes next instead of newer)
 
-[Unreleased]: https://github.com/podStation/podStation/compare/v1.47.6...HEAD
+[Unreleased]: https://github.com/podStation/podStation/compare/v1.48.1...HEAD
+[1.48.1]: https://github.com/podStation/podStation/compare/v1.48.0...v1.48.1
 [1.48.0]: https://github.com/podStation/podStation/compare/v1.47.6...v1.48.0
 [1.47.6]: https://github.com/podStation/podStation/compare/v1.47.5...v1.47.6
 [1.47.5]: https://github.com/podStation/podStation/compare/v1.47.4...v1.47.5
