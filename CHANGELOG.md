@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- The OPML file is generated with error when there are podcasts in a known error state (added, but the feed is invalid) - the generated OPML file contains only the text `undefined`. Fixes issue [#358](https://github.com/podStation/podStation/issues/358).
+
 ## [1.48.0]
 
 ### Added
